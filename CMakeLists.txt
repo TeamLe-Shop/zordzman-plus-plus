@@ -15,6 +15,14 @@ if(USING_GCC OR USING_CLANG)
                       -Wshadow -Wmissing-declarations -Wnon-virtual-dtor)
 endif()
 
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
+
+find_package(SDL2 REQUIRED)
+
+include_directories(${SDL2_INCLUDE_DIR})
+
 add_executable(zordzman
 src/main.cpp
 )
+
+target_link_libraries(zordzman ${SDL2_LIBRARY})

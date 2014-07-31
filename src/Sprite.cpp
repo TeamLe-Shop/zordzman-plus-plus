@@ -2,17 +2,17 @@
 
 Sprite::Sprite(Texture const &texture) { setTexture(texture); }
 
-void Sprite::setupQuadSizeInfo() {
+void Sprite::buildVertexArray() {
     auto const halfWidth = m_texture->getWidth() / 2;
     auto const halfHeight = m_texture->getHeight() / 2;
-    m_quads[0] = -halfWidth;
-    m_quads[1] = -halfHeight;
-    m_quads[2] = halfWidth;
-    m_quads[3] = -halfHeight;
-    m_quads[4] = halfWidth;
-    m_quads[5] = halfHeight;
-    m_quads[6] = -halfWidth;
-    m_quads[7] = halfHeight;
+    m_vertices[0] = -halfWidth;
+    m_vertices[1] = -halfHeight;
+    m_vertices[2] = halfWidth;
+    m_vertices[3] = -halfHeight;
+    m_vertices[4] = halfWidth;
+    m_vertices[5] = halfHeight;
+    m_vertices[6] = -halfWidth;
+    m_vertices[7] = halfHeight;
 }
 
 void Sprite::draw() {
@@ -23,7 +23,7 @@ void Sprite::draw() {
     glRotatef(m_angle, 0.0f, 0.0f, 1.0f);
     glColorPointer(3, GL_FLOAT, 0, m_colors);
     glTexCoordPointer(2, GL_FLOAT, 0, m_texcoords);
-    glVertexPointer(2, GL_FLOAT, 0, m_quads);
+    glVertexPointer(2, GL_FLOAT, 0, m_vertices);
     glDrawArrays(GL_QUADS, 0, 8);
     glPopMatrix();
 }
@@ -38,7 +38,7 @@ void Sprite::setColor(Uint8 r, Uint8 g, Uint8 b) {
 
 void Sprite::setTexture(Texture const &texture) {
     m_texture = &texture;
-    setupQuadSizeInfo();
+    buildVertexArray();
 }
 
 void Sprite::setPosition(int x, int y) {

@@ -15,7 +15,7 @@ public:
 
 private:
     int m_x{ 0 }, m_y{ 0 }, m_angle{ 0 };
-    GLfloat m_quads[8];
+    GLfloat m_vertices[8];
     GLfloat const m_texcoords[8]{
         0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
     };
@@ -23,9 +23,11 @@ private:
                           1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
     Texture const *m_texture;
     /**
-     * @brief I have no idea.
+     * @brief Build the vertex array
      *
-     * TODO: Figure out what this shit is or does
+     * This shit builds the quad array that is needed by
+     * glVertexPointer
+     *
      */
-    void setupQuadSizeInfo();
+    void buildVertexArray();
 };

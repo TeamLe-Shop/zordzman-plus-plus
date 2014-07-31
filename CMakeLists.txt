@@ -25,4 +25,4 @@ add_executable(zordzman
 src/main.cpp
 )
 
-target_link_libraries(zordzman ${SDL2_LIBRARY})
+target_link_libraries(zordzman ${SDL2_LIBRARY} SDL2_image)

@@ -45,7 +45,8 @@ int main()
     }
 
 	SDL_FreeSurface(img);
-    SDL_DestroyRenderer(renderer);
+	SDL_DestroyTexture(img_tex);
+	SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }

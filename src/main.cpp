@@ -28,6 +28,7 @@ int main() {
 
     bool quit = false;
     SDL_Rect img_rect;
+    int angle = 0;
     while (!quit) {
         SDL_Event event;
 
@@ -43,9 +44,13 @@ int main() {
         img_rect.y += (rand() % 12) - 6;
 
         glClear(GL_COLOR_BUFFER_BIT);
+        sprite.setAngle(angle);
+        sprite.setColor(rand() % 256, rand() % 256, rand() % 256);
         sprite.setPosition(img_rect.x, img_rect.y);
         sprite.draw();
         SDL_GL_SwapWindow(window);
+        angle++;
+        if (angle == 361) angle = 0;
     }
 
     SDL_GL_DeleteContext(gl_context);

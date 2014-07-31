@@ -23,4 +23,10 @@ private:
     GLfloat m_colors[12]{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
                           1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
     const Texture *m_texture;
+    /**
+     * @brief I have no idea.
+     *
+     * TODO: Figure out what this shit is or does
+     */
+    void setupQuadSizeInfo();
 };

@@ -2,6 +2,18 @@
 
 Sprite::Sprite(const Texture &texture) { setTexture(texture); }
 
+void Sprite::setupQuadSizeInfo() {
+    auto const halfWidth = m_texture->getWidth() / 2;
+    m_quads[0] = -halfWidth;
+    m_quads[1] = -halfWidth;
+    m_quads[2] = halfWidth;
+    m_quads[3] = -halfWidth;
+    m_quads[4] = halfWidth;
+    m_quads[5] = halfWidth;
+    m_quads[6] = -halfWidth;
+    m_quads[7] = halfWidth;
+}
+
 void Sprite::draw() {
     glPushMatrix();
     m_texture->bind();
@@ -25,14 +37,7 @@ void Sprite::setColor(Uint8 r, Uint8 g, Uint8 b) {
 
 void Sprite::setTexture(const Texture &texture) {
     m_texture = &texture;
-    m_quads[0] = -m_texture->getWidth() / 2;
-    m_quads[1] = -m_texture->getWidth() / 2;
-    m_quads[2] = m_texture->getWidth() / 2;
-    m_quads[3] = -m_texture->getWidth() / 2;
-    m_quads[4] = m_texture->getWidth() / 2;
-    m_quads[5] = m_texture->getWidth() / 2;
-    m_quads[6] = -m_texture->getWidth() / 2;
-    m_quads[7] = m_texture->getWidth() / 2;
+    setupQuadSizeInfo();
 }
 
 void Sprite::setPosition(int x, int y) {

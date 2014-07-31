@@ -50,7 +50,8 @@ int main() {
         sprite.draw();
         SDL_GL_SwapWindow(window);
         angle++;
-        if (angle == 361) angle = 0;
+        if (angle == 361)
+            angle = 0;
     }
 
     SDL_GL_DeleteContext(gl_context);

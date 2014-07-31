@@ -20,8 +20,8 @@ int main() {
                          SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_OPENGL);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 
-	initGL(800, 600);
-	
+    initGL(800, 600);
+
     Texture texture;
     texture.loadFromFile("resources/lel.png");
     Sprite sprite(texture);
@@ -58,18 +58,17 @@ int main() {
     SDL_Quit();
 }
 
-void initGL(int width, int height)
-{
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, width, height, 0, 1, -1);
-	glMatrixMode(GL_MODELVIEW);
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
+void initGL(int width, int height) {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, width, height, 0, 1, -1);
+    glMatrixMode(GL_MODELVIEW);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
 

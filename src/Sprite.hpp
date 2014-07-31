@@ -25,8 +25,8 @@ private:
     /**
      * @brief Build the vertex array
      *
-     * This shit builds the quad array that is needed by
-     * glVertexPointer
+     * Build the vertex array that is needed by
+     * glVertexPointer()
      *
      */
     void buildVertexArray();

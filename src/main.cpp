@@ -1,8 +1,12 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <stdio.h>
+#include <ctime>
+#include <cstdlib>
 
 int main() {
+	srand(time(0));
+
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -17,7 +21,7 @@ int main() {
     }
 
     bool quit = false;
-
+	SDL_Rect img_rect;
     while (!quit) {
         SDL_Event event;
 
@@ -26,10 +30,14 @@ int main() {
                 quit = true;
             }
         }
+        
+        img_rect = {100, 100, 600, 400};
+        
+        img_rect.x += (rand() % 12) - 6;
+        img_rect.y += (rand() % 12) - 6;
+                
         SDL_RenderClear(renderer);
-        /* Do I put muh rendering here? */
-        SDL_RenderCopy(renderer, texture, NULL, NULL);
-        /* ^ */
+        SDL_RenderCopy(renderer, texture, NULL, &img_rect);
         SDL_RenderPresent(renderer);
     }
 

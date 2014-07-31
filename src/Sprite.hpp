@@ -16,9 +16,6 @@ public:
 private:
     int m_x{ 0 }, m_y{ 0 }, m_angle{ 0 };
     GLfloat m_vertices[8];
-    GLfloat const m_texcoords[8]{
-        0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
-    };
     GLfloat m_colors[12]{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
                           1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
     Texture const *m_texture;

@@ -11,7 +11,6 @@ public:
     void draw();
     void setPosition(int x, int y);
     void setAngle(int angle);
-    Sprite() = default;
     Sprite(Texture const &texture);
 
 private:

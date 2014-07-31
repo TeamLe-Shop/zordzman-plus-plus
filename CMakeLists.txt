@@ -19,11 +19,16 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
+find_package(OpenGL REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIR})
 
 add_executable(zordzman
 src/main.cpp
+src/Sprite.hpp
+src/Sprite.cpp
+src/Texture.hpp
+src/Texture.cpp
 )
 
-target_link_libraries(zordzman ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY})
+target_link_libraries(zordzman ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${OPENGL_LIBRARY} ${GLEW_LIBRARY})

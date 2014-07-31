@@ -1,27 +1,48 @@
+#include "Texture.hpp"
+#include "Sprite.hpp"
+
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_opengl.h>
 #include <stdio.h>
 #include <ctime>
 #include <cstdlib>
+#include <stdexcept>
 
 int main() {
-	srand(time(0));
+    srand(time(0));
 
     SDL_Init(SDL_INIT_EVERYTHING);
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    SDL_CreateWindowAndRenderer(800, 600, SDL_WINDOW_SHOWN, &window, &renderer);
-    SDL_SetWindowTitle(window, "Hello zordzman++ world!");
+    SDL_Window *window =
+        SDL_CreateWindow("Hello zordzman++ world!", SDL_WINDOWPOS_UNDEFINED,
+                         SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_OPENGL);
+    SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 
-    auto texture = IMG_LoadTexture(renderer, "resources/lel.png");
-    if (!texture) {
-        printf("Whoopsie, here we go..\n");
-        printf("Failed to load media!\n%s\n", IMG_GetError());
-        return 1;
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, 800, 600, 0, 0, 1);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    GLenum err = glewInit();
+
+    if (err != GLEW_OK) {
+        throw std::runtime_error("Failed to init GLEW");
     }
 
+    Texture texture;
+    texture.loadFromFile("resources/lel.png");
+    Sprite sprite(texture);
+
     bool quit = false;
-	SDL_Rect img_rect;
+    SDL_Rect img_rect;
     while (!quit) {
         SDL_Event event;
 
@@ -30,19 +51,19 @@ int main() {
                 quit = true;
             }
         }
-        
-        img_rect = {100, 100, 600, 400};
-        
+
+        img_rect = { 100, 100, 600, 400 };
+
         img_rect.x += (rand() % 12) - 6;
         img_rect.y += (rand() % 12) - 6;
-                
-        SDL_RenderClear(renderer);
-        SDL_RenderCopy(renderer, texture, NULL, &img_rect);
-        SDL_RenderPresent(renderer);
+
+        glClear(GL_COLOR_BUFFER_BIT);
+        sprite.setPosition(img_rect.x, img_rect.y);
+        sprite.draw();
+        SDL_GL_SwapWindow(window);
     }
 
-    SDL_DestroyTexture(texture);
-    SDL_DestroyRenderer(renderer);
+    SDL_GL_DeleteContext(gl_context);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }

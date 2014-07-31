@@ -2,11 +2,7 @@
 
 #include <string>
 
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
-#else
-#include <GL/gl.h>
-#endif
+#include <SDL_opengl.h>
 
 class Texture {
 public:

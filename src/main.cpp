@@ -9,28 +9,19 @@
 #include <cstdlib>
 #include <stdexcept>
 
+void initGL(int width, int heights);
+
 int main() {
     srand(time(0));
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window =
-        SDL_CreateWindow("Hello zordzman++ world!", SDL_WINDOWPOS_UNDEFINED,
+        SDL_CreateWindow("Zordzman", SDL_WINDOWPOS_UNDEFINED,
                          SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_OPENGL);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, 800, 600, 0, 0, 1);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
+	initGL(800, 600);
+	
     Texture texture;
     texture.loadFromFile("resources/lel.png");
     Sprite sprite(texture);
@@ -46,7 +37,7 @@ int main() {
             }
         }
 
-        img_rect = { 100, 100, 600, 400 };
+        img_rect = { 0, 0, 0, 0 };
 
         img_rect.x += (rand() % 12) - 6;
         img_rect.y += (rand() % 12) - 6;
@@ -60,4 +51,24 @@ int main() {
     SDL_GL_DeleteContext(gl_context);
     SDL_DestroyWindow(window);
     SDL_Quit();
+}
+
+void initGL(int width, int height)
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, width, height, 0, 1, -1);
+	glMatrixMode(GL_MODELVIEW);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }

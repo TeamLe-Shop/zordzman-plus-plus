@@ -1,0 +1,6 @@
+LIB_SDL=-framework SDL2 -I/Library/Frameworks/SDL2.framework/Versions/Current/Headers
+LIB_SDLIMG=-framework SDL2_image -I/Library/Frameworks/SDL2_image.framework/Versions/Current/Headers
+LIB_OGL=-framework OpenGL -I/Library/Frameworks/OpenGL.framework/Headers
+
+all:
+	xcrun clang++ src/*.cpp ${LIB_SDL} ${LIB_SDLIMG} ${LIB_OGL} ${LIB_COCOA} ${LIB_CARBON} -std=c++11 -o zordzman

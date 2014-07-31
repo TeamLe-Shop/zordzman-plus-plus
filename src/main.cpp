@@ -31,12 +31,6 @@ int main() {
     glEnableClientState(GL_COLOR_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-    GLenum err = glewInit();
-
-    if (err != GLEW_OK) {
-        throw std::runtime_error("Failed to init GLEW");
-    }
-
     Texture texture;
     texture.loadFromFile("resources/lel.png");
     Sprite sprite(texture);

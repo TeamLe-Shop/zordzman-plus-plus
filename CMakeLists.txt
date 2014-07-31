@@ -31,4 +31,4 @@ src/Texture.hpp
 src/Texture.cpp
 )
 
-target_link_libraries(zordzman ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${OPENGL_LIBRARY} ${GLEW_LIBRARY})
+target_link_libraries(zordzman ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${OPENGL_LIBRARY})

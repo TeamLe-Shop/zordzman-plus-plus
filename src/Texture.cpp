@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 #include <stdexcept>
 
-void Texture::loadFromFile(const std::string &filename) {
+void Texture::loadFromFile(std::string const &filename) {
     SDL_Surface *img = IMG_Load(filename.c_str());
 
     if (!img) {

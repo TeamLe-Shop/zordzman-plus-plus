@@ -6,7 +6,7 @@
 
 class Texture {
 public:
-    void loadFromFile(const std::string &filename);
+    void loadFromFile(std::string const &filename);
     int getWidth() const;
     int getHeight() const;
     void bind() const;

@@ -1,6 +1,6 @@
 #include "Sprite.hpp"
 
-Sprite::Sprite(const Texture &texture) { setTexture(texture); }
+Sprite::Sprite(Texture const &texture) { setTexture(texture); }
 
 void Sprite::setupQuadSizeInfo() {
     auto const halfWidth = m_texture->getWidth() / 2;
@@ -35,7 +35,7 @@ void Sprite::setColor(Uint8 r, Uint8 g, Uint8 b) {
     m_colors[2] = m_colors[5] = m_colors[8] = m_colors[11] = b / 255.0f;
 }
 
-void Sprite::setTexture(const Texture &texture) {
+void Sprite::setTexture(Texture const &texture) {
     m_texture = &texture;
     setupQuadSizeInfo();
 }

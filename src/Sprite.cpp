@@ -4,14 +4,15 @@ Sprite::Sprite(Texture const &texture) { setTexture(texture); }
 
 void Sprite::setupQuadSizeInfo() {
     auto const halfWidth = m_texture->getWidth() / 2;
+    auto const halfHeight = m_texture->getHeight() / 2;
     m_quads[0] = -halfWidth;
-    m_quads[1] = -halfWidth;
+    m_quads[1] = -halfHeight;
     m_quads[2] = halfWidth;
-    m_quads[3] = -halfWidth;
+    m_quads[3] = -halfHeight;
     m_quads[4] = halfWidth;
-    m_quads[5] = halfWidth;
+    m_quads[5] = halfHeight;
     m_quads[6] = -halfWidth;
-    m_quads[7] = halfWidth;
+    m_quads[7] = halfHeight;
 }
 
 void Sprite::draw() {

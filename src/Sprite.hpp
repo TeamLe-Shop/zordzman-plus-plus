@@ -19,12 +19,6 @@ private:
     GLfloat m_colors[12]{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
                           1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
     Texture const *m_texture;
-    /**
-     * @brief Build the vertex array
-     *
-     * Build the vertex array that is needed by
-     * glVertexPointer()
-     *
-     */
+    /// @brief Build the vertex array that is needed by glVertexPointer()
     void buildVertexArray();
 };

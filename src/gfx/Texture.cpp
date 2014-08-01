@@ -62,8 +62,6 @@ void Texture::loadFromFile(std::string const &filename) {
     load_image_to_tex(filename.c_str(), &m_handle);
 }
 
-std::string Texture::getPath() const { return path; }
-
 int Texture::getWidth() const { return m_width; }
 
 int Texture::getHeight() const { return m_height; }

@@ -7,7 +7,6 @@
 class Texture {
 public:
     void loadFromFile(std::string const &filename);
-    std::string getPath() const;
     int getWidth() const;
     int getHeight() const;
     int getTileSize() const;
@@ -17,7 +16,6 @@ public:
     Texture() = default;
 
 private:
-    std::string path;
     GLuint m_handle;
     int m_width, m_height;
     // Tile width & Tile height. by default it's 8.

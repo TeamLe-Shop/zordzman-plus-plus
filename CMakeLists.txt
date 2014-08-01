@@ -25,7 +25,8 @@ find_package(SDL2_image REQUIRED)
 include_directories(${SDLIMAGE_INCLUDE_DIR})
 
 if(GATSAN)
-#include your dirs here
+	set(SDLIMAGE_LIBRARY /Library/Frameworks/SDL2_image.framework)
+	set(SDLIMAGE_INCLUDE_DIR /Library/Frameworks/SDL2_image.framework/Headers)
 endif()
 
 include_directories(src)

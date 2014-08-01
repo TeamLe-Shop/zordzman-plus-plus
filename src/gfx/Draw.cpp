@@ -15,7 +15,7 @@ void sprite(Texture const &spritesheet, int tx, int ty, float x, float y,
 
     // if (tx < 0 || ty < 0 || tx > ss_w / ts || ty > ss_h / ts) ;
 
-    /* Correct the tx and ty values. */
+    // Correct the tx and ty values.
 
     float tx_;
     float ty_;
@@ -25,7 +25,7 @@ void sprite(Texture const &spritesheet, int tx, int ty, float x, float y,
 
     float ts_ = 0.25f / (float)ts;
 
-    /* Avoid dividing by zero */
+    // Avoid dividing by zero
     if ((float)(tx * ts) < (ts_))
         tx_ = 0;
     else
@@ -36,10 +36,10 @@ void sprite(Texture const &spritesheet, int tx, int ty, float x, float y,
     else
         ty_ = 0.25f / (float)(ty * ts);
 
-    /* Bind the spritesheet texture... */
+    // Bind the spritesheet texture...
     spritesheet.bind();
 
-    /* The meat of the draw() method. */
+    // The meat of the draw() method.
     glTexCoord2f(tx_, ty_);
     glVertex2f(x, y);
     glTexCoord2f(tx_ + ts_, ty_);
@@ -49,7 +49,7 @@ void sprite(Texture const &spritesheet, int tx, int ty, float x, float y,
     glTexCoord2f(tx_, ty_ + ts_);
     glVertex2f(x, y + h);
 
-    /* ... unbind the texture. */
+    // unbind the texture.
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 

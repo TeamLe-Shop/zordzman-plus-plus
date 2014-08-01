@@ -7,7 +7,7 @@
 class Texture {
 public:
     void loadFromFile(std::string const &filename);
-    /* Kindly provided by Krootushas. */
+    // Kindly provided by Krootushas.
     bool load_image_to_tex(char const *filename, GLuint *);
     std::string getPath() const;
     int getWidth() const;
@@ -22,6 +22,6 @@ private:
     std::string path;
     GLuint m_handle;
     int m_width, m_height;
-    /* Tile width & Tile height. by default it's 8. */
+    // Tile width & Tile height. by default it's 8.
     int tile_size = 8;
 };

@@ -20,11 +20,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIR})
 find_package(SDL2_image REQUIRED)
+include_directories(${SDLIMAGE_INCLUDE_DIR})
+
+include_directories(src)
 
 file(GLOB_RECURSE SOURCE_FILES src/*.*pp)
-
-include_directories(${SDL2_INCLUDE_DIR} src)
 
 add_executable(zordzman ${SOURCE_FILES})
 

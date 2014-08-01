@@ -19,7 +19,7 @@ void initGL(int width, int height);
 
 int main() {
     srand(time(0));
-	initMap(25, 19);
+    initMap(25, 19);
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window =
@@ -42,25 +42,23 @@ int main() {
                 quit = true;
             }
         }
-        
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+
         glBegin(GL_QUADS);
-        for (int x = 0; x < 25; x++)
-        {
-        	for (int y = 0; y < 19; y++)
-        	{
-        		Drawer::draw(texture, map[x][y], 0, x * 32, y * 32, 32, 32);
-        	}
+        for (int x = 0; x < 25; x++) {
+            for (int y = 0; y < 19; y++) {
+                Drawer::draw(texture, map[x][y], 0, x * 32, y * 32, 32, 32);
+            }
         }
-        
+
         Drawer::rect(64, 64, 32, 32);
-        
-		glEnd();
-		
-		glBegin(GL_LINES);
-		Drawer::rect(32, 32, 32, 32, false);
-		glEnd();
+
+        glEnd();
+
+        glBegin(GL_LINES);
+        Drawer::rect(32, 32, 32, 32, false);
+        glEnd();
         SDL_GL_SwapWindow(window);
     }
 
@@ -89,9 +87,9 @@ void initGL(int width, int height) {
 }
 
 void initMap(int width, int height) {
-	for (int x = 0; x < width; x++) {
-    	for (int y = 0; y < height; y++) {
-    		map[x][y] = rand() % 2;
-    	}
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            map[x][y] = rand() % 2;
+        }
     }
 }

@@ -1,5 +1,4 @@
 #include "gfx/Texture.hpp"
-#include "Sprite.hpp"
 #include "gfx/Draw.hpp"
 #include "level/Level.hpp"
 

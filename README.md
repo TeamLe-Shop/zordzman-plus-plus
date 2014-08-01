@@ -48,7 +48,7 @@ SDL-Image: https://www.libsdl.org/projects/SDL_image/ (Recommended: 2.0.0)
 Mac OS X
 ========
 
-For OSX, rename OSX_Makefile to "Makefile" and build with Make.
+Download SDL2 and SDL2_image.
 
 Then, after you've opened your SDL2 .dmg, copy the SDL2.framework and
 move it into /Library/Frameworks directory. You can find this by navigating to Macintosh HD (usually by double clicking the icon on the desktop) and going to /Library/Frameworks.
@@ -61,7 +61,7 @@ and copy OpenGL.framework (It's a folder, remember!) into /Library/Frameworks (b
 
 That's about it. It's can be a little tedious, but once that's all set up you're ready to move on!
 
-Then navigate back to the zordzman-plus-plus folder where the OSX_Makefile is (now renamed Makefile) and run ```make```.
+Then navigate back to the zordzman-plus-plus folder where the Makefile.OSX is and run ```make -f Makefile.OSX``.
 Then, run ```./zordzman``` and the game should be brought up!
 
 Some info, there's something a little different with the headers used to #include OpenGL on Mac and other OSes.

@@ -33,6 +33,7 @@ bool load_image_to_tex(char const *const filename, GLuint &tex) {
             texture_format = GL_BGR_EXT;
         }
     } else {
+        SDL_FreeSurface(surface);
         return false;
     }
 

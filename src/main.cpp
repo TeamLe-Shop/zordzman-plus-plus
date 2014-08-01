@@ -23,7 +23,7 @@ int main() {
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window =
-        SDL_CreateWindow("Zordzman", SDL_WINDOWPOS_UNDEFINED,
+        SDL_CreateWindow("Zordzman v0.0.1", SDL_WINDOWPOS_UNDEFINED,
                          SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_OPENGL);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 

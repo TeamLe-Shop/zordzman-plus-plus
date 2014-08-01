@@ -80,7 +80,7 @@ instead takes care of this for us.
 Linux
 =====
 
-[LazyFoo](http://lazyfoo.net/tutorials/SDL/01_hello_SDL/linux/index.php) has a nice little tutorial on how to set up SDL on linux.
+If you don't know how to install SDL on Linux, check out this tutorial:
+[LazyFoo](http://lazyfoo.net/tutorials/SDL/01_hello_SDL/linux/index.php)
 
-For Linux, you have to download the source code, then do the whole ```./configure ; make all ; make install``` stuff we all love.
-Also do the same with SDL_image, though I'm not sure. We'll try our best to make collaborating on Zordzman with any OS a good experience!
+We'll try our best to make collaborating on Zordzman with any OS a good experience!

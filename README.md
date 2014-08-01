@@ -77,11 +77,12 @@ instead of the normal
 #include <gl.h>
 ```
 
-Don't worry, we already use an
+Using
 ```cpp
-#ifdef __APPLE__
+#include <SDL_opengl.h>
 ```
-to take care of this.
+instead takes care of this for us.
+
 
 Linux
 =====

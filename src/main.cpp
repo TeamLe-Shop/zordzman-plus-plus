@@ -10,10 +10,15 @@
 #include <cstdlib>
 #include <stdexcept>
 
-void initGL(int width, int heights);
+char map[25][19];
+
+void initMap(int width, int height);
+
+void initGL(int width, int height);
 
 int main() {
     srand(time(0));
+	initMap(25, 19);
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window =
@@ -40,7 +45,13 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         Drawer::beginDraw();
-        Drawer::draw(texture, 1, 0, 0, 0, 32, 32);
+        for (int x = 0; x < 25; x++)
+        {
+        	for (int y = 0; y < 19; y++)
+        	{
+        		Drawer::draw(texture, map[x][y], 0, x * 32, y * 32, 32, 32);
+        	}
+        }
 		Drawer::endDraw();
 
         SDL_GL_SwapWindow(window);
@@ -68,4 +79,12 @@ void initGL(int width, int height) {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+
+void initMap(int width, int height) {
+	for (int x = 0; x < width; x++) {
+    	for (int y = 0; y < height; y++) {
+    		map[x][y] = rand() % 2;
+    	}
+    }
 }

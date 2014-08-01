@@ -11,7 +11,7 @@ void Drawer::draw(Texture spritesheet, int tx, int ty, float x, float y, float w
 	/* If it's out of the bounds, print a warning message and return. */
 	if (tx < 0 || ty < 0 || tx > ss_w / ts || ty > ss_h / ts)
 	{
-		printf("[WARNING] Tried to access tile (%d, %d) in spritesheet %s, out of bounds", tx, ty,
+		printf("[WARNING] Tried to access tile (%d, %d) in spritesheet %s, out of bounds\n", tx, ty,
 			spritesheet.getPath().c_str());
 		return;
 	}

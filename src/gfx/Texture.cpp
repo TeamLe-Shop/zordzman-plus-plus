@@ -15,18 +15,18 @@ bool load_image_to_tex(char const *const filename, GLuint &tex) {
     }
 
     GLenum texture_format;
-    GLint nOfColors;
+    GLint bytesPerPixel;
 
     // get the number of channels in the SDL surface
-    nOfColors = surface->format->BytesPerPixel;
+    bytesPerPixel = surface->format->BytesPerPixel;
 
-    if (nOfColors == 4) {
+    if (bytesPerPixel == 4) {
         if (surface->format->Rmask == 0x000000ff) {
             texture_format = GL_RGBA;
         } else {
             texture_format = GL_BGRA_EXT;
         }
-    } else if (nOfColors == 3) {
+    } else if (bytesPerPixel == 3) {
         if (surface->format->Rmask == 0x000000ff) {
             texture_format = GL_RGB;
         } else {
@@ -44,7 +44,7 @@ bool load_image_to_tex(char const *const filename, GLuint &tex) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, surface->w, surface->h, 0,
+    glTexImage2D(GL_TEXTURE_2D, 0, bytesPerPixel, surface->w, surface->h, 0,
                  texture_format, GL_UNSIGNED_BYTE, surface->pixels);
     SDL_FreeSurface(surface);
     return true;

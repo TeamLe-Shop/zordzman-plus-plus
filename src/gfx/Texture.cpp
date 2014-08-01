@@ -21,23 +21,20 @@ bool load_image_to_tex(char const *const filename, GLuint &tex) {
     nOfColors = surface->format->BytesPerPixel;
 
     if (nOfColors == 4) {
-
-        if (surface->format->Rmask == 0x000000ff)
+        if (surface->format->Rmask == 0x000000ff) {
             texture_format = GL_RGBA;
-
-        else
+        } else {
             texture_format = GL_BGRA_EXT;
+        }
     } else if (nOfColors == 3) {
-
-        if (surface->format->Rmask == 0x000000ff)
-
+        if (surface->format->Rmask == 0x000000ff) {
             texture_format = GL_RGB;
-
-        else
-
+        } else {
             texture_format = GL_BGR_EXT;
-    } else
+        }
+    } else {
         return false;
+    }
 
     glGenTextures(1, &tex);
 

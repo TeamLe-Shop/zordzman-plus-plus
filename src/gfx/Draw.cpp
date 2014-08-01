@@ -26,15 +26,17 @@ void sprite(Texture const &spritesheet, int tx, int ty, float x, float y,
     float ts_ = 0.25f / (float)ts;
 
     // Avoid dividing by zero
-    if ((float)(tx * ts) < (ts_))
+    if ((float)(tx * ts) < (ts_)) {
         tx_ = 0;
-    else
+    } else {
         tx_ = 0.25f / (float)(tx * ts);
+    }
 
-    if ((float)(ty * ts) < (ts_))
+    if ((float)(ty * ts) < (ts_)) {
         ty_ = 0;
-    else
+    } else {
         ty_ = 0.25f / (float)(ty * ts);
+    }
 
     // Bind the spritesheet texture...
     spritesheet.bind();

@@ -21,7 +21,7 @@ You can also use a Makefile. OSX_Makefile is one that works for OSX. It assumes 
 Optionally just use CMake.
 
 We don't have a Makefile just for Linux right now. If you're on Linux, just install CMake.
-It goes something like
+It then goes something like
 ```
 cd zorzdman-plus-plus/
 mkdir build
@@ -30,6 +30,9 @@ cmake ..
 cd ..
 make
 ```
+
+Note this will generate some files like CMakeCache.txt and all that. Make sure not to push those up
+to the repository
 
 Libraries
 =========

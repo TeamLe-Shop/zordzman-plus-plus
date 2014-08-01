@@ -6,12 +6,19 @@
 #include <cassert>
 
 namespace {
+struct TexResult {
+    bool ok;
+    GLuint handle;
+    int width, height;
+};
+TexResult constexpr TexFail = TexResult{ false, 0, 0, 0 };
+
 // Kindly provided by Krootushas.
-bool load_image_to_tex(char const *const filename, GLuint &tex) {
+TexResult load_texture(char const *const filename) {
     SDL_Surface *surface = IMG_Load(filename);
 
     if (!surface) {
-        return false;
+        return TexFail;
     }
 
     GLenum texture_format;
@@ -34,8 +41,10 @@ bool load_image_to_tex(char const *const filename, GLuint &tex) {
         }
     } else {
         SDL_FreeSurface(surface);
-        return false;
+        return TexFail;
     }
+
+    GLuint tex;
 
     glGenTextures(1, &tex);
 
@@ -47,12 +56,18 @@ bool load_image_to_tex(char const *const filename, GLuint &tex) {
     glTexImage2D(GL_TEXTURE_2D, 0, bytesPerPixel, surface->w, surface->h, 0,
                  texture_format, GL_UNSIGNED_BYTE, surface->pixels);
     SDL_FreeSurface(surface);
-    return true;
+    return TexResult{ true, tex, surface->w, surface->h };
 }
 }
 
 void Texture::loadFromFile(std::string const &filename) {
-    load_image_to_tex(filename.c_str(), m_handle);
+    TexResult result = load_texture(filename.c_str());
+    if (!result.ok) {
+        throw std::runtime_error("Failed loading texture!");
+    }
+    m_handle = result.handle;
+    m_width = result.width;
+    m_height = result.height;
 }
 
 int Texture::getWidth() const { return m_width; }

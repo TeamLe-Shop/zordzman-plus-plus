@@ -20,23 +20,7 @@ SDL-Image: https://www.libsdl.org/projects/SDL_image/ (Required: 2.0.0 or greate
 Building
 ========
 
-There are build instructions for Mac and Linux, as well as required libraries below.
-
-Our good friend [crumblingstatue](https://github.com/crumblingstatue) has added CMakeLists.txt
-to take care of dependencies for us. You'll need to install CMake, either from the command line or 
-here: http://www.cmake.org/cmake/resources/software.html
-
-You can also use a Makefile. Makefile.OSX is one that works for OSX. It assumes you have Xcode, though!
-Optionally just use CMake.
-
-If you're on Linux, use [CMake](http://cmake.org/).
-Assuming you are in the zordzman-plus-plus directory, do these steps:
-```
-mkdir ../build-zordzman-plus-plus
-cd ../build-zordzman-plus-plus
-cmake ../zordzman-plus-plus
-make
-```
+There are build instructions for Mac and Linux below.
 
 ### Mac OS X ###
 
@@ -80,5 +64,17 @@ instead takes care of this for us.
 
 If you don't know how to install SDL on Linux, check out this tutorial:
 [LazyFoo](http://lazyfoo.net/tutorials/SDL/01_hello_SDL/linux/index.php)
+
+Use [CMake](http://cmake.org/) to build.
+If you don't know how to use CMake, do the following:
+
+Assuming you are in the zordzman-plus-plus directory, do these steps:
+```
+mkdir ../build-zordzman-plus-plus
+cd ../build-zordzman-plus-plus
+cmake ../zordzman-plus-plus
+make
+```
+
 
 We'll try our best to make collaborating on Zordzman with any OS a good experience!

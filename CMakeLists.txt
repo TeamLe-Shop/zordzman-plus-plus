@@ -21,14 +21,16 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(OpenGL REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIR})
+include_directories(${SDL2_INCLUDE_DIR} src)
 
 add_executable(zordzman
-src/main.cpp
-src/Sprite.hpp
 src/Sprite.cpp
-src/Texture.hpp
+src/Sprite.hpp
 src/Texture.cpp
+src/Texture.hpp
+src/gfx/Draw.cpp
+src/gfx/Draw.hpp
+src/main.cpp
 )
 
 target_link_libraries(zordzman ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${OPENGL_LIBRARY})

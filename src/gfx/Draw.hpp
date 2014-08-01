@@ -3,8 +3,7 @@
  * for this. - JavaCakess/vividMario52
  */
 
-#ifndef DRAW_HPP
-#define DRAW_HPP
+#pragma once
 
 #include <cassert>
 #include <stdio.h>
@@ -23,5 +22,3 @@ public:
     static void rect(float x, float y, float w, float h, bool filled = true);
     static void line(float x1, float y1, float x2, float y2);
 };
-
-#endif /* DRAW_HPP */

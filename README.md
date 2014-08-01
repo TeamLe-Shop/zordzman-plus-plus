@@ -33,12 +33,10 @@ Libraries
 =========
 
 It uses SDL, SDL_Image and OpenGL for about everything right now.
-Feel free to... Tag Along!
 
+SDL: https://www.libsdl.org/download-2.0.php (Required: 2.0.0 or greater)
 
-SDL: https://www.libsdl.org/download-2.0.php (Recommended: 2.0.0)
-
-SDL-Image: https://www.libsdl.org/projects/SDL_image/ (Recommended: 2.0.0)
+SDL-Image: https://www.libsdl.org/projects/SDL_image/ (Required: 2.0.0 or greater)
 
 Mac OS X
 ========

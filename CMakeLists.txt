@@ -10,7 +10,7 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 endif()
 
 # For GCC and Clang, enable C++11 support and add some other flags
-if(USING_GCC OR USING_CLANG)
+if(USING_GCC OR USING_CLANG OR GATSAN)
   add_compile_options(-std=c++11 -pedantic -Wall -Wextra
                       -Wshadow -Wmissing-declarations -Wnon-virtual-dtor)
 endif()
@@ -23,6 +23,10 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 find_package(SDL2_image REQUIRED)
 include_directories(${SDLIMAGE_INCLUDE_DIR})
+
+if(GATSAN)
+#include your dirs here
+endif()
 
 include_directories(src)
 

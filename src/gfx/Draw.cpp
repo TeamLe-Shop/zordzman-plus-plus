@@ -20,6 +20,10 @@ void Drawer::draw(Texture spritesheet, int tx, int ty, float x, float y, float w
 	
 	float tx_;
 	float ty_;
+	
+	// actually fucking document  the requirement of ts being > 0 thanks Seb
+	assert(ts > 0);
+	
 	float ts_ = 0.25f / (float) ts;
 	
 	glColor3f(1, 1, 1);
@@ -39,7 +43,6 @@ void Drawer::draw(Texture spritesheet, int tx, int ty, float x, float y, float w
 	spritesheet.bind();
 	
 	/* The meat of the draw() method. */
-	printf("%f %f %f\n", tx_, ty_, ts_);
 	glTexCoord2f(tx_, ty_);
 	glVertex2f(x, y);
 	glTexCoord2f(tx_ + ts_, ty_);

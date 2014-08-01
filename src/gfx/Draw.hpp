@@ -6,6 +6,7 @@
 #ifndef DRAW_HPP
 #define DRAW_HPP
 
+#include <cassert>
 #include <stdio.h>
 #include <SDL_opengl.h>
 #include "Texture.hpp" // The original Zordzman used a custom SpriteSheet class.

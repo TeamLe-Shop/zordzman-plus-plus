@@ -20,19 +20,14 @@ here: http://www.cmake.org/cmake/resources/software.html
 You can also use a Makefile. OSX_Makefile is one that works for OSX. It assumes you have Xcode, though!
 Optionally just use CMake.
 
-We don't have a Makefile just for Linux right now. If you're on Linux, just install CMake.
-It then goes something like
+If you're on Linux, use [CMake](http://cmake.org/).
+Assuming you are in the zordzman-plus-plus directory, do these steps:
 ```
-cd zorzdman-plus-plus/
-mkdir build
-cd build/
-cmake ..
-cd ..
+mkdir ../build-zordzman-plus-plus
+cd ../build-zordzman-plus-plus
+cmake ../zordzman-plus-plus
 make
 ```
-
-Note this will generate some files like CMakeCache.txt and all that. Make sure not to push those up
-to the repository!
 
 Libraries
 =========

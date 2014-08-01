@@ -1,5 +1,6 @@
-#include "Texture.hpp"
+#include "gfx/Texture.hpp"
 #include "Sprite.hpp"
+#include "gfx/Draw.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -23,12 +24,10 @@ int main() {
     initGL(800, 600);
 
     Texture texture;
-    texture.loadFromFile("resources/lel.png");
-    Sprite sprite(texture);
+    texture.loadFromFile("resources/spritesheet.png");
 
     bool quit = false;
-    SDL_Rect img_rect;
-    int angle = 0;
+
     while (!quit) {
         SDL_Event event;
 
@@ -37,21 +36,14 @@ int main() {
                 quit = true;
             }
         }
+        
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        Drawer::beginDraw();
+        Drawer::draw(texture, 1, 0, 0, 0, 32, 32);
+		Drawer::endDraw();
 
-        img_rect = { 0, 0, 0, 0 };
-
-        img_rect.x += (rand() % 12) - 6;
-        img_rect.y += (rand() % 12) - 6;
-
-        glClear(GL_COLOR_BUFFER_BIT);
-        sprite.setAngle(angle);
-        sprite.setColor(rand() % 256, rand() % 256, rand() % 256);
-        sprite.setPosition(img_rect.x, img_rect.y);
-        sprite.draw();
         SDL_GL_SwapWindow(window);
-        angle++;
-        if (angle == 361)
-            angle = 0;
     }
 
     SDL_GL_DeleteContext(gl_context);

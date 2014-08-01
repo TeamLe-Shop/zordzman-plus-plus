@@ -2,8 +2,9 @@
 
 // TODO: Add more shit
 
-void Drawer::draw(Texture const &spritesheet, int tx, int ty, float x, float y,
-                  float w, float h) {
+namespace draw {
+void sprite(Texture const &spritesheet, int tx, int ty, float x, float y,
+            float w, float h) {
     int ts = spritesheet.getTileSize();
     // int ss_w = spritesheet.getWidth();
     // int ss_h = spritesheet.getHeight();
@@ -48,21 +49,22 @@ void Drawer::draw(Texture const &spritesheet, int tx, int ty, float x, float y,
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Drawer::rect(float x, float y, float w, float h, bool filled) {
+void rect(float x, float y, float w, float h, bool filled) {
     if (filled) {
         glVertex2f(x, y);
         glVertex2f(x + w, y);
         glVertex2f(x + w, y + h);
         glVertex2f(x, y + h);
     } else {
-        Drawer::line(x, y, x + w, y);
-        Drawer::line(x + w, y, x + w, y + h);
-        Drawer::line(x + w, y + h, x, y + h);
-        Drawer::line(x, y + h, x, y);
+        draw::line(x, y, x + w, y);
+        draw::line(x + w, y, x + w, y + h);
+        draw::line(x + w, y + h, x, y + h);
+        draw::line(x, y + h, x, y);
     }
 }
 
-void Drawer::line(float x1, float y1, float x2, float y2) {
+void line(float x1, float y1, float x2, float y2) {
     glVertex2f(x1, y1);
     glVertex2f(x2, y2);
+}
 }

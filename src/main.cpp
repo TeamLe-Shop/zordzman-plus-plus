@@ -48,16 +48,16 @@ int main() {
         glBegin(GL_QUADS);
         for (int x = 0; x < 25; x++) {
             for (int y = 0; y < 19; y++) {
-                Drawer::draw(texture, map[x][y], 0, x * 32, y * 32, 32, 32);
+                draw::sprite(texture, map[x][y], 0, x * 32, y * 32, 32, 32);
             }
         }
 
-        Drawer::rect(64, 64, 32, 32);
+        draw::rect(64, 64, 32, 32);
 
         glEnd();
 
         glBegin(GL_LINES);
-        Drawer::rect(32, 32, 32, 32, false);
+        draw::rect(32, 32, 32, 32, false);
         glEnd();
         SDL_GL_SwapWindow(window);
     }

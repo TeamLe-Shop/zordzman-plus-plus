@@ -17,7 +17,7 @@ Our good friend crumblingstatue (https://github.com/crumblingstatue) has added C
 to take care of dependencies for us. You'll need to install CMake, either from the command line or 
 here: http://www.cmake.org/cmake/resources/software.html
 
-You can also use a Makefile. OSX_Makefile is one that works for OSX. It assumes you have Xcode, though!
+You can also use a Makefile. Makefile.OSX is one that works for OSX. It assumes you have Xcode, though!
 Optionally just use CMake.
 
 If you're on Linux, use [CMake](http://cmake.org/).
@@ -49,7 +49,7 @@ Then, after you've opened your SDL2 .dmg, copy the SDL2.framework and
 move it into /Library/Frameworks directory. You can find this by navigating to Macintosh HD (usually by double clicking the icon on the desktop) and going to /Library/Frameworks.
 Then, do the same with the SDL2_image dmg.
 
-The next part requires XCode (https://developer.apple.com/xcode/downloads/), and what you need to do is find your XCode.app, right click, select "Show Package Contents" and 
+The next part requires [XCode](https://developer.apple.com/xcode/downloads/), and what you need to do is find your XCode.app, right click, select "Show Package Contents" and 
 you'll be brought to the folder "Contents".
 Navigate to Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.x.sdk/Developer/System/Library/Frameworks
 and copy OpenGL.framework (It's a folder, remember!) into /Library/Frameworks (back where you put the SDL stuff).
@@ -82,7 +82,7 @@ instead takes care of this for us.
 Linux
 =====
 
-http://lazyfoo.net/tutorials/SDL/01_hello_SDL/linux/index.php is a nice little tutorial on how to set up SDL on linux.
+[LazyFoo](http://lazyfoo.net/tutorials/SDL/01_hello_SDL/linux/index.php) has a nice little tutorial on how to set up SDL on linux.
 
 For Linux, you have to download the source code, then do the whole ```./configure ; make all ; make install``` stuff we all love.
 Also do the same with SDL_image, though I'm not sure. We'll try our best to make collaborating on Zordzman with any OS a good experience!

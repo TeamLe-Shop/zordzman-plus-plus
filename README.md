@@ -38,8 +38,7 @@ cmake ../zordzman-plus-plus
 make
 ```
 
-Mac OS X
-========
+### Mac OS X ###
 
 Download SDL2 and SDL2_image.
 
@@ -77,8 +76,7 @@ Using
 instead takes care of this for us.
 
 
-Linux
-=====
+### Linux ###
 
 If you don't know how to install SDL on Linux, check out this tutorial:
 [LazyFoo](http://lazyfoo.net/tutorials/SDL/01_hello_SDL/linux/index.php)

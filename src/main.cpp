@@ -9,6 +9,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <stdexcept>
+#include <iostream>
 
 namespace {
 
@@ -55,7 +56,10 @@ int main() {
     initGL(800, 600);
 
     Texture texture;
-    texture.loadFromFile("resources/spritesheet.png");
+    if (!texture.loadFromFile("resources/spritesheet.png")) {
+        std::cerr << "Failed to load sprite sheet. Fail.";
+        return EXIT_FAILURE;
+    }
 
     bool quit = false;
 

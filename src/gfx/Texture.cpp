@@ -60,14 +60,15 @@ TexResult load_texture(char const *const filename) {
 }
 }
 
-void Texture::loadFromFile(std::string const &filename) {
+bool Texture::loadFromFile(std::string const &filename) {
     TexResult result = load_texture(filename.c_str());
     if (!result.ok) {
-        throw std::runtime_error("Failed loading texture!");
+        return false;
     }
     m_handle = result.handle;
     m_width = result.width;
     m_height = result.height;
+    return true;
 }
 
 int Texture::getWidth() const { return m_width; }

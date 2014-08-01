@@ -1,10 +1,7 @@
 #include "Level.hpp"
 
-Level::Level(int width, int height) {
-    setWidth(width);
-    setHeight(height);
-}
+Level::Level(int width, int height) : m_width(width), m_height(height) {}
 
-void Level::setWidth(int w) { width = h; }
+void Level::setWidth(int width) { m_width = width; }
 
-void Level::setHeight(int h) { height = h; }
+void Level::setHeight(int height) { m_height = height; }

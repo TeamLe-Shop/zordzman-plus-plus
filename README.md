@@ -32,7 +32,7 @@ make
 ```
 
 Note this will generate some files like CMakeCache.txt and all that. Make sure not to push those up
-to the repository
+to the repository!
 
 Libraries
 =========
@@ -54,7 +54,7 @@ Then, after you've opened your SDL2 .dmg, copy the SDL2.framework and
 move it into /Library/Frameworks directory. You can find this by navigating to Macintosh HD (usually by double clicking the icon on the desktop) and going to /Library/Frameworks.
 Then, do the same with the SDL2_image dmg.
 
-The next part requires XCode, and what you need to do is find your XCode.app, right click, select "Show Package Contents" and 
+The next part requires XCode (https://developer.apple.com/xcode/downloads/), and what you need to do is find your XCode.app, right click, select "Show Package Contents" and 
 you'll be brought to the folder "Contents".
 Navigate to Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.x.sdk/Developer/System/Library/Frameworks
 and copy OpenGL.framework (It's a folder, remember!) into /Library/Frameworks (back where you put the SDL stuff).

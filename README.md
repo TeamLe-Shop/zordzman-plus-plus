@@ -8,6 +8,15 @@ the original Zordzman created by JavaCakess in, well, Java.
 This remake shall be in C++, and will be developed by a team
 rather than one person.
 
+Dependencies
+=========
+
+It uses SDL, SDL_Image and OpenGL for about everything right now.
+
+SDL: https://www.libsdl.org/download-2.0.php (Required: 2.0.0 or greater)
+
+SDL-Image: https://www.libsdl.org/projects/SDL_image/ (Required: 2.0.0 or greater)
+
 Building
 ========
 
@@ -28,15 +37,6 @@ cd ../build-zordzman-plus-plus
 cmake ../zordzman-plus-plus
 make
 ```
-
-Libraries
-=========
-
-It uses SDL, SDL_Image and OpenGL for about everything right now.
-
-SDL: https://www.libsdl.org/download-2.0.php (Required: 2.0.0 or greater)
-
-SDL-Image: https://www.libsdl.org/projects/SDL_image/ (Required: 2.0.0 or greater)
 
 Mac OS X
 ========

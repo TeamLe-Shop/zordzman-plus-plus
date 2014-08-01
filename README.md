@@ -40,26 +40,6 @@ That's about it. It's can be a little tedious, but once that's all set up you're
 Then navigate back to the zordzman-plus-plus folder where the Makefile.OSX is and run ```make -f Makefile.OSX```.
 Then, run ```./zordzman``` and the game should be brought up!
 
-Some info, there's something a little different with the headers used to #include OpenGL on Mac and other OSes.
-
-You use
-```cpp
-#include <OpenGL/gl.h>
-```
-instead of the normal
-```cpp
-#include <GL/gl.h>
-// or
-#include <gl.h>
-```
-
-Using
-```cpp
-#include <SDL_opengl.h>
-```
-instead takes care of this for us.
-
-
 ### Linux ###
 
 If you don't know how to install SDL on Linux, check out this tutorial:
@@ -76,5 +56,11 @@ cmake ../zordzman-plus-plus
 make
 ```
 
+
+Contributing
+============
+
+Anyone is welcome to contribute!
+Just make sure to read [CONTRIBUTING.md] before doing so!
 
 We'll try our best to make collaborating on Zordzman with any OS a good experience!

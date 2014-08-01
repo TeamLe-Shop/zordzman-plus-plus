@@ -19,7 +19,6 @@ void Texture::loadFromFile(std::string const &filename) {
 
     // Build Texture
     glGenTextures(1, &m_handle);
-    glBindTexture(GL_TEXTURE_2D, m_handle);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     // TODO: We assume that the pixel data is always in RGBA format.

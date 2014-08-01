@@ -41,6 +41,7 @@ Then navigate back to the zordzman-plus-plus folder where the Makefile.OSX* is a
 Then, run ```./zordzman``` and the game should be brought up!
 
 (*) Note: Makefile.OSX is no longer used to build the project on Mac OSX. [CMake](http://cmake.org/) is recommended.
+The usage for Mac and Linux are pretty much the same.
 
 ### Linux ###
 

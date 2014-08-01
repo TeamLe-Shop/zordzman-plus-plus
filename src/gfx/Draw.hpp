@@ -18,9 +18,9 @@
 class Drawer {
 	
 public:
-	static void beginDraw();
 	static void draw(Texture spritesheet, int tx, int ty, float x, float y, float w, float h);
-	static void endDraw();
+	static void rect(float x, float y, float w, float h, bool filled=true);
+	static void line(float x1, float y1, float x2, float y2);
 };
 
 

@@ -44,7 +44,7 @@ int main() {
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        Drawer::beginDraw();
+        glBegin(GL_QUADS);
         for (int x = 0; x < 25; x++)
         {
         	for (int y = 0; y < 19; y++)
@@ -52,8 +52,14 @@ int main() {
         		Drawer::draw(texture, map[x][y], 0, x * 32, y * 32, 32, 32);
         	}
         }
-		Drawer::endDraw();
-
+        
+        Drawer::rect(64, 64, 32, 32);
+        
+		glEnd();
+		
+		glBegin(GL_LINES);
+		Drawer::rect(32, 32, 32, 32, false);
+		glEnd();
         SDL_GL_SwapWindow(window);
     }
 

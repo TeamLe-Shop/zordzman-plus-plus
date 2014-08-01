@@ -2,8 +2,6 @@
 
 // TODO: Add more shit
 
-void Drawer::beginDraw() { glBegin(GL_QUADS); }
-
 void Drawer::draw(Texture spritesheet, int tx, int ty, float x, float y, float w, float h) {
 	int ts = spritesheet.getTileSize();
 	int ss_w = spritesheet.getWidth();
@@ -53,7 +51,25 @@ void Drawer::draw(Texture spritesheet, int tx, int ty, float x, float y, float w
 	glVertex2f(x, y + h);
 	
 	/* ... unbind the texture. */
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);	
 }
 
-void Drawer::endDraw() { glEnd(); }
+void Drawer::rect(float x, float y, float w, float h, bool filled) {
+	if (filled) {
+		glVertex2f(x, y);
+		glVertex2f(x + w, y);
+		glVertex2f(x + w, y + h);
+		glVertex2f(x, y + h);
+	} else {
+		Drawer::line(x, y, x + w, y);
+		Drawer::line(x + w, y, x + w, y + h);
+		Drawer::line(x + w, y + h, x, y + h);
+		Drawer::line(x, y + h, x, y);
+	}
+}
+
+void Drawer::line(float x1, float y1, float x2, float y2)
+{
+	glVertex2f(x1, y1);
+	glVertex2f(x2, y2);
+}

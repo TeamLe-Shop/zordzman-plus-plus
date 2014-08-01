@@ -2,7 +2,7 @@
 
 // TODO: Add more shit
 
-void Drawer::draw(Texture spritesheet, int tx, int ty, float x, float y, float w, float h) {
+void Drawer::draw(Texture const &spritesheet, int tx, int ty, float x, float y, float w, float h) {
 	int ts = spritesheet.getTileSize();
 	int ss_w = spritesheet.getWidth();
 	int ss_h = spritesheet.getHeight();

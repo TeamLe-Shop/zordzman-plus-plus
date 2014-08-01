@@ -7,12 +7,14 @@
 class Texture {
 public:
     void loadFromFile(std::string const &filename);
-    std::string getPath();
+    std::string getPath() const;
     int getWidth() const;
     int getHeight() const;
     int getTileSize() const;
     void bind() const;
     ~Texture();
+    Texture(const Texture&) = delete;
+    Texture() = default;
 
 private:
 	std::string path;

@@ -30,7 +30,7 @@ void Texture::loadFromFile(std::string const &filename) {
     SDL_FreeSurface(surface);
 }
 
-std::string Texture::getPath() { return path; }
+std::string Texture::getPath() const { return path; }
 
 int Texture::getWidth() const { return m_width; }
 

@@ -8,6 +8,29 @@ the original Zordzman created by JavaCakess in, well, Java.
 This remake shall be in C++, and will be developed by a team
 rather than one person.
 
+Building
+========
+
+There are build instructions for Mac and Linux, as well as required libraries below.
+
+Our good friend crumblingstatue (https://github.com/crumblingstatue) has added CMakeLists.txt
+to take care of dependencies for us. You'll need to install CMake, either from the command line or 
+here: http://www.cmake.org/cmake/resources/software.html
+
+You can also use a Makefile. OSX_Makefile is one that works for OSX. It assumes you have Xcode, though!
+Optionally just use CMake.
+
+We don't have a Makefile just for Linux right now. If you're on Linux, just install CMake.
+It goes something like
+```
+cd zorzdman-plus-plus/
+mkdir build
+cd build/
+cmake ..
+cd ..
+make
+```
+
 Libraries
 =========
 
@@ -35,5 +58,32 @@ and copy OpenGL.framework (It's a folder, remember!) into /Library/Frameworks (b
 
 That's about it. It's can be a little tedious, but once that's all set up you're ready to move on!
 
-Then navigate back to the zordzman-plus-plus folder where the OSX_Makefile is (now renamed Makefile) and run "make".
-Then, run "./zordzman" and the game should be brought up!
+Then navigate back to the zordzman-plus-plus folder where the OSX_Makefile is (now renamed Makefile) and run ```make```.
+Then, run ```./zordzman``` and the game should be brought up!
+
+Some info, there's something a little different with the headers used to #include OpenGL on Mac and other OSes.
+
+You use
+```cpp
+#include <OpenGL/gl.h>
+```
+instead of the normal
+```cpp
+#include <GL/gl.h>
+// or
+#include <gl.h>
+```
+
+Don't worry, we already use an
+```cpp
+#ifdef __APPLE__
+```
+to take care of this.
+
+Linux
+=====
+
+http://lazyfoo.net/tutorials/SDL/01_hello_SDL/linux/index.php is a nice little tutorial on how to set up SDL on linux.
+
+For Linux, you have to download the source code, then do the whole ```./configure ; make all ; make install``` stuff we all love.
+Also do the same with SDL_image, though I'm not sure. We'll try our best to make collaborating on Zordzman with any OS a good experience!

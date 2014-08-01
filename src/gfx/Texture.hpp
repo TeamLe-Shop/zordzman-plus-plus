@@ -23,5 +23,5 @@ private:
     GLuint m_handle;
     int m_width, m_height;
     // Tile width & Tile height. by default it's 8.
-    int tile_size = 8;
+    int m_tile_size = 8;
 };

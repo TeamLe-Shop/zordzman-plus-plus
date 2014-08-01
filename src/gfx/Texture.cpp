@@ -66,7 +66,7 @@ int Texture::getWidth() const { return m_width; }
 
 int Texture::getHeight() const { return m_height; }
 
-int Texture::getTileSize() const { return tile_size; }
+int Texture::getTileSize() const { return m_tile_size; }
 
 void Texture::bind() const { glBindTexture(GL_TEXTURE_2D, m_handle); }
 

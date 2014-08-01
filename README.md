@@ -61,6 +61,6 @@ Contributing
 ============
 
 Anyone is welcome to contribute!
-Just make sure to read [CONTRIBUTING.md] before doing so!
+Just make sure to read [CONTRIBUTING.md](CONTRIBUTING.md) before doing so!
 
 We'll try our best to make collaborating on Zordzman with any OS a good experience!

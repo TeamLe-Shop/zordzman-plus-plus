@@ -1,8 +1,3 @@
-/* Draw.hpp should take care of drawing with spritesheets.
- * I'll be reusing some of the original Zordzman source code
- * for this. - JavaCakess/vividMario52
- */
-
 #pragma once
 
 #include "Texture.hpp" // The original Zordzman used a custom SpriteSheet class.

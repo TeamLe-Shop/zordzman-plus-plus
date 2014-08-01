@@ -5,11 +5,9 @@
 #include <iostream>
 #include <cassert>
 
-void Texture::loadFromFile(std::string const &filename) {
-    load_image_to_tex(filename.c_str(), &m_handle);
-}
-
-bool Texture::load_image_to_tex(char const *const filename, GLuint *tex) {
+namespace {
+// Kindly provided by Krootushas.
+bool load_image_to_tex(char const *const filename, GLuint *tex) {
 
     SDL_Surface *surface; // This surface will tell us the details of the image
     GLenum texture_format;
@@ -56,8 +54,12 @@ bool Texture::load_image_to_tex(char const *const filename, GLuint *tex) {
     if (surface) {
         SDL_FreeSurface(surface);
     }
-    std::cout << "lal\n";
     return true;
+}
+}
+
+void Texture::loadFromFile(std::string const &filename) {
+    load_image_to_tex(filename.c_str(), &m_handle);
 }
 
 std::string Texture::getPath() const { return path; }

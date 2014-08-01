@@ -39,7 +39,7 @@ void sprite(Texture const &spritesheet, int tx, int ty, float x, float y,
     }
 
     // Bind the spritesheet texture...
-    spritesheet.bind();
+    Texture::bind(spritesheet);
 
     // The meat of the draw() method.
     glTexCoord2f(tx_, ty_);
@@ -52,7 +52,7 @@ void sprite(Texture const &spritesheet, int tx, int ty, float x, float y,
     glVertex2f(x, y + h);
 
     // unbind the texture.
-    glBindTexture(GL_TEXTURE_2D, 0);
+    Texture::unbind();
 }
 
 void rect(float x, float y, float w, float h, bool filled) {

@@ -77,7 +77,10 @@ int Texture::getHeight() const { return m_height; }
 
 int Texture::getTileSize() const { return m_tile_size; }
 
-void Texture::bind() const { glBindTexture(GL_TEXTURE_2D, m_handle); }
+void Texture::bind(const Texture &texture) {
+    glBindTexture(GL_TEXTURE_2D, texture.m_handle);
+}
+void Texture::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 Texture::~Texture() { glDeleteTextures(1, &m_handle); }
 

@@ -10,7 +10,8 @@ public:
     int getWidth() const;
     int getHeight() const;
     int getTileSize() const;
-    void bind() const;
+    static void bind(Texture const &texture);
+    static void unbind();
     ~Texture();
     Texture(const Texture &) = delete;
     Texture(std::string const &filename);

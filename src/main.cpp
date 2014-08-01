@@ -2,6 +2,8 @@
 #include <SDL_image.h>
 #include <stdio.h>
 
+#pragma (lib,"SDL2.lib")
+
 int main() {
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window;

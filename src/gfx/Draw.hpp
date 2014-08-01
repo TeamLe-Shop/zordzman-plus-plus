@@ -5,9 +5,6 @@
 
 #pragma once
 
-#include <cassert>
-#include <stdio.h>
-#include <SDL_opengl.h>
 #include "Texture.hpp" // The original Zordzman used a custom SpriteSheet class.
                        // We'll probably enhance Texture.hpp and use that as
                        // a spritesheet.

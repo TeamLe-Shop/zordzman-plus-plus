@@ -1,5 +1,9 @@
 #include "Draw.hpp"
 
+#include <cassert>
+#include <stdio.h>
+#include <SDL_opengl.h>
+
 // TODO: Add more shit
 
 namespace draw {

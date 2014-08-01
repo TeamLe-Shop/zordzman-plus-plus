@@ -7,7 +7,9 @@
 #define DRAW_HPP
 
 #include <SDL_opengl.h>
-#include "Texture.hpp"
+#include "Texture.hpp" // The original Zordzman used a custom SpriteSheet class.
+					   // We'll probably enhance Texture.hpp and use that as 
+				       // a spritesheet.
 
 // TODO: Add shit
 

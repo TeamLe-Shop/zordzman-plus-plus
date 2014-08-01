@@ -13,7 +13,7 @@ Building
 
 There are build instructions for Mac and Linux, as well as required libraries below.
 
-Our good friend crumblingstatue (https://github.com/crumblingstatue) has added CMakeLists.txt
+Our good friend [crumblingstatue](https://github.com/crumblingstatue) has added CMakeLists.txt
 to take care of dependencies for us. You'll need to install CMake, either from the command line or 
 here: http://www.cmake.org/cmake/resources/software.html
 

@@ -1,6 +1,7 @@
 #include "gfx/Texture.hpp"
 #include "Sprite.hpp"
 #include "gfx/Draw.hpp"
+#include "level/Level.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>

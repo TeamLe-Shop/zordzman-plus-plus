@@ -2,33 +2,70 @@
 
 #include <SDL_image.h>
 #include <stdexcept>
+#include <iostream>
 #include <cassert>
 
 
 void Texture::loadFromFile(std::string const &filename) {
-    SDL_Surface *surface = IMG_Load(filename.c_str());
-
-    if (!surface) {
-        throw std::runtime_error("Failed to load image");
-    }
-    
-    path = filename;
-
-    m_width = surface->w;
-    m_height = surface->h;
-
-    // Build Texture
-    glGenTextures(1, &m_handle);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    // TODO: We assume that the pixel data is always in RGBA format.
-    // It might not always be the case.
-    // We could examine the SDL_Surface for the format of the pixel data.
-    assert(surface->format->BitsPerPixel == 32);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, surface->pixels);
-    SDL_FreeSurface(surface);
+	load_image_to_tex(filename.c_str(), &m_handle);
 }
+
+	
+bool Texture::load_image_to_tex ( char const * const filename, GLuint * tex ) {
+     
+	SDL_Surface *surface;   // This surface will tell us the details of the image
+	GLenum texture_format;
+	GLint  nOfColors;
+
+	surface = IMG_Load(filename);
+
+	if(surface) {
+    	// get the number of channels in the SDL surface
+    	nOfColors = surface->format->BytesPerPixel;
+	
+		if(nOfColors == 4) {
+	
+			if (surface->format->Rmask == 0x000000ff)
+				texture_format = GL_RGBA;
+	
+			else
+				texture_format = GL_BGRA_EXT;
+		}
+	
+		else if(nOfColors == 3) {
+	
+				if (surface->format->Rmask == 0x000000ff)
+	
+						texture_format = GL_RGB;
+	
+				else
+	
+						texture_format = GL_BGR_EXT;
+		}
+	
+		else return false;
+	
+		glGenTextures(1, tex);
+	
+		glBindTexture(GL_TEXTURE_2D, *tex);
+	
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	
+		glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, surface->w, surface->h, 0,
+			texture_format, GL_UNSIGNED_BYTE, surface->pixels);
+
+	}
+	else return false;
+	
+	if(surface) {
+		SDL_FreeSurface(surface);
+	}
+	std::cout << "lal\n";
+	return true;
+}
+	
+
 
 std::string Texture::getPath() const { return path; }
 

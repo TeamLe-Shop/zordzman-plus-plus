@@ -4,15 +4,10 @@
 
 void Drawer::draw(Texture const &spritesheet, int tx, int ty, float x, float y, float w, float h) {
 	int ts = spritesheet.getTileSize();
-	int ss_w = spritesheet.getWidth();
-	int ss_h = spritesheet.getHeight();
-	/* If it's out of the bounds, print a warning message and return. */
-	if (tx < 0 || ty < 0 || tx > ss_w / ts || ty > ss_h / ts)
-	{
-		printf("[WARNING] Tried to access tile (%d, %d) in spritesheet %s, out of bounds\n", tx, ty,
-			spritesheet.getPath().c_str());
-		return;
-	}
+	//int ss_w = spritesheet.getWidth();
+	//int ss_h = spritesheet.getHeight();
+
+	//if (tx < 0 || ty < 0 || tx > ss_w / ts || ty > ss_h / ts) ;
 	
 	/* Correct the tx and ty values. */
 	
@@ -23,8 +18,6 @@ void Drawer::draw(Texture const &spritesheet, int tx, int ty, float x, float y, 
 	assert(ts > 0);
 	
 	float ts_ = 0.25f / (float) ts;
-	
-	glColor3f(1, 1, 1);
 	
 	/* Avoid dividing by zero */
 	if ((float)(tx * ts) < (ts_))

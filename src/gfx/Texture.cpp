@@ -7,7 +7,7 @@
 
 namespace {
 // Kindly provided by Krootushas.
-bool load_image_to_tex(char const *const filename, GLuint *tex) {
+bool load_image_to_tex(char const *const filename, GLuint &tex) {
 
     SDL_Surface *surface; // This surface will tell us the details of the image
     GLenum texture_format;
@@ -38,9 +38,9 @@ bool load_image_to_tex(char const *const filename, GLuint *tex) {
         } else
             return false;
 
-        glGenTextures(1, tex);
+        glGenTextures(1, &tex);
 
-        glBindTexture(GL_TEXTURE_2D, *tex);
+        glBindTexture(GL_TEXTURE_2D, tex);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -59,7 +59,7 @@ bool load_image_to_tex(char const *const filename, GLuint *tex) {
 }
 
 void Texture::loadFromFile(std::string const &filename) {
-    load_image_to_tex(filename.c_str(), &m_handle);
+    load_image_to_tex(filename.c_str(), m_handle);
 }
 
 int Texture::getWidth() const { return m_width; }

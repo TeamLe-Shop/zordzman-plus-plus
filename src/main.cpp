@@ -55,11 +55,7 @@ int main() {
 
     initGL(800, 600);
 
-    Texture texture;
-    if (!texture.loadFromFile("resources/spritesheet.png")) {
-        std::cerr << "Failed to load sprite sheet. Fail.";
-        return EXIT_FAILURE;
-    }
+    Texture texture("resources/spritesheet.png");
 
     bool quit = false;
 

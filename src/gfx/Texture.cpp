@@ -80,3 +80,9 @@ int Texture::getTileSize() const { return m_tile_size; }
 void Texture::bind() const { glBindTexture(GL_TEXTURE_2D, m_handle); }
 
 Texture::~Texture() { glDeleteTextures(1, &m_handle); }
+
+Texture::Texture(const std::string &filename) {
+    if (!loadFromFile(filename)) {
+        throw std::runtime_error("Failed to construct texture.");
+    }
+}

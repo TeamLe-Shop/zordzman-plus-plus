@@ -13,7 +13,7 @@ public:
     void bind() const;
     ~Texture();
     Texture(const Texture &) = delete;
-    Texture() = default;
+    Texture(std::string const &filename);
 
 private:
     GLuint m_handle;

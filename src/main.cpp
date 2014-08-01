@@ -11,11 +11,37 @@
 #include <cstdlib>
 #include <stdexcept>
 
+namespace {
+
 char map[25][19];
 
-void initMap(int width, int height);
+void initGL(int width, int height) {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, width, height, 0, 1, -1);
+    glMatrixMode(GL_MODELVIEW);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-void initGL(int width, int height);
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+
+void initMap(int width, int height) {
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            map[x][y] = rand() % 2;
+        }
+    }
+}
+}
 
 int main() {
     srand(time(0));
@@ -65,31 +91,4 @@ int main() {
     SDL_GL_DeleteContext(gl_context);
     SDL_DestroyWindow(window);
     SDL_Quit();
-}
-
-void initGL(int width, int height) {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, width, height, 0, 1, -1);
-    glMatrixMode(GL_MODELVIEW);
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-}
-
-void initMap(int width, int height) {
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            map[x][y] = rand() % 2;
-        }
-    }
 }

@@ -17,9 +17,10 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIR})
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
-find_package(OpenGL REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES src/*.*pp)
 

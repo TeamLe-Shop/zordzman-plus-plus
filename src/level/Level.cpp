@@ -1,6 +1,5 @@
 #include "Level.hpp"
 
-#include <vector>
 #include <iostream>
 #include <fstream>
 
@@ -30,20 +29,12 @@ Level::Level(std::string const &levelname) {
     auto data = readAllFromStream(file);
     file.close();
 
-    bool tileData = false;
+    m_width = data[0];
+    m_height = data[1];
+    m_tiles.resize(m_width * m_height);
 
-    for (size_t i = 0; i < data.size(); i++) {
-        if (tileData) {
-            map[i] = data[i - 2];
-        } else {
-            if (i == 0) { // Width
-                m_width = data[i];
-            } else if (i == 1) { // Height
-                m_height = data[i];
-                map = new byte[m_width * m_height];
-                tileData = true;
-            }
-        }
+    for (size_t i = 2; i < data.size(); i++) {
+        m_tiles[i - 2] = data[i];
     }
 }
 
@@ -51,6 +42,8 @@ void Level::setWidth(int width) { m_width = width; }
 
 void Level::setHeight(int height) { m_height = height; }
 
-byte Level::tileAt(int x, int y) { return map[x + y * m_width]; }
+byte Level::tileAt(int x, int y) { return m_tiles[x + y * m_width]; }
 
-void Level::setTileAt(int x, int y, byte tile) { map[x + y * m_width] = tile; }
+void Level::setTileAt(int x, int y, byte tile) {
+    m_tiles[x + y * m_width] = tile;
+}

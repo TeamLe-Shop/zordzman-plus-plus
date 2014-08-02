@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 typedef unsigned char byte;
 
@@ -12,6 +13,6 @@ public:
     void setTileAt(int x, int y, byte t);
 
 private:
-    byte *map;
+    std::vector<byte> m_tiles;
     int m_width, m_height;
 };

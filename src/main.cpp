@@ -71,8 +71,8 @@ int main() {
         glBegin(GL_QUADS);
         for (int x = 0; x < level.getWidth(); x++) {
             for (int y = 0; y < level.getHeight(); y++) {
-                drawSprite(sheet, level.tileAt(x, y), 0, x * 32, y * 32, 32,
-                           32);
+                drawSpriteFromSheet(sheet, level.tileAt(x, y), 0, x * 32,
+                                    y * 32, 32, 32);
             }
         }
         glEnd();

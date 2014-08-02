@@ -16,8 +16,8 @@ namespace drawingOperations {
 /// @param h Height of the sprite
 ///
 /// @warning This function expects the GL drawing mode to be GL_QUADS
-void drawSprite(SpriteSheet const &spritesheet, int tx, int ty, float x,
-                float y, float w, float h);
+void drawSpriteFromSheet(SpriteSheet const &spritesheet, int tx, int ty,
+                         float x, float y, float w, float h);
 
 /// @brief Draw a rectangle
 ///

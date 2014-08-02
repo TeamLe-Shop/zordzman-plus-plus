@@ -4,8 +4,8 @@
 #include <SDL_opengl.h>
 
 namespace drawingOperations {
-void drawSprite(SpriteSheet const &spritesheet, int tx, int ty, float x,
-                float y, float w, float h) {
+void drawSpriteFromSheet(SpriteSheet const &spritesheet, int tx, int ty,
+                         float x, float y, float w, float h) {
     unsigned int tileSize = spritesheet.getTileSize();
     // int ss_w = spritesheet.getWidth();
     // int ss_h = spritesheet.getHeight();

@@ -12,8 +12,6 @@
 
 namespace {
 
-char map[25][19];
-
 void initGL(int width, int height) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -33,18 +31,11 @@ void initGL(int width, int height) {
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
-void initMap(int width, int height) {
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            map[x][y] = rand() % 2;
-        }
-    }
-}
 }
 
 int main() {
     srand(time(0));
-    initMap(25, 19);
+    Level level("kek.lvl");
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window =
@@ -81,7 +72,7 @@ int main() {
         glBegin(GL_QUADS);
         for (int x = 0; x < 25; x++) {
             for (int y = 0; y < 19; y++) {
-                drawSprite(sheet, map[x][y], 0, x * 32, y * 32, 32, 32);
+                drawSprite(sheet, level.tileAt(x, y), 0, x * 32, y * 32, 32, 32);
             }
         }
 

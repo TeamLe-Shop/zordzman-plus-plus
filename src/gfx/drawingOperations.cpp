@@ -3,8 +3,6 @@
 #include <cassert>
 #include <SDL_opengl.h>
 
-// TODO: Add more shit
-
 namespace drawingOperations {
 void drawSprite(SpriteSheet const &spritesheet, int tx, int ty, float x,
                 float y, float w, float h) {

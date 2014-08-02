@@ -6,7 +6,7 @@ typedef unsigned char byte;
 
 class Level {
 public:
-    Level(std::string const &levelname);
+    Level(std::string const levelname);
     void setWidth(int width);
     void setHeight(int height);
     byte tileAt(int x, int y);

@@ -15,9 +15,8 @@ std::vector<char> readAllFromStream(std::istream &stream) {
 }
 }
 
-Level::Level(std::string const &levelname) {
-    std::ifstream file("resources/levels/" + levelname,
-                       std::ios::in | std::ios::binary | std::ios::ate);
+Level::Level(std::string const levelname) {
+    std::ifstream file(("resources/levels/" + levelname).c_str(), std::ios::in | std::ios::binary | std::ios::ate);
 
     if (!file.is_open()) {
         std::cerr << "[ERROR] Couldn't open level file resources/levels/"

@@ -1,14 +1,11 @@
 #pragma once
-#include <iostream>
-#include <fstream>
-
-// TODO: Actually add shit
+#include <string>
 
 typedef unsigned char byte;
 
 class Level {
 public:
-    Level(std::string const file);
+    Level(std::string const &levelname);
     void setWidth(int width);
     void setHeight(int height);
     byte tileAt(int x, int y);

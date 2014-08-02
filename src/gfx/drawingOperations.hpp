@@ -8,8 +8,8 @@ namespace drawingOperations {
 /// @brief Draw a sprite from a SpriteSheet
 ///
 /// @param spritesheet The sprite sheet to use
-/// @param tx The x offset of the sprite in the sheet
-/// @param ty The y offset of the sprite in the sheet
+/// @param xOff The x offset of the sprite in the sheet
+/// @param yOff The y offset of the sprite in the sheet
 /// @param x Horizontal position to draw the sprite at
 /// @param y Vertical position to draw the sprite at
 /// @param w Width of the projection
@@ -19,7 +19,7 @@ namespace drawingOperations {
 /// the sprite will be scaled.
 ///
 /// @warning This function expects the GL drawing mode to be GL_QUADS
-void drawSpriteFromSheet(SpriteSheet const &spritesheet, int tx, int ty,
+void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
                          float x, float y, float w, float h);
 
 /// @brief Draw a rectangle

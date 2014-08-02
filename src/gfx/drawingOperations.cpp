@@ -4,7 +4,7 @@
 #include <SDL_opengl.h>
 
 namespace drawingOperations {
-void drawSpriteFromSheet(SpriteSheet const &spritesheet, int tx, int ty,
+void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
                          float x, float y, float w, float h) {
     unsigned int tileSize = spritesheet.getSpriteSize();
 
@@ -16,16 +16,16 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int tx, int ty,
     float ts_ = 0.25f / (float)tileSize;
 
     // Avoid dividing by zero
-    if ((float)(tx * tileSize) < (ts_)) {
+    if ((float)(xOff * tileSize) < (ts_)) {
         tx_ = 0;
     } else {
-        tx_ = 0.25f / (float)(tx * tileSize);
+        tx_ = 0.25f / (float)(xOff * tileSize);
     }
 
-    if ((float)(ty * tileSize) < (ts_)) {
+    if ((float)(yOff * tileSize) < (ts_)) {
         ty_ = 0;
     } else {
-        ty_ = 0.25f / (float)(ty * tileSize);
+        ty_ = 0.25f / (float)(yOff * tileSize);
     }
 
     // Bind the spritesheet texture...

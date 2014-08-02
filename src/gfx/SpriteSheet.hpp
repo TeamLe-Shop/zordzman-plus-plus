@@ -7,8 +7,6 @@
 /// It has a thing called a tile size, which is very
 /// important you see.
 class SpriteSheet : public Texture {
-    using Texture::Texture;
-
 public:
     /// @brief Get the current tile size
     unsigned int getTileSize() const;

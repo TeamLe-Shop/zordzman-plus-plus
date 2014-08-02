@@ -1,4 +1,4 @@
-#include "Draw.hpp"
+#include "drawingOperations.hpp"
 
 #include <cassert>
 #include <stdio.h>
@@ -6,9 +6,9 @@
 
 // TODO: Add more shit
 
-namespace draw {
-void sprite(Texture const &spritesheet, int tx, int ty, float x, float y,
-            float w, float h) {
+namespace drawingOperations {
+void drawSprite(Texture const &spritesheet, int tx, int ty, float x, float y,
+                float w, float h) {
     int ts = spritesheet.getTileSize();
     // int ss_w = spritesheet.getWidth();
     // int ss_h = spritesheet.getHeight();
@@ -55,21 +55,21 @@ void sprite(Texture const &spritesheet, int tx, int ty, float x, float y,
     Texture::unbind();
 }
 
-void rect(float x, float y, float w, float h, bool filled) {
+void drawRectangle(float x, float y, float w, float h, bool filled) {
     if (filled) {
         glVertex2f(x, y);
         glVertex2f(x + w, y);
         glVertex2f(x + w, y + h);
         glVertex2f(x, y + h);
     } else {
-        draw::line(x, y, x + w, y);
-        draw::line(x + w, y, x + w, y + h);
-        draw::line(x + w, y + h, x, y + h);
-        draw::line(x, y + h, x, y);
+        drawLine(x, y, x + w, y);
+        drawLine(x + w, y, x + w, y + h);
+        drawLine(x + w, y + h, x, y + h);
+        drawLine(x, y + h, x, y);
     }
 }
 
-void line(float x1, float y1, float x2, float y2) {
+void drawLine(float x1, float y1, float x2, float y2) {
     glVertex2f(x1, y1);
     glVertex2f(x2, y2);
 }

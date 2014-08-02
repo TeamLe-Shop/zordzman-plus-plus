@@ -1,5 +1,5 @@
 #include "gfx/Texture.hpp"
-#include "gfx/Draw.hpp"
+#include "gfx/drawingOperations.hpp"
 #include "level/Level.hpp"
 
 #include <SDL.h>
@@ -68,21 +68,23 @@ int main() {
             }
         }
 
+        using namespace drawingOperations;
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glBegin(GL_QUADS);
         for (int x = 0; x < 25; x++) {
             for (int y = 0; y < 19; y++) {
-                draw::sprite(texture, map[x][y], 0, x * 32, y * 32, 32, 32);
+                drawSprite(texture, map[x][y], 0, x * 32, y * 32, 32, 32);
             }
         }
 
-        draw::rect(64, 64, 32, 32);
+        drawRectangle(64, 64, 32, 32);
 
         glEnd();
 
         glBegin(GL_LINES);
-        draw::rect(32, 32, 32, 32, false);
+        drawRectangle(32, 32, 32, 32, false);
         glEnd();
         SDL_GL_SwapWindow(window);
     }

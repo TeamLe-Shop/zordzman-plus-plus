@@ -75,14 +75,8 @@ int main() {
                 drawSprite(sheet, level.tileAt(x, y), 0, x * 32, y * 32, 32, 32);
             }
         }
-
-        drawRectangle(64, 64, 32, 32);
-
         glEnd();
-
-        glBegin(GL_LINES);
-        drawRectangle(32, 32, 32, 32, false);
-        glEnd();
+        
         SDL_GL_SwapWindow(window);
     }
 

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 namespace {
 // Read all data from a stream into a vector of char
@@ -31,10 +32,7 @@ Level::Level(std::string const levelname) {
     m_width = data[0];
     m_height = data[1];
     m_tiles.resize(m_width * m_height);
-
-    for (size_t i = 2; i < data.size(); i++) {
-        m_tiles[i - 2] = data[i];
-    }
+    std::copy(data.begin() + 2, data.end(), m_tiles.begin());
 }
 
 void Level::setWidth(int width) { m_width = width; }

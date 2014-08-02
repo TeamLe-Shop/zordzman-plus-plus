@@ -1,7 +1,6 @@
 #include "drawingOperations.hpp"
 
 #include <cassert>
-#include <stdio.h>
 #include <SDL_opengl.h>
 
 // TODO: Add more shit
@@ -9,7 +8,7 @@
 namespace drawingOperations {
 void drawSprite(SpriteSheet const &spritesheet, int tx, int ty, float x,
                 float y, float w, float h) {
-    int ts = spritesheet.getTileSize();
+    unsigned int tileSize = spritesheet.getTileSize();
     // int ss_w = spritesheet.getWidth();
     // int ss_h = spritesheet.getHeight();
 
@@ -20,22 +19,19 @@ void drawSprite(SpriteSheet const &spritesheet, int tx, int ty, float x,
     float tx_;
     float ty_;
 
-    // actually fucking document  the requirement of ts being > 0 thanks Seb
-    assert(ts > 0);
-
-    float ts_ = 0.25f / (float)ts;
+    float ts_ = 0.25f / (float)tileSize;
 
     // Avoid dividing by zero
-    if ((float)(tx * ts) < (ts_)) {
+    if ((float)(tx * tileSize) < (ts_)) {
         tx_ = 0;
     } else {
-        tx_ = 0.25f / (float)(tx * ts);
+        tx_ = 0.25f / (float)(tx * tileSize);
     }
 
-    if ((float)(ty * ts) < (ts_)) {
+    if ((float)(ty * tileSize) < (ts_)) {
         ty_ = 0;
     } else {
-        ty_ = 0.25f / (float)(ty * ts);
+        ty_ = 0.25f / (float)(ty * tileSize);
     }
 
     // Bind the spritesheet texture...

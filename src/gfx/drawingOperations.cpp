@@ -6,27 +6,12 @@
 namespace drawingOperations {
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
                          float x, float y, float w, float h) {
-    unsigned int const sprSize = spritesheet.getSpriteSize();
-
-    // Calculate the texture coordinates
-
-    float texc_left;
-    float texc_top;
-
-    float const texSize = 0.25f / (float)sprSize;
-
-    // Avoid dividing by zero
-    if ((float)(xOff * sprSize) < texSize) {
-        texc_left = 0;
-    } else {
-        texc_left = 0.25f / (float)(xOff * sprSize);
-    }
-
-    if ((float)(yOff * sprSize) < texSize) {
-        texc_top = 0;
-    } else {
-        texc_top = 0.25f / (float)(yOff * sprSize);
-    }
+    // Transform the coordinates to OpenGL texture coordinates
+    float const sprSize = spritesheet.getSpriteSize();
+    float const texSpriteW = sprSize / spritesheet.getWidth();
+    float const texSpriteH = sprSize / spritesheet.getHeight();
+    float const texc_left = texSpriteW * xOff;
+    float const texc_top = texSpriteH * yOff;
 
     // Bind the spritesheet texture...
     Texture::bind(spritesheet);
@@ -34,11 +19,11 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     // The meat of the draw() method.
     glTexCoord2f(texc_left, texc_top);
     glVertex2f(x, y);
-    glTexCoord2f(texc_left + texSize, texc_top);
+    glTexCoord2f(texc_left + texSpriteW, texc_top);
     glVertex2f(x + w, y);
-    glTexCoord2f(texc_left + texSize, texc_top + texSize);
+    glTexCoord2f(texc_left + texSpriteW, texc_top + texSpriteH);
     glVertex2f(x + w, y + h);
-    glTexCoord2f(texc_left, texc_top + texSize);
+    glTexCoord2f(texc_left, texc_top + texSpriteH);
     glVertex2f(x, y + h);
 
     // unbind the texture.

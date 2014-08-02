@@ -7,10 +7,6 @@ namespace drawingOperations {
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int tx, int ty,
                          float x, float y, float w, float h) {
     unsigned int tileSize = spritesheet.getSpriteSize();
-    // int ss_w = spritesheet.getWidth();
-    // int ss_h = spritesheet.getHeight();
-
-    // if (tx < 0 || ty < 0 || tx > ss_w / ts || ty > ss_h / ts) ;
 
     // Correct the tx and ty values.
 

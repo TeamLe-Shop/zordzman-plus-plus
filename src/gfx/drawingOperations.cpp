@@ -7,8 +7,8 @@
 // TODO: Add more shit
 
 namespace drawingOperations {
-void drawSprite(Texture const &spritesheet, int tx, int ty, float x, float y,
-                float w, float h) {
+void drawSprite(SpriteSheet const &spritesheet, int tx, int ty, float x,
+                float y, float w, float h) {
     int ts = spritesheet.getTileSize();
     // int ss_w = spritesheet.getWidth();
     // int ss_h = spritesheet.getHeight();

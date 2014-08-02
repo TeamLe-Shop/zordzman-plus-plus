@@ -15,8 +15,6 @@ public:
     int getWidth() const;
     /// @brief Get the height of the texture
     int getHeight() const;
-    /// @brief Get tile size. Dunno m8.
-    int getTileSize() const;
     /// @brief Bind a texture for subsequent drawing calls
     ///
     /// @param texture The texture to bind
@@ -31,6 +29,4 @@ public:
 private:
     GLuint m_handle;
     int m_width, m_height;
-    // Tile width & Tile height. by default it's 8.
-    int m_tile_size = 8;
 };

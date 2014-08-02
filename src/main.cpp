@@ -55,7 +55,7 @@ int main() {
 
     initGL(800, 600);
 
-    Texture texture("resources/spritesheet.png");
+    SpriteSheet sheet("resources/spritesheet.png");
 
     bool quit = false;
 
@@ -75,7 +75,7 @@ int main() {
         glBegin(GL_QUADS);
         for (int x = 0; x < 25; x++) {
             for (int y = 0; y < 19; y++) {
-                drawSprite(texture, map[x][y], 0, x * 32, y * 32, 32, 32);
+                drawSprite(sheet, map[x][y], 0, x * 32, y * 32, 32, 32);
             }
         }
 

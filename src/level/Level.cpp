@@ -8,7 +8,7 @@ Level::Level(std::string const level) {
 
     if (!file.is_open()) {
         std::cerr << "[ERROR] Couldn't open level file resources/levels/%s" <<
-               level.c_str());
+               level.c_str();
     }
 
     // Right now, we're just taking in some basic information about the map.

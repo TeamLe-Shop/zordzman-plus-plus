@@ -51,7 +51,7 @@ int main() {
 
     initGL(800, 600);
 
-    SpriteSheet sheet("resources/spritesheet.png");
+    SpriteSheet sheet("resources/spritesheet.png", 8);
 
     bool quit = false;
 

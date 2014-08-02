@@ -1,5 +1,6 @@
 #include "SpriteSheet.hpp"
 
-unsigned int SpriteSheet::getTileSize() const { return m_tile_size; }
+unsigned int SpriteSheet::getSpriteSize() const { return m_spriteSize; }
 
-SpriteSheet::SpriteSheet(const std::string &filename) : Texture(filename) {}
+SpriteSheet::SpriteSheet(std::string const &filename, unsigned int spriteSize)
+    : Texture(filename), m_spriteSize(spriteSize) {}

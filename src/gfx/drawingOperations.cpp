@@ -6,7 +6,7 @@
 namespace drawingOperations {
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int tx, int ty,
                          float x, float y, float w, float h) {
-    unsigned int tileSize = spritesheet.getTileSize();
+    unsigned int tileSize = spritesheet.getSpriteSize();
     // int ss_w = spritesheet.getWidth();
     // int ss_h = spritesheet.getHeight();
 

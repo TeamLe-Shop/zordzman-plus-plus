@@ -52,6 +52,13 @@ int main() {
                          SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_OPENGL);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 
+    int const imgflags = IMG_INIT_PNG;
+
+    if (IMG_Init(imgflags) != imgflags) {
+        std::cerr << "Failed to initialize SDL_image: " << IMG_GetError();
+        return 1;
+    }
+
     initGL(800, 600);
 
     SpriteSheet sheet("resources/spritesheet.png");
@@ -88,6 +95,7 @@ int main() {
         SDL_GL_SwapWindow(window);
     }
 
+    IMG_Quit();
     SDL_GL_DeleteContext(gl_context);
     SDL_DestroyWindow(window);
     SDL_Quit();

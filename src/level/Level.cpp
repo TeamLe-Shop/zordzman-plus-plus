@@ -5,7 +5,7 @@ Level::Level(std::string const level) {
 	char * memblock;
 	std::ifstream file (("resources/levels/" + level).c_str(), std::ios::in|std::ios::binary|std::ios::ate);
 	
-	if (!file.is_open()) { printf("[ERROR] Couldn't open level file resources/levels/%s", level.c_str()); }
+	if (!file.is_open()) { std::cerr << "[ERROR] Couldn't open level file resources/levels/" << level.c_str() << "\n"; }
 	
 	// Right now, we're just taking in some basic information about the map.
 	

@@ -8,3 +8,4 @@ not (always?) present on OS X.
 
 ### C++11 features that can't be used because gatsan's old compiler ###
 - Inheriting constructors
+- Passing std::string to fstream constructor

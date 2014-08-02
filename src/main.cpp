@@ -69,8 +69,8 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glBegin(GL_QUADS);
-        for (int x = 0; x < 25; x++) {
-            for (int y = 0; y < 19; y++) {
+        for (int x = 0; x < level.getWidth(); x++) {
+            for (int y = 0; y < level.getHeight(); y++) {
                 drawSprite(sheet, level.tileAt(x, y), 0, x * 32, y * 32, 32,
                            32);
             }

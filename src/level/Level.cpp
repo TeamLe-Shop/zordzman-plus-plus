@@ -42,6 +42,10 @@ void Level::setWidth(int width) { m_width = width; }
 
 void Level::setHeight(int height) { m_height = height; }
 
+int Level::getWidth() const { return m_width; }
+
+int Level::getHeight() const { return m_height; }
+
 byte Level::tileAt(int x, int y) { return m_tiles[x + y * m_width]; }
 
 void Level::setTileAt(int x, int y, byte tile) {

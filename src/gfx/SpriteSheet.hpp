@@ -14,6 +14,8 @@ public:
     unsigned int getTileSize() const;
     /// @brief Get the default tile size. It's 8. Yes.
     static unsigned int constexpr getDefaultTileSize() { return 8; }
+    /// @brief Construct the spritesheet from a file
+    SpriteSheet(std::string const &filename);
 
 private:
     unsigned int m_tile_size = getDefaultTileSize();

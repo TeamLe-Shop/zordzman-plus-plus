@@ -5,7 +5,7 @@
 /// @brief Various drawing operations
 namespace drawingOperations {
 
-/// @brief Draw a sprite from a sprite sheet
+/// @brief Draw a sprite from a SpriteSheet
 ///
 /// @param spritesheet The sprite sheet to use
 /// @param tx The x offset of the sprite in the sheet

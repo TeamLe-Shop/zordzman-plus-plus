@@ -12,8 +12,11 @@ namespace drawingOperations {
 /// @param ty The y offset of the sprite in the sheet
 /// @param x Horizontal position to draw the sprite at
 /// @param y Vertical position to draw the sprite at
-/// @param w Width of the sprite
-/// @param h Height of the sprite
+/// @param w Width of the projection
+/// @param h Height of the projection
+///
+/// If the projection size differs from the tile size of the sprite sheet,
+/// the sprite will be scaled.
 ///
 /// @warning This function expects the GL drawing mode to be GL_QUADS
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int tx, int ty,

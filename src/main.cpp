@@ -30,7 +30,6 @@ void initGL(int width, int height) {
     glEnableClientState(GL_COLOR_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
-
 }
 
 int main() {
@@ -72,11 +71,12 @@ int main() {
         glBegin(GL_QUADS);
         for (int x = 0; x < 25; x++) {
             for (int y = 0; y < 19; y++) {
-                drawSprite(sheet, level.tileAt(x, y), 0, x * 32, y * 32, 32, 32);
+                drawSprite(sheet, level.tileAt(x, y), 0, x * 32, y * 32, 32,
+                           32);
             }
         }
         glEnd();
-        
+
         SDL_GL_SwapWindow(window);
     }
 

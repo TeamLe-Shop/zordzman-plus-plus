@@ -23,7 +23,8 @@ public:
     byte tileAt(int x, int y) const;
     /// @brief Set the tile at location (x, y) to t
     void setTileAt(int x, int y, byte t);
-	void render();
+    void render();
+
 private:
     std::vector<byte> m_tiles;
     int m_width, m_height;

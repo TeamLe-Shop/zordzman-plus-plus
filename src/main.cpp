@@ -53,7 +53,7 @@ int main() {
     initGL(800, 600);
 
     globalResources::init();
-    
+
     bool quit = false;
 
     while (!quit) {
@@ -70,7 +70,7 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glBegin(GL_QUADS);
-       	level.render();
+        level.render();
         glEnd();
 
         SDL_GL_SwapWindow(window);

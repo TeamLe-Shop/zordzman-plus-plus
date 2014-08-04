@@ -22,5 +22,4 @@ public:
 
 private:
     unsigned int m_spriteSize;
-	
 };

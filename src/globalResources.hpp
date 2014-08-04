@@ -3,8 +3,7 @@
 
 namespace globalResources {
 
-    void init();
-    SpriteSheet const & getSheet(char const *const key);
-    void free();
-
+void init();
+SpriteSheet const &getSheet(char const *const key);
+void free();
 }

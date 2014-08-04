@@ -53,12 +53,13 @@ void Level::setTileAt(int x, int y, byte tile) {
 }
 
 void Level::render() {
-	using namespace globalResources;
-	using namespace drawingOperations;
-	
-	for (int x = 0; x < m_width; x++) {
-		for (int y = 0; y < m_height; y++) {
-            drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32, y * 32, 32, 32);
-		}
-	}
+    using namespace globalResources;
+    using namespace drawingOperations;
+
+    for (int x = 0; x < m_width; x++) {
+        for (int y = 0; y < m_height; y++) {
+            drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32,
+                                y * 32, 32, 32);
+        }
+    }
 }

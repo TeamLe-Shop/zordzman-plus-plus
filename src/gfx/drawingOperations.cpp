@@ -16,7 +16,7 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     // Bind the spritesheet texture...
     Texture::bind(spritesheet);
 
-    // The meat of the draw() method.
+    // Draw a textured quad that represents the sprite
     glTexCoord2f(texc_left, texc_top);
     glVertex2f(x, y);
     glTexCoord2f(texc_left + texSpriteW, texc_top);

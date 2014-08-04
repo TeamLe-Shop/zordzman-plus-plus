@@ -58,7 +58,7 @@ void Level::render() {
 	
 	for (int x = 0; x < m_width; x++) {
 		for (int y = 0; y < m_height; y++) {
-			drawSpriteFromSheet(getMainSheet(), tileAt(x, y), 0, x * 32, y * 32, 32, 32);
+            drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32, y * 32, 32, 32);
 		}
 	}
 }

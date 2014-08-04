@@ -1,6 +1,7 @@
 #include "gfx/Texture.hpp"
 #include "gfx/drawingOperations.hpp"
 #include "level/Level.hpp"
+#include "globalResources.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -50,6 +51,8 @@ int main() {
     }
 
     initGL(800, 600);
+
+    globalResources::init();
     
     bool quit = false;
 
@@ -73,6 +76,7 @@ int main() {
         SDL_GL_SwapWindow(window);
     }
 
+    globalResources::free();
     IMG_Quit();
     SDL_GL_DeleteContext(gl_context);
     SDL_DestroyWindow(window);

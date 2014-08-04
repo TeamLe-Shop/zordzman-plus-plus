@@ -1,4 +1,6 @@
 #include "Level.hpp"
+#include "globalResources.hpp"
+#include "gfx/drawingOperations.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -40,12 +42,23 @@ void Level::setWidth(int width) { m_width = width; }
 
 void Level::setHeight(int height) { m_height = height; }
 
-int Level::getWidth() const { return m_width; }
+byte Level::getWidth() const { return m_width; }
 
-int Level::getHeight() const { return m_height; }
+byte Level::getHeight() const { return m_height; }
 
 byte Level::tileAt(int x, int y) const { return m_tiles[x + y * m_width]; }
 
 void Level::setTileAt(int x, int y, byte tile) {
     m_tiles[x + y * m_width] = tile;
+}
+
+void Level::render() {
+	using namespace globalResources;
+	using namespace drawingOperations;
+	
+	for (int x = 0; x < m_width; x++) {
+		for (int y = 0; y < m_height; y++) {
+			drawSpriteFromSheet(getMainSheet(), tileAt(x, y), 0, x * 32, y * 32, 32, 32);
+		}
+	}
 }

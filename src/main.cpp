@@ -35,7 +35,7 @@ void initGL(int width, int height) {
 
 int main() {
     srand(time(0));
-    Level level("kek.lvl");
+    Level level("kak.lvl");
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window =

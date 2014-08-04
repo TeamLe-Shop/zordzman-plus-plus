@@ -27,6 +27,7 @@ include_directories(${SDLIMAGE_INCLUDE_DIR})
 if(GATSAN)
 	set(SDLIMAGE_LIBRARY /Library/Frameworks/SDL2_image.framework)
 	set(SDLIMAGE_INCLUDE_DIR /Library/Frameworks/SDL2_image.framework/Headers)
+        add_compile_options(-stdlib=libc++)
 endif()
 
 include_directories(src)

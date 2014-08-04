@@ -50,7 +50,9 @@ int main() {
     }
 
     initGL(800, 600);
-    
+
+    SpriteSheet sheet("resources/spritesheet.png", 8);
+
     bool quit = false;
 
     while (!quit) {
@@ -67,7 +69,12 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glBegin(GL_QUADS);
-       	level.render();
+        for (int x = 0; x < level.getWidth(); x++) {
+            for (int y = 0; y < level.getHeight(); y++) {
+                drawSpriteFromSheet(sheet, level.tileAt(x, y), 0, x * 32,
+                                    y * 32, 32, 32);
+            }
+        }
         glEnd();
 
         SDL_GL_SwapWindow(window);

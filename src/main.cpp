@@ -11,6 +11,8 @@
 #include <stdexcept>
 #include <iostream>
 
+bool keysHeld[256] = {false};
+
 namespace {
 
 void initGL(int width, int height) {
@@ -55,7 +57,7 @@ int main() {
     globalResources::init();
 
     bool quit = false;
-
+    
     while (!quit) {
         SDL_Event event;
 
@@ -63,16 +65,24 @@ int main() {
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
+            
+    		if (event.type == SDL_KEYDOWN) {
+           		keysHeld[event.key.keysym.sym % 0x100] = true;
+         	}
+         	if (event.type == SDL_KEYUP) {
+            	keysHeld[event.key.keysym.sym % 0x100] = false;
+         	}
         }
 
-        using namespace drawingOperations;
+		if (keysHeld[SDLK_LEFT % 0x100]) {
+			std::cout << "Left Button says OUCH! \n";
+		}
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glBegin(GL_QUADS);
         level.render();
         glEnd();
-
         SDL_GL_SwapWindow(window);
     }
 

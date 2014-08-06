@@ -6,8 +6,6 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_opengl.h>
-#include <ctime>
-#include <cstdlib>
 #include <stdexcept>
 #include <iostream>
 
@@ -34,7 +32,6 @@ void initGL(int width, int height) {
 }
 
 int main() {
-    srand(time(0));
     Level kek_lvl("kek.lvl");
     Level level = kek_lvl;
 

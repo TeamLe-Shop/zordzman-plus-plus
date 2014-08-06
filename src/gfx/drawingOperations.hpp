@@ -44,4 +44,7 @@ void drawRectangle(float x, float y, float w, float h, bool filled = true);
 ///
 /// @warning This function expects the GL drawing mode to be GL_LINES
 void drawLine(float x1, float y1, float x2, float y2);
+
+/// @brief Draw text
+void drawText(std::string const &text, int x, int y);
 }

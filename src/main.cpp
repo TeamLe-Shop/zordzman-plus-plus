@@ -72,6 +72,7 @@ int main() {
 
         glBegin(GL_QUADS);
         level.render();
+        drawingOperations::drawText("Hello, 1234 World!", 100, 280);
         glEnd();
         SDL_GL_SwapWindow(window);
     }

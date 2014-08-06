@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <SDL_opengl.h>
+#include "globalResources.hpp"
 
 namespace drawingOperations {
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
@@ -47,5 +48,42 @@ void drawRectangle(float x, float y, float w, float h, bool filled) {
 void drawLine(float x1, float y1, float x2, float y2) {
     glVertex2f(x1, y1);
     glVertex2f(x2, y2);
+}
+
+void drawText(std::string const &text, int x, int y) {
+    for (char c : text) {
+        int ox, oy;
+        if (islower(c)) {
+            oy = 26;
+            ox = c - 'a';
+        } else if (isupper(c)) {
+            oy = 28;
+            ox = c - 'A';
+        } else {
+            oy = 29;
+
+            if (isdigit(c)) {
+                ox = c - '0';
+            } else {
+                switch (c) {
+                case ',':
+                    ox = 11;
+                    break;
+                case '!':
+                    ox = 16;
+                    break;
+                case ' ':
+                    ox = 28;
+                    break;
+                default:
+                    ox = 17;
+                    break;
+                }
+            }
+        }
+        SpriteSheet const &sheet = globalResources::getSheet("main");
+        drawSpriteFromSheet(sheet, ox, oy, x, y, 32, 32);
+        x += 32;
+    }
 }
 }

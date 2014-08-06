@@ -72,7 +72,19 @@ int main() {
 
         glBegin(GL_QUADS);
         level.render();
-        drawingOperations::drawText("Hello, 1234 World!", 100, 280);
+        glEnd();
+        
+        glBegin(GL_QUADS);
+        glColor3f(0.2f, 0.2f, 0.2f);
+        drawingOperations::drawRectangle(0, 0, 800, 32);
+        glEnd();
+        glBegin(GL_LINES);
+        glColor3f(1, 1, 1);
+        drawingOperations::drawLine(0, 32, 800, 32);
+        glColor3f(1, 1, 1);
+        glEnd();
+        glBegin(GL_QUADS);
+        drawingOperations::drawText("HP: 23", 0, 0, 16, 16);
         glEnd();
         SDL_GL_SwapWindow(window);
     }

@@ -4,7 +4,16 @@
 #include <SDL_opengl.h>
 #include "globalResources.hpp"
 
+
 namespace drawingOperations {
+
+const char* chars = 
+"abcdefghijklmnopqrstuvwxyz      \
+                                \
+ABCDEFGHIJKLMNOPQRSTUVWXYZ      \
+0123456789.,:;'\"!?$%()-=+/*_    ";
+
+
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
                          float x, float y, float w, float h) {
     // Transform the coordinates to OpenGL texture coordinates
@@ -50,40 +59,17 @@ void drawLine(float x1, float y1, float x2, float y2) {
     glVertex2f(x2, y2);
 }
 
-void drawText(std::string const &text, int x, int y) {
+void drawText(std::string const &text, int x, int y, int w, int h) {
+	SpriteSheet const &sheet = globalResources::getSheet("main");
     for (char c : text) {
-        int ox, oy;
-        if (islower(c)) {
-            oy = 26;
-            ox = c - 'a';
-        } else if (isupper(c)) {
-            oy = 28;
-            ox = c - 'A';
-        } else {
-            oy = 29;
-
-            if (isdigit(c)) {
-                ox = c - '0';
-            } else {
-                switch (c) {
-                case ',':
-                    ox = 11;
-                    break;
-                case '!':
-                    ox = 16;
-                    break;
-                case ' ':
-                    ox = 28;
-                    break;
-                default:
-                    ox = 17;
-                    break;
-                }
-            }
+        char* char_index = strchr(chars, c);
+        int index = char_index - chars;
+		if (char_index) {
+			drawSpriteFromSheet(sheet, (index % 32),
+				26 + (index / 32), x, y, w, h);
+        	x += w;
         }
-        SpriteSheet const &sheet = globalResources::getSheet("main");
-        drawSpriteFromSheet(sheet, ox, oy, x, y, 32, 32);
-        x += 32;
     }
 }
-}
+
+} // My little namespaaaaaace

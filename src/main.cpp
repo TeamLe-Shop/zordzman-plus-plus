@@ -82,7 +82,6 @@ int main() {
         glBegin(GL_LINES);
         	glColor3f(1, 1, 1);
        		drawingOperations::drawLine(0, 32, 800, 32);
-        	glColor3f(1, 1, 1);
         glEnd();
         
         glBegin(GL_QUADS);

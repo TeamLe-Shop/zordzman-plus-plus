@@ -3,7 +3,7 @@
 #include <cassert>
 #include <SDL_opengl.h>
 #include "globalResources.hpp"
-
+#include <string.h>
 
 namespace drawingOperations {
 

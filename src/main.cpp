@@ -67,7 +67,7 @@ int main() {
             }
         }
 
-        keys = SDL_GetKeyboardState(NULL);
+        keys = SDL_GetKeyboardState(nullptr);
         if (keys[SDL_SCANCODE_LEFT])
             std::cout << "Ouch! :(\n";
 

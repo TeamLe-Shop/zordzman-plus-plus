@@ -27,9 +27,9 @@ public:
     void setTileAt(int x, int y, byte t);
     /// @brief hurrdurr render tiles and shit
     void render();
-	/// @brief Copy level data
-	Level operator=(const Level& other);
-	
+    /// @brief Copy level data
+    Level operator=(const Level &other);
+
 private:
     std::vector<byte> m_tiles;
     byte m_width, m_height;

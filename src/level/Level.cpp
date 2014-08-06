@@ -39,7 +39,7 @@ Level::Level(std::string const levelname) {
 }
 
 Level::Level(int width, int height, std::vector<byte> tiles)
-	:m_width(width), m_height(height), m_tiles(tiles) { }
+    : m_width(width), m_height(height), m_tiles(tiles) {}
 
 void Level::setWidth(byte width) { m_width = width; }
 
@@ -67,6 +67,6 @@ void Level::render() {
     }
 }
 
-Level Level::operator=(const Level& other) {
-	return Level(m_width, m_height, other.m_tiles);
+Level Level::operator=(const Level &other) {
+    return Level(m_width, m_height, other.m_tiles);
 }

@@ -56,7 +56,7 @@ int main() {
     globalResources::init();
 
     bool quit = false;
-    const Uint8* keys;
+    const Uint8 *keys;
 
     while (!quit) {
         SDL_Event event;
@@ -66,9 +66,10 @@ int main() {
                 quit = true;
             }
         }
-        
+
         keys = SDL_GetKeyboardState(NULL);
-    	if ( keys[SDL_SCANCODE_LEFT] ) std::cout << "Ouch! :(\n";
+        if (keys[SDL_SCANCODE_LEFT])
+            std::cout << "Ouch! :(\n";
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

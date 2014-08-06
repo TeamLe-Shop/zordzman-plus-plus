@@ -13,14 +13,15 @@ void init() {
 }
 
 const SpriteSheet &getSheet(const char *const key) {
-    auto pair = sheets.find(key);
-    std::string error("Fuck I couldn't find spritesheet ");
-    error += key;
-    if (pair == sheets.end()) {
+    auto iter = sheets.find(key);
+
+    if (iter == sheets.end()) {
+        std::string error("Fuck I couldn't find spritesheet ");
+        error += key;
         throw std::runtime_error(error);
     }
 
-    return pair->second;
+    return iter->second;
 }
 
 void free() { sheets.clear(); }

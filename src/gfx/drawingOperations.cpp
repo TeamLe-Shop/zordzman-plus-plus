@@ -62,7 +62,7 @@ void drawLine(float x1, float y1, float x2, float y2) {
 void drawText(std::string const &text, int x, int y, int w, int h) {
 	SpriteSheet const &sheet = globalResources::getSheet("main");
     for (char c : text) {
-        char* char_index = strchr(chars, (int)c);
+        const char* char_index = strchr(chars, c);
         int index = char_index - chars;
 		if (char_index) {
 			drawSpriteFromSheet(sheet, (index % 32),

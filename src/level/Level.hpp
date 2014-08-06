@@ -1,8 +1,7 @@
 #pragma once
+
 #include <string>
 #include <vector>
-
-#include "gfx/drawingOperations.hpp"
 
 typedef unsigned char byte;
 

@@ -11,10 +11,12 @@ class Level {
 public:
     /// @brief Construct the level from a level name
     Level(std::string const levelname);
+    /// @brief Construct a level from a vector of TILES
+    Level(int width, int height, std::vector<byte> tiles);
     /// @brief Set the width of the level
-    void setWidth(int width);
+    void setWidth(byte width);
     /// @brief Set the height of the level
-    void setHeight(int height);
+    void setHeight(byte height);
     /// @brief Get the width of the level
     byte getWidth() const;
     /// @brief Get the height of the level
@@ -23,9 +25,12 @@ public:
     byte tileAt(int x, int y) const;
     /// @brief Set the tile at location (x, y) to t
     void setTileAt(int x, int y, byte t);
+    /// @brief hurrdurr render tiles and shit
     void render();
-
+	/// @brief Copy level data
+	Level operator=(const Level& other);
+	
 private:
     std::vector<byte> m_tiles;
-    int m_width, m_height;
+    byte m_width, m_height;
 };

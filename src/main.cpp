@@ -35,7 +35,8 @@ void initGL(int width, int height) {
 
 int main() {
     srand(time(0));
-    Level level("kak.lvl");
+    Level kek_lvl("kek.lvl");
+    Level level = kek_lvl;
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window =
@@ -68,7 +69,6 @@ int main() {
         
         keys = SDL_GetKeyboardState(NULL);
     	if ( keys[SDL_SCANCODE_LEFT] ) std::cout << "Ouch! :(\n";
-
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

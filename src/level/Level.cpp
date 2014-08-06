@@ -38,9 +38,12 @@ Level::Level(std::string const levelname) {
     std::copy(data.begin() + 2, data.end(), m_tiles.begin());
 }
 
-void Level::setWidth(int width) { m_width = width; }
+Level::Level(int width, int height, std::vector<byte> tiles)
+	:m_width(width), m_height(height), m_tiles(tiles) { }
 
-void Level::setHeight(int height) { m_height = height; }
+void Level::setWidth(byte width) { m_width = width; }
+
+void Level::setHeight(byte height) { m_height = height; }
 
 byte Level::getWidth() const { return m_width; }
 
@@ -62,4 +65,8 @@ void Level::render() {
                                 y * 32, 32, 32);
         }
     }
+}
+
+Level Level::operator=(const Level& other) {
+	return Level(m_width, m_height, other.m_tiles);
 }

@@ -31,6 +31,6 @@ public:
     Level operator=(const Level &other);
 
 private:
-    std::vector<byte> m_tiles;
     byte m_width, m_height;
+    std::vector<byte> m_tiles;
 };

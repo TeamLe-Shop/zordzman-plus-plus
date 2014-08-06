@@ -71,21 +71,30 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glBegin(GL_QUADS);
-        level.render();
+        	level.render();
         glEnd();
         
         glBegin(GL_QUADS);
-        glColor3f(0.2f, 0.2f, 0.2f);
-        drawingOperations::drawRectangle(0, 0, 800, 32);
+    		glColor3f(0.2f, 0.2f, 0.2f);
+        	drawingOperations::drawRectangle(0, 0, 800, 32);
         glEnd();
+        
         glBegin(GL_LINES);
-        glColor3f(1, 1, 1);
-        drawingOperations::drawLine(0, 32, 800, 32);
-        glColor3f(1, 1, 1);
+        	glColor3f(1, 1, 1);
+       		drawingOperations::drawLine(0, 32, 800, 32);
+        	glColor3f(1, 1, 1);
         glEnd();
+        
         glBegin(GL_QUADS);
-        drawingOperations::drawText("HP: 23", 0, 0, 16, 16);
+        	drawingOperations::drawText("HP: 23", 0, 0, 16, 16);
+        	drawingOperations::drawText("WEP:", 0, 16, 16, 16);
+        	glColor3f(0, 1, 0);
+        	drawingOperations::drawText("Zord", 64, 16, 8, 8);
+        	glColor3f(0.6, 0.6, 0.6);
+        	drawingOperations::drawText("Chicken", 64, 24, 8, 8);
+        	glColor3f(1, 1, 1);
         glEnd();
+        
         SDL_GL_SwapWindow(window);
     }
 

@@ -2,6 +2,7 @@
 #include "gfx/drawingOperations.hpp"
 #include "level/Level.hpp"
 #include "globalResources.hpp"
+#include "Screen.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -9,32 +10,11 @@
 #include <stdexcept>
 #include <iostream>
 
-namespace {
-
-void initGL(int width, int height) {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, width, height, 0, 1, -1);
-    glMatrixMode(GL_MODELVIEW);
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-}
-}
-
 int main() {
+	using namespace Screen;
     Level kek_lvl("kek.lvl");
     Level level = kek_lvl;
-
+    
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window =
         SDL_CreateWindow("Zordzman v0.0.1", SDL_WINDOWPOS_UNDEFINED,
@@ -63,35 +43,47 @@ int main() {
                 quit = true;
             }
         }
-
+        
+        float speed = 3;
+        
         keys = SDL_GetKeyboardState(nullptr);
-        if (keys[SDL_SCANCODE_LEFT])
-            std::cout << "Ouch! :(\n";
+        if (keys[SDL_SCANCODE_LEFT]) {
+            push(-speed, 0);
+        } else if (keys[SDL_SCANCODE_RIGHT]) {
+        	push(speed, 0);
+        } else if (keys[SDL_SCANCODE_UP]) {
+        	push(0, -speed);
+        } else if (keys[SDL_SCANCODE_DOWN]) {
+        	push(0, speed);
+        }
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glBegin(GL_QUADS);
         	level.render();
-        glEnd();
-        
-        glBegin(GL_QUADS);
-    		glColor3f(0.2f, 0.2f, 0.2f);
-        	drawingOperations::drawRectangle(0, 0, 800, 32);
+        	
+        	
+    		glColor4f(0.2f, 0.2f, 0.2f, 0.6f);
+        	drawingOperations::drawRectangle(get_xOffset(), get_yOffset(),
+        		800, 32);
+        	glColor3f(0.5, 0.5, 0.5);
+        	drawingOperations::drawText("HP: 23", get_xOffset(), get_yOffset(),
+        		16, 16);
+        	drawingOperations::drawText("WEP:", get_xOffset(),
+        		get_yOffset()+16, 16, 16);
+        	glColor3f(0, 1, 0);
+        	drawingOperations::drawText("Zord", get_xOffset()+64,
+        		get_yOffset()+16, 8, 8);
+        	glColor3f(0.6, 0.6, 0.6);
+        	drawingOperations::drawText("Chicken", get_xOffset()+64,
+        		get_yOffset()+24, 8, 8);
+        	glColor3f(1, 1, 1);
         glEnd();
         
         glBegin(GL_LINES);
         	glColor3f(1, 1, 1);
-       		drawingOperations::drawLine(0, 32, 800, 32);
-        glEnd();
-        
-        glBegin(GL_QUADS);
-        	drawingOperations::drawText("HP: 23", 0, 0, 16, 16);
-        	drawingOperations::drawText("WEP:", 0, 16, 16, 16);
-        	glColor3f(0, 1, 0);
-        	drawingOperations::drawText("Zord", 64, 16, 8, 8);
-        	glColor3f(0.6, 0.6, 0.6);
-        	drawingOperations::drawText("Chicken", 64, 24, 8, 8);
-        	glColor3f(1, 1, 1);
+       		drawingOperations::drawLine(get_xOffset(), get_yOffset()+32,
+       			800, 32);
         glEnd();
         
         SDL_GL_SwapWindow(window);

@@ -1,5 +1,6 @@
 zordzman-plus-plus
 ==================
+![](http://servers.tf:8080/buildStatus/icon?job=zordzman-plus-plus)
 
 The best game that ever existed. Period.
 

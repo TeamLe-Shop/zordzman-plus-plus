@@ -32,16 +32,16 @@ int main() {
 
     globalResources::init();
 
-    bool quit = false;
     const Uint8 *keys;
 
-    while (!quit) {
+    for (;;) {
         SDL_Event event;
 
-        while (SDL_PollEvent(&event)) {
+        if (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
-                quit = true;
+                break;
             }
+            continue;
         }
 
         float speed = 3;

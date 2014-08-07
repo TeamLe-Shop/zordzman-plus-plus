@@ -18,7 +18,8 @@ int main() {
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window =
         SDL_CreateWindow("Zordzman v0.0.1", SDL_WINDOWPOS_UNDEFINED,
-                         SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_OPENGL);
+                         SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT,
+                         SDL_WINDOW_OPENGL);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 
     int const imgflags = IMG_INIT_PNG;
@@ -47,6 +48,7 @@ int main() {
         float speed = 3;
         
         keys = SDL_GetKeyboardState(nullptr);
+        
         if (keys[SDL_SCANCODE_LEFT]) {
             push(-speed, 0);
         } else if (keys[SDL_SCANCODE_RIGHT]) {
@@ -61,11 +63,9 @@ int main() {
 
         glBegin(GL_QUADS);
         	level.render();
-        	
-        	
     		glColor4f(0.2f, 0.2f, 0.2f, 0.6f);
         	drawingOperations::drawRectangle(get_xOffset(), get_yOffset(),
-        		800, 32);
+        		WIDTH, 32);
         	glColor3f(0.5, 0.5, 0.5);
         	drawingOperations::drawText("HP: 23", get_xOffset(), get_yOffset(),
         		16, 16);
@@ -83,7 +83,7 @@ int main() {
         glBegin(GL_LINES);
         	glColor3f(1, 1, 1);
        		drawingOperations::drawLine(get_xOffset(), get_yOffset()+32,
-       			800, 32);
+       			WIDTH, 32);
         glEnd();
         
         SDL_GL_SwapWindow(window);

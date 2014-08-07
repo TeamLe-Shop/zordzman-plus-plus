@@ -2,6 +2,9 @@
 
 namespace Screen {
 
+const short int WIDTH = 800;
+const short int HEIGHT = 600;
+
 /// @brief Initialize OpenGL for 2D
 /// @param width The width of the screen
 /// @param height The height of the screen

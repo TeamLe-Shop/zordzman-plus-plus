@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(zordzman)
 
+option(GATSAN "You are gatsan" FALSE)
+
 # Detect compiler
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(USING_GCC TRUE)

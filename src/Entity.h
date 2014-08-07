@@ -1,5 +1,4 @@
 #pragma once
-#include "Sprite.hpp"
 
 class Entity {
     public:

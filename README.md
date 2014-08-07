@@ -38,11 +38,8 @@ and copy OpenGL.framework (It's a folder, remember!) into /Library/Frameworks (b
 
 That's about it. It's can be a little tedious, but once that's all set up you're ready to move on!
 
-Then navigate back to the zordzman-plus-plus folder where the Makefile.OSX* is and run ```make -f Makefile.OSX```.
-Then, run ```./zordzman``` and the game should be brought up!
+Then navigate back to the zordzman-plus-plus folder, and proceed to do the CMake instructions for Linux. They are almost the exact same.
 
-(*) Note: Makefile.OSX is no longer used to build the project on Mac OSX. [CMake](http://cmake.org/) is recommended.
-The usage for Mac and Linux are pretty much the same.
 
 ### Linux ###
 

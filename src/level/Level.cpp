@@ -59,14 +59,14 @@ void Level::setTileAt(int x, int y, byte tile) {
 void Level::render() {
     using namespace globalResources;
     using namespace drawingOperations;
-	using namespace Screen;
+    using namespace Screen;
 
     for (int x = 0; x < m_width; x++) {
         for (int y = 0; y < m_height; y++) {
-        	if (x*32 < get_xOffset() - 32
-        		|| y*32 < get_yOffset() - 32
-        		|| x*32 > get_xOffset() + WIDTH
-        		|| y*32 > get_yOffset() + HEIGHT) continue;
+            if (x * 32 < get_xOffset() - 32 || y * 32 < get_yOffset() - 32 ||
+                x * 32 > get_xOffset() + WIDTH ||
+                y * 32 > get_yOffset() + HEIGHT)
+                continue;
             drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32,
                                 y * 32, 32, 32);
         }

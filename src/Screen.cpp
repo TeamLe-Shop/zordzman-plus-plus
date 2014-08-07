@@ -25,13 +25,12 @@ void initGL(int width, int height) {
 }
 
 void push(float x, float y) {
-	glTranslatef(-x, -y, 0);
-	xOffs += x; yOffs += y;
+    glTranslatef(-x, -y, 0);
+    xOffs += x;
+    yOffs += y;
 }
 
 float get_xOffset() { return xOffs; }
 
 float get_yOffset() { return yOffs; }
-
 }
-

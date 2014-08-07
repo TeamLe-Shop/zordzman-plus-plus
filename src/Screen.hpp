@@ -18,5 +18,4 @@ void push(float x, float y);
 float get_xOffset();
 
 float get_yOffset();
-
 }

@@ -7,12 +7,10 @@
 
 namespace drawingOperations {
 
-const char* chars = 
-"abcdefghijklmnopqrstuvwxyz      \
+const char *chars = "abcdefghijklmnopqrstuvwxyz      \
                                 \
 ABCDEFGHIJKLMNOPQRSTUVWXYZ      \
 0123456789.,:;'\"!?$%()-=+/*_    ";
-
 
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
                          float x, float y, float w, float h) {
@@ -60,14 +58,14 @@ void drawLine(float x1, float y1, float x2, float y2) {
 }
 
 void drawText(std::string const &text, int x, int y, int w, int h) {
-	SpriteSheet const &sheet = globalResources::getSheet("main");
+    SpriteSheet const &sheet = globalResources::getSheet("main");
     for (char c : text) {
-        const char* char_index = strchr(chars, c);
+        const char *char_index = strchr(chars, c);
         int index = char_index - chars;
-		if (char_index) {
-			drawSpriteFromSheet(sheet, (index % 32),
-				26 + (index / 32), x, y, w, h);
-        	x += w;
+        if (char_index) {
+            drawSpriteFromSheet(sheet, (index % 32), 26 + (index / 32), x, y, w,
+                                h);
+            x += w;
         }
     }
 }

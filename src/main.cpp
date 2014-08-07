@@ -63,26 +63,21 @@ int main() {
         glBegin(GL_QUADS);
         level.render();
         glColor4f(0.2f, 0.2f, 0.2f, 0.6f);
-        drawingOperations::drawRectangle(get_xOffset(), get_yOffset(), WIDTH,
-                                         32);
+        using namespace drawingOperations;
+        drawRectangle(get_xOffset(), get_yOffset(), WIDTH, 32);
         glColor3f(0.5, 0.5, 0.5);
-        drawingOperations::drawText("HP: 23", get_xOffset(), get_yOffset(), 16,
-                                    16);
-        drawingOperations::drawText("WEP:", get_xOffset(), get_yOffset() + 16,
-                                    16, 16);
+        drawText("HP: 23", get_xOffset(), get_yOffset(), 16, 16);
+        drawText("WEP:", get_xOffset(), get_yOffset() + 16, 16, 16);
         glColor3f(0, 1, 0);
-        drawingOperations::drawText("Zord", get_xOffset() + 64,
-                                    get_yOffset() + 16, 8, 8);
+        drawText("Zord", get_xOffset() + 64, get_yOffset() + 16, 8, 8);
         glColor3f(0.6, 0.6, 0.6);
-        drawingOperations::drawText("Chicken", get_xOffset() + 64,
-                                    get_yOffset() + 24, 8, 8);
+        drawText("Chicken", get_xOffset() + 64, get_yOffset() + 24, 8, 8);
         glColor3f(1, 1, 1);
         glEnd();
 
         glBegin(GL_LINES);
         glColor3f(1, 1, 1);
-        drawingOperations::drawLine(get_xOffset(), get_yOffset() + 32, WIDTH,
-                                    32);
+        drawLine(get_xOffset(), get_yOffset() + 32, WIDTH, 32);
         glEnd();
 
         SDL_GL_SwapWindow(window);

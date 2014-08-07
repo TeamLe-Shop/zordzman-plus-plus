@@ -8,6 +8,5 @@ class Entity {
     int w;
     int h;
     virtual void render();
-    private:
-    Sprite spr;
+    virtual void tick();
 };

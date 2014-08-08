@@ -1,7 +1,7 @@
 #pragma once
 
 class Entity {
-    public:
+public:
     int x;
     int y;
     int w;

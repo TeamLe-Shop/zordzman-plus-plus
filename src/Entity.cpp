@@ -1,9 +1,5 @@
 #include "Entity.h"
 
-void Entity::render() {
-    
-}
+void Entity::render() {}
 
-void Entity::tick() {
-    
-}
+void Entity::tick() {}

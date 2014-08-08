@@ -61,14 +61,24 @@ void Level::render() {
     using namespace drawingOperations;
     using namespace Screen;
 
-    for (int x = 0; x < m_width; x++) {
-        for (int y = 0; y < m_height; y++) {
-            if (x * 32 < get_xOffset() - 32 || y * 32 < get_yOffset() - 32 ||
-                x * 32 > get_xOffset() + WIDTH ||
-                y * 32 > get_yOffset() + HEIGHT)
-                continue;
-            drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32,
-                                y * 32, 32, 32);
+	int minX = (int)(get_xOffset() / 32);
+	int maxX = minX + WIDTH/32;
+	
+	int minY = (int)(get_yOffset() / 32);
+	int maxY = minY + HEIGHT/32;
+	
+	if (minX < 0) minX = 0;
+	if (maxX > getWidth()-1) maxX = getWidth() - 1;
+	if (minY < 0) minY = 0;
+	if (maxY > getHeight()-1) maxY = getHeight() - 1;
+
+	printf("%d - %d, %d - %d\n", minX, maxX, minY, maxY);
+
+    for (int x = minX; x <= maxX; x++) {
+        for (int y = minY; y <= maxY; y++) {
+        	
+        	drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32, y *
+        		32, 32, 32);
         }
     }
 }

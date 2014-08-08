@@ -21,7 +21,8 @@ SDL-Image: https://www.libsdl.org/projects/SDL_image/ (Required: 2.0.0 or greate
 Building
 ========
 
-There are build instructions for Mac and Linux below.
+There are build instructions for [Mac](https://github.com/TeamLe-Shop/zordzman-plus-plus#mac-os-x)
+and [Linux](https://github.com/TeamLe-Shop/zordzman-plus-plus#linux) below.
 
 ### Mac OS X ###
 

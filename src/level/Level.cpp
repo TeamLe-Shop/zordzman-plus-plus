@@ -72,8 +72,6 @@ void Level::render() {
 	if (minY < 0) minY = 0;
 	if (maxY > getHeight()-1) maxY = getHeight() - 1;
 
-	printf("%d - %d, %d - %d\n", minX, maxX, minY, maxY);
-
     for (int x = minX; x <= maxX; x++) {
         for (int y = minY; y <= maxY; y++) {
         	

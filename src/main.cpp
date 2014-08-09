@@ -3,6 +3,7 @@
 #include "level/Level.hpp"
 #include "globalResources.hpp"
 #include "Screen.hpp"
+#include "entity/Player.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -12,8 +13,12 @@
 
 int main() {
     using namespace Screen;
+    using namespace drawingOperations;
     Level kek_lvl("kek.lvl");
     Level level = kek_lvl;
+    
+    Player player(300, 300);
+    level.add(player);
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window = SDL_CreateWindow(
@@ -21,9 +26,7 @@ int main() {
         WIDTH, HEIGHT, SDL_WINDOW_OPENGL);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 
-    int const imgflags = IMG_INIT_PNG;
-
-    if (IMG_Init(imgflags) != imgflags) {
+    if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
         std::cerr << "Failed to initialize SDL_image: " << IMG_GetError();
         return 1;
     }
@@ -62,16 +65,17 @@ int main() {
 
         glBegin(GL_QUADS);
         level.render();
-        glColor4f(0.2f, 0.2f, 0.2f, 0.6f);
-        using namespace drawingOperations;
-        drawRectangle(get_xOffset(), get_yOffset(), WIDTH, 32);
-        glColor3f(0.5, 0.5, 0.5);
-        drawText("HP: 23", get_xOffset(), get_yOffset(), 16, 16);
-        drawText("WEP:", get_xOffset(), get_yOffset() + 16, 16, 16);
+        player.render();
+        glColor3f(0.2f, 0.2f, 0.2f);
+        drawRectangle(get_xOffset(), get_yOffset()+HEIGHT-32, WIDTH, 32);
+        glColor3f(0.7, 0.7, 0.7);
+        drawText("HP: 23", get_xOffset(), get_yOffset()+HEIGHT-32, 16, 16);
+        drawText("WEP:", get_xOffset(), get_yOffset()+HEIGHT-32 + 16, 16, 16);
         glColor3f(0, 1, 0);
-        drawText("Zord", get_xOffset() + 64, get_yOffset() + 16, 8, 8);
+        drawText("Zord", get_xOffset() + 64, get_yOffset()+HEIGHT-32+ 16, 8, 8);
         glColor3f(0.6, 0.6, 0.6);
-        drawText("Chicken", get_xOffset() + 64, get_yOffset() + 24, 8, 8);
+        drawText("Chicken", get_xOffset() + 64, get_yOffset()+HEIGHT-32 + 24,
+        			8, 8);
         glColor3f(1, 1, 1);
         glEnd();
 

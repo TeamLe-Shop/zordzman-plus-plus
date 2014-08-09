@@ -4,6 +4,6 @@
 namespace globalResources {
 
 void init();
-SpriteSheet const &getSheet(char const *const key);
+SpriteSheet &getSheet(char const *const key);
 void free();
 }

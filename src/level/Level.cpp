@@ -70,15 +70,22 @@ void Level::render() {
 	if (minX < 0) minX = 0;
 	if (maxX > getWidth()-1) maxX = getWidth() - 1;
 	if (minY < 0) minY = 0;
-	if (maxY > getHeight()-1) maxY = getHeight() - 1;
+	if (maxY > getHeight()-2) maxY = getHeight() - 2;
 
     for (int x = minX; x <= maxX; x++) {
         for (int y = minY; y <= maxY; y++) {
-        	
-        	drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32, y *
-        		32, 32, 32);
+        	drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32,
+        		y * 32, 32, 32);
         }
     }
+    
+    for (auto e : entities) {
+    	e->render();
+    }
+}
+
+void Level::add(Entity e) {
+	entities.push_back(&e);
 }
 
 Level Level::operator=(const Level &other) {

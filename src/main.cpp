@@ -14,6 +14,7 @@
 int main() {
     using namespace Screen;
     using namespace drawingOperations;
+
     Level kek_lvl("kek.lvl");
     Level level = kek_lvl;
 

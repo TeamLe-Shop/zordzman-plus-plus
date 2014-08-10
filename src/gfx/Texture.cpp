@@ -56,6 +56,7 @@ TexResult load_texture(char const *const filename) {
     glTexImage2D(GL_TEXTURE_2D, 0, bytesPerPixel, surface->w, surface->h, 0,
                  texture_format, GL_UNSIGNED_BYTE, surface->pixels);
     SDL_FreeSurface(surface);
+    glBindTexture(GL_TEXTURE_2D, 0);
     return TexResult{ true, tex, surface->w, surface->h };
 }
 }

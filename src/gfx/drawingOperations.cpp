@@ -42,7 +42,6 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
 
 void drawRectangle(float x, float y, float w, float h, bool filled) {
     if (filled) {
-        std::cout << "kok\n";
         glVertex2f(x, y);
         glVertex2f(x + w, y);
         glVertex2f(x + w, y + h);

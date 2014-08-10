@@ -11,9 +11,25 @@
 #include <stdexcept>
 #include <iostream>
 
+/* if compiling with Visual Studio */
+#if defined(_MSC_VER )
+
+/* if main is defined */
+#ifdef main
+
+/* undefine main */
+#undef main
+#endif
+#endif
+
+
+
 int main() {
+
+	
     using namespace Screen;
     using namespace drawingOperations;
+	/* why no spaces between two different blocks of code? */
     Level kek_lvl("kek.lvl");
     Level level = kek_lvl;
 
@@ -37,17 +53,23 @@ int main() {
 
     const Uint8 *keys;
 
-    for (;;) {
+	bool is_runnning = true;
+
+	/* replaced for(;;) with a while because : "use right tool for the job" ... */
+    while (is_runnning) {
+
         SDL_Event event;
 
-        if (SDL_PollEvent(&event)) {
+		/* added while because fuck you! */
+        while(SDL_PollEvent(&event)) {
+
             if (event.type == SDL_QUIT) {
-                break;
+
+                is_runnning = false;
             }
-            continue;
         }
 
-        float speed = 3;
+        float speed = 1;
 
         keys = SDL_GetKeyboardState(nullptr);
 
@@ -61,8 +83,32 @@ int main() {
             push(0, speed);
         }
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		/* removed GL_DEPTH_BUFFER_BIT because depth test is disabled, thus it will always be cleared */
+        glClear(GL_COLOR_BUFFER_BIT);
 
+<<<<<<< HEAD
+			level.render(); 
+	
+		/* just why? why every draw function could not have its own glBegin and glEnd? */
+        glBegin(GL_QUADS);
+
+		/* all this code bellow relies on the fact that the level.render() left right texture binded */
+
+		/* if not, all text rendering will fail, because text rendering functions does not bind its own texture */
+
+			glColor3f(0.7f, 0.7f, 0.7f);
+			drawText("HP: 23", get_xOffset(), get_yOffset() + HEIGHT - 32, 16, 16);
+			drawText("WEP:", get_xOffset(), get_yOffset() + HEIGHT - 32 + 16, 16, 16);
+
+			glColor3f(0, 1, 0);
+			drawText("Zord", get_xOffset() + 64, get_yOffset() + HEIGHT - 32 + 16, 8, 8);
+
+			glColor3f(0.6, 0.6, 0.6);
+			drawText("Chicken", get_xOffset() + 64, get_yOffset() + HEIGHT - 32 + 24, 8, 8);
+
+		/* still why... */
+		glEnd();
+=======
         level.render();
 
         glBegin(GL_QUADS);
@@ -81,11 +127,9 @@ int main() {
                  get_yOffset() + HEIGHT - 32 + 24, 8, 8);
         glColor3f(1, 1, 1);
         glEnd();
+>>>>>>> origin/master
 
-        glBegin(GL_LINES);
-        glColor3f(1, 1, 1);
-        drawLine(get_xOffset(), get_yOffset() + 32, WIDTH, 32);
-        glEnd();
+		/* removed line rendering, pointles */
 
         SDL_GL_SwapWindow(window);
     }

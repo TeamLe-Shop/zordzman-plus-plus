@@ -2,6 +2,7 @@
 #include "globalResources.hpp"
 #include "gfx/drawingOperations.hpp"
 #include "Screen.hpp"
+#include "entity/Player.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -73,22 +74,24 @@ void Level::render() {
         maxX = getWidth() - 1;
     if (minY < 0)
         minY = 0;
-    if (maxY > getHeight() - 2)
-        maxY = getHeight() - 2;
+    if (maxY > getHeight() - 1)
+        maxY = getHeight() - 1;
 
+	glBegin(GL_QUADS);
     for (int x = minX; x <= maxX; x++) {
         for (int y = minY; y <= maxY; y++) {
             drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32,
                                 y * 32, 32, 32);
         }
     }
+	glEnd();
 
-    for (auto e : entities) {
+    for (Entity* e : entities) {
         e->render();
     }
 }
 
-void Level::add(Entity e) { entities.push_back(&e); }
+void Level::add(Entity* e) { entities.push_back(e); }
 
 Level Level::operator=(const Level &other) {
     return Level(m_width, m_height, other.m_tiles);

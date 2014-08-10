@@ -17,7 +17,7 @@ int main() {
     Level kek_lvl("kek.lvl");
     Level level = kek_lvl;
 
-    Player player(300, 300);
+    Player* player = new Player(300, 300);
     level.add(player);
 
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -63,11 +63,12 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        level.render();        
+        
         glBegin(GL_QUADS);
-        level.render();
-        player.render();
-        glColor3f(0.2f, 0.2f, 0.2f);
-        drawRectangle(get_xOffset(), get_yOffset() + HEIGHT - 32, WIDTH, 32);
+        glColor3f(1, 1, 1);
+        drawRectangle(get_xOffset(), get_yOffset() + HEIGHT - 32, WIDTH, 32,
+        			  true);
         glColor3f(0.7, 0.7, 0.7);
         drawText("HP: 23", get_xOffset(), get_yOffset() + HEIGHT - 32, 16, 16);
         drawText("WEP:", get_xOffset(), get_yOffset() + HEIGHT - 32 + 16, 16,
@@ -79,7 +80,7 @@ int main() {
         drawText("Chicken", get_xOffset() + 64,
                  get_yOffset() + HEIGHT - 32 + 24, 8, 8);
         glColor3f(1, 1, 1);
-        glEnd();
+		glEnd();
 
         glBegin(GL_LINES);
         glColor3f(1, 1, 1);

@@ -86,6 +86,7 @@ void Level::render() {
 
     for (Entity *e : entities) {
         e->render();
+        e->tick();
     }
 }
 

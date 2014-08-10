@@ -61,32 +61,34 @@ void Level::render() {
     using namespace drawingOperations;
     using namespace Screen;
 
-	int minX = (int)(get_xOffset() / 32);
-	int maxX = minX + WIDTH/32;
-	
-	int minY = (int)(get_yOffset() / 32);
-	int maxY = minY + HEIGHT/32;
-	
-	if (minX < 0) minX = 0;
-	if (maxX > getWidth()-1) maxX = getWidth() - 1;
-	if (minY < 0) minY = 0;
-	if (maxY > getHeight()-2) maxY = getHeight() - 2;
+    int minX = (int)(get_xOffset() / 32);
+    int maxX = minX + WIDTH / 32;
+
+    int minY = (int)(get_yOffset() / 32);
+    int maxY = minY + HEIGHT / 32;
+
+    if (minX < 0)
+        minX = 0;
+    if (maxX > getWidth() - 1)
+        maxX = getWidth() - 1;
+    if (minY < 0)
+        minY = 0;
+    if (maxY > getHeight() - 2)
+        maxY = getHeight() - 2;
 
     for (int x = minX; x <= maxX; x++) {
         for (int y = minY; y <= maxY; y++) {
-        	drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32,
-        		y * 32, 32, 32);
+            drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32,
+                                y * 32, 32, 32);
         }
     }
-    
+
     for (auto e : entities) {
-    	e->render();
+        e->render();
     }
 }
 
-void Level::add(Entity e) {
-	entities.push_back(&e);
-}
+void Level::add(Entity e) { entities.push_back(&e); }
 
 Level Level::operator=(const Level &other) {
     return Level(m_width, m_height, other.m_tiles);

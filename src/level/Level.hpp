@@ -36,5 +36,5 @@ public:
 private:
     byte m_width, m_height;
     std::vector<byte> m_tiles;
-	std::vector<Entity*> entities;
+    std::vector<Entity *> entities;
 };

@@ -29,7 +29,7 @@ public:
     /// @brief hurrdurr render tiles and entities
     void render();
     /// @brief Add an entity to the level
-    void add(Entity* e);
+    void add(Entity *e);
     /// @brief Copy level data
     Level operator=(const Level &other);
 

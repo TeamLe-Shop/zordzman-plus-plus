@@ -15,7 +15,8 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ      \
 0123456789.,:;'\"!?$%()-=+/*_    ";
 
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
-                         float x, float y, float w, float h) {
+                         float x, float y, float w, float h,
+                         char flip) {
     // Transform the coordinates to OpenGL texture coordinates
     float const sprSize = spritesheet.getSpriteSize();
     float const texSpriteW = sprSize / spritesheet.getWidth();
@@ -28,14 +29,28 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
 
     // Draw a textured quad that represents the sprite
     glBegin(GL_QUADS);
-    glTexCoord2f(texc_left, texc_top);
-    glVertex2f(x, y);
-    glTexCoord2f(texc_left + texSpriteW, texc_top);
-    glVertex2f(x + w, y);
-    glTexCoord2f(texc_left + texSpriteW, texc_top + texSpriteH);
-    glVertex2f(x + w, y + h);
-    glTexCoord2f(texc_left, texc_top + texSpriteH);
-    glVertex2f(x, y + h);
+    switch (flip) {
+    case NO_FLIP:
+        glTexCoord2f(texc_left, texc_top);
+        glVertex2f(x, y);
+        glTexCoord2f(texc_left + texSpriteW, texc_top);
+        glVertex2f(x + w, y);
+        glTexCoord2f(texc_left + texSpriteW, texc_top + texSpriteH);
+        glVertex2f(x + w, y + h);
+        glTexCoord2f(texc_left, texc_top + texSpriteH);
+        glVertex2f(x, y + h);
+        break;
+     case X_FLIP:
+        glTexCoord2f(texc_left, texc_top);
+        glVertex2f(x + w, y);
+        glTexCoord2f(texc_left + texSpriteW, texc_top);
+        glVertex2f(x, y);
+        glTexCoord2f(texc_left + texSpriteW, texc_top + texSpriteH);
+        glVertex2f(x, y + h);
+        glTexCoord2f(texc_left, texc_top + texSpriteH);
+        glVertex2f(x + w, y + h);
+        break;
+    }
     glEnd();
 
     // unbind the texture.

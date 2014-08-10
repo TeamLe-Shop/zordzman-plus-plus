@@ -6,6 +6,7 @@ class Player : public Entity {
 public:
     Player(float nx, float ny);
     void render();
+    void tick();
     void moveUp();
     void moveDown();
     void moveLeft();

@@ -13,11 +13,8 @@ void initGL(int width, int height) {
     glOrtho(0, width, height, 0, 1, -1);
     glMatrixMode(GL_MODELVIEW);
     glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glDisable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);

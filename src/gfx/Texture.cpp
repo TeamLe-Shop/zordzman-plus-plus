@@ -11,7 +11,7 @@ struct TexResult {
     GLuint handle;
     int width, height;
 };
-TexResult constexpr TexFail = TexResult{ false, 0, 0, 0 };
+TexResult const TexFail = TexResult{ false, 0, 0, 0 };
 
 // Kindly provided by Krootushas.
 TexResult load_texture(char const *const filename) {

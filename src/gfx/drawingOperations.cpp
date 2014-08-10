@@ -23,12 +23,11 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     float const texc_left = texSpriteW * xOff;
     float const texc_top = texSpriteH * yOff;
 
-    glBegin(GL_QUADS);
-
     // Bind the spritesheet texture...
     Texture::bind(spritesheet);
 
     // Draw a textured quad that represents the sprite
+    glBegin(GL_QUADS);
     glTexCoord2f(texc_left, texc_top);
     glVertex2f(x, y);
     glTexCoord2f(texc_left + texSpriteW, texc_top);
@@ -37,9 +36,10 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     glVertex2f(x + w, y + h);
     glTexCoord2f(texc_left, texc_top + texSpriteH);
     glVertex2f(x, y + h);
+    glEnd();
+
     // unbind the texture.
     Texture::unbind();
-    glEnd();
 }
 
 void drawRectangle(float x, float y, float w, float h, bool filled) {

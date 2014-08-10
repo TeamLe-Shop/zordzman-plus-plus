@@ -23,7 +23,7 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     float const texc_left = texSpriteW * xOff;
     float const texc_top = texSpriteH * yOff;
 
-	glBegin(GL_QUADS);
+    glBegin(GL_QUADS);
 
     // Bind the spritesheet texture...
     Texture::bind(spritesheet);
@@ -44,7 +44,7 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
 
 void drawRectangle(float x, float y, float w, float h, bool filled) {
     if (filled) {
-    	glBegin(GL_QUADS);
+        glBegin(GL_QUADS);
         glVertex2f(x, y);
         glVertex2f(x + w, y);
         glVertex2f(x + w, y + h);
@@ -59,7 +59,7 @@ void drawRectangle(float x, float y, float w, float h, bool filled) {
 }
 
 void drawLine(float x1, float y1, float x2, float y2) {
-	glBegin(GL_LINES);
+    glBegin(GL_LINES);
     glVertex2f(x1, y1);
     glVertex2f(x2, y2);
     glEnd();

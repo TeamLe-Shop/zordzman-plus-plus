@@ -11,6 +11,8 @@
 #include <stdexcept>
 #include <iostream>
 
+#pragma (lib,"SDL2.lib")
+
 int main() {
     using namespace Screen;
     using namespace drawingOperations;

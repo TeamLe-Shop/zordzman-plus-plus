@@ -66,7 +66,6 @@ int main() {
 
         level.render();
 
-        glBegin(GL_QUADS);
         glColor3f(1, 1, 1);
         drawRectangle(get_xOffset(), get_yOffset() + HEIGHT - 32, WIDTH, 32,
                       true);
@@ -81,12 +80,9 @@ int main() {
         drawText("Chicken", get_xOffset() + 64,
                  get_yOffset() + HEIGHT - 32 + 24, 8, 8);
         glColor3f(1, 1, 1);
-        glEnd();
 
-        glBegin(GL_LINES);
         glColor3f(1, 1, 1);
         drawLine(get_xOffset(), get_yOffset() + 32, WIDTH, 32);
-        glEnd();
 
         SDL_GL_SwapWindow(window);
     }

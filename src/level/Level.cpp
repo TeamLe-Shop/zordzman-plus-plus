@@ -77,14 +77,12 @@ void Level::render() {
     if (maxY > getHeight() - 1)
         maxY = getHeight() - 1;
 
-    glBegin(GL_QUADS);
     for (int x = minX; x <= maxX; x++) {
         for (int y = minY; y <= maxY; y++) {
             drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32,
                                 y * 32, 32, 32);
         }
     }
-    glEnd();
 
     for (Entity *e : entities) {
         e->render();

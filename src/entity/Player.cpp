@@ -15,3 +15,11 @@ void Player::render() {
     drawSpriteFromSheet(getSheet("main"), 0, 2, x, y, 32, 32);
     getSheet("main").setSpriteSize(8);
 }
+
+void Player::moveUp() { y -= speed; }
+
+void Player::moveDown() { y += speed; }
+
+void Player::moveLeft() { x -= speed; }
+
+void Player::moveRight() { x += speed; }

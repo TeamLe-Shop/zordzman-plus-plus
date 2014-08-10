@@ -19,6 +19,7 @@ int main() {
     Level level = kek_lvl;
 
     Player *player = new Player(300, 300);
+    player->speed = 1.5;
     level.add(player);
 
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -47,26 +48,24 @@ int main() {
             }
             continue;
         }
-
-        float speed = 3;
-
+        
         keys = SDL_GetKeyboardState(nullptr);
 
         if (keys[SDL_SCANCODE_LEFT]) {
-            push(-speed, 0);
+            player->moveLeft();
         } else if (keys[SDL_SCANCODE_RIGHT]) {
-            push(speed, 0);
+            player->moveRight();
         } else if (keys[SDL_SCANCODE_UP]) {
-            push(0, -speed);
+            player->moveUp();
         } else if (keys[SDL_SCANCODE_DOWN]) {
-            push(0, speed);
+            player->moveDown();
         }
 
         glClear(GL_COLOR_BUFFER_BIT);
 
         level.render();
 
-        glColor3f(1, 1, 1);
+        glColor3f(0.2, 0.2, 0.2);
         drawRectangle(get_xOffset(), get_yOffset() + HEIGHT - 32, WIDTH, 32,
                       true);
         glColor3f(0.7, 0.7, 0.7);
@@ -79,11 +78,15 @@ int main() {
         glColor3f(0.6, 0.6, 0.6);
         drawText("Chicken", get_xOffset() + 64,
                  get_yOffset() + HEIGHT - 32 + 24, 8, 8);
+                 
+        glColor3f(0, 0, 0);
+        drawLine(get_xOffset(), get_yOffset()+HEIGHT-32, get_xOffset() + WIDTH,
+        		 get_yOffset()+HEIGHT-32);
+        drawLine(get_xOffset(), get_yOffset()+HEIGHT-33, get_xOffset() + WIDTH,
+        		 get_yOffset()+HEIGHT-33);
+         
         glColor3f(1, 1, 1);
-
-        glColor3f(1, 1, 1);
-        drawLine(get_xOffset(), get_yOffset() + 32, WIDTH, 32);
-
+        
         SDL_GL_SwapWindow(window);
     }
 

@@ -61,6 +61,7 @@ void drawLine(float x1, float y1, float x2, float y2) {
 
 void drawText(std::string const &text, int x, int y, int w, int h) {
     SpriteSheet const &sheet = globalResources::getSheet("main");
+    Texture::bind(sheet);
     for (char c : text) {
         char const *char_index = strchr(chars, c);
         if (char_index) {
@@ -70,6 +71,7 @@ void drawText(std::string const &text, int x, int y, int w, int h) {
             x += w;
         }
     }
+    Texture::unbind();
 }
 
 } // My little namespaaaaaace

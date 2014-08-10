@@ -6,18 +6,19 @@ namespace Screen {
 float xOffs = 0, yOffs = 0;
 
 void initGL(int width, int height) {
-    glEnable(GL_BLEND);
+
+    glEnable(GL_BLEND);				
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, width, height, 0, 1, -1);
     glMatrixMode(GL_MODELVIEW);
     glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);	/* enabled second time in the same function... */
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 	/* enabled second time in the same function... */
 
     glDisable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_2D); /* enabled second time in the same function... */
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);

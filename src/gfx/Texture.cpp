@@ -11,7 +11,10 @@ struct TexResult {
     GLuint handle;
     int width, height;
 };
-TexResult constexpr TexFail = TexResult{ false, 0, 0, 0 };
+
+/* error C2127: '`anonymous-namespace'::TexFail': illegal initialization of 'constexpr' entity with a non-constant expression */
+TexResult /* constexpr */ TexFail = TexResult{ false, 0, 0, 0 };
+
 
 // Kindly provided by Krootushas.
 TexResult load_texture(char const *const filename) {

@@ -5,9 +5,7 @@
 /// @brief Various drawing operations
 namespace drawingOperations {
 
-char const NO_FLIP = 0,
-           X_FLIP  = 1,
-           Y_FLIP  = 2;
+char const NO_FLIP = 0, X_FLIP = 1, Y_FLIP = 2;
 
 /// @brief Draw a sprite from a SpriteSheet
 ///
@@ -22,8 +20,8 @@ char const NO_FLIP = 0,
 /// If the projection size differs from the tile size of the sprite sheet,
 /// the sprite will be scaled.
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
-                         float x, float y, float w, float h, char flip =        
-                         NO_FLIP);
+                         float x, float y, float w, float h,
+                         char flip = NO_FLIP);
 
 /// @brief Draw a rectangle
 ///

@@ -15,8 +15,7 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZ      \
 0123456789.,:;'\"!?$%()-=+/*_    ";
 
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
-                         float x, float y, float w, float h,
-                         char flip) {
+                         float x, float y, float w, float h, char flip) {
     // Transform the coordinates to OpenGL texture coordinates
     float const sprSize = spritesheet.getSpriteSize();
     float const texSpriteW = sprSize / spritesheet.getWidth();
@@ -40,7 +39,7 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
         glTexCoord2f(texc_left, texc_top + texSpriteH);
         glVertex2f(x, y + h);
         break;
-     case X_FLIP:
+    case X_FLIP:
         glTexCoord2f(texc_left, texc_top);
         glVertex2f(x + w, y);
         glTexCoord2f(texc_left + texSpriteW, texc_top);

@@ -48,7 +48,7 @@ int main() {
             }
             continue;
         }
-        
+
         keys = SDL_GetKeyboardState(nullptr);
 
         if (keys[SDL_SCANCODE_LEFT]) {
@@ -78,15 +78,15 @@ int main() {
         glColor3f(0.6, 0.6, 0.6);
         drawText("Chicken", get_xOffset() + 64,
                  get_yOffset() + HEIGHT - 32 + 24, 8, 8);
-                 
+
         glColor3f(0, 0, 0);
-        drawLine(get_xOffset(), get_yOffset()+HEIGHT-32, get_xOffset() + WIDTH,
-        		 get_yOffset()+HEIGHT-32);
-        drawLine(get_xOffset(), get_yOffset()+HEIGHT-33, get_xOffset() + WIDTH,
-        		 get_yOffset()+HEIGHT-33);
-         
+        drawLine(get_xOffset(), get_yOffset() + HEIGHT - 32,
+                 get_xOffset() + WIDTH, get_yOffset() + HEIGHT - 32);
+        drawLine(get_xOffset(), get_yOffset() + HEIGHT - 33,
+                 get_xOffset() + WIDTH, get_yOffset() + HEIGHT - 33);
+
         glColor3f(1, 1, 1);
-        
+
         SDL_GL_SwapWindow(window);
     }
 

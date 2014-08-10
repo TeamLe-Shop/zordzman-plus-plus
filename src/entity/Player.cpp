@@ -20,13 +20,27 @@ void Player::render() {
 }
 
 void Player::tick() {
-    if (steps > 60) steps = 0;
+    if (steps > 60)
+        steps = 0;
 }
 
-void Player::moveUp() { steps+=speed*0.8; y -= speed; }
+void Player::moveUp() {
+    steps += speed * 0.8;
+    y -= speed;
+}
 
-void Player::moveDown() { steps+=speed*0.8; y += speed; }
+void Player::moveDown() {
+    steps += speed * 0.8;
+    y += speed;
+}
 
-void Player::moveLeft() { steps+=speed*0.8;; x -= speed; }
+void Player::moveLeft() {
+    steps += speed * 0.8;
+    ;
+    x -= speed;
+}
 
-void Player::moveRight() { steps+=speed*0.8; x += speed; }
+void Player::moveRight() {
+    steps += speed * 0.8;
+    x += speed;
+}

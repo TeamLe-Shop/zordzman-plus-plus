@@ -2,6 +2,8 @@
 #include "gfx/drawingOperations.hpp"
 #include "globalResources.hpp"
 
+#include <SDL.h>
+
 float steps = 0;
 
 Player::Player(float nx, float ny) {
@@ -20,6 +22,19 @@ void Player::render() {
 }
 
 void Player::tick() {
+
+    Uint8 const *keys = SDL_GetKeyboardState(nullptr);
+
+    if (keys[SDL_SCANCODE_LEFT]) {
+        moveLeft();
+    } else if (keys[SDL_SCANCODE_RIGHT]) {
+        moveRight();
+    } else if (keys[SDL_SCANCODE_UP]) {
+        moveUp();
+    } else if (keys[SDL_SCANCODE_DOWN]) {
+        moveDown();
+    }
+
     if (steps > 60)
         steps = 0;
 }
@@ -44,3 +59,5 @@ void Player::moveRight() {
     steps += speed * 0.8;
     x += speed;
 }
+
+Player *Player::clone() const { return new Player(*this); }

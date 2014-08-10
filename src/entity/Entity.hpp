@@ -9,4 +9,5 @@ public:
     virtual void render();
     virtual void tick();
     virtual ~Entity();
+    virtual Entity *clone() const = 0;
 };

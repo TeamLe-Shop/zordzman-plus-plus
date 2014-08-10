@@ -84,14 +84,24 @@ void Level::render() {
         }
     }
 
-    for (Entity *e : entities) {
+    for (auto const &e : entities) {
         e->render();
         e->tick();
     }
 }
 
-void Level::add(Entity *e) { entities.push_back(e); }
+void Level::add(Entity *e) {
+    entities.push_back(std::move(std::unique_ptr<Entity>(e)));
+}
 
-Level Level::operator=(const Level &other) {
-    return Level(m_width, m_height, other.m_tiles);
+Level &Level::operator=(const Level &other) {
+    m_width = other.m_width;
+    m_height = other.m_height;
+    m_tiles = other.m_tiles;
+
+    for (auto const &e : other.entities) {
+        entities.push_back(std::move(std::unique_ptr<Entity>(e->clone())));
+    }
+
+    return *this;
 }

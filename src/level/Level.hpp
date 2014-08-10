@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 typedef unsigned char byte;
 
@@ -31,10 +32,11 @@ public:
     /// @brief Add an entity to the level
     void add(Entity *e);
     /// @brief Copy level data
-    Level operator=(const Level &other);
+    Level &operator=(const Level &other);
+    Level() = default;
 
 private:
-    byte m_width, m_height;
+    byte m_width = 0, m_height = 0;
     std::vector<byte> m_tiles;
-    std::vector<Entity *> entities;
+    std::vector<std::unique_ptr<Entity>> entities;
 };

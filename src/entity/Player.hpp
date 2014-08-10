@@ -12,4 +12,5 @@ public:
     void moveLeft();
     void moveRight();
     float speed;
+    Player *clone() const;
 };

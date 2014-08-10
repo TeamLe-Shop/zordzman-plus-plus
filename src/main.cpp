@@ -15,12 +15,14 @@ int main() {
     using namespace Screen;
     using namespace drawingOperations;
 
-    Level kek_lvl("kek.lvl");
-    Level level = kek_lvl;
-
-    Player *player = new Player(300, 300);
-    player->speed = 1.5;
-    level.add(player);
+    Level level;
+    {
+        Level kek_lvl("kek.lvl");
+        Player *player = new Player(300, 300);
+        player->speed = 1.5;
+        kek_lvl.add(player);
+        level = kek_lvl;
+    }
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window = SDL_CreateWindow(
@@ -37,8 +39,6 @@ int main() {
 
     globalResources::init();
 
-    const Uint8 *keys;
-
     for (;;) {
         SDL_Event event;
 
@@ -47,18 +47,6 @@ int main() {
                 break;
             }
             continue;
-        }
-
-        keys = SDL_GetKeyboardState(nullptr);
-
-        if (keys[SDL_SCANCODE_LEFT]) {
-            player->moveLeft();
-        } else if (keys[SDL_SCANCODE_RIGHT]) {
-            player->moveRight();
-        } else if (keys[SDL_SCANCODE_UP]) {
-            player->moveUp();
-        } else if (keys[SDL_SCANCODE_DOWN]) {
-            player->moveDown();
         }
 
         glClear(GL_COLOR_BUFFER_BIT);

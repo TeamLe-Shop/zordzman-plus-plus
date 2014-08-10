@@ -1,6 +1,7 @@
 #include "drawingOperations.hpp"
 
 #include <cassert>
+#include <cstddef>
 #include <SDL_opengl.h>
 #include "globalResources.hpp"
 #include <string.h>
@@ -61,8 +62,8 @@ void drawText(std::string const &text, int x, int y, int w, int h) {
     SpriteSheet const &sheet = globalResources::getSheet("main");
     for (char c : text) {
         const char *char_index = strchr(chars, c);
-        int index = char_index - chars;
         if (char_index) {
+            ptrdiff_t index = char_index - chars;
             drawSpriteFromSheet(sheet, (index % 32), 26 + (index / 32), x, y, w,
                                 h);
             x += w;

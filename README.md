@@ -2,7 +2,7 @@ zordzman-plus-plus
 ==================
 ![](http://servers.tf:8080/buildStatus/icon?job=zordzman-plus-plus)
 
-The best game that ever existed. Period.
+The best game that ever existed, if it weren't for JavaCakess' cancerous changes.
 
 Zordzman-plus-plus (Zordzman++) will be a remake of
 the original Zordzman created by JavaCakess in, well, Java.
@@ -62,7 +62,7 @@ make
 Contributing
 ============
 
-Anyone is welcome to contribute!
+Anyone is welcome to contribute! (Apart from gatsan lil)
 Just make sure to read [CONTRIBUTING.md](CONTRIBUTING.md) before doing so!
 
 We'll try our best to make collaborating on Zordzman with any OS a good experience!

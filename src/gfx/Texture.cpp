@@ -76,14 +76,14 @@ int Texture::getWidth() const { return m_width; }
 
 int Texture::getHeight() const { return m_height; }
 
-void Texture::bind(const Texture &texture) {
+void Texture::bind(Texture const &texture) {
     glBindTexture(GL_TEXTURE_2D, texture.m_handle);
 }
 void Texture::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 Texture::~Texture() { glDeleteTextures(1, &m_handle); }
 
-Texture::Texture(const std::string &filename) {
+Texture::Texture(std::string const &filename) {
     if (!loadFromFile(filename)) {
         throw std::runtime_error("Failed to construct texture.");
     }

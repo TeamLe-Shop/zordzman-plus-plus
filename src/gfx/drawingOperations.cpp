@@ -19,7 +19,7 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     float const texc_top = texSpriteH * yOff;
 
     // Bind the spritesheet texture...
-    Texture::bind(spritesheet);
+    sys::Texture::bind(spritesheet);
 
     // Draw a textured quad that represents the sprite
     glBegin(GL_QUADS);
@@ -48,7 +48,7 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     glEnd();
 
     // unbind the texture.
-    Texture::unbind();
+    sys::Texture::unbind();
 }
 
 void drawRectangle(float x, float y, float w, float h, bool filled) {

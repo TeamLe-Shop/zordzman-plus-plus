@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Texture.hpp"
+#include "sys/Texture.hpp"
 
 /// @brief A Texture that acts as a sprite sheet
 ///
@@ -10,7 +10,7 @@
 /// This property is called the "Sprite size" of the sprite sheet.
 /// There must be no gaps between the sprites.
 ///
-class SpriteSheet : public Texture {
+class SpriteSheet : public sys::Texture {
 public:
     /// @brief Get the current sprite size
     unsigned int getSpriteSize() const;

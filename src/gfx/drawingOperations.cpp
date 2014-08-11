@@ -21,14 +21,7 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     float const texc_left = texSpriteW * xOff;
     float const texc_top = texSpriteH * yOff;
 
-    // Whether we're using the same spritesheet (currentSheet == spritesheet)
-    bool sameSheet = true;
-
-    if (currentSheet != &spritesheet) {
-        sameSheet = false;
-        sys::Texture::unbind();
-        sys::Texture::bind(spritesheet);
-    }
+    sys::Texture::bind(spritesheet);
 
     // Draw a textured quad that represents the sprite
     glBegin(GL_QUADS);
@@ -54,6 +47,7 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
         glVertex2f(x + w, y + h);
         break;
     }
+    sys::Texture::unbind();
     glEnd();
 }
 

@@ -5,6 +5,8 @@
 #include <iostream>
 #include <cassert>
 
+namespace sys {
+
 namespace {
 struct TexResult {
     bool ok;
@@ -87,4 +89,5 @@ Texture::Texture(std::string const &filename) {
     if (!loadFromFile(filename)) {
         throw std::runtime_error("Failed to construct texture.");
     }
+}
 }

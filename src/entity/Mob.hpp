@@ -12,9 +12,11 @@ typedef enum {
     EAST
 } Direction;
 
+/// @brief Return the string name of a direction.
+///
+/// @param d The direction
 std::string directionName(Direction d);
-
-};
+}
 
 using namespace mob;
 

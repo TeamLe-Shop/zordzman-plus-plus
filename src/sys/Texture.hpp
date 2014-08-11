@@ -4,6 +4,8 @@
 
 #include <SDL_opengl.h>
 
+namespace sys {
+
 /// @brief Texture
 class Texture {
 public:
@@ -30,3 +32,4 @@ private:
     GLuint m_handle;
     int m_width, m_height;
 };
+}

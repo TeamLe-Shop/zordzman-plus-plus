@@ -36,10 +36,7 @@ void Player::render() {
 }
 
 void Player::tick() {
-    
     input();
-
-    std::cout << "Player Direction: " << directionName(m_direction) << "\n";
 
     if (steps > 60)
         steps = 0;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sys/Window.hpp"
+#include "sys/RenderWindow.hpp"
 #include "sys/System.hpp"
 #include "level/Level.hpp"
 
@@ -12,6 +12,6 @@ public:
 
 private:
     sys::System m_system;
-    sys::Window m_window;
+    sys::RenderWindow m_window;
     Level m_level;
 };

@@ -9,8 +9,11 @@
 
 namespace drawingOperations {
 
+SpriteSheet* currentSheet = NULL;
+
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
                          float x, float y, float w, float h, char flip) {
+
     // Transform the coordinates to OpenGL texture coordinates
     float const sprSize = spritesheet.getSpriteSize();
     float const texSpriteW = sprSize / spritesheet.getWidth();
@@ -18,8 +21,14 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     float const texc_left = texSpriteW * xOff;
     float const texc_top = texSpriteH * yOff;
 
-    // Bind the spritesheet texture...
-    Texture::bind(spritesheet);
+    // Whether we're using the same spritesheet (currentSheet == spritesheet)
+    bool sameSheet = true;
+
+    if (currentSheet != &spritesheet) {
+        sameSheet = false;
+        sys::Texture::unbind();
+        sys::Texture::bind(spritesheet);
+    }
 
     // Draw a textured quad that represents the sprite
     glBegin(GL_QUADS);
@@ -46,13 +55,12 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
         break;
     }
     glEnd();
-
-    // unbind the texture.
-    Texture::unbind();
 }
 
 void drawRectangle(float x, float y, float w, float h, bool filled) {
+
     if (filled) {
+
         glBegin(GL_QUADS);
         glVertex2f(x, y);
         glVertex2f(x + w, y);
@@ -68,6 +76,7 @@ void drawRectangle(float x, float y, float w, float h, bool filled) {
 }
 
 void drawLine(float x1, float y1, float x2, float y2) {
+
     glBegin(GL_LINES);
     glVertex2f(x1, y1);
     glVertex2f(x2, y2);

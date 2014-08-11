@@ -4,6 +4,7 @@
 #include "globalResources.hpp"
 #include "Screen.hpp"
 #include "entity/Player.hpp"
+#include "sys/Window.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -19,10 +20,7 @@ int main() {
     level.add(new Player(300, 300, 1.5));
 
     SDL_Init(SDL_INIT_EVERYTHING);
-    SDL_Window *window = SDL_CreateWindow(
-        "Zordzman v0.0.1", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        WIDTH, HEIGHT, SDL_WINDOW_OPENGL);
-    SDL_GLContext gl_context = SDL_GL_CreateContext(window);
+    sys::Window window(WIDTH, HEIGHT, "Zordzman v0.0.1");
 
     if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
         std::cerr << "Failed to initialize SDL_image: " << IMG_GetError();
@@ -69,12 +67,10 @@ int main() {
 
         glColor3f(1, 1, 1);
 
-        SDL_GL_SwapWindow(window);
+        window.present();
     }
 
     globalResources::free();
     IMG_Quit();
-    SDL_GL_DeleteContext(gl_context);
-    SDL_DestroyWindow(window);
     SDL_Quit();
 }

@@ -11,7 +11,7 @@ public:
     void render();
     void tick();
     Player *clone() const;
-    
+
 private:
     void input();
     void moveUp();

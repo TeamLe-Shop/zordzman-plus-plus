@@ -57,7 +57,7 @@ void Level::setTileAt(int x, int y, byte tile) {
     m_tiles[x + y * m_width] = tile;
 }
 
-void Level::render() {
+void Level::render() const {
     using namespace globalResources;
     using namespace drawingOperations;
     using namespace Screen;

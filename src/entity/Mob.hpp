@@ -14,7 +14,7 @@ typedef enum {
 
 std::string directionName(Direction d);
 
-};
+}
 
 using namespace mob;
 

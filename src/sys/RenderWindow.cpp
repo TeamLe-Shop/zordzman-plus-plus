@@ -1,4 +1,4 @@
-#include "Window.hpp"
+#include "RenderWindow.hpp"
 
 #include <SDL_opengl.h>
 
@@ -22,17 +22,18 @@ void initGL(int width, int height) {
 }
 }
 
-Window::Window(unsigned width, unsigned height, std::string const title, int x,
-               int y, Uint32 flags) {
+RenderWindow::RenderWindow(unsigned width, unsigned height,
+                           std::string const title, int x, int y,
+                           Uint32 flags) {
     m_handle = SDL_CreateWindow(title.c_str(), x, y, width, height, flags);
     m_glContext = SDL_GL_CreateContext(m_handle);
     initGL(width, height);
 }
 
-Window::~Window() {
+RenderWindow::~RenderWindow() {
     SDL_GL_DeleteContext(m_glContext);
     SDL_DestroyWindow(m_handle);
 }
 
-void Window::present() { SDL_GL_SwapWindow(m_handle); }
+void RenderWindow::present() { SDL_GL_SwapWindow(m_handle); }
 }

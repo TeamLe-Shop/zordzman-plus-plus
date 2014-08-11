@@ -4,13 +4,15 @@
 
 class Player : public Entity {
 public:
-    Player(float nx, float ny);
+    Player(float x, float y, float speed);
     void render();
     void tick();
+    Player *clone() const;
+
+private:
     void moveUp();
     void moveDown();
     void moveLeft();
     void moveRight();
-    float speed;
-    Player *clone() const;
+    float m_speed;
 };

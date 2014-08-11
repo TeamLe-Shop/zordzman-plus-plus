@@ -15,12 +15,8 @@ int main() {
     using namespace Screen;
     using namespace drawingOperations;
 
-    Level level;
-    {
-        Level kek_lvl("kek.lvl");
-        kek_lvl.add(new Player(300, 300, 1.5));
-        level = kek_lvl;
-    }
+    Level level("kek.lvl");
+    level.add(new Player(300, 300, 1.5));
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window = SDL_CreateWindow(

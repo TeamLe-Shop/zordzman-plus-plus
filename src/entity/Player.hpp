@@ -4,7 +4,7 @@
 
 class Player : public Entity {
 public:
-    Player(float x, float y, float speed);
+    Player(float x, float y, float speed = 1.0f);
     void render();
     void tick();
     Player *clone() const;

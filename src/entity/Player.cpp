@@ -15,19 +15,19 @@ void Player::render() {
 
     getSheet("main").setSpriteSize(16);
     switch (m_direction) {
-    case DOWN:
+    case SOUTH:
         drawSpriteFromSheet(getSheet("main"), 0, 2, m_x, m_y, 32, 32,
                             steps < 30 ? NO_FLIP : X_FLIP);
         break;
-    case UP:
+    case NORTH:
         drawSpriteFromSheet(getSheet("main"), 3, 2, m_x, m_y, 32, 32,
                             steps < 30 ? NO_FLIP : X_FLIP);
         break;
-    case LEFT:
+    case WEST:
         drawSpriteFromSheet(getSheet("main"), steps < 30 ? 1 : 2, 2, m_x, m_y,
                             32, 32, X_FLIP);
         break;
-    case RIGHT:
+    case EAST:
         drawSpriteFromSheet(getSheet("main"), steps < 30 ? 1 : 2, 2, m_x, m_y,
                             32, 32, NO_FLIP);
         break;
@@ -64,25 +64,25 @@ void Player::input() {
 void Player::moveUp() {
     steps -= m_speed * 0.8;
     m_y -= m_speed;
-    m_direction = UP;
+    m_direction = NORTH;
 }
 
 void Player::moveDown() {
     steps += m_speed * 0.8;
     m_y += m_speed;
-    m_direction = DOWN;
+    m_direction = SOUTH;
 }
 
 void Player::moveLeft() {
     steps -= m_speed * 0.8;
     m_x -= m_speed;
-    m_direction = LEFT;
+    m_direction = WEST;
 }
 
 void Player::moveRight() {
     steps += m_speed * 0.8;
     m_x += m_speed;
-    m_direction = RIGHT;
+    m_direction = EAST;
 }
 
 Player *Player::clone() const { return new Player(*this); }

@@ -6,10 +6,10 @@ namespace mob {
 
 std::string directionName(Direction d) {
     switch (d) {
-    case UP: return std::string("Up");
-    case DOWN: return std::string("Down");
-    case LEFT: return std::string("Left");
-    case RIGHT: return std::string("Right");
+    case NORTH: return std::string("North");
+    case SOUTH: return std::string("South");
+    case WEST: return std::string("West");
+    case EAST: return std::string("East");
     default: return std::string("Invalid");
     }
 }

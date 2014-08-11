@@ -9,11 +9,6 @@
 
 namespace drawingOperations {
 
-char const *chars = "abcdefghijklmnopqrstuvwxyz      \
-                                \
-ABCDEFGHIJKLMNOPQRSTUVWXYZ      \
-0123456789.,:;'\"!?$%()-=+/*_    ";
-
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
                          float x, float y, float w, float h, char flip) {
     // Transform the coordinates to OpenGL texture coordinates
@@ -82,6 +77,11 @@ void drawLine(float x1, float y1, float x2, float y2) {
 void drawText(std::string const &text, int x, int y, int w, int h) {
     SpriteSheet const &sheet = globalResources::getSheet("main");
     for (char c : text) {
+        char const *const chars = "abcdefghijklmnopqrstuvwxyz      "
+                                  "                                "
+                                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ      "
+                                  "0123456789.,:;'\"!?$%()-=+/*_   ";
+
         char const *char_index = strchr(chars, c);
         if (char_index) {
             ptrdiff_t index = char_index - chars;

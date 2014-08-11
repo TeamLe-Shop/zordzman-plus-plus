@@ -27,8 +27,6 @@ int main() {
         return 1;
     }
 
-    initGL(800, 600);
-
     globalResources::init();
 
     for (;;) {

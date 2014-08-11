@@ -1,11 +1,32 @@
 #include "Window.hpp"
 
+#include <SDL_opengl.h>
+
 namespace sys {
+
+namespace {
+void initGL(int width, int height) {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, width, height, 0, 1, -1);
+    glMatrixMode(GL_MODELVIEW);
+    glEnable(GL_TEXTURE_2D);
+
+    glDisable(GL_DEPTH_TEST);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+}
 
 Window::Window(unsigned width, unsigned height, std::string const title, int x,
                int y, Uint32 flags) {
     m_handle = SDL_CreateWindow(title.c_str(), x, y, width, height, flags);
     m_glContext = SDL_GL_CreateContext(m_handle);
+    initGL(width, height);
 }
 
 Window::~Window() {

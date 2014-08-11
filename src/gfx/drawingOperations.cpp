@@ -80,7 +80,7 @@ void drawText(std::string const &text, int x, int y, int w, int h) {
         char const *const chars = "abcdefghijklmnopqrstuvwxyz      "
                                   "                                "
                                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ      "
-                                  "0123456789.,:;'\"!?$%()-=+/*_   ";
+                                  "0123456789.,:;'\"!?$%()-=+/*_    ";
 
         char const *char_index = strchr(chars, c);
         if (char_index) {

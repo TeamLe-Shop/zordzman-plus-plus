@@ -18,8 +18,7 @@ int main() {
     Level level;
     {
         Level kek_lvl("kek.lvl");
-        Player *player = new Player(300, 300, 1.5);
-        kek_lvl.add(player);
+        kek_lvl.add(new Player(300, 300, 1.5));
         level = kek_lvl;
     }
 

@@ -14,7 +14,7 @@ void init() {
                    std::forward_as_tuple("resources/spritesheet.png", 8));
 }
 
-SpriteSheet &getSheet(const char *const key) {
+SpriteSheet &getSheet(char const *const key) {
     auto iter = sheets.find(key);
 
     if (iter == sheets.end()) {

@@ -22,7 +22,6 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     float const texc_top = texSpriteH * yOff;
 
     if (&spritesheet != currentSheet) {
-        sys::Texture::unbind();
         sys::Texture::bind(spritesheet);
         currentSheet = &spritesheet;
     }

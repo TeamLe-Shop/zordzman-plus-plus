@@ -46,7 +46,7 @@ void Game::exec() {
         auto const width = m_window.getWidth();
         auto const height = m_window.getHeight();
 
-        char* hp_str = (char*)malloc(8);
+        char hp_str[8];
 
         sprintf(hp_str, "HP: %d", player->getHealth());
 

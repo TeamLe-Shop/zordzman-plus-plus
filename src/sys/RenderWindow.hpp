@@ -17,9 +17,12 @@ public:
     RenderWindow(RenderWindow const &other) = delete;
     RenderWindow &operator=(RenderWindow const &other) = delete;
     void present();
+    unsigned getWidth() const;
+    unsigned getHeight() const;
 
 private:
     SDL_Window *m_handle;
     SDL_GLContext m_glContext;
+    unsigned m_width, m_height;
 };
 }

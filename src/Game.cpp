@@ -1,6 +1,5 @@
 #include "Game.hpp"
 
-#include "Screen.hpp"
 #include "globalResources.hpp"
 #include "entity/Player.hpp"
 #include "gfx/drawingOperations.hpp"
@@ -9,14 +8,16 @@
 #include <SDL_image.h>
 #include <iostream>
 
-Game::Game()
-    : m_window(Screen::WIDTH, Screen::HEIGHT, "Zordzman v0.0.1"),
-      m_level("kek.lvl") {
+Game::Game() : m_window(800, 600, "Zordzman v0.0.1"), m_level("kek.lvl") {
+    m_instance = this;
     globalResources::init();
     m_level.add(new Player(300, 300, 1.5));
 }
 
-Game::~Game() { globalResources::free(); }
+Game::~Game() {
+    globalResources::free();
+    m_instance = nullptr;
+}
 
 void Game::exec() {
     for (;;) {
@@ -33,31 +34,37 @@ void Game::exec() {
 
         m_level.render();
 
-        using namespace Screen;
         using namespace drawingOperations;
+        auto const width = m_window.getWidth();
+        auto const height = m_window.getHeight();
 
         glColor3f(0.2, 0.2, 0.2);
-        drawRectangle(get_xOffset(), get_yOffset() + HEIGHT - 32, WIDTH, 32,
-                      true);
+        drawRectangle(0, 0 + height - 32, width, 32, true);
         glColor3f(0.7, 0.7, 0.7);
-        drawText("HP: 23", get_xOffset(), get_yOffset() + HEIGHT - 32, 16, 16);
-        drawText("WEP:", get_xOffset(), get_yOffset() + HEIGHT - 32 + 16, 16,
-                 16);
+        drawText("HP: 23", 0, 0 + height - 32, 16, 16);
+        drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
         glColor3f(0, 1, 0);
-        drawText("Zord", get_xOffset() + 64, get_yOffset() + HEIGHT - 32 + 16,
-                 8, 8);
+        drawText("Zord", 0 + 64, 0 + height - 32 + 16, 8, 8);
         glColor3f(0.6, 0.6, 0.6);
-        drawText("Chicken", get_xOffset() + 64,
-                 get_yOffset() + HEIGHT - 32 + 24, 8, 8);
+        drawText("Chicken", 0 + 64, 0 + height - 32 + 24, 8, 8);
 
         glColor3f(0, 0, 0);
-        drawLine(get_xOffset(), get_yOffset() + HEIGHT - 32,
-                 get_xOffset() + WIDTH, get_yOffset() + HEIGHT - 32);
-        drawLine(get_xOffset(), get_yOffset() + HEIGHT - 33,
-                 get_xOffset() + WIDTH, get_yOffset() + HEIGHT - 33);
+        drawLine(0, 0 + height - 32, 0 + width, 0 + height - 32);
+        drawLine(0, 0 + height - 33, 0 + width, 0 + height - 33);
 
         glColor3f(1, 1, 1);
 
         m_window.present();
     }
 }
+
+Game *Game::m_instance;
+
+Game &Game::get() {
+    if (!m_instance) {
+        throw std::runtime_error("Game::get(): Game instance is null.");
+    }
+    return *m_instance;
+}
+
+sys::RenderWindow &Game::getWindow() { return m_window; }

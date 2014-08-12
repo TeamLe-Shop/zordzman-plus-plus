@@ -1,8 +1,8 @@
 #include "Level.hpp"
 #include "globalResources.hpp"
 #include "gfx/drawingOperations.hpp"
-#include "Screen.hpp"
 #include "entity/Player.hpp"
+#include "Game.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -60,13 +60,13 @@ void Level::setTileAt(int x, int y, byte tile) {
 void Level::render() const {
     using namespace globalResources;
     using namespace drawingOperations;
-    using namespace Screen;
+    auto &window = Game::get().getWindow();
 
-    int minX = (int)(get_xOffset() / 32);
-    int maxX = minX + WIDTH / 32;
+    int minX = (int)(0 / 32);
+    int maxX = minX + window.getWidth() / 32;
 
-    int minY = (int)(get_yOffset() / 32);
-    int maxY = minY + HEIGHT / 32;
+    int minY = (int)(0 / 32);
+    int maxY = minY + window.getHeight() / 32;
 
     if (minX < 0)
         minX = 0;

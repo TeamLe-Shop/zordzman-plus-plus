@@ -9,7 +9,7 @@
 
 namespace drawingOperations {
 
-SpriteSheet* currentSheet = NULL;
+SpriteSheet *currentSheet = NULL;
 
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
                          float x, float y, float w, float h, char flip) {
@@ -24,7 +24,7 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     if (&spritesheet != currentSheet) {
         sys::Texture::unbind();
         sys::Texture::bind(spritesheet);
-        currentSheet = (SpriteSheet*)&spritesheet;
+        currentSheet = (SpriteSheet *)&spritesheet;
     }
 
     // Draw a textured quad that represents the sprite

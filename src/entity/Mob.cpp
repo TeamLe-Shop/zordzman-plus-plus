@@ -18,7 +18,6 @@ std::string directionName(Direction d) {
         return std::string("Invalid");
     }
 }
-
 }
 
 using namespace mob;

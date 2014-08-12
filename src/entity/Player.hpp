@@ -17,12 +17,18 @@ public:
     void render();
     /// @brief 'tick' the player.
     void tick();
+    /// @brief Clone the player
     Player *clone() const;
 
 private:
+    /// @brief Check for input form the keyboard.
     void input();
+    /// @brief Move the player up.
     void moveUp();
+    /// @brief Move the player down.
     void moveDown();
+    /// @brief Move the player left.
     void moveLeft();
+    /// @brief Move the player right.
     void moveRight();
 };

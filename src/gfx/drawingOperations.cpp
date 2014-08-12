@@ -21,6 +21,9 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     float const texc_left = texSpriteW * xOff;
     float const texc_top = texSpriteH * yOff;
 
+    // If the spritesheet passed in isn't the currentSheet, bind
+    // the spritesheet instead, and set currentSheet to the address
+    // of spritesheet.
     if (&spritesheet != currentSheet) {
         sys::Texture::bind(spritesheet);
         currentSheet = &spritesheet;
@@ -54,10 +57,12 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
 }
 
 void drawRectangle(float x, float y, float w, float h, bool filled) {
+    // Unbind any textures if we have any bound.
     if (currentSheet) {
         sys::Texture::unbind();
         currentSheet = nullptr;
     }
+    // We can choose between a filled whole rectangle, or just an outline.
     if (filled) {
 
         glBegin(GL_QUADS);
@@ -94,8 +99,10 @@ void drawText(std::string const &text, int x, int y, int w, int h) {
                                   "0123456789.,:;'\"!?$%()-=+/*_    ";
 
         char const *char_index = strchr(chars, c);
+        // If the current character is found in chars...
         if (char_index) {
             ptrdiff_t index = char_index - chars;
+            // Find it and draw it.
             drawSpriteFromSheet(sheet, (index % 32), 26 + (index / 32), x, y, w,
                                 h);
             x += w;

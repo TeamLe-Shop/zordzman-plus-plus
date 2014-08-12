@@ -18,6 +18,7 @@ SpriteSheet &getSheet(char const *const key) {
     auto iter = sheets.find(key);
 
     if (iter == sheets.end()) {
+        // Throw a runtime error if we couldn't find the spritesheet.
         std::string error("Fuck I couldn't find spritesheet ");
         error += key;
         throw std::runtime_error(error);

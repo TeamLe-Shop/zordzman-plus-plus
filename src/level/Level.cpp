@@ -34,6 +34,7 @@ Level::Level(std::string const levelname) {
     auto data = readAllFromStream(file);
     file.close();
 
+    // Width, height, spawn X and spawn Y are the first 4 bytes.
     m_width = data[0];
     m_height = data[1];
     m_spawnx = data[2] * 32;
@@ -74,6 +75,8 @@ void Level::render() const {
     int minY = (int)(0 / 32);
     int maxY = minY + window.getHeight() / 32;
 
+    // Make sure we don't render anything beyond what's on the screen
+    // or part of the level.
     if (minX < 0)
         minX = 0;
     if (maxX > getWidth() - 1)

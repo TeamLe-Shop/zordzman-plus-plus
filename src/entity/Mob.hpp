@@ -30,7 +30,7 @@ public:
     void setDirection(Direction d);
 
 protected:
-    int m_health;
+    int m_health = 0;
     float m_speed;
     Direction m_direction;
 };

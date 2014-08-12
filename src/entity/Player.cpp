@@ -7,7 +7,9 @@
 
 float steps = 0;
 
-Player::Player(float x, float y, float speed) : Mob(x, y, speed) {}
+Player::Player(float x, float y, float speed) : Mob(x, y, speed) {
+    m_health = 100;
+}
 
 void Player::render() {
     using namespace drawingOperations;

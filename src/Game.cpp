@@ -8,15 +8,18 @@
 #include <SDL_image.h>
 #include <iostream>
 #include <stdexcept>
+#include <cstdio>
 
 namespace {
 Game *game_instance;
+Player *player;
 }
 
 Game::Game() : m_window(800, 600, "Zordzman v0.0.1"), m_level("kek.lvl") {
     game_instance = this;
     globalResources::init();
-    m_level.add(new Player(m_level.getSpawnX(), m_level.getSpawnY(), 1.5));
+    player = new Player(m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
+    m_level.add(player);
 }
 
 Game::~Game() {
@@ -43,17 +46,21 @@ void Game::exec() {
         auto const width = m_window.getWidth();
         auto const height = m_window.getHeight();
 
+        char* hp_str = (char*)malloc(8);
+
+        sprintf(hp_str, "HP: %d", player->getHealth());
+
         glColor3f(0.2, 0.2, 0.2);
         drawRectangle(0, 0 + height - 32, width, 32, true);
         glColor3f(0.7, 0.7, 0.7);
-        drawText("HP: 23", 0, 0 + height - 32, 16, 16);
+        drawText(hp_str, 0, 0 + height - 32, 16, 16);
         drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
         glColor3f(0, 1, 0);
         drawText("Zord", 0 + 64, 0 + height - 32 + 16, 8, 8);
         glColor3f(0.6, 0.6, 0.6);
         drawText("Chicken", 0 + 64, 0 + height - 32 + 24, 8, 8);
 
-        glColor3f(0, 0, 0);
+        glColor3f(0, 0, 0.5);
         drawLine(0, 0 + height - 32, 0 + width, 0 + height - 32);
         drawLine(0, 0 + height - 33, 0 + width, 0 + height - 33);
 

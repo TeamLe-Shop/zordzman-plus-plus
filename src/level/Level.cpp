@@ -35,7 +35,7 @@ Level::Level(std::string const levelname) {
     file.close();
 
     m_width = data[0];
-    m_height = data[1] * 32;
+    m_height = data[1];
     m_spawnx = data[2] * 32;
     m_spawny = data[3] * 32;
     m_tiles.resize(m_width * m_height);

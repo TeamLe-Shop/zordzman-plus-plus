@@ -21,7 +21,13 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     float const texc_left = texSpriteW * xOff;
     float const texc_top = texSpriteH * yOff;
 
-    sys::Texture::bind(spritesheet);
+    bool sameSheet = false;
+
+    if (&spritesheet != currentSheet) {
+        sys::Texture::unbind();
+        sys::Texture::bind(spritesheet);
+        currentSheet = (SpriteSheet*)&spritesheet;
+    }
 
     // Draw a textured quad that represents the sprite
     glBegin(GL_QUADS);
@@ -49,11 +55,14 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     }
     glEnd();
 
-    sys::Texture::unbind();
+    if (sameSheet) sys::Texture::unbind();
 }
 
 void drawRectangle(float x, float y, float w, float h, bool filled) {
-
+    if (currentSheet != NULL) {
+        sys::Texture::unbind();
+        currentSheet = NULL;
+    }
     if (filled) {
 
         glBegin(GL_QUADS);
@@ -71,7 +80,10 @@ void drawRectangle(float x, float y, float w, float h, bool filled) {
 }
 
 void drawLine(float x1, float y1, float x2, float y2) {
-
+    if (currentSheet != NULL) {
+        sys::Texture::unbind();
+        currentSheet = NULL;
+    }
     glBegin(GL_LINES);
     glVertex2f(x1, y1);
     glVertex2f(x2, y2);

@@ -55,9 +55,9 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
 }
 
 void drawRectangle(float x, float y, float w, float h, bool filled) {
-    if (currentSheet != NULL) {
+    if (currentSheet) {
         sys::Texture::unbind();
-        currentSheet = NULL;
+        currentSheet = nullptr;
     }
     if (filled) {
 
@@ -76,9 +76,9 @@ void drawRectangle(float x, float y, float w, float h, bool filled) {
 }
 
 void drawLine(float x1, float y1, float x2, float y2) {
-    if (currentSheet != NULL) {
+    if (currentSheet) {
         sys::Texture::unbind();
-        currentSheet = NULL;
+        currentSheet = nullptr;
     }
     glBegin(GL_LINES);
     glVertex2f(x1, y1);

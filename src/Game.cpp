@@ -7,6 +7,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
+#include <stdexcept>
 
 namespace {
 Game *game_instance;

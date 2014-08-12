@@ -23,6 +23,7 @@ public:
     static void bind(Texture const &texture);
     /// @brief Unbind the currently bound texture
     static void unbind();
+    /// @brief Destroy the texture.
     ~Texture();
     Texture(const Texture &) = delete;
     /// @brief Construct the texture from a file

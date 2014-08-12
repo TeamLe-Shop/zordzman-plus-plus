@@ -14,6 +14,7 @@ class SpriteSheet : public sys::Texture {
 public:
     /// @brief Get the current sprite size
     unsigned int getSpriteSize() const;
+    /// @brief Set the current sprite size
     void setSpriteSize(unsigned int size);
     /// @brief Construct the spritesheet from a file and a sprite size
     ///

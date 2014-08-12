@@ -6,8 +6,11 @@
 
 class Game {
 public:
+    /// @brief Initialize the resources, player and level
     Game();
+    /// @brief Free all resources
     ~Game();
+    /// @brief Game loop.
     void exec();
     /// @brief Get the active game instance
     static Game &get();

@@ -5,6 +5,7 @@
 
 namespace mob {
 
+/// @brief A direction enum for cardinal directions.
 typedef enum {
     NORTH,
     SOUTH,
@@ -23,10 +24,24 @@ using namespace mob;
 class Mob : public Entity {
 
 public:
+    /// @brief Initialize and set the mob's x, y, speed and direction.
+    ///
+    /// @param x The x position
+    /// @param y The y position
+    /// @param speed The speed of the mob, by default 1.0f.
+    /// @param d The direction, by default it is SOUTH.
     Mob(float x, float y, float speed = 1.0f, Direction d = SOUTH);
+    /// @brief Return the current health
     int getHealth();
+    /// @brief Set the current health.
+    ///
+    /// @param health The health
     void setHealth(int health);
+    /// @brief Return the direction of the mob.
     Direction getDirection();
+    /// @brief Set the direction of the mob.
+    ///
+    /// @param d Direction to set it to
     void setDirection(Direction d);
 
 protected:

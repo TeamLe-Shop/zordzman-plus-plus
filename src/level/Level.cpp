@@ -35,9 +35,11 @@ Level::Level(std::string const levelname) {
     file.close();
 
     m_width = data[0];
-    m_height = data[1];
+    m_height = data[1] * 32;
+    m_spawnx = data[2] * 32;
+    m_spawny = data[3] * 32;
     m_tiles.resize(m_width * m_height);
-    std::copy(data.begin() + 2, data.end(), m_tiles.begin());
+    std::copy(data.begin() + 4, data.end(), m_tiles.begin());
 }
 
 Level::Level(int width, int height, std::vector<byte> tiles)
@@ -50,6 +52,10 @@ void Level::setHeight(byte height) { m_height = height; }
 byte Level::getWidth() const { return m_width; }
 
 byte Level::getHeight() const { return m_height; }
+
+int Level::getSpawnX() const { return m_spawnx; }
+
+int Level::getSpawnY() const { return m_spawny; }
 
 byte Level::tileAt(int x, int y) const { return m_tiles[x + y * m_width]; }
 

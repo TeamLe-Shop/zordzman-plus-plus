@@ -16,7 +16,7 @@ Game *game_instance;
 Game::Game() : m_window(800, 600, "Zordzman v0.0.1"), m_level("kek.lvl") {
     game_instance = this;
     globalResources::init();
-    m_level.add(new Player(300, 300, 1.5));
+    m_level.add(new Player(m_level.getSpawnX(), m_level.getSpawnY(), 1.5));
 }
 
 Game::~Game() {

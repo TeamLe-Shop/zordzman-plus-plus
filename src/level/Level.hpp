@@ -23,6 +23,10 @@ public:
     byte getWidth() const;
     /// @brief Get the height of the level
     byte getHeight() const;
+    /// @brief Get the player spawn x location of the level
+    int getSpawnX() const;
+    /// @brief Get the player spawn y location of the level
+    int getSpawnY() const;
     /// @brief Get the tile located at (x, y)
     byte tileAt(int x, int y) const;
     /// @brief Set the tile at location (x, y) to t
@@ -37,6 +41,7 @@ public:
 
 private:
     byte m_width = 0, m_height = 0;
+    int m_spawnx = 0, m_spawny = 0;
     std::vector<byte> m_tiles;
     std::vector<std::unique_ptr<Entity>> entities;
 };

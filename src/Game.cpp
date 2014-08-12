@@ -8,15 +8,19 @@
 #include <SDL_image.h>
 #include <iostream>
 
+namespace {
+Game *game_instance;
+}
+
 Game::Game() : m_window(800, 600, "Zordzman v0.0.1"), m_level("kek.lvl") {
-    m_instance = this;
+    game_instance = this;
     globalResources::init();
     m_level.add(new Player(300, 300, 1.5));
 }
 
 Game::~Game() {
     globalResources::free();
-    m_instance = nullptr;
+    game_instance = nullptr;
 }
 
 void Game::exec() {
@@ -58,13 +62,11 @@ void Game::exec() {
     }
 }
 
-Game *Game::m_instance;
-
 Game &Game::get() {
-    if (!m_instance) {
+    if (!game_instance) {
         throw std::runtime_error("Game::get(): Game instance is null.");
     }
-    return *m_instance;
+    return *game_instance;
 }
 
 sys::RenderWindow &Game::getWindow() { return m_window; }

@@ -47,8 +47,9 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
         glVertex2f(x + w, y + h);
         break;
     }
-    sys::Texture::unbind();
     glEnd();
+
+    sys::Texture::unbind();
 }
 
 void drawRectangle(float x, float y, float w, float h, bool filled) {

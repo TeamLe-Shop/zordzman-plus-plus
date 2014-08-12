@@ -21,8 +21,6 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     float const texc_left = texSpriteW * xOff;
     float const texc_top = texSpriteH * yOff;
 
-    bool sameSheet = false;
-
     if (&spritesheet != currentSheet) {
         sys::Texture::unbind();
         sys::Texture::bind(spritesheet);
@@ -54,8 +52,6 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
         break;
     }
     glEnd();
-
-    if (sameSheet) sys::Texture::unbind();
 }
 
 void drawRectangle(float x, float y, float w, float h, bool filled) {

@@ -1,2 +1,0 @@
-# Name         X  Y  W   H   Size
-Player_North0  3  2  32  32  16

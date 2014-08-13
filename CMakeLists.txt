@@ -25,10 +25,14 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 find_package(SDL2_image REQUIRED)
 include_directories(${SDLIMAGE_INCLUDE_DIR})
+find_package(SDL2_net REQUIRED)
+include_directories(${SDLNET_INCLUDE_DIR})
 
 if(GATSAN)
 	set(SDLIMAGE_LIBRARY /Library/Frameworks/SDL2_image.framework)
 	set(SDLIMAGE_INCLUDE_DIR /Library/Frameworks/SDL2_image.framework/Headers)
+	set(SDLNET_LIBRARY /Library/Frameworks/SDL2_net.framework)
+	set(SDLNET_INCLUDE_DIR /Library/Frameworks/SDL2_net.framework/Headers)
         add_compile_options(-stdlib=libc++)
 endif()
 
@@ -38,4 +42,4 @@ file(GLOB_RECURSE SOURCE_FILES src/*.*pp)
 
 add_executable(zordzman ${SOURCE_FILES})
 
-target_link_libraries(zordzman ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${OPENGL_LIBRARY})
+target_link_libraries(zordzman ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY})

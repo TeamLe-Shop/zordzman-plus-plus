@@ -15,6 +15,7 @@ bool TCPSock::connectToHost(std::string host, int portnum) {
         fprintf(stderr, "[ERROR] Could not open socket\n");
         return false;
     }
+    m_open = true;
     return true;
 }
 
@@ -22,6 +23,7 @@ void TCPSock::startReading() {
 }
 
 bool TCPSock::send(std::string buf) {
+    buf += "\r\n";
     int len = strlen(buf.c_str()) + 1;
     if (SDLNet_TCP_Send(m_socket, (void*) buf.c_str(), len) < len) {
         fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
@@ -31,10 +33,13 @@ bool TCPSock::send(std::string buf) {
 }
 
 void TCPSock::close() {
-    SDLNet_TCP_Close(m_socket);
+    if (m_open) {
+        SDLNet_TCP_Close(m_socket);
+        m_open = false;
+    }
 }
 
 TCPSock::~TCPSock() {
-    SDLNet_TCP_Close(m_socket);
+    close();
 }
 } // namespace net

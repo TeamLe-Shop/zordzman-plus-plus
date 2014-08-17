@@ -22,6 +22,7 @@ public:
 private:
     IPaddress m_server;
     TCPsocket m_socket;
+    bool m_open;
 };
 
 } //namespace net

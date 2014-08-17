@@ -28,7 +28,7 @@ Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
 
     net::TCPSock socket;
     socket.connectToHost("localhost", PORT_NUMBER);
-    socket.send("Hello world!\n");
+    socket.send("Hello world!");
     socket.send("END");
     socket.close();
 

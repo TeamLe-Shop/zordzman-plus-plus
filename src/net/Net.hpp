@@ -18,6 +18,7 @@ public:
     void startReading();
     bool send(std::string buf);
     void close();
+    ~TCPSock();
 private:
     IPaddress m_server;
     TCPsocket m_socket;

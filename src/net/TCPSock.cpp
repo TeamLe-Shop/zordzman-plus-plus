@@ -33,4 +33,8 @@ bool TCPSock::send(std::string buf) {
 void TCPSock::close() {
     SDLNet_TCP_Close(m_socket);
 }
+
+TCPSock::~TCPSock() {
+    SDLNet_TCP_Close(m_socket);
+}
 } // namespace net

@@ -29,6 +29,8 @@ bool TCPSock::send(std::string buf) {
         fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
         return false;
     }
+
+    printf("Message: %s", buf.c_str());
     return true;
 }
 

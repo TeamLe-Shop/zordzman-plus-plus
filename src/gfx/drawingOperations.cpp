@@ -1,5 +1,4 @@
 #include "drawingOperations.hpp"
-
 #include <cassert>
 #include <cstddef>
 #include <SDL_opengl.h>
@@ -20,7 +19,6 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
     float const texSpriteH = sprSize / spritesheet.getHeight();
     float const texc_left = texSpriteW * xOff;
     float const texc_top = texSpriteH * yOff;
-
     // If the spritesheet passed in isn't the currentSheet, bind
     // the spritesheet instead, and set currentSheet to the address
     // of spritesheet.
@@ -28,7 +26,6 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
         sys::Texture::bind(spritesheet);
         currentSheet = &spritesheet;
     }
-
     // Draw a textured quad that represents the sprite
     glBegin(GL_QUADS);
     switch (flip) {
@@ -53,6 +50,7 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
         glVertex2f(x + w, y + h);
         break;
     }
+
     glEnd();
 }
 
@@ -64,7 +62,6 @@ void drawRectangle(float x, float y, float w, float h, bool filled) {
     }
     // We can choose between a filled whole rectangle, or just an outline.
     if (filled) {
-
         glBegin(GL_QUADS);
         glVertex2f(x, y);
         glVertex2f(x + w, y);
@@ -77,6 +74,7 @@ void drawRectangle(float x, float y, float w, float h, bool filled) {
         drawLine(x + w, y + h, x, y + h);
         drawLine(x, y + h, x, y);
     }
+
 }
 
 void drawLine(float x1, float y1, float x2, float y2) {
@@ -84,6 +82,7 @@ void drawLine(float x1, float y1, float x2, float y2) {
         sys::Texture::unbind();
         currentSheet = nullptr;
     }
+
     glBegin(GL_LINES);
     glVertex2f(x1, y1);
     glVertex2f(x2, y2);
@@ -97,7 +96,6 @@ void drawText(std::string const &text, int x, int y, int w, int h) {
                                   "                                "
                                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ      "
                                   "0123456789.,:;'\"!?$%()-=+/*_    ";
-
         char const *char_index = strchr(chars, c);
         // If the current character is found in chars...
         if (char_index) {

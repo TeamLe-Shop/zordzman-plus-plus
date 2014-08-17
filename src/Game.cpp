@@ -3,6 +3,8 @@
 #include "globalResources.hpp"
 #include "entity/Player.hpp"
 #include "gfx/drawingOperations.hpp"
+#include "net/Net.hpp"
+
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -21,6 +23,16 @@ Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
     globalResources::init();
     player = new Player(m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
     m_level.add(player);
+
+    if (!net::initNet()) exit(1);
+
+    net::TCPSock socket;
+    socket.connectToHost("localhost", PORT_NUMBER);
+    socket.send("Hello world!\n");
+    socket.send("END");
+    socket.close();
+
+    net::cleanUp();
 }
 
 Game::~Game() {

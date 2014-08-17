@@ -19,7 +19,7 @@ public:
                  std::string const title = "Untitled",
                  int x = SDL_WINDOWPOS_UNDEFINED,
                  int y = SDL_WINDOWPOS_UNDEFINED,
-                 Uint32 flags = SDL_WINDOW_OPENGL);
+                 unsigned int flags = SDL_WINDOW_OPENGL);
     /// @brief Destroy the window
     ~RenderWindow();
     RenderWindow(RenderWindow const &other) = delete;

@@ -2,7 +2,10 @@ zordzman-plus-plus
 ==================
 ![](http://servers.tf:8080/buildStatus/icon?job=zordzman-plus-plus)
 
-The best game that ever existed, if it weren't for JavaCakess' cancerous changes.
+(Note: The above icon may show the incorrect build status due to GitHub cacheing the images.
+The build status is currently "failed" since the builder does not have SDL_Net installed.)
+
+The best game that ever existed!
 
 Zordzman-plus-plus (Zordzman++) will be a remake of
 the original Zordzman created by JavaCakess in, well, Java.
@@ -14,13 +17,13 @@ Dependencies
 
 It uses SDL, SDL_Image and OpenGL for about everything right now.
 
-We may use SDL_Net for networking.
+We will use SDL_Net for networking.
 
 SDL: https://libsdl.org/download-2.0.php (Required: 2.0.0 or greater)
 
 SDL-Image: https://libsdl.org/projects/SDL_image/ (Required: 2.0.0 or greater)
 
-SDL-Net: https://libsdl.org/projects/SDL_net/
+SDL-Net: https://libsdl.org/projects/SDL_net/ (Required: 2.0.0 or greater)
 
 Building
 ========

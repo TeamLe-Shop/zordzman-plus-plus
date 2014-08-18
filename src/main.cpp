@@ -5,7 +5,7 @@
 
 int main() {
     try {
-    	// Initialize the game.
+        // Initialize the game.
         Game game;
         // Start the game loop.
         game.exec();

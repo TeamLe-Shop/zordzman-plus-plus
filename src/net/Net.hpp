@@ -2,7 +2,6 @@
 
 #define PORT_NUMBER 4544
 
-
 #include <SDL.h>
 #include <SDL_net.h>
 #include <string>
@@ -41,11 +40,12 @@ public:
     /// @param The amount of bytes to send.
     ///
     /// @return If the sending was successful.
-    bool send(void* buf, int len);
+    bool send(void *buf, int len);
     /// @brief Close the socket.
     void close();
     /// @brief Close the socket when destroyed.
     ~TCPSock();
+
 private:
     // The address of the server.
     IPaddress m_server;
@@ -55,4 +55,4 @@ private:
     bool m_open;
 };
 
-} //namespace net
+} // namespace net

@@ -15,8 +15,6 @@ bool initNet() {
     return true;
 }
 
-void cleanUp() {
-    SDLNet_Quit();
-}
+void cleanUp() { SDLNet_Quit(); }
 
-} //namespace net
+} // namespace net

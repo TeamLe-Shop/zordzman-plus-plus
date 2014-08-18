@@ -75,7 +75,6 @@ void drawRectangle(float x, float y, float w, float h, bool filled) {
         drawLine(x + w, y + h, x, y + h);
         drawLine(x, y + h, x, y);
     }
-
 }
 
 void drawLine(float x1, float y1, float x2, float y2) {

@@ -30,12 +30,12 @@ void Player::render() {
                             distance_walked < 30 ? NO_FLIP : X_FLIP);
         break;
     case WEST:
-        drawSpriteFromSheet(getSheet("main"), distance_walked < 30 ? 1 : 2,
-                            2, m_x, m_y, 32, 32, X_FLIP);
+        drawSpriteFromSheet(getSheet("main"), distance_walked < 30 ? 1 : 2, 2,
+                            m_x, m_y, 32, 32, X_FLIP);
         break;
     case EAST:
-        drawSpriteFromSheet(getSheet("main"), distance_walked < 30 ? 1 : 2,
-                            2, m_x, m_y, 32, 32, NO_FLIP);
+        drawSpriteFromSheet(getSheet("main"), distance_walked < 30 ? 1 : 2, 2,
+                            m_x, m_y, 32, 32, NO_FLIP);
         break;
     }
     // Set the sprite size back to 8x8.

@@ -23,7 +23,8 @@ void initGL(int width, int height) {
 }
 
 RenderWindow::RenderWindow(unsigned width, unsigned height,
-                           std::string const title, int x, int y, unsigned int flags)
+                           std::string const title, int x, int y,
+                           unsigned int flags)
     : m_width(width), m_height(height) {
     m_handle = SDL_CreateWindow(title.c_str(), x, y, width, height, flags);
     m_glContext = SDL_GL_CreateContext(m_handle);

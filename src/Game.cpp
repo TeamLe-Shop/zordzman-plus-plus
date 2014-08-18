@@ -5,7 +5,6 @@
 #include "gfx/drawingOperations.hpp"
 #include "net/Net.hpp"
 
-
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
@@ -31,12 +30,13 @@ Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
 
     // Initialize SDLNet, so we can use sockets.
     // If it fails, exit with exit code 1.
-    if (!net::initNet()) exit(1);
+    if (!net::initNet())
+        exit(1);
 
     // Try and connect to host "localhost", with PORT_NUMBER.
     socket.connectToHost("localhost", PORT_NUMBER);
     // Send the protocol version
-    socket.send((void*) &net::PROTOCOL_VERSION, 1);
+    socket.send((void *)&net::PROTOCOL_VERSION, 1);
 }
 
 Game::~Game() {

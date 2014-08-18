@@ -21,6 +21,7 @@ public:
     Player *clone() const;
     /// @brief Return the player's username.
     std::string getUsername();
+
 private:
     /// @brief Check for input form the keyboard.
     void input();

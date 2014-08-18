@@ -9,7 +9,7 @@
 float distance_walked = 0;
 
 Player::Player(std::string username, float x, float y, float speed)
-       : Mob(x, y, speed), m_username(username) {
+    : Mob(x, y, speed), m_username(username) {
     m_health = 100;
 }
 

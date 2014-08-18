@@ -11,7 +11,7 @@ int main() {
         game.exec();
     }
     catch (std::exception const &except) {
-        std::cerr << "Fatal exception: " << except.what();
+        std::cerr << "Fatal exception: " << except.what() << std::endl;
         return 1;
     }
 }

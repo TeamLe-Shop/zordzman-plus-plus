@@ -10,6 +10,7 @@ namespace globalResources {
 std::unordered_map<std::string, SpriteSheet> sheets;
 
 void init() {
+    // Load the spritesheets n shit
     sheets.emplace(std::piecewise_construct, std::forward_as_tuple("main"),
                    std::forward_as_tuple("resources/spritesheet.png", 8));
 }

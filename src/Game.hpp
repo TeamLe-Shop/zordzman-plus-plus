@@ -8,7 +8,7 @@ class Game {
 public:
     /// @brief Initialize the resources, player and level
     Game();
-    /// @brief Free all resources
+    /// @brief Free resources to avoid memory leaks n shit
     ~Game();
     /// @brief Game loop.
     void exec();

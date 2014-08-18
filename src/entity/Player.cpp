@@ -9,7 +9,6 @@
 float distance_walked = 0;
 
 Player::Player(float x, float y, float speed) : Mob(x, y, speed) {
-    // Set the initial health to 100.
     m_health = 100;
 }
 
@@ -20,7 +19,7 @@ void Player::render() {
     // Set the spritesize to 16 x 16 for now.
     getSheet("main").setSpriteSize(16);
     // Depending on their direction, render a different sprite.
-    // The sprite will animate based on how many "distance_walked" it has taken.
+    // The sprite will animate based on how many "steps" it has taken.
     switch (m_direction) {
     case SOUTH:
         drawSpriteFromSheet(getSheet("main"), 0, 2, m_x, m_y, 32, 32,
@@ -55,7 +54,8 @@ void Player::tick() {
 }
 
 void Player::input() {
-    // Get the current keyboard state
+    // Get the current keyboard state. This will have information
+    // about what keys are pressed n shit
     Uint8 const *keys = SDL_GetKeyboardState(nullptr);
 
     // Check if they've pressed the arrow keys, and move them if they have.

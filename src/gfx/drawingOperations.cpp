@@ -55,7 +55,8 @@ void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
 }
 
 void drawRectangle(float x, float y, float w, float h, bool filled) {
-    // Unbind any textures if we have any bound.
+    // Unbind any textures if we have any bound. This will avoid
+    // our rectangle being fucked up beyond recgonition.
     if (currentSheet) {
         sys::Texture::unbind();
         currentSheet = nullptr;

@@ -15,7 +15,7 @@ public:
     Player(float x, float y, float speed = 1.0f);
     /// @brief Render the player.
     void render();
-    /// @brief 'tick' the player.
+    /// @brief Update logic and variables, like position n shit
     void tick();
     /// @brief Clone the player
     Player *clone() const;

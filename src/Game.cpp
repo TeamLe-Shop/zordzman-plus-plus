@@ -20,31 +20,32 @@ std::string const title = "Zordzman v0.0.1";
 
 Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
     game_instance = this;
-    // Initialize the global resources.
+    // Initialize the global resources, so we can access various shit like
+    // spritesheets and sounds
     globalResources::init();
     // Spawn the player at the level spawn, with a speed of 1.5
     player = new Player(m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
     // Add the player to level.
     m_level.add(player);
 
-    // Initialize SDLNet. If it fails, exit with exit code 1.
+    // Initialize SDLNet, so we can use sockets.
+    // If it fails, exit with exit code 1.
     if (!net::initNet()) exit(1);
 
-    // Create a new TCP Socket object.
+    // Create a new TCP Socket object so we can send shit
     net::TCPSock socket;
     // Try and connect to host "localhost", the the PORT_NUMBER.
     socket.connectToHost("localhost", PORT_NUMBER);
-    // Send string "VERSION 0.0.1"
+    // Send some data B)
     socket.send("VERSION 0.0.1");
-    // Send "END" to tell the server to terminate the connection.
     socket.send("END");
 
-    // Quit SDLNet.
+    // Quit SDLNet and clean up. It closes the sockets for us n shit
     net::cleanUp();
 }
 
 Game::~Game() {
-    // Free resources.
+    // Free resources n shit, so we don't get a memory leak.
     globalResources::free();
     game_instance = nullptr;
 }
@@ -63,7 +64,7 @@ void Game::exec() {
         // Clear the screen.
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Render the level's tiles and entities.
+        // Render the level's tiles and entities n hsit
         m_level.render();
 
         using namespace drawingOperations;
@@ -84,7 +85,6 @@ void Game::exec() {
 
         // Draw the health string.
         drawText(hp_str, 0, 0 + height - 32, 16, 16);
-        // Draw "WEP:" onto the screen.
         drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
         glColor3f(0, 1, 0);
         // Draw the names of the weapons as smaller components

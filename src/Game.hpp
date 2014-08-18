@@ -3,6 +3,8 @@
 #include "sys/RenderWindow.hpp"
 #include "sys/System.hpp"
 #include "level/Level.hpp"
+#include "net/Net.hpp"
+#include "entity/Player.hpp"
 
 class Game {
 public:
@@ -20,5 +22,7 @@ public:
 private:
     sys::System m_system;
     sys::RenderWindow m_window;
+    net::TCPSock m_socket;
     Level m_level;
+    Player *m_player;
 };

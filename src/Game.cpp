@@ -1,9 +1,7 @@
 #include "Game.hpp"
 
 #include "globalResources.hpp"
-#include "entity/Player.hpp"
 #include "gfx/drawingOperations.hpp"
-#include "net/Net.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -13,9 +11,7 @@
 
 namespace {
 Game *game_instance;
-Player *player;
 std::string const title = "Zordzman v0.0.1";
-net::TCPSock socket;
 }
 
 Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
@@ -24,9 +20,9 @@ Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
     // spritesheets and sounds
     globalResources::init();
     // Spawn the player at the level spawn, with a speed of 1.5
-    player = new Player(m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
+    m_player = new Player(m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
     // Add the player to level.
-    m_level.add(player);
+    m_level.add(m_player);
 
     // Initialize SDLNet, so we can use sockets.
     // If it fails, exit with exit code 1.
@@ -34,9 +30,9 @@ Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
         exit(1);
 
     // Try and connect to host "localhost", with PORT_NUMBER.
-    socket.connectToHost("localhost", PORT_NUMBER);
+    m_socket.connectToHost("localhost", PORT_NUMBER);
     // Send the protocol version
-    socket.send((void *)&net::PROTOCOL_VERSION, 1);
+    m_socket.send((void *)&net::PROTOCOL_VERSION, 1);
 }
 
 Game::~Game() {
@@ -72,7 +68,7 @@ void Game::exec() {
         char hp_str[8];
 
         // Use sprintf to put the "HP: <health>" string into hp_str
-        sprintf(hp_str, "HP: %d", player->getHealth());
+        sprintf(hp_str, "HP: %d", m_player->getHealth());
 
         // Draw the rectangle/box which contains information about the player.
         glColor3f(0.2, 0.2, 0.2);

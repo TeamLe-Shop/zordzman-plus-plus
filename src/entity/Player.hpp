@@ -12,14 +12,15 @@ public:
     /// @param x X position
     /// @param y Y Position
     /// @speed The speed, by default 1.0f.
-    Player(float x, float y, float speed = 1.0f);
+    Player(std::string username, float x, float y, float speed = 1.0f);
     /// @brief Render the player.
     void render();
     /// @brief Update logic and variables, like position n shit
     void tick();
     /// @brief Clone the player
     Player *clone() const;
-
+    /// @brief Return the player's username.
+    std::string getUsername();
 private:
     /// @brief Check for input form the keyboard.
     void input();
@@ -31,4 +32,6 @@ private:
     void moveLeft();
     /// @brief Move the player right.
     void moveRight();
+
+    std::string m_username = "Player";
 };

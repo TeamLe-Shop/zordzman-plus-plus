@@ -21,7 +21,8 @@ Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
     // spritesheets and sounds
     globalResources::init();
     // Spawn the player at the level spawn, with a speed of 1.5
-    m_player = new Player(m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
+    m_player = new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(),
+                          1.5);
     // Add the player to level.
     m_level.add(m_player);
 

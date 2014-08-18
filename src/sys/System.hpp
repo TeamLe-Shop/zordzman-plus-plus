@@ -6,9 +6,7 @@ namespace sys {
 /// depend on
 class System {
 public:
-    /// @brief Initialize SDL
     System();
-    /// @brief Quit SDL.
     ~System();
 };
 }

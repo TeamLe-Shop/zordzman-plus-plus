@@ -20,21 +20,31 @@ std::string const title = "Zordzman v0.0.1";
 
 Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
     game_instance = this;
+    // Initialize the global resources.
     globalResources::init();
+    // Spawn the player at the level spawn, with a speed of 1.5
     player = new Player(m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
+    // Add the player to level.
     m_level.add(player);
 
+    // Initialize SDLNet. If it fails, exit with exit code 1.
     if (!net::initNet()) exit(1);
 
+    // Create a new TCP Socket object.
     net::TCPSock socket;
+    // Try and connect to host "localhost", the the PORT_NUMBER.
     socket.connectToHost("localhost", PORT_NUMBER);
+    // Send string "VERSION 0.0.1"
     socket.send("VERSION 0.0.1");
+    // Send "END" to tell the server to terminate the connection.
     socket.send("END");
 
+    // Quit SDLNet.
     net::cleanUp();
 }
 
 Game::~Game() {
+    // Free resources.
     globalResources::free();
     game_instance = nullptr;
 }
@@ -43,11 +53,11 @@ void Game::exec() {
     for (;;) {
         SDL_Event event;
 
+        // Break from our game loop if they've hit the 'X' button.
         if (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 break;
             }
-            continue;
         }
 
         // Clear the screen.

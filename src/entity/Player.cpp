@@ -5,7 +5,8 @@
 #include <iostream>
 #include <SDL.h>
 
-float steps = 0;
+// How many "pixels" the player has walked.
+float distance_walked = 0;
 
 Player::Player(float x, float y, float speed) : Mob(x, y, speed) {
     // Set the initial health to 100.
@@ -19,23 +20,23 @@ void Player::render() {
     // Set the spritesize to 16 x 16 for now.
     getSheet("main").setSpriteSize(16);
     // Depending on their direction, render a different sprite.
-    // The sprite will animate based on how many "steps" it has taken.
+    // The sprite will animate based on how many "distance_walked" it has taken.
     switch (m_direction) {
     case SOUTH:
         drawSpriteFromSheet(getSheet("main"), 0, 2, m_x, m_y, 32, 32,
-                            steps < 30 ? NO_FLIP : X_FLIP);
+                            distance_walked < 30 ? NO_FLIP : X_FLIP);
         break;
     case NORTH:
         drawSpriteFromSheet(getSheet("main"), 3, 2, m_x, m_y, 32, 32,
-                            steps < 30 ? NO_FLIP : X_FLIP);
+                            distance_walked < 30 ? NO_FLIP : X_FLIP);
         break;
     case WEST:
-        drawSpriteFromSheet(getSheet("main"), steps < 30 ? 1 : 2, 2, m_x, m_y,
-                            32, 32, X_FLIP);
+        drawSpriteFromSheet(getSheet("main"), distance_walked < 30 ? 1 : 2,
+                            2, m_x, m_y, 32, 32, X_FLIP);
         break;
     case EAST:
-        drawSpriteFromSheet(getSheet("main"), steps < 30 ? 1 : 2, 2, m_x, m_y,
-                            32, 32, NO_FLIP);
+        drawSpriteFromSheet(getSheet("main"), distance_walked < 30 ? 1 : 2,
+                            2, m_x, m_y, 32, 32, NO_FLIP);
         break;
     }
     // Set the sprite size back to 8x8.
@@ -46,10 +47,11 @@ void Player::tick() {
     // Handle input, mainly movement.
     input();
 
-    if (steps > 60)
-        steps = 0;
-    else if (steps < 0)
-        steps = 60;
+    // Keep the "distance walked" between 60 and 0.
+    if (distance_walked > 60)
+        distance_walked = 0;
+    else if (distance_walked < 0)
+        distance_walked = 60;
 }
 
 void Player::input() {
@@ -70,36 +72,36 @@ void Player::input() {
 
 void Player::moveUp() {
     // Decrease the player's Y position by their speed
-    // and their steps by (speed * 0.8), as well as
+    // and their distance_walked by (speed * 0.8), as well as
     // change their direction to NORTH.
-    steps -= m_speed * 0.8;
+    distance_walked -= m_speed * 0.8;
     m_y -= m_speed;
     m_direction = NORTH;
 }
 
 void Player::moveDown() {
     // Increase the player's Y position by their speed
-    // and their steps by (speed * 0.8), as well as
+    // and their distance_walked by (speed * 0.8), as well as
     // change their direction to SOUTH.
-    steps += m_speed * 0.8;
+    distance_walked += m_speed * 0.8;
     m_y += m_speed;
     m_direction = SOUTH;
 }
 
 void Player::moveLeft() {
     // Decrease the player's Z position by their speed
-    // and their steps by (speed * 0.8), as well as
+    // and their distance_walked by (speed * 0.8), as well as
     // change their direction to WEST.
-    steps -= m_speed * 0.8;
+    distance_walked -= m_speed * 0.8;
     m_x -= m_speed;
     m_direction = WEST;
 }
 
 void Player::moveRight() {
     // Increase the player's X position by their speed
-    // and their steps by (speed * 0.8), as well as
+    // and their distance_walked by (speed * 0.8), as well as
     // change their direction to EAST.
-    steps += m_speed * 0.8;
+    distance_walked += m_speed * 0.8;
     m_x += m_speed;
     m_direction = EAST;
 }

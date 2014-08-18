@@ -14,6 +14,7 @@ public:
     void exec();
     /// @brief Get the active game instance
     static Game &get();
+    /// @brief Get the window on which things are rendered.
     sys::RenderWindow &getWindow();
 
 private:

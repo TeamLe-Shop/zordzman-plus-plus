@@ -3,6 +3,7 @@
 namespace net {
 
 bool initNet() {
+    // Quit if we couldn't initialize SDLNet.
     if (SDLNet_Init() == -1) {
         fprintf(stderr, "[ERROR] SDLNet_Init: %s\n", SDLNet_GetError());
         fprintf(stderr,

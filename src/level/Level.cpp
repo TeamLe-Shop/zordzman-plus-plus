@@ -24,6 +24,7 @@ Level::Level(std::string const levelname) {
     std::ifstream file(("resources/levels/" + levelname),
                        std::ios::in | std::ios::binary | std::ios::ate);
 
+    // Complain if that Level couldn't be found / opened.
     if (!file.is_open()) {
         std::cerr << "[ERROR] Couldn't open level file resources/levels/"
                   << levelname;
@@ -39,7 +40,9 @@ Level::Level(std::string const levelname) {
     m_height = data[1];
     m_spawnx = data[2] * 32;
     m_spawny = data[3] * 32;
+    // Resize the vector to match the width and height.
     m_tiles.resize(m_width * m_height);
+    // Copy over the level data over to the vector.
     std::copy(data.begin() + 4, data.end(), m_tiles.begin());
 }
 
@@ -69,6 +72,7 @@ void Level::render() const {
     using namespace drawingOperations;
     auto &window = Game::get().getWindow();
 
+    // Borders for the renders.
     int minX = (int)(0 / 32);
     int maxX = minX + window.getWidth() / 32;
 
@@ -93,6 +97,7 @@ void Level::render() const {
         }
     }
 
+    // Render and update the entities.
     for (auto const &e : entities) {
         e->render();
         e->tick();

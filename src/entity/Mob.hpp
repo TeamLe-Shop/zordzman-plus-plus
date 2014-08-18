@@ -45,7 +45,10 @@ public:
     void setDirection(Direction d);
 
 protected:
+    // The mob's health.
     int m_health = 0;
+    // The mob's speed.
     float m_speed;
+    // The direction the mob is facing.
     Direction m_direction;
 };

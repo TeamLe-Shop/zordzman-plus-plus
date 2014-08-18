@@ -52,12 +52,15 @@ TexResult load_texture(char const *const filename) {
 
     glBindTexture(GL_TEXTURE_2D, tex);
 
+    // Display each pixel clearly.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     glTexImage2D(GL_TEXTURE_2D, 0, bytesPerPixel, surface->w, surface->h, 0,
                  texture_format, GL_UNSIGNED_BYTE, surface->pixels);
     SDL_FreeSurface(surface);
+
+    // Unbind the texture and return the result.
     glBindTexture(GL_TEXTURE_2D, 0);
     return TexResult{ true, tex, surface->w, surface->h };
 }

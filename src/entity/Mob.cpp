@@ -14,7 +14,7 @@ std::string directionName(Direction d) {
         return std::string("West");
     case EAST:
         return std::string("East");
-    default:
+    default: // If for some reason it's not any of the above, "Invalid"
         return std::string("Invalid");
     }
 }

@@ -1,9 +1,7 @@
-#include "net/Net.hpp"
-
-using namespace net;
+#include "TCPSocket.hpp"
 
 namespace net {
-bool TCPSock::connectToHost(std::string host, int portnum) {
+bool TCPSocket::connectToHost(std::string host, int portnum) {
     // Attempt to resolve the host. Report the error if we couldn't.
     if (SDLNet_ResolveHost(&m_server, host.c_str(), portnum) < 0) {
         fprintf(stderr, "[ERROR] SDLNet_ResolveHost: %s\n", SDLNet_GetError());
@@ -23,11 +21,11 @@ bool TCPSock::connectToHost(std::string host, int portnum) {
     return true;
 }
 
-void TCPSock::startReading() {
+void TCPSocket::startReading() {
     // Nothing here yet!
 }
 
-bool TCPSock::send(std::string buf) {
+bool TCPSocket::send(std::string buf) {
     if (!m_open)
         return false;
     int len = strlen(buf.c_str()) + 1;
@@ -41,7 +39,7 @@ bool TCPSock::send(std::string buf) {
     return true;
 }
 
-bool TCPSock::send(void *buf, int len) {
+bool TCPSocket::send(void *buf, int len) {
     if (!m_open)
         return false;
     // Report an error if we sent less bytes than we should have.
@@ -54,7 +52,7 @@ bool TCPSock::send(void *buf, int len) {
     return true;
 }
 
-void TCPSock::close() {
+void TCPSocket::close() {
     // Check if it's open, and close it if it is.
     if (m_open) {
         SDLNet_TCP_Close(m_socket);
@@ -62,7 +60,7 @@ void TCPSock::close() {
     }
 }
 
-TCPSock::~TCPSock() {
+TCPSocket::~TCPSocket() {
     // Close the socket.
     close();
 }

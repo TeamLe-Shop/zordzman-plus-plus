@@ -28,8 +28,7 @@ void TCPSock::startReading() {
 }
 
 bool TCPSock::send(std::string buf) {
-    // Send the buf string (plus a "\r\n") to the server.
-    buf += "\r\n";
+    if (!m_open) return false;
     int len = strlen(buf.c_str()) + 1;
     // Report an error if we sent less bytes than we should have.
     if (SDLNet_TCP_Send(m_socket, (void*) buf.c_str(), len) < len) {
@@ -38,6 +37,18 @@ bool TCPSock::send(std::string buf) {
     }
 
     printf("Message: %s", buf.c_str());
+    return true;
+}
+
+bool TCPSock::send(void* buf, int len) {
+    if (!m_open) return false;
+    // Report an error if we sent less bytes than we should have.
+    if (SDLNet_TCP_Send(m_socket, buf, len) < len) {
+        fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
+        return false;
+    }
+
+    printf("Message: %s", buf);
     return true;
 }
 

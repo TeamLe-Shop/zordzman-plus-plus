@@ -16,6 +16,7 @@ namespace {
 Game *game_instance;
 Player *player;
 std::string const title = "Zordzman v0.0.1";
+net::TCPSock socket;
 }
 
 Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
@@ -32,22 +33,17 @@ Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
     // If it fails, exit with exit code 1.
     if (!net::initNet()) exit(1);
 
-    // Create a new TCP Socket object so we can send shit
-    net::TCPSock socket;
-    // Try and connect to host "localhost", the the PORT_NUMBER.
+    // Try and connect to host "localhost", with PORT_NUMBER.
     socket.connectToHost("localhost", PORT_NUMBER);
-    // Send some data B)
-    socket.send("VERSION 0.0.1");
-    socket.send("END");
-
-    // Quit SDLNet and clean up. It closes the sockets for us n shit
-    net::cleanUp();
+    // Send the protocol version
+    socket.send((void*) &net::PROTOCOL_VERSION, 1);
 }
 
 Game::~Game() {
     // Free resources n shit, so we don't get a memory leak.
     globalResources::free();
     game_instance = nullptr;
+    net::cleanUp();
 }
 
 void Game::exec() {

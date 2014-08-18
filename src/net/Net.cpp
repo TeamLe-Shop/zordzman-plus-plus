@@ -2,6 +2,8 @@
 
 namespace net {
 
+char const PROTOCOL_VERSION = 0;
+
 bool initNet() {
     // Quit if we couldn't initialize SDLNet.
     if (SDLNet_Init() == -1) {

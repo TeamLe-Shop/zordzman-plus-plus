@@ -2,7 +2,7 @@
 
 namespace net {
 
-extern char const PROTOCOL_VERSION;
-extern int const PORT_NUMBER;
+char const PROTOCOL_VERSION = 0;
+int const PORT_NUMBER = 4544;
 
 } // namespace net

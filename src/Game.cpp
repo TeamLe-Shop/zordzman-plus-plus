@@ -23,7 +23,7 @@ Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
     globalResources::init();
     m_player =
         new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
-    joinServer("localhost");
+    joinServer("gatsan.ddns.net");
     // Add the player to level.
     m_level.add(m_player);
 }

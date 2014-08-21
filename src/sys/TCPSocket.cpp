@@ -50,7 +50,5 @@ void TCPSocket::close() {
     }
 }
 
-TCPSocket::~TCPSocket() {
-    close();
-}
+TCPSocket::~TCPSocket() { close(); }
 } // namespace net

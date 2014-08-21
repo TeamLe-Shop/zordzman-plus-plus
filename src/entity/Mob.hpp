@@ -6,12 +6,12 @@
 namespace mob {
 
 /// @brief A direction enum for cardinal directions.
-typedef enum {
+enum Direction {
     NORTH,
     SOUTH,
     WEST,
     EAST
-} Direction;
+};
 
 /// @brief Return the string name of a direction.
 ///

@@ -15,31 +15,32 @@ Player::Player(std::string username, float x, float y, float speed)
 void Player::render() {
     using namespace drawingOperations;
     using namespace globalResources;
+    SpriteSheet &sheet = getSheet("main");
 
     // Set the spritesize to 16 x 16 for now.
-    getSheet("main").setSpriteSize(16);
+    sheet.setSpriteSize(16);
     // Depending on their direction, render a different sprite.
     // The sprite will animate based on how many "steps" it has taken.
     switch (m_direction) {
     case SOUTH:
-        drawSpriteFromSheet(getSheet("main"), 0, 2, m_x, m_y, 32, 32,
+        drawSpriteFromSheet(sheet, 0, 2, m_x, m_y, 32, 32,
                             distance_walked < 30 ? NO_FLIP : X_FLIP);
         break;
     case NORTH:
-        drawSpriteFromSheet(getSheet("main"), 3, 2, m_x, m_y, 32, 32,
+        drawSpriteFromSheet(sheet, 3, 2, m_x, m_y, 32, 32,
                             distance_walked < 30 ? NO_FLIP : X_FLIP);
         break;
     case WEST:
-        drawSpriteFromSheet(getSheet("main"), distance_walked < 30 ? 1 : 2, 2,
-                            m_x, m_y, 32, 32, X_FLIP);
+        drawSpriteFromSheet(sheet, distance_walked < 30 ? 1 : 2, 2, m_x, m_y,
+                            32, 32, X_FLIP);
         break;
     case EAST:
-        drawSpriteFromSheet(getSheet("main"), distance_walked < 30 ? 1 : 2, 2,
-                            m_x, m_y, 32, 32, NO_FLIP);
+        drawSpriteFromSheet(sheet, distance_walked < 30 ? 1 : 2, 2, m_x, m_y,
+                            32, 32, NO_FLIP);
         break;
     }
     // Set the sprite size back to 8x8.
-    getSheet("main").setSpriteSize(8);
+    sheet.setSpriteSize(8);
 
     float username_x = (m_x + 16) - m_username.size() * 4;
     float username_y = m_y - 12;

@@ -2,8 +2,7 @@ zordzman-plus-plus
 ==================
 ![](http://servers.tf:8080/buildStatus/icon?job=zordzman-plus-plus)
 
-(Note: The above icon may show the incorrect build status due to GitHub cacheing the images.
-The build status is currently "failed" since the builder does not have SDL_Net installed.)
+(Note: The above icon may show the incorrect build status due to GitHub cacheing the images.)
 
 The best game that ever existed!
 

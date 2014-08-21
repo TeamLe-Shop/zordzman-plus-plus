@@ -35,8 +35,7 @@ public:
     /// @param data - The data to send
     ///
     /// return If the sending was successful.
-    template <typename T>
-    bool send(T const &data) {
+    template <typename T> bool send(T const &data) {
         return send(&data, sizeof(T));
     }
     /// @brief Close the socket.

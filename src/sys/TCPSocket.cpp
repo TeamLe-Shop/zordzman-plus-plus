@@ -60,7 +60,6 @@ void TCPSocket::close() {
 }
 
 TCPSocket::~TCPSocket() {
-    // Close the socket.
     close();
 }
 } // namespace net

@@ -5,10 +5,12 @@
 
 namespace json {
 
-std::string formatJson(std::string jsonString) {
-    for (size_t i = 0; i < jsonString.size(); i++) {
-        if (jsonString[i] == '`') {
-            jsonString[i] = '\"';
+std::string formatJson(std::string jsonString, bool specialQuotes) {
+    if (specialQuotes) {
+        for (size_t i = 0; i < jsonString.size(); i++) {
+            if (jsonString[i] == '`') {
+                jsonString[i] = '\"';
+            }
         }
     }
 

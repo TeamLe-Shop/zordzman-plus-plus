@@ -3,12 +3,15 @@
 #include "gfx/drawingOperations.hpp"
 #include "entity/Player.hpp"
 #include "Game.hpp"
+#include "level/tiles/Tile.hpp"
 
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 
 namespace {
+int ticks = 0;
+
 // Read all data from a stream into a vector of char
 std::vector<char> readAllFromStream(std::istream &stream) {
     std::vector<char> data;
@@ -92,7 +95,8 @@ void Level::render() const {
 
     for (int x = minX; x <= maxX; x++) {
         for (int y = minY; y <= maxY; y++) {
-            drawSpriteFromSheet(getSheet("main"), tileAt(x, y), 0, x * 32,
+            drawSpriteFromSheet(getSheet("main"),
+                                tile::render(tileAt(x, y), ticks), 0, x * 32,
                                 y * 32, 32, 32);
         }
     }
@@ -102,6 +106,7 @@ void Level::render() const {
         e->render();
         e->tick();
     }
+    ticks++;
 }
 
 void Level::add(Entity *e) {

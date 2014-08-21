@@ -1,6 +1,12 @@
 #pragma once
 
-namespace Tile {
+typedef unsigned char byte;
 
-// fookin tiles
+namespace tile {
+
+const byte GRASS = 0,
+           FLOWER = 1,
+           WATER  = 2;
+
+byte render(byte a, int tick);
 }

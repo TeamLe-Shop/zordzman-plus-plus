@@ -4,7 +4,7 @@
 
 using fmt::print;
 
-namespace net {
+namespace sys {
 bool TCPSocket::connectToHost(std::string host, int portnum) {
     // Attempt to resolve the host. Report the error if we couldn't.
     if (SDLNet_ResolveHost(&m_server, host.c_str(), portnum) < 0) {

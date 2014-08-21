@@ -1,6 +1,6 @@
 #pragma once
 
-namespace net {
+namespace sys {
 
 char const PROTOCOL_VERSION = 0;
 

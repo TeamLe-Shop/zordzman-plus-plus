@@ -27,7 +27,7 @@ Game::Game(Config const &cfg)
 
 void Game::joinServer(std::string host) {
     m_socket.connectToHost(host, m_cfg.port);
-    m_socket.send(net::PROTOCOL_VERSION);
+    m_socket.send(sys::PROTOCOL_VERSION);
 
     std::string credentials("{                         "
                             "    `type`: `credentials`,"

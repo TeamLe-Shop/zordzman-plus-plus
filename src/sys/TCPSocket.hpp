@@ -3,7 +3,7 @@
 #include <SDL_net.h>
 #include <string>
 
-namespace net {
+namespace sys {
 
 // The TCPSocket class. Hurr durr?
 class TCPSocket {

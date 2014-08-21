@@ -28,7 +28,7 @@ private:
     Game &operator=(const Game &) = delete;
     sys::System m_system;
     sys::RenderWindow m_window;
-    net::TCPSocket m_socket;
+    sys::TCPSocket m_socket;
 
 public:
     ResourceManager resources;

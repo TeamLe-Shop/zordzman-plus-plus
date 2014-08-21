@@ -49,6 +49,6 @@ private:
     // The actual socket.
     TCPsocket m_socket;
     // Whether it is open or not.
-    bool m_open;
+    bool m_open = false;
 };
 }

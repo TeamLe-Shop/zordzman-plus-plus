@@ -16,6 +16,9 @@ Dependencies
 =========
 
 It uses SDL, SDL_Image and OpenGL for about everything right now.
+It also uses cJson for parsing JSON. See cJson on sourceforge: http://sourceforge.net/projects/cjson/
+
+The source code of cJson in zordzman is located in the src/cJson/ directory.
 
 We will use SDL_Net for networking.
 

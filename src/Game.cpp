@@ -3,6 +3,7 @@
 #include "globalResources.hpp"
 #include "gfx/drawingOperations.hpp"
 #include "net/Net.hpp"
+#include "json/json.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -21,15 +22,26 @@ Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
     // spritesheets and sounds
     globalResources::init();
     // Spawn the player at the level spawn, with a speed of 1.5
+    joinServer("gatsan.ddns.net");
     m_player =
         new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
     // Add the player to level.
     m_level.add(m_player);
+}
 
-    // Try and connect to host "localhost", with PORT_NUMBER.
-    m_socket.connectToHost("localhost", net::PORT_NUMBER);
-    // Send the protocol version
+void Game::joinServer(std::string host) {
+    m_socket.connectToHost(host, net::PORT_NUMBER);
     m_socket.send((void *)&net::PROTOCOL_VERSION, 1);
+
+    std::string credentials(
+    "{                         "
+    "    `type`: `credentials`,"
+    "    `entity`: {           "
+    "        `name`: `%s`      "
+    "    }                     "
+    "}                         ");
+
+    credentials = json::formatJson(credentials);
 }
 
 Game::~Game() {

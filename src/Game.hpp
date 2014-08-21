@@ -18,6 +18,8 @@ public:
     static Game &get();
     /// @brief Get the window on which things are rendered.
     sys::RenderWindow &getWindow();
+    /// @brief Join a game server.
+    void joinServer(std::string host);
 
 private:
     sys::System m_system;

@@ -29,7 +29,7 @@ public:
     /// @param The amount of bytes to send.
     ///
     /// @return If the sending was successful.
-    bool send(void *buf, int len);
+    bool send(const void *buf, int len);
     /// @brief Close the socket.
     void close();
     /// @brief Close the socket when destroyed.

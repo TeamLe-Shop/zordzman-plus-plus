@@ -40,7 +40,7 @@ bool TCPSocket::send(std::string buf) {
     return true;
 }
 
-bool TCPSocket::send(void *buf, int len) {
+bool TCPSocket::send(const void *buf, int len) {
     if (!m_open)
         return false;
     // Report an error if we sent less bytes than we should have.

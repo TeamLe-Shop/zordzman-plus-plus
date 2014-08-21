@@ -32,13 +32,14 @@ void Game::joinServer(std::string host) {
     m_socket.connectToHost(host, net::PORT_NUMBER);
     m_socket.send((void *)&net::PROTOCOL_VERSION, 1);
 
-    std::string credentials(
-    "{                         "
-    "    `type`: `credentials`,"
-    "    `entity`: {           "
-    "        `name`: `" + m_player->getUsername() + "`      "
-    "    }                     \n"
-    "}                         \n");
+    std::string credentials("{                         "
+                            "    `type`: `credentials`,"
+                            "    `entity`: {           "
+                            "        `name`: `" +
+                            m_player->getUsername() +
+                            "`      "
+                            "    }                     \n"
+                            "}                         \n");
 
     credentials = json::formatJson(credentials);
 

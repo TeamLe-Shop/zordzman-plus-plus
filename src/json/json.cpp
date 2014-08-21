@@ -24,4 +24,4 @@ std::string formatJson(std::string jsonString) {
     return result_string;
 }
 
-} //namespace json
+} // namespace json

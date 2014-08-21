@@ -5,11 +5,12 @@
 #include "level/Level.hpp"
 #include "sys/TCPSocket.hpp"
 #include "entity/Player.hpp"
+#include "Config.hpp"
 
 class Game {
 public:
     /// @brief Initialize the resources, player and level
-    Game();
+    Game(Config const &cfg);
     /// @brief Free resources to avoid memory leaks n shit
     ~Game();
     /// @brief Game loop.
@@ -29,4 +30,5 @@ private:
     net::TCPSocket m_socket;
     Level m_level;
     Player *m_player;
+    Config const &m_cfg;
 };

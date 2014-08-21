@@ -15,20 +15,21 @@ Game *game_instance;
 std::string const title = "Zordzman v0.0.1";
 }
 
-Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
+Game::Game(Config const &cfg)
+    : m_window(800, 600, title), m_level("kek.lvl"), m_cfg(cfg) {
     game_instance = this;
     // Initialize the global resources, so we can access various shit like
     // spritesheets and sounds
     globalResources::init();
     m_player =
         new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
-    joinServer("gatsan.ddns.net");
+    joinServer(cfg.host);
     // Add the player to level.
     m_level.add(m_player);
 }
 
 void Game::joinServer(std::string host) {
-    m_socket.connectToHost(host, net::PORT_NUMBER);
+    m_socket.connectToHost(host, m_cfg.port);
     m_socket.send(net::PROTOCOL_VERSION);
 
     std::string credentials("{                         "

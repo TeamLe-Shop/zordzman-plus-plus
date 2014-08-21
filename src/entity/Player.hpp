@@ -20,7 +20,7 @@ public:
     /// @brief Clone the player
     Player *clone() const;
     /// @brief Return the player's m_m_m_username.
-    std::string getUsername();
+    std::string getUsername() const;
 
 private:
     /// @brief Check for input form the keyboard.

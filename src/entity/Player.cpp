@@ -117,7 +117,4 @@ void Player::moveRight() {
 
 Player *Player::clone() const { return new Player(*this); }
 
-std::string Player::getUsername() {
-    std::string s = m_username;
-    return s;
-}
+std::string Player::getUsername() const { return m_username; }

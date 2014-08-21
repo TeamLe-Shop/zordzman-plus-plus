@@ -8,7 +8,7 @@ public:
     /// @param y Initial y position
     Entity(float x, float y);
     /// @brief Call the render code for an entity.
-    virtual void render();
+    virtual void render() const;
     /// @brief Update logic for an entity.
     virtual void tick();
     virtual ~Entity();

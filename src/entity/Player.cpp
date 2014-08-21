@@ -9,7 +9,7 @@ Player::Player(std::string username, float x, float y, float speed)
     m_health = 100;
 }
 
-void Player::render() {
+void Player::render() const {
     using namespace drawingOperations;
     using namespace globalResources;
     SpriteSheet &sheet = getSheet("main");

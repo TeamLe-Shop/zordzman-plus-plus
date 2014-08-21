@@ -12,8 +12,8 @@ std::string formatJson(std::string jsonString) {
         }
     }
 
-    cJSON* json = cJSON_Parse(jsonString.c_str());
-    char* out;
+    cJSON *json = cJSON_Parse(jsonString.c_str());
+    char *out;
 
     out = cJSON_Print(json);
     cJSON_Delete(json);

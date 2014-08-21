@@ -2,7 +2,7 @@
 
 #include "globalResources.hpp"
 #include "gfx/drawingOperations.hpp"
-#include "net/Net.hpp"
+#include "net/net.hpp"
 #include "json/json.hpp"
 
 #include <SDL.h>

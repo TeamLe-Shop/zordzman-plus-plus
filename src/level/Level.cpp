@@ -4,8 +4,8 @@
 #include "entity/Player.hpp"
 #include "Game.hpp"
 #include "level/tiles/Tile.hpp"
+#include "format.h"
 
-#include <iostream>
 #include <fstream>
 #include <algorithm>
 
@@ -29,8 +29,8 @@ Level::Level(std::string const levelname) {
 
     // Complain if that Level couldn't be found / opened.
     if (!file.is_open()) {
-        std::cerr << "[ERROR] Couldn't open level file resources/levels/"
-                  << levelname;
+        fmt::format("[ERROR] Couldn't open level file resources/levels/{}",
+                    levelname);
         std::abort();
     }
 

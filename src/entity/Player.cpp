@@ -2,7 +2,6 @@
 #include "gfx/drawingOperations.hpp"
 #include "globalResources.hpp"
 
-#include <iostream>
 #include <SDL.h>
 
 // How many "pixels" the player has walked.

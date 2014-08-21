@@ -2,7 +2,6 @@
 
 #include <SDL_image.h>
 #include <stdexcept>
-#include <iostream>
 #include <cassert>
 
 namespace sys {

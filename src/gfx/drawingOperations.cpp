@@ -4,7 +4,6 @@
 #include <SDL_opengl.h>
 #include "globalResources.hpp"
 #include <string.h>
-#include <iostream>
 
 namespace drawingOperations {
 

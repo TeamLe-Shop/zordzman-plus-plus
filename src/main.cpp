@@ -1,7 +1,7 @@
 #include "Game.hpp"
 
 #include <stdexcept>
-#include <iostream>
+#include "format.h"
 
 int main() {
     try {
@@ -11,7 +11,7 @@ int main() {
         game.exec();
     }
     catch (std::exception const &except) {
-        std::cerr << "Fatal exception: " << except.what() << std::endl;
+        fmt::print(stderr, "Fatal exception: {}\n", except.what());
         return 1;
     }
 }

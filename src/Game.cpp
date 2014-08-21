@@ -7,9 +7,8 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
-#include <iostream>
 #include <stdexcept>
-#include <cstdio>
+#include "format.h"
 
 namespace {
 Game *game_instance;
@@ -73,20 +72,14 @@ void Game::exec() {
         auto const width = m_window.getWidth();
         auto const height = m_window.getHeight();
 
-        // The string that contains information about the player's current
-        // health.
-        char hp_str[8];
-
-        // Use sprintf to put the "HP: <health>" string into hp_str
-        sprintf(hp_str, "HP: %d", m_player->getHealth());
-
         // Draw the rectangle/box which contains information about the player.
         glColor3f(0.2, 0.2, 0.2);
         drawRectangle(0, 0 + height - 32, width, 32, true);
         glColor3f(0.7, 0.7, 0.7);
 
         // Draw the health string.
-        drawText(hp_str, 0, 0 + height - 32, 16, 16);
+        auto hptext = fmt::format("HP: {}", m_player->getHealth());
+        drawText(hptext, 0, 0 + height - 32, 16, 16);
         drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
         glColor3f(0, 1, 0);
         // Draw the names of the weapons as smaller components

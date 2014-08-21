@@ -1,5 +1,4 @@
 #include "Tile.hpp"
-#include <iostream>
 
 using namespace tile;
 

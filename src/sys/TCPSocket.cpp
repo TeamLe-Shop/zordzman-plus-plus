@@ -28,16 +28,7 @@ void TCPSocket::startReading() {
 }
 
 bool TCPSocket::send(std::string buf) {
-    if (!m_open)
-        return false;
-    int len = strlen(buf.c_str()) + 1;
-    // Report an error if we sent less bytes than we should have.
-    if (SDLNet_TCP_Send(m_socket, (void *)buf.c_str(), len) < len) {
-        fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
-        return false;
-    }
-    std::cout << std::endl;
-    return true;
+    return send(static_cast<const void *>(buf.c_str()), buf.size() + 1);
 }
 
 bool TCPSocket::send(const void *buf, int len) {

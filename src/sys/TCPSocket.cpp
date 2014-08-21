@@ -1,5 +1,7 @@
 #include "TCPSocket.hpp"
 
+#include <iostream>
+
 namespace net {
 bool TCPSocket::connectToHost(std::string host, int portnum) {
     // Attempt to resolve the host. Report the error if we couldn't.
@@ -34,6 +36,7 @@ bool TCPSocket::send(std::string buf) {
         fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
         return false;
     }
+    std::cout << std::endl;
     return true;
 }
 

@@ -21,9 +21,9 @@ Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
     // Initialize the global resources, so we can access various shit like
     // spritesheets and sounds
     globalResources::init();
-    joinServer("gatsan.ddns.net");
     m_player =
         new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
+    joinServer("gatsan.ddns.net");
     // Add the player to level.
     m_level.add(m_player);
 }
@@ -36,14 +36,9 @@ void Game::joinServer(std::string host) {
     "{                         "
     "    `type`: `credentials`,"
     "    `entity`: {           "
-    "        `name`: `");
-    std::string temp;
-    temp.append(m_player->getUsername()); // <-- WHY WONT THIS FUCKING WORK
-    temp.append("`      "
-    "    }                     "
+    "        `name`: `" + m_player->getUsername() + "`      "
+    "    }                     \n"
     "}                         \n");
-
-    credentials += temp;
 
     credentials = json::formatJson(credentials);
 

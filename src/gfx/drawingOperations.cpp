@@ -2,7 +2,7 @@
 #include <cassert>
 #include <cstddef>
 #include <SDL_opengl.h>
-#include "globalResources.hpp"
+#include "Game.hpp"
 #include <string.h>
 
 namespace drawingOperations {
@@ -89,7 +89,7 @@ void drawLine(float x1, float y1, float x2, float y2) {
 }
 
 void drawText(std::string const &text, int x, int y, int w, int h) {
-    SpriteSheet const &sheet = globalResources::getSheet("main");
+    SpriteSheet const &sheet = Game::get().resources.getSheet("main");
     for (char c : text) {
         char const *const chars = "abcdefghijklmnopqrstuvwxyz      "
                                   "                                "

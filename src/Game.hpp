@@ -6,12 +6,13 @@
 #include "sys/TCPSocket.hpp"
 #include "entity/Player.hpp"
 #include "Config.hpp"
+#include "ResourceManager.hpp"
 
 class Game {
 public:
     /// @brief Initialize the resources, player and level
     Game(Config const &cfg);
-    /// @brief Free resources to avoid memory leaks n shit
+    /// @brief Destructor
     ~Game();
     /// @brief Game loop.
     void exec();
@@ -28,6 +29,11 @@ private:
     sys::System m_system;
     sys::RenderWindow m_window;
     net::TCPSocket m_socket;
+
+public:
+    ResourceManager resources;
+
+private:
     Level m_level;
     Player *m_player;
     Config const &m_cfg;

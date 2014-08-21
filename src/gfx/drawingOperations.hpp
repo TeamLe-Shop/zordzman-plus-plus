@@ -1,7 +1,6 @@
 #pragma once
 
 #include "SpriteSheet.hpp"
-#include "globalResources.hpp"
 
 /// @brief Various drawing operations
 namespace drawingOperations {

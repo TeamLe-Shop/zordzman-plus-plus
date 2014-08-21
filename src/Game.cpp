@@ -1,6 +1,5 @@
 #include "Game.hpp"
 
-#include "globalResources.hpp"
 #include "gfx/drawingOperations.hpp"
 #include "net/net.hpp"
 #include "json/json.hpp"
@@ -18,9 +17,6 @@ std::string const title = "Zordzman v0.0.1";
 Game::Game(Config const &cfg)
     : m_window(800, 600, title), m_level("kek.lvl"), m_cfg(cfg) {
     game_instance = this;
-    // Initialize the global resources, so we can access various shit like
-    // spritesheets and sounds
-    globalResources::init();
     m_player =
         new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
     joinServer(cfg.host);
@@ -46,11 +42,7 @@ void Game::joinServer(std::string host) {
     m_socket.send(credentials);
 }
 
-Game::~Game() {
-    // Free resources n shit, so we don't get a memory leak.
-    globalResources::free();
-    game_instance = nullptr;
-}
+Game::~Game() { game_instance = nullptr; }
 
 void Game::exec() {
     for (;;) {

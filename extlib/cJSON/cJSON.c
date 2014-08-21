@@ -23,14 +23,14 @@
 /* cJSON */
 /* JSON parser in C. */
 
-#include <cstring>
-#include <cstdio>
-#include <cmath>
-#include <cstdlib>
-#include <cfloat>
-#include <climits>
-#include <cctype>
-#include "json/cJSON.h"
+#include <string.h>
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <float.h>
+#include <limits.h>
+#include <ctype.h>
+#include "cJSON.h"
 
 static const char *ep;
 
@@ -584,7 +584,7 @@ void cJSON_Minify(char *json)
 	while (*json)
 	{
 		if (*json==' ') json++;
-		else if (*json=='\t') json++;	// Whitespace characters.
+		else if (*json=='\t') json++;   // Whitespace characters.
 		else if (*json=='\r') json++;
 		else if (*json=='\n') json++;
 		else if (*json=='/' && json[1]=='/')  while (*json && *json!='\n') json++;	// double-slash comments, to end of line.

@@ -11,6 +11,10 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(USING_CLANG TRUE)
 endif()
 
+include_directories(extlib/cJSON)
+
+add_library(cJSON extlib/cJSON/cJSON.c)
+
 # For GCC and Clang, enable C++11 support and add some other flags
 if(USING_GCC OR USING_CLANG OR GATSAN)
   add_compile_options(-std=c++11 -pedantic -Wall -Wextra
@@ -42,4 +46,4 @@ file(GLOB_RECURSE SOURCE_FILES src/*.*pp)
 
 add_executable(zordzman ${SOURCE_FILES})
 
-target_link_libraries(zordzman ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY})
+target_link_libraries(zordzman ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} cJSON)

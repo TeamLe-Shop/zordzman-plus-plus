@@ -1,4 +1,4 @@
-#include "json/cJSON.h"
+#include "cJSON.h"
 #include <cstring>
 #include <cstdlib>
 #include "json/json.hpp"
@@ -26,4 +26,4 @@ std::string formatJson(std::string jsonString, bool specialQuotes) {
     return result_string;
 }
 
-} //namespace json
+} // namespace json

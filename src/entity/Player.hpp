@@ -35,4 +35,6 @@ private:
     void moveRight();
 
     std::string m_username = "Player";
+    // How many "pixels" the player has walked.
+    float m_distanceWalked = 0;
 };

@@ -4,9 +4,6 @@
 
 #include <SDL.h>
 
-// How many "pixels" the player has walked.
-float distance_walked = 0;
-
 Player::Player(std::string username, float x, float y, float speed)
     : Mob(x, y, speed), m_username(username) {
     m_health = 100;
@@ -24,18 +21,18 @@ void Player::render() {
     switch (m_direction) {
     case SOUTH:
         drawSpriteFromSheet(sheet, 0, 2, m_x, m_y, 32, 32,
-                            distance_walked < 30 ? NO_FLIP : X_FLIP);
+                            m_distanceWalked < 30 ? NO_FLIP : X_FLIP);
         break;
     case NORTH:
         drawSpriteFromSheet(sheet, 3, 2, m_x, m_y, 32, 32,
-                            distance_walked < 30 ? NO_FLIP : X_FLIP);
+                            m_distanceWalked < 30 ? NO_FLIP : X_FLIP);
         break;
     case WEST:
-        drawSpriteFromSheet(sheet, distance_walked < 30 ? 1 : 2, 2, m_x, m_y,
+        drawSpriteFromSheet(sheet, m_distanceWalked < 30 ? 1 : 2, 2, m_x, m_y,
                             32, 32, X_FLIP);
         break;
     case EAST:
-        drawSpriteFromSheet(sheet, distance_walked < 30 ? 1 : 2, 2, m_x, m_y,
+        drawSpriteFromSheet(sheet, m_distanceWalked < 30 ? 1 : 2, 2, m_x, m_y,
                             32, 32, NO_FLIP);
         break;
     }
@@ -56,10 +53,10 @@ void Player::tick() {
     input();
 
     // Keep the "distance walked" between 60 and 0.
-    if (distance_walked > 60)
-        distance_walked = 0;
-    else if (distance_walked < 0)
-        distance_walked = 60;
+    if (m_distanceWalked > 60)
+        m_distanceWalked = 0;
+    else if (m_distanceWalked < 0)
+        m_distanceWalked = 60;
 }
 
 void Player::input() {
@@ -83,7 +80,7 @@ void Player::moveUp() {
     // Decrease the player's Y position by their speed
     // and their distance_walked by (speed * 0.8), as well as
     // change their direction to NORTH.
-    distance_walked -= m_speed * 0.8;
+    m_distanceWalked -= m_speed * 0.8;
     m_y -= m_speed;
     m_direction = NORTH;
 }
@@ -92,7 +89,7 @@ void Player::moveDown() {
     // Increase the player's Y position by their speed
     // and their distance_walked by (speed * 0.8), as well as
     // change their direction to SOUTH.
-    distance_walked += m_speed * 0.8;
+    m_distanceWalked += m_speed * 0.8;
     m_y += m_speed;
     m_direction = SOUTH;
 }
@@ -101,7 +98,7 @@ void Player::moveLeft() {
     // Decrease the player's Z position by their speed
     // and their distance_walked by (speed * 0.8), as well as
     // change their direction to WEST.
-    distance_walked -= m_speed * 0.8;
+    m_distanceWalked -= m_speed * 0.8;
     m_x -= m_speed;
     m_direction = WEST;
 }
@@ -110,7 +107,7 @@ void Player::moveRight() {
     // Increase the player's X position by their speed
     // and their distance_walked by (speed * 0.8), as well as
     // change their direction to EAST.
-    distance_walked += m_speed * 0.8;
+    m_distanceWalked += m_speed * 0.8;
     m_x += m_speed;
     m_direction = EAST;
 }

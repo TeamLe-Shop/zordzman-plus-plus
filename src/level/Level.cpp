@@ -28,9 +28,9 @@ Level::Level(std::string const levelname) {
 
     // Complain if that Level couldn't be found / opened.
     if (!file.is_open()) {
-        fmt::format("[ERROR] Couldn't open level file resources/levels/{}",
-                    levelname);
-        std::abort();
+        auto str = fmt::format(
+            "[ERROR] Couldn't open level file resources/levels/{}", levelname);
+        throw std::runtime_error(str);
     }
 
     // Right now, we're just taking in some basic information about the map.

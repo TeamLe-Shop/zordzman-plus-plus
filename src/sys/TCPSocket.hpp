@@ -30,6 +30,15 @@ public:
     ///
     /// @return If the sending was successful.
     bool send(const void *buf, int len);
+    /// @brief Send data to the host
+    ///
+    /// @param data - The data to send
+    ///
+    /// return If the sending was successful.
+    template <typename T>
+    bool send(T const &data) {
+        return send(&data, sizeof(T));
+    }
     /// @brief Close the socket.
     void close();
     /// @brief Close the socket when destroyed.

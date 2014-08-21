@@ -23,14 +23,14 @@ Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
     globalResources::init();
     m_player =
         new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
-    joinServer("gatsan.ddns.net");
+    joinServer("localhost");
     // Add the player to level.
     m_level.add(m_player);
 }
 
 void Game::joinServer(std::string host) {
     m_socket.connectToHost(host, net::PORT_NUMBER);
-    m_socket.send((void *)&net::PROTOCOL_VERSION, 1);
+    m_socket.send(net::PROTOCOL_VERSION);
 
     std::string credentials("{                         "
                             "    `type`: `credentials`,"

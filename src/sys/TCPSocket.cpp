@@ -34,8 +34,6 @@ bool TCPSocket::send(std::string buf) {
         fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
         return false;
     }
-
-    printf("Message: %s", buf.c_str());
     return true;
 }
 
@@ -47,8 +45,6 @@ bool TCPSocket::send(void *buf, int len) {
         fprintf(stderr, "SDLNet_TCP_Send: %s\n", SDLNet_GetError());
         return false;
     }
-
-    printf("Message: %s", buf);
     return true;
 }
 

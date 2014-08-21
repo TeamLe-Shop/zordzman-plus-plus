@@ -33,15 +33,18 @@ void Game::joinServer(std::string host) {
     m_socket.connectToHost(host, net::PORT_NUMBER);
     m_socket.send((void *)&net::PROTOCOL_VERSION, 1);
 
-    std::string credentials(
+    char* jsonStr =
     "{                         "
     "    `type`: `credentials`,"
     "    `entity`: {           "
     "        `name`: `%s`      "
     "    }                     "
-    "}                         ");
+    "}                         \n";
 
+    sprintf(jsonStr, jsonStr, m_player->getUsername());
     credentials = json::formatJson(credentials);
+
+    m_socket.send(credentials);
 }
 
 Game::~Game() {

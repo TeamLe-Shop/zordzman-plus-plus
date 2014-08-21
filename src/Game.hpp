@@ -22,6 +22,8 @@ public:
     void joinServer(std::string host);
 
 private:
+    Game(const Game &) = delete;
+    Game &operator=(const Game &) = delete;
     sys::System m_system;
     sys::RenderWindow m_window;
     net::TCPSocket m_socket;

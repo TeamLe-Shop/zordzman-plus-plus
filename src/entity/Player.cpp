@@ -42,9 +42,9 @@ void Player::render() {
     // Set the sprite size back to 8x8.
     getSheet("main").setSpriteSize(8);
 
-    float username_x = (m_x + 16) - (m_username.size() * 4);
+    float username_x = (m_x + 16) - m_username.size() * 4;
     float username_y = m_y - 12;
-    float username_width = (m_username.size() * 8);
+    float username_width = m_username.size() * 8;
     glColor4f(0.2, 0.2, 0.2, 0.2);
     drawRectangle(username_x, username_y, username_width, 8);
     glColor4f(1, 1, 1, 1);
@@ -116,3 +116,8 @@ void Player::moveRight() {
 }
 
 Player *Player::clone() const { return new Player(*this); }
+
+std::string Player::getUsername() {
+    std::string s = m_username;
+    return s;
+}

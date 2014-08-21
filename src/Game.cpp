@@ -21,7 +21,6 @@ Game::Game() : m_window(800, 600, title), m_level("kek.lvl") {
     // Initialize the global resources, so we can access various shit like
     // spritesheets and sounds
     globalResources::init();
-    // Spawn the player at the level spawn, with a speed of 1.5
     joinServer("gatsan.ddns.net");
     m_player =
         new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5);
@@ -33,15 +32,19 @@ void Game::joinServer(std::string host) {
     m_socket.connectToHost(host, net::PORT_NUMBER);
     m_socket.send((void *)&net::PROTOCOL_VERSION, 1);
 
-    char* jsonStr =
+    std::string credentials(
     "{                         "
     "    `type`: `credentials`,"
     "    `entity`: {           "
-    "        `name`: `%s`      "
+    "        `name`: `");
+    std::string temp;
+    temp.append(m_player->getUsername()); // <-- WHY WONT THIS FUCKING WORK
+    temp.append("`      "
     "    }                     "
-    "}                         \n";
+    "}                         \n");
 
-    sprintf(jsonStr, jsonStr, m_player->getUsername());
+    credentials += temp;
+
     credentials = json::formatJson(credentials);
 
     m_socket.send(credentials);

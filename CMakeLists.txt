@@ -54,12 +54,12 @@ include_directories(client)
 file(GLOB_RECURSE CLIENT_SOURCES client/*.*pp)
 
 add_executable(zordzman ${CLIENT_SOURCES})
-add_executable(zordserv server/main.cpp)
+add_executable(zordzman-server server/main.cpp)
 
 target_link_libraries(zordzman
     ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLNET_LIBRARY}
     ${OPENGL_LIBRARY} cJSON cppformat server)
 
-target_link_libraries(zordserv
+target_link_libraries(zordzman-server
     ${SDL2_LIBRARY} ${SDLNET_LIBRARY} server cJSON cppformat
 )

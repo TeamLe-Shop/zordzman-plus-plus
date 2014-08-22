@@ -49,11 +49,11 @@ if(GATSAN)
         add_compile_options(-stdlib=libc++)
 endif()
 
-include_directories(src)
+include_directories(client)
 
-file(GLOB_RECURSE SOURCE_FILES src/*.*pp)
+file(GLOB_RECURSE CLIENT_SOURCES client/*.*pp)
 
-add_executable(zordzman ${SOURCE_FILES})
+add_executable(zordzman ${CLIENT_SOURCES})
 add_executable(zordserv server/main.cpp)
 
 target_link_libraries(zordzman

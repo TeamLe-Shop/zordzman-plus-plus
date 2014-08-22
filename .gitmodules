@@ -1,0 +1,3 @@
+[submodule "zordzmanpp-server"]
+	path = zordzmanpp-server
+	url = https://github.com/TeamLe-Shop/zordzmanpp-server.git

@@ -27,6 +27,9 @@ if(USING_GCC OR USING_CLANG OR GATSAN)
   endif()
 endif()
 
+include_directories(zordzmanpp-server/lib)
+add_subdirectory(zordzmanpp-server)
+
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 
 find_package(OpenGL REQUIRED)

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SDL_net.h>
-#include "cJSON.h"
 
 class Server {
 public:

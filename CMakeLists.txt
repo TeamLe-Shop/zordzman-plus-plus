@@ -11,10 +11,9 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(USING_CLANG TRUE)
 endif()
 
-include_directories(common/extlib/cJSON)
+include_directories(common/extlib/json11)
 include_directories(common/extlib/cppformat)
 
-add_library(cJSON common/extlib/cJSON/cJSON.c)
 add_library(cppformat common/extlib/cppformat/format.cc)
 
 # For GCC and Clang, enable C++11 support and add some other flags
@@ -26,6 +25,8 @@ if(USING_GCC OR USING_CLANG OR GATSAN)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=${SANITIZE}")
   endif()
 endif()
+
+add_library(json11 common/extlib/json11/json11.cpp)
 
 include_directories(server/lib)
 add_library(server server/lib/Server.cpp)
@@ -58,8 +59,8 @@ add_executable(zordzman-server server/main.cpp)
 
 target_link_libraries(zordzman
     ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLNET_LIBRARY}
-    ${OPENGL_LIBRARY} cJSON cppformat server)
+    ${OPENGL_LIBRARY} json11 cppformat server)
 
 target_link_libraries(zordzman-server
-    ${SDL2_LIBRARY} ${SDLNET_LIBRARY} server cJSON cppformat
+    ${SDL2_LIBRARY} ${SDLNET_LIBRARY} server json11 cppformat
 )

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string.h>
 #include "format.h"
+#include "json11.hpp"
 
 #define PORT_NUMBER 4544
 #define PROTOCOL_VERSION 0
@@ -95,12 +96,18 @@ int Server::exec() {
                         }
                     } else {
                         // Parse as JSON.
-                        cJSON* json = cJSON_Parse(buffer);
+                        std::string err;
+                        auto json = json11::Json::parse(buffer, err);
 
-                        cJSON* jsonObject = cJSON_GetObjectItem(json, "type");
+                        if (json == json11::Json()) {
+                            print("[ERROR] Failed to parse JSON: {}", err);
+                        }
 
-                        printf("[INFO] Message Type: %s\n",
-                                cJSON_Print(jsonObject));
+                        auto type = json["type"].dump();
+
+
+                        print("[INFO] Message Type: {}\n",
+                                type);
                     }
 
                 } else {

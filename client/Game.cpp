@@ -2,7 +2,7 @@
 
 #include "gfx/drawingOperations.hpp"
 #include "net/net.hpp"
-#include "json/json.hpp"
+#include "json11.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -35,19 +35,18 @@ Game::Game(Config const &cfg)
 void Game::joinServer(std::string host) {
     m_socket.connectToHost(host, m_cfg.port);
     m_socket.send(sys::PROTOCOL_VERSION);
+    using namespace json11;
 
-    std::string credentials("{                         "
-                            "    `type`: `credentials`,"
-                            "    `entity`: {           "
-                            "        `name`: `" +
-                            m_player->getUsername() +
-                            "`       "
-                            "    }                     \n"
-                            "}                         \n");
+    Json credentials = Json::object {
+        {"type", "credentials"},
+        {"entity", Json::object {
+            {"name", m_player->getUsername()}
+        }},
+    };
 
-    credentials = json::formatJson(credentials);
+    fmt::print("Sending credentials: \"{}\"", credentials.dump());
 
-    m_socket.send(credentials);
+    m_socket.send(credentials.dump());
 }
 
 Game::~Game() { game_instance = nullptr; }

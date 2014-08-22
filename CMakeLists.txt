@@ -14,7 +14,8 @@ endif()
 include_directories(common/extlib/cJSON)
 include_directories(common/extlib/cppformat)
 
-add_subdirectory(common)
+add_library(cJSON common/extlib/cJSON/cJSON.c)
+add_library(cppformat common/extlib/cppformat/format.cc)
 
 # For GCC and Clang, enable C++11 support and add some other flags
 if(USING_GCC OR USING_CLANG OR GATSAN)
@@ -26,8 +27,8 @@ if(USING_GCC OR USING_CLANG OR GATSAN)
   endif()
 endif()
 
-include_directories(server/src/lib)
-add_subdirectory(server)
+include_directories(server/lib)
+add_library(server server/lib/Server.cpp)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 
@@ -53,7 +54,12 @@ include_directories(src)
 file(GLOB_RECURSE SOURCE_FILES src/*.*pp)
 
 add_executable(zordzman ${SOURCE_FILES})
+add_executable(zordserv server/main.cpp)
 
 target_link_libraries(zordzman
     ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLNET_LIBRARY}
-    ${OPENGL_LIBRARY} cJSON cppformat libzordz-server)
+    ${OPENGL_LIBRARY} cJSON cppformat server)
+
+target_link_libraries(zordserv
+    ${SDL2_LIBRARY} ${SDLNET_LIBRARY} server cJSON cppformat
+)

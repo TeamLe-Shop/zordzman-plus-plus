@@ -7,7 +7,7 @@
 #include "format.h"
 
 
-/// @breif Represents a connected client
+/// @brief Represents a connected client
 ///
 /// When a message handler is called it is passed the client instance from which
 /// the message originated. Therefore this used be used for persisting anything
@@ -18,12 +18,12 @@ public:
     Client(TCPsocket socket);
     ~Client();
 
-    /// @breif Convenience logging that includes the peers's address
+    /// @brief Convenience logging that includes the peers's address
     ///
     /// Messages are printed to stderr.
     void log(std::string message);
 
-    /// @breif Assert the client is using the correct protocol version
+    /// @brief Assert the client is using the correct protocol version
     /// @return True if the correct version, false otherwise
     bool checkProtocolVersion();
 

@@ -30,10 +30,10 @@ Server::Server() {
     memset(buffer, 0, 1024);
 
     print("\n[INFO] Compiled with SDL_net version: {:d}.{:d}.{:d}\n",
-           compile_version.major, compile_version.minor, compile_version.patch);
+          compile_version.major, compile_version.minor, compile_version.patch);
 
     print("[INFO] Running with SDL_net version: {:d}.{:d}.{:d}\n\n",
-           link_version->major, link_version->minor, link_version->patch);
+          link_version->major, link_version->minor, link_version->patch);
 
     print("-- INITIALIZING --\n");
 
@@ -105,9 +105,7 @@ int Server::exec() {
 
                         auto type = json["type"].dump();
 
-
-                        print("[INFO] Message Type: {}\n",
-                                type);
+                        print("[INFO] Message Type: {}\n", type);
                     }
 
                 } else {

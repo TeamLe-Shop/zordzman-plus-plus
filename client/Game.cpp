@@ -37,11 +37,9 @@ void Game::joinServer(std::string host) {
     m_socket.send(sys::PROTOCOL_VERSION);
     using namespace json11;
 
-    Json credentials = Json::object {
-        {"type", "credentials"},
-        {"entity", Json::object {
-            {"name", m_player->getUsername()}
-        }},
+    Json credentials = Json::object{
+        { "type", "credentials" },
+        { "entity", Json::object{ { "name", m_player->getUsername() } } },
     };
 
     fmt::print("Sending credentials: \"{}\"", credentials.dump());

@@ -53,9 +53,10 @@ endif()
 include_directories(client)
 
 file(GLOB_RECURSE CLIENT_SOURCES client/*.*pp)
-
 add_executable(zordzman ${CLIENT_SOURCES})
-add_executable(zordzman-server server/main.cpp)
+
+file(GLOB_RECURSE SERVER_SOURCES server/*.*pp)
+add_executable(zordzman-server ${SERVER_SOURCES})
 
 target_link_libraries(zordzman
     ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLNET_LIBRARY}

@@ -1,3 +1,6 @@
 [submodule "zordzmanpp-server"]
 	path = zordzmanpp-server
 	url = https://github.com/TeamLe-Shop/zordzmanpp-server.git
+[submodule "zordzmanpp-common"]
+	path = zordzmanpp-common
+	url = https://github.com/TeamLe-Shop/zordzmanpp-common.git

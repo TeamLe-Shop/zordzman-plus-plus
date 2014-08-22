@@ -11,11 +11,10 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(USING_CLANG TRUE)
 endif()
 
-include_directories(extlib/cJSON)
-include_directories(extlib/cppformat)
+include_directories(zordzmanpp-common/extlib/cJSON)
+include_directories(zordzmanpp-common/extlib/cppformat)
 
-add_library(cJSON extlib/cJSON/cJSON.c)
-add_library(cppformat extlib/cppformat/format.cc)
+add_subdirectory(zordzmanpp-common)
 
 # For GCC and Clang, enable C++11 support and add some other flags
 if(USING_GCC OR USING_CLANG OR GATSAN)

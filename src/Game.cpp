@@ -8,6 +8,7 @@
 #include <SDL_image.h>
 #include <stdexcept>
 #include "format.h"
+#include <thread>
 
 namespace {
 Game *game_instance;
@@ -20,6 +21,9 @@ Game::Game(Config const &cfg)
           new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5)),
       m_cfg(cfg) {
     game_instance = this;
+    if (cfg.host == "localhost") {
+        std::thread([=] { m_server.exec(); }).detach();
+    }
     joinServer(cfg.host);
     // Add the player to level.
     m_level.add(m_player);

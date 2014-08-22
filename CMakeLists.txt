@@ -27,7 +27,7 @@ if(USING_GCC OR USING_CLANG OR GATSAN)
   endif()
 endif()
 
-include_directories(zordzmanpp-server/lib)
+include_directories(zordzmanpp-server/src/lib)
 add_subdirectory(zordzmanpp-server)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
@@ -57,4 +57,4 @@ add_executable(zordzman ${SOURCE_FILES})
 
 target_link_libraries(zordzman
     ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLNET_LIBRARY}
-    ${OPENGL_LIBRARY} cJSON cppformat)
+    ${OPENGL_LIBRARY} cJSON cppformat libzordz-server)

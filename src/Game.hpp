@@ -7,6 +7,7 @@
 #include "entity/Player.hpp"
 #include "Config.hpp"
 #include "ResourceManager.hpp"
+#include "Server.hpp"
 
 class Game {
 public:
@@ -37,4 +38,5 @@ private:
     Level m_level;
     Player *m_player;
     Config const &m_cfg;
+    Server m_server;
 };

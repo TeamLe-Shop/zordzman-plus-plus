@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "Client.hpp"
 
 #include <SDL_net.h>
 #include <iostream>

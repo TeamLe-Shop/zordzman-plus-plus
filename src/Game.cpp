@@ -12,7 +12,7 @@
 
 namespace {
 Game *game_instance;
-std::string const title = "Zordzman v0.0.1";
+std::string const title = "Zordzman v0.0.2";
 }
 
 Game::Game(Config const &cfg)
@@ -21,6 +21,9 @@ Game::Game(Config const &cfg)
           new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5)),
       m_cfg(cfg) {
     game_instance = this;
+
+    // Create a new thread for the server if we're connecting
+    // to localhost.
     if (cfg.host == "localhost") {
         std::thread([=] { m_server.exec(); }).detach();
     }

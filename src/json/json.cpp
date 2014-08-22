@@ -2,6 +2,7 @@
 #include <cstring>
 #include <cstdlib>
 #include "json/json.hpp"
+#include "format.h"
 
 namespace json {
 
@@ -15,6 +16,12 @@ std::string formatJson(std::string jsonString, bool specialQuotes) {
     }
 
     cJSON *json = cJSON_Parse(jsonString.c_str());
+
+    if (!json) {
+        fmt::print(stderr, "[WARNING] Failed to parse JSON: {}\r\n",
+                   jsonString);
+        return "";
+    }
     char *out;
 
     out = cJSON_Print(json);

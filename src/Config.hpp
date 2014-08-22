@@ -3,6 +3,6 @@
 #include <string>
 
 struct Config {
-    std::string host = "gatsan.ddns.net";
+    std::string host = "localhost";
     int port = 4544;
 };

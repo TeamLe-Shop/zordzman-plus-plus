@@ -38,7 +38,7 @@ void Game::joinServer(std::string host) {
                             "    `entity`: {           "
                             "        `name`: `" +
                             m_player->getUsername() +
-                            "`      "
+                            "`       "
                             "    }                     \n"
                             "}                         \n");
 

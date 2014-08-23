@@ -117,4 +117,14 @@ std::string Player::getUsername() const { return m_username; }
 
 BaseWeapon Player::getCombatWeapon() { return m_combat_weapon; }
 
+bool Player::holdingCombatWeapon() {
+    return m_current_weapon == &m_combat_weapon;
+}
+
 BaseWeapon Player::getSpecialWeapon() { return m_special_weapon; }
+
+bool Player::holdingSpecialWeapon() {
+    return m_current_weapon == &m_special_weapon;
+}
+
+BaseWeapon Player::getCurrentWeapon() { return *m_current_weapon; }

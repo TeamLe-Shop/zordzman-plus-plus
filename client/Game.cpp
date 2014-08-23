@@ -3,6 +3,7 @@
 #include "gfx/drawingOperations.hpp"
 #include "net/net.hpp"
 #include "json11.hpp"
+#include "gfx/SpriteSheet.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -45,37 +46,59 @@ void Game::exec() {
         // Render the level's tiles and entities n hsit
         m_level.render();
 
-        using namespace drawingOperations;
-        auto const width = m_window.getWidth();
-        auto const height = m_window.getHeight();
-
-        // Draw the rectangle/box which contains information about the player.
-        glColor3f(0.2, 0.2, 0.2);
-        drawRectangle(0, 0 + height - 32, width, 32, true);
-        glColor3f(0.7, 0.7, 0.7);
-
-        // Format the health string & weapon strings
-        auto hptext = fmt::format("HP: {}", m_player->getHealth());
-
-        auto combatwep = m_player->getCombatWeapon().getName();
-        auto specialwep = m_player->getSpecialWeapon().getName();
-        drawText(hptext, 0, 0 + height - 32, 16, 16);
-        drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
-        glColor3f(0, 1, 0);
-        // Draw the names of the weapons as smaller components
-        drawText(combatwep, 0 + 64, 0 + height - 32 + 16, 8, 8);
-        glColor3f(0.6, 0.6, 0.6);
-        drawText(specialwep, 0 + 64, 0 + height - 32 + 24, 8, 8);
-
-        // Line border to seperate the actual game from the UI
-        glColor3f(0, 0, 0.5);
-        drawLine(0, 0 + height - 32, 0 + width, 0 + height - 32);
-        drawLine(0, 0 + height - 33, 0 + width, 0 + height - 33);
+        drawUI();
 
         glColor3f(1, 1, 1);
 
         m_window.present();
     }
+}
+
+void Game::drawUI() {
+    using namespace drawingOperations;
+    SpriteSheet &sheet = Game::get().resources.getSheet("main");
+    auto const width = m_window.getWidth();
+    auto const height = m_window.getHeight();
+
+    // Draw the rectangle/box which contains information about the player.
+    glColor3f(0.2, 0.2, 0.2);
+    drawRectangle(0, 0 + height - 32, width, 32, true);
+    glColor3f(0.7, 0.7, 0.7);
+
+    // Format the health string & weapon strings
+    auto hptext = fmt::format("HP: {}", m_player->getHealth());
+
+    auto combatwep = m_player->getCombatWeapon().getName();
+    bool holdingcombat = m_player->holdingCombatWeapon();
+    auto specialwep = m_player->getSpecialWeapon().getName();
+    bool holdingspecial = m_player->holdingSpecialWeapon();
+
+    drawText(hptext, 0, 0 + height - 32, 16, 16);
+    drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
+
+    // Draw the names of the weapons as smaller components
+
+    glColor3f(0.6, 0.6, 0.6);
+    if (holdingcombat) { glColor3f(0, 1, 0); }
+
+    drawText(combatwep, 0 + 64, 0 + height - 32 + 16, 8, 8);
+
+    glColor3f(0.6, 0.6, 0.6);
+
+    if (holdingspecial) { glColor3f(0, 1, 0); }
+
+    drawText(specialwep, 0 + 64, 0 + height - 32 + 24, 8, 8);
+
+    glColor3f(1, 1, 1);
+
+    drawSpriteFromSheet(sheet, m_player->getCurrentWeapon().x_tile,
+                        m_player->getCurrentWeapon().y_tile, 0 + 200,
+                        0 + height - 32, 32, 32);
+
+    // Line border to seperate the actual game from the UI
+    glColor3f(0, 0, 0.5);
+    drawLine(0, 0 + height - 32, 0 + width, 0 + height - 32);
+    drawLine(0, 0 + height - 33, 0 + width, 0 + height - 33);
 }
 
 Game &Game::get() {

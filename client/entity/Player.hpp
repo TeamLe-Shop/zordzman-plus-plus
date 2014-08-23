@@ -27,7 +27,11 @@ public:
     std::string getUsername() const;
 
     BaseWeapon getCombatWeapon();
+    bool holdingCombatWeapon();
     BaseWeapon getSpecialWeapon();
+    bool holdingSpecialWeapon();
+
+    BaseWeapon getCurrentWeapon();
 private:
     /// @brief Check for input form the keyboard.
     void input();
@@ -45,4 +49,5 @@ private:
     float m_distanceWalked = 0;
 
     BaseWeapon m_combat_weapon = BlankWeapon, m_special_weapon = BlankWeapon;
+    BaseWeapon *m_current_weapon = &m_combat_weapon;
 };

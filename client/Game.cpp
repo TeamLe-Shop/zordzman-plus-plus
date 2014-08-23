@@ -22,29 +22,8 @@ Game::Game(Config const &cfg)
       m_cfg(cfg) {
     game_instance = this;
 
-    // Create a new thread for the server if we're connecting
-    // to localhost.
-    if (cfg.host == "localhost") {
-        std::thread([=] { m_server.exec(); }).detach();
-    }
-    joinServer(cfg.host);
     // Add the player to level.
     m_level.add(m_player);
-}
-
-void Game::joinServer(std::string host) {
-    m_socket.connectToHost(host, m_cfg.port);
-    m_socket.send(sys::PROTOCOL_VERSION);
-    using namespace json11;
-
-    Json credentials = Json::object{
-        { "type", "credentials" },
-        { "entity", Json::object{ { "name", m_player->getUsername() } } },
-    };
-
-    fmt::print("Sending credentials: \"{}\"", credentials.dump());
-
-    m_socket.send(credentials.dump());
 }
 
 Game::~Game() { game_instance = nullptr; }

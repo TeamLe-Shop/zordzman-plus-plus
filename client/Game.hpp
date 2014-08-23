@@ -38,5 +38,4 @@ private:
     Level m_level;
     Player *m_player;
     Config const &m_cfg;
-    Server m_server;
 };

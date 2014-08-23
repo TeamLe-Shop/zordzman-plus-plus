@@ -3,7 +3,9 @@
 
 
 #include <string>
+
 #include <SDL_net.h>
+
 #include "format.h"
 
 
@@ -16,7 +18,6 @@ class Client {
 
 public:
     Client(TCPsocket socket);
-    ~Client();
 
     /// @brief Convenience logging that includes the peers's address
     ///

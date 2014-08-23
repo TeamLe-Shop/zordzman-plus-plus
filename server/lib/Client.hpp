@@ -9,6 +9,13 @@
 #include "format.h"
 
 
+enum ClientState {
+    PENDING,  /// Connection established but protocol version not asserted
+    CONNECTED,   /// Connected and protocol version checked; normal operation
+    DISCONNECTED,  /// The socket is, or is in the process of disconnecting
+};
+
+
 /// @brief Represents a connected client
 ///
 /// When a message handler is called it is passed the client instance from which
@@ -17,6 +24,9 @@
 class Client {
 
 public:
+    /// @brief Construct a new Client instance
+    ///
+    /// The client's initial state will be set to PENDING.
     Client(TCPsocket socket);
 
     /// @brief Convenience logging that includes the peers's address
@@ -29,5 +39,6 @@ public:
     bool checkProtocolVersion();
 
 private:
+    ClientState m_state;
     TCPsocket m_socket;
 };

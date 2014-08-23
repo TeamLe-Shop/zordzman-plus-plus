@@ -9,13 +9,10 @@
 #include "Client.hpp"
 
 
-#define RECV_BUFFER_SIZE 8192
-
-
 class Server {
 
 public:
-    Server(IPaddress *address);
+    Server(IPaddress *address, unsigned int max_clients);
     ~Server();
     int exec();
 
@@ -38,14 +35,15 @@ private:
     /// @brief Accept all pending connections
     ///
     /// This accept(2)s all pending connections on the listening socket. These
-    /// new connections are wrapped in a `Client` and then checked to ensure
-    /// they're using the correct protocol version. If the client is using the
-    /// correct version then they're added to the `m_clients` collection.
-    /// Otherwise the connection is terminated.
+    /// new connections are wrapped in a `Client` and added to the `m_clients`
+    /// collection as well has having their socket added to the socket set.
+    /// If the max number of clients has been reached the new client will be
+    /// disconnected immediately.
     void acceptConnections();
 
+    unsigned int m_max_clients;
     TCPsocket m_socket;
     IPaddress *m_address;
     std::vector<Client> m_clients;
-    char m_recv_buffer[RECV_BUFFER_SIZE];
+    SDLNet_SocketSet m_socket_set;
 };

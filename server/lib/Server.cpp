@@ -15,9 +15,10 @@
 #define MAGIC_NUMEBER 0xCAC35500 | PROTOCOL_VERSION
 
 
-Server::Server(IPaddress *address) {
+Server::Server(IPaddress *address, unsigned int max_clients) {
     m_address = address;
-    memset(m_recv_buffer, 0, RECV_BUFFER_SIZE);
+    m_max_clients = max_clients;
+    m_socket_set = SDLNet_AllocSocketSet(m_max_clients * 1);
     SDL_version compile_version;
     const SDL_version *link_version = SDLNet_Linked_Version();
     SDL_NET_VERSION(&compile_version);
@@ -65,9 +66,17 @@ void Server::acceptConnections() {
         if (!client_socket) {
             break;
         }
-        Client client(client_socket);
-        if (client.checkProtocolVersion()) {
-            m_clients.push_back(client);
+        if (m_clients.size() >= m_max_clients) {
+            // Perhaps issue some kind of "server full" warning. But how would
+            // this be done as the client would be in the PENDING state
+            // intially.
+            SDLNet_TCP_Close(client_socket);
+        } else {
+            Client client(client_socket);
+            if (client.checkProtocolVersion()) {
+                m_clients.push_back(client);
+                SDLNet_TCP_AddSocket(m_socket_set, client_socket);
+            }
         }
     }
 }

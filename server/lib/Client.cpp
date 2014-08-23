@@ -4,6 +4,7 @@
 
 Client::Client(TCPsocket socket) {
     m_socket = socket;
+    m_state = PENDING;
     log("Client connected");
 }
 

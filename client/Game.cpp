@@ -54,15 +54,18 @@ void Game::exec() {
         drawRectangle(0, 0 + height - 32, width, 32, true);
         glColor3f(0.7, 0.7, 0.7);
 
-        // Draw the health string.
+        // Format the health string & weapon strings
         auto hptext = fmt::format("HP: {}", m_player->getHealth());
+
+        auto combatwep = m_player->getCombatWeapon().getName();
+        auto specialwep = m_player->getSpecialWeapon().getName();
         drawText(hptext, 0, 0 + height - 32, 16, 16);
         drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
         glColor3f(0, 1, 0);
         // Draw the names of the weapons as smaller components
-        drawText("Zord", 0 + 64, 0 + height - 32 + 16, 8, 8);
+        drawText(combatwep, 0 + 64, 0 + height - 32 + 16, 8, 8);
         glColor3f(0.6, 0.6, 0.6);
-        drawText("Chicken", 0 + 64, 0 + height - 32 + 24, 8, 8);
+        drawText(specialwep, 0 + 64, 0 + height - 32 + 24, 8, 8);
 
         // Line border to seperate the actual game from the UI
         glColor3f(0, 0, 0.5);

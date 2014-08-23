@@ -114,3 +114,7 @@ void Player::moveRight() {
 Player *Player::clone() const { return new Player(*this); }
 
 std::string Player::getUsername() const { return m_username; }
+
+BaseWeapon Player::getCombatWeapon() { return m_combat_weapon; }
+
+BaseWeapon Player::getSpecialWeapon() { return m_special_weapon; }

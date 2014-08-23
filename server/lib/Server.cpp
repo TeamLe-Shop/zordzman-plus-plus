@@ -73,10 +73,8 @@ void Server::acceptConnections() {
             SDLNet_TCP_Close(client_socket);
         } else {
             Client client(client_socket);
-            if (client.checkProtocolVersion()) {
-                m_clients.push_back(client);
-                SDLNet_TCP_AddSocket(m_socket_set, client_socket);
-            }
+            m_clients.push_back(client);
+            SDLNet_TCP_AddSocket(m_socket_set, client_socket);
         }
     }
 }
@@ -85,6 +83,10 @@ void Server::acceptConnections() {
 int Server::exec() {
     while (true) {
         acceptConnections();
+        SDLNet_CheckSockets(m_socket_set, 0);
+        for (auto client: m_clients) {
+            client.recv();
+        }
     }
     return 1;
 }

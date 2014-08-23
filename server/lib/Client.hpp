@@ -9,6 +9,9 @@
 #include "format.h"
 
 
+#define RECV_BUFFER_SIZE 8192
+
+
 enum ClientState {
     PENDING,  /// Connection established but protocol version not asserted
     CONNECTED,   /// Connected and protocol version checked; normal operation
@@ -38,7 +41,17 @@ public:
     /// @return True if the correct version, false otherwise
     bool checkProtocolVersion();
 
+    /// @brief Read bytes from the socket into the buffer
+    ///
+    /// Reads up to RECV_BUFFER_SIZE bytes into the buffer. This calls
+    /// SDLNet_ReadySocket and only attempts to read if the socket has data
+    /// pending. Therefore the caller is responsible for calling
+    /// SDLNet_CheckSockets on the socket set containing the client's socket.
+    void recv();
+
 private:
+    char m_buffer[RECV_BUFFER_SIZE];
+    char *m_buffer_start;
     ClientState m_state;
     TCPsocket m_socket;
 };

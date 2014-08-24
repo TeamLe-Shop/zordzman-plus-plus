@@ -1,6 +1,6 @@
-
 #include "Client.hpp"
 
+namespace server {
 Client::Client(TCPsocket socket) {
     m_socket = socket;
     log("Client connected");
@@ -16,3 +16,4 @@ void Client::log(std::string message) {
 }
 
 bool Client::checkProtocolVersion() { return true; }
+}

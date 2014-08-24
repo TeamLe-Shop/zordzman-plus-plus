@@ -1,6 +1,6 @@
 #include "Player.hpp"
 #include "gfx/drawingOperations.hpp"
-#include "Game.hpp"
+#include "Client.hpp"
 
 #include <SDL.h>
 
@@ -11,7 +11,7 @@ Player::Player(std::string username, float x, float y, float speed)
 
 void Player::render() const {
     using namespace drawingOperations;
-    SpriteSheet &sheet = Game::get().resources.getSheet("main");
+    SpriteSheet &sheet = Client::get().resources.getSheet("main");
 
     // Set the spritesize to 16 x 16 for now.
     sheet.setSpriteSize(16);

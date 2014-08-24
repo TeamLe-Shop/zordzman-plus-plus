@@ -1,4 +1,4 @@
-#include "Game.hpp"
+#include "Client.hpp"
 
 #include "gfx/drawingOperations.hpp"
 #include "net/net.hpp"
@@ -12,11 +12,11 @@
 #include <thread>
 
 namespace {
-Game *game_instance;
+Client *game_instance;
 std::string const title = "Zordzman v0.0.2";
 }
 
-Game::Game(Config const &cfg)
+Client::Client(Config const &cfg)
     : m_window(800, 600, title), m_level("kek.lvl"),
       m_player(
           new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5)),
@@ -27,9 +27,9 @@ Game::Game(Config const &cfg)
     m_level.add(m_player);
 }
 
-Game::~Game() { game_instance = nullptr; }
+Client::~Client() { game_instance = nullptr; }
 
-void Game::exec() {
+void Client::exec() {
     for (;;) {
         SDL_Event event;
 
@@ -54,9 +54,9 @@ void Game::exec() {
     }
 }
 
-void Game::drawUI() {
+void Client::drawUI() {
     using namespace drawingOperations;
-    SpriteSheet &sheet = Game::get().resources.getSheet("main");
+    SpriteSheet &sheet = Client::get().resources.getSheet("main");
     auto const width = m_window.getWidth();
     auto const height = m_window.getHeight();
 
@@ -105,11 +105,11 @@ void Game::drawUI() {
     drawLine(0, 0 + height - 33, 0 + width, 0 + height - 33);
 }
 
-Game &Game::get() {
+Client &Client::get() {
     if (!game_instance) {
         throw std::runtime_error("Game::get(): Game instance is null.");
     }
     return *game_instance;
 }
 
-sys::RenderWindow &Game::getWindow() { return m_window; }
+sys::RenderWindow &Client::getWindow() { return m_window; }

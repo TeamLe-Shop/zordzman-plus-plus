@@ -1,7 +1,7 @@
 #include "Level.hpp"
 #include "gfx/drawingOperations.hpp"
 #include "entity/Player.hpp"
-#include "Game.hpp"
+#include "Client.hpp"
 #include "level/tiles/Tile.hpp"
 #include "format.h"
 
@@ -71,7 +71,7 @@ void Level::setTileAt(int x, int y, byte tile) {
 
 void Level::render() const {
     using namespace drawingOperations;
-    auto &window = Game::get().getWindow();
+    auto &window = Client::get().getWindow();
 
     // Borders for the renders.
     int minX = (int)(0 / 32);
@@ -93,7 +93,7 @@ void Level::render() const {
 
     for (int x = minX; x <= maxX; x++) {
         for (int y = minY; y <= maxY; y++) {
-            drawSpriteFromSheet(Game::get().resources.getSheet("main"),
+            drawSpriteFromSheet(Client::get().resources.getSheet("main"),
                                 tile::render(tileAt(x, y), ticks), 0, x * 32,
                                 y * 32, 32, 32);
         }

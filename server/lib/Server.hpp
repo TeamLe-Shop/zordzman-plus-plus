@@ -9,6 +9,7 @@
 
 #define RECV_BUFFER_SIZE 8192
 
+namespace server {
 class Server {
 
 public:
@@ -45,3 +46,4 @@ private:
     std::vector<Client> m_clients;
     char m_recv_buffer[RECV_BUFFER_SIZE];
 };
+}

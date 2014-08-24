@@ -1,4 +1,4 @@
-#include "Game.hpp"
+#include "Client.hpp"
 
 #include <stdexcept>
 #include "format.h"
@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
             cfg.host = argv[1];
         }
         // Initialize the game.
-        Game game(cfg);
+        Client game(cfg);
         // Start the game loop.
         game.exec();
     }

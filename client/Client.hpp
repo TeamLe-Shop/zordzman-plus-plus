@@ -7,18 +7,18 @@
 #include "entity/Player.hpp"
 #include "Config.hpp"
 #include "ResourceManager.hpp"
-#include "Server.hpp"
+#include "server/lib/Server.hpp"
 
-class Game {
+class Client {
 public:
     /// @brief Initialize the resources, player and level
-    Game(Config const &cfg);
+    Client(Config const &cfg);
     /// @brief Destructor
-    ~Game();
+    ~Client();
     /// @brief Game loop.
     void exec();
     /// @brief Get the active game instance
-    static Game &get();
+    static Client &get();
     /// @brief Get the window on which things are rendered.
     sys::RenderWindow &getWindow();
     /// @brief Join a game server.
@@ -26,8 +26,8 @@ public:
     void drawUI();
 
 private:
-    Game(const Game &) = delete;
-    Game &operator=(const Game &) = delete;
+    Client(const Client &) = delete;
+    Client &operator=(const Client &) = delete;
     sys::System m_system;
     sys::RenderWindow m_window;
     sys::TCPSocket m_socket;

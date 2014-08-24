@@ -13,6 +13,7 @@
 #define PROTOCOL_VERSION 0x00
 #define MAGIC_NUMEBER 0xCAC35500 | PROTOCOL_VERSION
 
+namespace server {
 Server::Server(IPaddress *address) {
     m_address = address;
     memset(m_recv_buffer, 0, RECV_BUFFER_SIZE);
@@ -64,4 +65,5 @@ int Server::exec() {
         acceptConnections();
     }
     return 1;
+}
 }

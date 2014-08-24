@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <string>
@@ -7,6 +6,7 @@
 
 #include "format.h"
 
+namespace server {
 /// @brief Represents a connected client
 ///
 /// When a message handler is called it is passed the client instance from which
@@ -29,3 +29,4 @@ public:
 private:
     TCPsocket m_socket;
 };
+}

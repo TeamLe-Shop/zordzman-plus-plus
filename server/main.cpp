@@ -5,6 +5,6 @@
 
 int main() {
     IPaddress address = { INADDR_ANY, 9001 };
-    Server server(&address);
+    server::Server server(&address);
     server.exec();
 }

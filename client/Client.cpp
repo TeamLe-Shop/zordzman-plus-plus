@@ -64,7 +64,7 @@ void Client::drawHUD() {
     setColor(m_hud.hud_box.color);
     drawRectangle(m_hud.hud_box.x, m_hud.hud_box.y, m_hud.hud_box.width,
                   m_hud.hud_box.height, true);
-    glColor4f(0.7, 0.7, 0.7, 1);
+    setColor(m_hud.font_color);
 
     // Format the health string & weapon strings
     auto hptext = fmt::format("HP: {}", m_player->getHealth());
@@ -79,17 +79,17 @@ void Client::drawHUD() {
 
     // Draw the names of the weapons as smaller components
 
-    glColor3f(0.6, 0.6, 0.6);
+    setColor(m_hud.font_color);
     if (holdingcombat) {
-        glColor3f(0, 1, 0);
+        setColor(m_hud.font_color_active);
     }
 
     drawText(combatwep, 0 + 64, 0 + height - 32 + 16, 8, 8);
 
-    glColor3f(0.6, 0.6, 0.6);
+    setColor(m_hud.font_color);
 
     if (holdingspecial) {
-        glColor3f(0, 1, 0);
+        setColor(m_hud.font_color_active);
     }
 
     drawText(specialwep, 0 + 64, 0 + height - 32 + 24, 8, 8);

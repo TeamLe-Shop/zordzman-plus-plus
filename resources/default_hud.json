@@ -17,5 +17,8 @@
         "width": 800,
         "height": 32,
         "color": "515151FF"
-    }
+    },
+
+    "font-color-active": "00FF00FF",
+    "font-color": "B2B2B2FF"
 }

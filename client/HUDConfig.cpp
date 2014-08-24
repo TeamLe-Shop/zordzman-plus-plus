@@ -45,6 +45,9 @@ HUD::HUD(std::string hud) {
     setint(hud_box.width, json["hud-box"]["width"]);
     setint(hud_box.height, json["hud-box"]["height"]);
     setcol(hud_box.color, json["hud-box"]["color"], 16);
+
+    setcol(font_color, json["font-color"], 16);
+    setcol(font_color_active, json["font-color-active"], 16);
 }
 
 void HUD::setcol(uint32_t &i, Json json, int base) {

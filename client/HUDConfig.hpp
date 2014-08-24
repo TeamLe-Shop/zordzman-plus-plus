@@ -13,6 +13,9 @@ public:
     void setcol(uint32_t &i, Json json, int base = 10);
     void setint(int &i, Json json, int base = 10);
 public:
+    uint32_t font_color_active = 0x00FF00FF;
+    uint32_t font_color = 0xB2B2B2FF;
+
     struct hud_box {
         int x = 0;
         int y = 568;

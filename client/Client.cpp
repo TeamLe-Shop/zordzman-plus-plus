@@ -17,11 +17,11 @@ Client *game_instance;
 std::string const title = "Zordzman v0.0.2";
 }
 
-Client::Client(Config const &cfg)
+Client::Client(Config const &cfg, HUD hud)
     : m_window(800, 600, title), m_level("kek.lvl"),
       m_player(
           new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5)),
-      m_cfg(cfg) {
+      m_cfg(cfg), m_hud(hud) {
     game_instance = this;
 
     // Add the player to level.
@@ -47,7 +47,7 @@ void Client::exec() {
         // Render the level's tiles and entities n hsit
         m_level.render();
 
-        drawUI();
+        drawHUD();
 
         glColor3f(1, 1, 1);
 
@@ -55,16 +55,16 @@ void Client::exec() {
     }
 }
 
-void Client::drawUI() {
+void Client::drawHUD() {
     using namespace drawingOperations;
     SpriteSheet &sheet = Client::get().resources.getSheet("main");
     auto const width = m_window.getWidth();
     auto const height = m_window.getHeight();
 
     // Draw the rectangle/box which contains information about the player.
-    glColor3f(0.2, 0.2, 0.2);
+    setColor(m_hud.bg_color);
     drawRectangle(0, 0 + height - 32, width, 32, true);
-    glColor3f(0.7, 0.7, 0.7);
+    glColor4f(0.7, 0.7, 0.7, 1);
 
     // Format the health string & weapon strings
     auto hptext = fmt::format("HP: {}", m_player->getHealth());
@@ -101,7 +101,7 @@ void Client::drawUI() {
                         0 + height - 32, 32, 32);
 
     // Line border to seperate the actual game from the UI
-    glColor3f(0, 0, 0.5);
+    setColor(m_hud.border_color);
     drawLine(0, 0 + height - 32, 0 + width, 0 + height - 32);
     drawLine(0, 0 + height - 33, 0 + width, 0 + height - 33);
 }

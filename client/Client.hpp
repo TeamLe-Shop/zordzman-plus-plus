@@ -8,12 +8,13 @@
 #include "Config.hpp"
 #include "ResourceManager.hpp"
 #include "server/lib/Server.hpp"
+#include "HUDConfig.hpp"
 
 namespace client {
 class Client {
 public:
     /// @brief Initialize the resources, player and level
-    Client(Config const &cfg);
+    Client(Config const &cfg, HUD hud);
     /// @brief Destructor
     ~Client();
     /// @brief Game loop.
@@ -24,7 +25,8 @@ public:
     sys::RenderWindow &getWindow();
     /// @brief Join a game server.
     void joinServer(std::string host);
-    void drawUI();
+    /// @brief Draw the HUD.
+    void drawHUD();
 
 private:
     Client(const Client &) = delete;
@@ -40,5 +42,6 @@ private:
     Level m_level;
     Player *m_player;
     Config const &m_cfg;
+    HUD m_hud;
 };
 }

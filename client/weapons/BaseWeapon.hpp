@@ -3,6 +3,7 @@
 #include "weapons/weapon.hpp"
 #include <string>
 
+namespace client {
 namespace weapon {
 
 /// @brief The base weapon for every weapon in the game
@@ -39,3 +40,4 @@ private:
 };
 
 } // namespace weapon
+} // namespace client

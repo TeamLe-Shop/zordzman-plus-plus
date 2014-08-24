@@ -1,5 +1,6 @@
 #pragma once
 
+namespace client {
 /// @brief The namespace containing all weapons.
 namespace weapon {
 
@@ -15,3 +16,4 @@ enum WeaponType {
 };
 
 } // namespace weapons
+} // namespace client

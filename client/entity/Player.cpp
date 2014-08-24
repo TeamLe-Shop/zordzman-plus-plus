@@ -4,6 +4,7 @@
 
 #include <SDL.h>
 
+namespace client {
 Player::Player(std::string username, float x, float y, float speed)
     : Mob(x, y, speed), m_username(username) {
     m_health = 100;
@@ -128,3 +129,4 @@ bool Player::holdingSpecialWeapon() {
 }
 
 BaseWeapon Player::getCurrentWeapon() { return *m_current_weapon; }
+}

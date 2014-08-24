@@ -11,6 +11,7 @@
 #include "format.h"
 #include <thread>
 
+namespace client {
 namespace {
 Client *game_instance;
 std::string const title = "Zordzman v0.0.2";
@@ -113,3 +114,4 @@ Client &Client::get() {
 }
 
 sys::RenderWindow &Client::getWindow() { return m_window; }
+}

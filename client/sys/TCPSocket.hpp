@@ -3,6 +3,7 @@
 #include <SDL_net.h>
 #include <string>
 
+namespace client {
 namespace sys {
 
 // The TCPSocket class. Hurr durr?
@@ -51,4 +52,5 @@ private:
     // Whether it is open or not.
     bool m_open = false;
 };
+}
 }

@@ -5,6 +5,7 @@
 #include "Client.hpp"
 #include <string.h>
 
+namespace client {
 namespace drawingOperations {
 
 SpriteSheet const *currentSheet = nullptr;
@@ -110,4 +111,5 @@ void drawText(std::string const &text, int x, int y, int w, int h) {
     }
 }
 
-} // My little namespaaaaaace
+} // namespace drawingOperations
+} // namespace client

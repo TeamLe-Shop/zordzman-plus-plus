@@ -1,7 +1,6 @@
 #include "Tile.hpp"
 
-using namespace tile;
-
+namespace client {
 namespace tile {
 
 byte render(byte a, int ticks) {
@@ -23,3 +22,4 @@ byte render(byte a, int ticks) {
 }
 
 } // namespace tile
+} // namespace client

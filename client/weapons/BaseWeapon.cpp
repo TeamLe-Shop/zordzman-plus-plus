@@ -1,8 +1,7 @@
 #include "weapons/BaseWeapon.hpp"
 #include "weapons/weapon.hpp"
 
-using namespace weapon;
-
+namespace client {
 namespace weapon {
 
 BaseWeapon::BaseWeapon(std::string name, int xtile, int ytile, WeaponSlot slot,
@@ -14,4 +13,5 @@ std::string BaseWeapon::getName() { return m_name; }
 WeaponSlot BaseWeapon::getSlot() { return m_slot; }
 
 WeaponType BaseWeapon::getType() { return m_type; }
+}
 }

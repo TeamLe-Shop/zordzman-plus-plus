@@ -2,6 +2,7 @@
 
 #include <SDL_opengl.h>
 
+namespace client {
 namespace sys {
 
 namespace {
@@ -41,4 +42,5 @@ void RenderWindow::present() { SDL_GL_SwapWindow(m_handle); }
 unsigned RenderWindow::getWidth() const { return m_width; }
 
 unsigned RenderWindow::getHeight() const { return m_height; }
+}
 }

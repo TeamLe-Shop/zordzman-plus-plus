@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 
+namespace client {
 class ResourceManager {
 public:
     /// @brief Initialize the resources.
@@ -16,3 +17,4 @@ private:
     // The map containing spritesheets that can be referred to by their name.
     std::unordered_map<std::string, SpriteSheet> m_sheets;
 };
+}

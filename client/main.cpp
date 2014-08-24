@@ -4,6 +4,8 @@
 #include "format.h"
 #include "Config.hpp"
 
+using namespace client;
+
 int main(int argc, char *argv[]) {
     try {
         Config cfg;

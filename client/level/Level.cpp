@@ -8,6 +8,7 @@
 #include <fstream>
 #include <algorithm>
 
+namespace client {
 namespace {
 int ticks = 0;
 
@@ -121,4 +122,5 @@ Level &Level::operator=(const Level &other) {
     }
 
     return *this;
+}
 }

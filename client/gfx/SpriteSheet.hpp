@@ -2,6 +2,7 @@
 
 #include "sys/Texture.hpp"
 
+namespace client {
 /// @brief A Texture that acts as a sprite sheet
 ///
 /// SpriteSheet is a texture that can be used as a sprite sheet.
@@ -25,3 +26,4 @@ public:
 private:
     unsigned int m_spriteSize;
 };
+}

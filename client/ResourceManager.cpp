@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <tuple>
 
+namespace client {
 ResourceManager::ResourceManager() {
     // Load the spritesheets n shit
     m_sheets.emplace(std::piecewise_construct, std::forward_as_tuple("main"),
@@ -21,4 +22,5 @@ SpriteSheet &ResourceManager::getSheet(char const *const key) {
     }
 
     return iter->second;
+}
 }

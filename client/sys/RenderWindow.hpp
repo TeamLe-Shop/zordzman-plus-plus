@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <string>
 
+namespace client {
 namespace sys {
 
 /// @brief A window that provides a rendering context
@@ -37,4 +38,5 @@ private:
     SDL_GLContext m_glContext;
     unsigned m_width, m_height;
 };
+}
 }

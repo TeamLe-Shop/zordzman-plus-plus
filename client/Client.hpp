@@ -9,6 +9,7 @@
 #include "ResourceManager.hpp"
 #include "server/lib/Server.hpp"
 
+namespace client {
 class Client {
 public:
     /// @brief Initialize the resources, player and level
@@ -40,3 +41,4 @@ private:
     Player *m_player;
     Config const &m_cfg;
 };
+}

@@ -2,6 +2,7 @@
 
 #include <string>
 
+namespace client {
 namespace mob {
 
 std::string directionName(Direction d) {
@@ -18,9 +19,6 @@ std::string directionName(Direction d) {
         return std::string("Invalid");
     }
 }
-}
-
-using namespace mob;
 
 Mob::Mob(float x, float y, float speed, Direction d)
     : Entity(x, y), m_speed(speed), m_direction(d) {}
@@ -32,3 +30,5 @@ void Mob::setHealth(int health) { m_health = health; }
 Direction Mob::getDirection() { return m_direction; }
 
 void Mob::setDirection(Direction d) { m_direction = d; }
+}
+}

@@ -3,6 +3,7 @@
 
 #include <string>
 
+namespace client {
 namespace mob {
 
 /// @brief A direction enum for cardinal directions.
@@ -17,7 +18,6 @@ enum Direction {
 ///
 /// @param d The direction
 std::string directionName(Direction d);
-}
 
 using namespace mob;
 
@@ -52,3 +52,5 @@ protected:
     // The direction the mob is facing.
     Direction m_direction;
 };
+} // namespace mob
+} // namespace client

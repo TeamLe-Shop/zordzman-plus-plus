@@ -5,6 +5,7 @@
 #include "weapons/weapon.hpp"
 #include "weapons/weaponList.hpp"
 
+namespace client {
 using namespace mob;
 using namespace weapon;
 using namespace weaponList;
@@ -52,3 +53,4 @@ private:
     BaseWeapon m_combat_weapon = BlankWeapon, m_special_weapon = BlankWeapon;
     BaseWeapon *m_current_weapon = &m_combat_weapon;
 };
+}

@@ -7,6 +7,7 @@
 
 #include "format.h"
 
+namespace client {
 namespace sys {
 
 System::System() {
@@ -29,5 +30,6 @@ System::~System() {
     SDLNet_Quit();
     IMG_Quit();
     SDL_Quit();
+}
 }
 }

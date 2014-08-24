@@ -2,6 +2,7 @@
 
 #include "SpriteSheet.hpp"
 
+namespace client {
 /// @brief Various drawing operations
 namespace drawingOperations {
 
@@ -43,4 +44,5 @@ void drawLine(float x1, float y1, float x2, float y2);
 
 /// @brief Draw text
 void drawText(std::string const &text, int x, int y, int w, int h);
+}
 }

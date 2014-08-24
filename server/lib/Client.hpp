@@ -2,6 +2,7 @@
 #pragma once
 
 
+#include <array>
 #include <string>
 
 #include <SDL_net.h>
@@ -49,9 +50,10 @@ public:
     /// SDLNet_CheckSockets on the socket set containing the client's socket.
     void recv();
 
-private:
-    char m_buffer[RECV_BUFFER_SIZE];
-    char *m_buffer_start;
+    // lol getters and setters
     ClientState m_state;
+
+private:
+    std::vector<char> m_buffer;
     TCPsocket m_socket;
 };

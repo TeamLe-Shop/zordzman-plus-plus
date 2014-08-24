@@ -2,7 +2,9 @@
 #include "Server.hpp"
 #include "Client.hpp"
 
+#include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <string.h>
 
 #include <SDL_net.h>
@@ -85,8 +87,22 @@ int Server::exec() {
         acceptConnections();
         SDLNet_CheckSockets(m_socket_set, 0);
         for (auto client: m_clients) {
-            client.recv();
+            if (client.m_state == PENDING
+                || client.m_state == CONNECTED) {
+                client.recv();
+            }
         }
+        // lol is copy neccesary? can i into modify in-place?
+        std::vector<Client> filtered_clients;
+        std::copy_if(
+            m_clients.begin(),
+            m_clients.end(),
+            std::back_inserter(filtered_clients),
+            [] (Client client) {
+                return client.m_state == DISCONNECTED;
+            }
+        );
+        m_clients = filtered_clients;
     }
     return 1;
 }

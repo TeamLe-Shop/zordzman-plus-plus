@@ -7,7 +7,7 @@
 Client::Client(TCPsocket socket) {
     m_socket = socket;
     m_state = PENDING;
-    m_buffer_start = m_buffer;
+    m_buffer.reserve(RECV_BUFFER_SIZE);
     log("Client connected");
 }
 
@@ -28,12 +28,18 @@ bool Client::checkProtocolVersion() {
 
 
 void Client::recv() {
-    ptrdiff_t buffer_space = m_buffer_start - m_buffer;
-    if (SDLNet_SocketReady(m_socket) == 0) {
+    if (SDLNet_SocketReady(m_socket) == 0
+        || m_buffer.size() == RECV_BUFFER_SIZE) {
         return;
     }
-
-
-    fmt::print(stderr, "{:p} {:p} {}\n",
-               (void *) m_buffer, (void *) m_buffer_start, buffer_space);
+    char buffer[RECV_BUFFER_SIZE];
+    int bytes_recv = SDLNet_TCP_Recv(m_socket, buffer,
+                                     RECV_BUFFER_SIZE - m_buffer.size());
+    if (bytes_recv <= 0) {
+        m_state = DISCONNECTED;
+    } else {
+        for (int i = 0; i < bytes_recv; i++) {
+            m_buffer.push_back(buffer[i]);
+        }
+    }
 }

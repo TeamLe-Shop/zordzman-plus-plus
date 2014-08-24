@@ -1,0 +1,24 @@
+# This is a Zordzman HUD JSON file!
+# Have fun customizing!
+{
+#   Colors are hex numbers in strings.
+#   The hex numbers must be strings.
+    "border": {
+        "x": 0,
+        "y": 499,
+        "width": 800,
+        "height": 2,
+        "color": "00007FFF"
+    },
+
+    "hud-box": {
+        "x": 0,
+        "y": 500,
+        "width": 800,
+        "height": 128,
+        "color": "FF00FF7F"
+    },
+
+    "font-color-active": "FF00FFFF",
+    "font-color": "7F007FFF"
+}

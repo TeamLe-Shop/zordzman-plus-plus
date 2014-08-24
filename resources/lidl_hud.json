@@ -3,19 +3,20 @@
 {
 #   Colors are hex numbers in strings.
 #   The hex numbers must be strings.
+
     "border": {
         "x": 0,
-        "y": 567,
+        "y": 539,
         "width": 800,
-        "height": 2,
+        "height": 4,
         "color": "00007FFF"
     },
 
     "hud-box": {
         "x": 0,
-        "y": 568,
+        "y": 540,
         "width": 800,
-        "height": 32,
+        "height": 60,
         "color": "515151FF"
     }
 }

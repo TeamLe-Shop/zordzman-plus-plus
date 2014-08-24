@@ -58,12 +58,12 @@ void Client::exec() {
 void Client::drawHUD() {
     using namespace drawingOperations;
     SpriteSheet &sheet = Client::get().resources.getSheet("main");
-    auto const width = m_window.getWidth();
     auto const height = m_window.getHeight();
 
     // Draw the rectangle/box which contains information about the player.
-    setColor(m_hud.bg_color);
-    drawRectangle(0, 0 + height - 32, width, 32, true);
+    setColor(m_hud.hud_box.color);
+    drawRectangle(m_hud.hud_box.x, m_hud.hud_box.y, m_hud.hud_box.width,
+                  m_hud.hud_box.height, true);
     glColor4f(0.7, 0.7, 0.7, 1);
 
     // Format the health string & weapon strings
@@ -100,10 +100,10 @@ void Client::drawHUD() {
                         m_player->getCurrentWeapon().y_tile, 0 + 200,
                         0 + height - 32, 32, 32);
 
-    // Line border to seperate the actual game from the UI
-    setColor(m_hud.border_color);
-    drawLine(0, 0 + height - 32, 0 + width, 0 + height - 32);
-    drawLine(0, 0 + height - 33, 0 + width, 0 + height - 33);
+    // Line border to seperate the actual game from the HUD
+    setColor(m_hud.border.color);
+    drawRectangle(m_hud.border.x, m_hud.border.y, m_hud.border.width,
+                  m_hud.border.height);
 }
 
 Client &Client::get() {

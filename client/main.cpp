@@ -10,7 +10,7 @@ using namespace client;
 int main(int argc, char *argv[]) {
     try {
         Config cfg;
-        HUD hud("resources/default_hud.json");
+        HUD hud("resources/lidl_hud.json");
 
         if (argc > 1) {
             cfg.host = argv[1];

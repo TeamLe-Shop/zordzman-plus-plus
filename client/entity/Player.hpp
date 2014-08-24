@@ -2,8 +2,13 @@
 
 #include "Entity.hpp"
 #include "Mob.hpp"
+#include "weapons/weapon.hpp"
+#include "weapons/weaponList.hpp"
 
+namespace client {
 using namespace mob;
+using namespace weapon;
+using namespace weaponList;
 
 class Player : public Mob {
 public:
@@ -22,6 +27,13 @@ public:
     /// @brief Return the player's m_m_m_username.
     std::string getUsername() const;
 
+    BaseWeapon getCombatWeapon();
+    bool holdingCombatWeapon();
+    BaseWeapon getSpecialWeapon();
+    bool holdingSpecialWeapon();
+
+    BaseWeapon getCurrentWeapon();
+
 private:
     /// @brief Check for input form the keyboard.
     void input();
@@ -37,4 +49,8 @@ private:
     std::string m_username = "Player";
     // How many "pixels" the player has walked.
     float m_distanceWalked = 0;
+
+    BaseWeapon m_combat_weapon = BlankWeapon, m_special_weapon = BlankWeapon;
+    BaseWeapon *m_current_weapon = &m_combat_weapon;
 };
+}

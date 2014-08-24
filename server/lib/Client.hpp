@@ -1,6 +1,4 @@
-
 #pragma once
-
 
 #include <array>
 #include <string>
@@ -9,16 +7,15 @@
 
 #include "format.h"
 
-
 #define RECV_BUFFER_SIZE 8192
 
 
+namespace server {
 enum ClientState {
     PENDING,  /// Connection established but protocol version not asserted
     CONNECTED,   /// Connected and protocol version checked; normal operation
     DISCONNECTED,  /// The socket is, or is in the process of disconnecting
 };
-
 
 /// @brief Represents a connected client
 ///
@@ -57,3 +54,4 @@ private:
     std::vector<char> m_buffer;
     TCPsocket m_socket;
 };
+}

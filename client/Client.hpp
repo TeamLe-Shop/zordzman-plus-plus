@@ -7,26 +7,30 @@
 #include "entity/Player.hpp"
 #include "Config.hpp"
 #include "ResourceManager.hpp"
-#include "Server.hpp"
+#include "server/lib/Server.hpp"
+#include "HUDConfig.hpp"
 
-class Game {
+namespace client {
+class Client {
 public:
     /// @brief Initialize the resources, player and level
-    Game(Config const &cfg);
+    Client(Config const &cfg, HUD hud);
     /// @brief Destructor
-    ~Game();
+    ~Client();
     /// @brief Game loop.
     void exec();
     /// @brief Get the active game instance
-    static Game &get();
+    static Client &get();
     /// @brief Get the window on which things are rendered.
     sys::RenderWindow &getWindow();
     /// @brief Join a game server.
     void joinServer(std::string host);
+    /// @brief Draw the HUD.
+    void drawHUD();
 
 private:
-    Game(const Game &) = delete;
-    Game &operator=(const Game &) = delete;
+    Client(const Client &) = delete;
+    Client &operator=(const Client &) = delete;
     sys::System m_system;
     sys::RenderWindow m_window;
     sys::TCPSocket m_socket;
@@ -38,4 +42,6 @@ private:
     Level m_level;
     Player *m_player;
     Config const &m_cfg;
+    HUD m_hud;
 };
+}

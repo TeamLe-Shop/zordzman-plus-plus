@@ -4,6 +4,7 @@
 
 #include <SDL_opengl.h>
 
+namespace client {
 namespace sys {
 
 /// @brief Texture
@@ -33,4 +34,5 @@ private:
     GLuint m_handle;
     int m_width, m_height;
 };
+}
 }

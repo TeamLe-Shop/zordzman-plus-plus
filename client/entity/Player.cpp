@@ -1,9 +1,10 @@
 #include "Player.hpp"
 #include "gfx/drawingOperations.hpp"
-#include "Game.hpp"
+#include "Client.hpp"
 
 #include <SDL.h>
 
+namespace client {
 Player::Player(std::string username, float x, float y, float speed)
     : Mob(x, y, speed), m_username(username) {
     m_health = 100;
@@ -11,7 +12,7 @@ Player::Player(std::string username, float x, float y, float speed)
 
 void Player::render() const {
     using namespace drawingOperations;
-    SpriteSheet &sheet = Game::get().resources.getSheet("main");
+    SpriteSheet &sheet = Client::get().resources.getSheet("main");
 
     // Set the spritesize to 16 x 16 for now.
     sheet.setSpriteSize(16);
@@ -114,3 +115,18 @@ void Player::moveRight() {
 Player *Player::clone() const { return new Player(*this); }
 
 std::string Player::getUsername() const { return m_username; }
+
+BaseWeapon Player::getCombatWeapon() { return m_combat_weapon; }
+
+bool Player::holdingCombatWeapon() {
+    return m_current_weapon == &m_combat_weapon;
+}
+
+BaseWeapon Player::getSpecialWeapon() { return m_special_weapon; }
+
+bool Player::holdingSpecialWeapon() {
+    return m_current_weapon == &m_special_weapon;
+}
+
+BaseWeapon Player::getCurrentWeapon() { return *m_current_weapon; }
+}

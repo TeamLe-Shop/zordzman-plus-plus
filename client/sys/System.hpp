@@ -1,5 +1,6 @@
 #pragma once
 
+namespace client {
 namespace sys {
 
 /// @brief Provides the context which the other sys components
@@ -9,4 +10,5 @@ public:
     System();
     ~System();
 };
+}
 }

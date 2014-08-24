@@ -3,9 +3,8 @@
 
 #include "lib/Server.hpp"
 
-
 int main() {
-    IPaddress address = {INADDR_ANY, 9001};
-    Server server(&address, 1);
+    IPaddress address = { INADDR_ANY, 9001 };
+    server::Server server(&address, 1);
     server.exec();
 }

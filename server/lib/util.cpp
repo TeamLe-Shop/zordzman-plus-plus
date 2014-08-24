@@ -1,14 +1,9 @@
-
 #include "util.hpp"
 
-
+namespace server {
 std::string IPaddress_AsString(IPaddress *address) {
-    return fmt::format(
-        "{}.{}.{}.{}:{}",
-        address->host >> 0 & 0xFF,
-        address->host >> 8 & 0xFF,
-        address->host >> 16 & 0xFF,
-        address->host >> 24 & 0xFF,
-        address->port
-    );
+    return fmt::format("{}.{}.{}.{}:{}", address->host >> 24 & 0xFF,
+                       address->host >> 16 & 0xFF, address->host >> 8 & 0xFF,
+                       address->host >> 0 & 0xFF, address->port);
+}
 }

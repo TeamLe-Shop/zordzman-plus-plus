@@ -12,11 +12,10 @@
 #include "format.h"
 #include "json11.hpp"
 
-
 #define PROTOCOL_VERSION 0x00
 #define MAGIC_NUMEBER 0xCAC35500 | PROTOCOL_VERSION
 
-
+namespace server {
 Server::Server(IPaddress *address, unsigned int max_clients) {
     m_address = address;
     m_max_clients = max_clients;
@@ -25,18 +24,11 @@ Server::Server(IPaddress *address, unsigned int max_clients) {
     const SDL_version *link_version = SDLNet_Linked_Version();
     SDL_NET_VERSION(&compile_version);
 
-    fmt::print(
-        "[INFO] Compiled with SDL_net version: {:d}.{:d}.{:d}\n",
-        compile_version.major,
-        compile_version.minor,
-        compile_version.patch
-    );
-    fmt::print(
-        "[INFO] Running with SDL_net version: {:d}.{:d}.{:d}\n\n",
-        link_version->major,
-        link_version->minor,
-        link_version->patch
-    );
+    fmt::print("[INFO] Compiled with SDL_net version: {:d}.{:d}.{:d}\n",
+               compile_version.major, compile_version.minor,
+               compile_version.patch);
+    fmt::print("[INFO] Running with SDL_net version: {:d}.{:d}.{:d}\n\n",
+               link_version->major, link_version->minor, link_version->patch);
     if (SDL_Init(0) == -1) {
         fprintf(stderr, "[ERROR] SDL_Init: %s\n", SDL_GetError());
         fprintf(stderr,
@@ -55,11 +47,7 @@ Server::Server(IPaddress *address, unsigned int max_clients) {
     log("Bound to interface", IPaddress_AsString(m_address));
 }
 
-
-Server::~Server() {
-    printf("[INFO] Server shut down.\n\n");
-}
-
+Server::~Server() { printf("[INFO] Server shut down.\n\n"); }
 
 void Server::acceptConnections() {
     while (true) {
@@ -80,7 +68,6 @@ void Server::acceptConnections() {
         }
     }
 }
-
 
 int Server::exec() {
     while (true) {
@@ -105,4 +92,5 @@ int Server::exec() {
         m_clients = filtered_clients;
     }
     return 1;
+}
 }

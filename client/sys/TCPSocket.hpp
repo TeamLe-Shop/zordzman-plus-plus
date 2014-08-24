@@ -3,6 +3,9 @@
 #include <SDL_net.h>
 #include <string>
 
+#define REQUIRES(...) typename std::enable_if<(__VA_ARGS__), int>::type = 0
+
+namespace client {
 namespace sys {
 
 // The TCPSocket class. Hurr durr?
@@ -30,12 +33,13 @@ public:
     ///
     /// @return If the sending was successful.
     bool send(const void *buf, int len);
-    /// @brief Send data to the host
+    /// @brief Send numeric data to the host
     ///
-    /// @param data - The data to send
+    /// @param data - The number to send
     ///
     /// return If the sending was successful.
-    template <typename T> bool send(T const &data) {
+    template <typename T, REQUIRES(std::is_arithmetic<T>())>
+    bool send(T const &data) {
         return send(&data, sizeof(T));
     }
     /// @brief Close the socket.
@@ -51,4 +55,5 @@ private:
     // Whether it is open or not.
     bool m_open = false;
 };
+}
 }

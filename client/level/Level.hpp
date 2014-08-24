@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 
+namespace client {
 typedef unsigned char byte;
 
 /// @brief A game level hurr durr
@@ -45,3 +46,4 @@ private:
     std::vector<byte> m_tiles;
     std::vector<std::unique_ptr<Entity>> entities;
 };
+}

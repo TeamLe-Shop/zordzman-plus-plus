@@ -1,5 +1,6 @@
 #pragma once
 
+namespace client {
 class Entity {
 public:
     /// @brief Entity Constructor.
@@ -18,3 +19,4 @@ protected:
     float m_x;
     float m_y;
 };
+}

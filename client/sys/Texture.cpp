@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <cassert>
 
+namespace client {
 namespace sys {
 
 namespace {
@@ -92,5 +93,6 @@ Texture::Texture(std::string const &filename) {
     if (!loadFromFile(filename)) {
         throw std::runtime_error("Failed to construct texture.");
     }
+}
 }
 }

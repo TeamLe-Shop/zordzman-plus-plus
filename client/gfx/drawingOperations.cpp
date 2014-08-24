@@ -2,15 +2,19 @@
 #include <cassert>
 #include <cstddef>
 #include <SDL_opengl.h>
-#include "Game.hpp"
+#include "Client.hpp"
 #include <string.h>
 
+namespace client {
 namespace drawingOperations {
 
 SpriteSheet const *currentSheet = nullptr;
 
 void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
                          float x, float y, float w, float h, char flip) {
+
+    if (xOff < 0 || yOff < 0)
+        return;
 
     // Transform the coordinates to OpenGL texture coordinates
     float const sprSize = spritesheet.getSpriteSize();
@@ -89,7 +93,7 @@ void drawLine(float x1, float y1, float x2, float y2) {
 }
 
 void drawText(std::string const &text, int x, int y, int w, int h) {
-    SpriteSheet const &sheet = Game::get().resources.getSheet("main");
+    SpriteSheet const &sheet = Client::get().resources.getSheet("main");
     for (char c : text) {
         char const *const chars = "abcdefghijklmnopqrstuvwxyz      "
                                   "                                "
@@ -107,4 +111,14 @@ void drawText(std::string const &text, int x, int y, int w, int h) {
     }
 }
 
-} // My little namespaaaaaace
+void setColor(int r, int g, int b, int a) {
+    glColor4f(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
+}
+
+void setColor(uint32_t col) {
+    glColor4f((col >> 24 & 0xFF) / 255.0f, (col >> 16 & 0xFF) / 255.0f,
+              (col >> 8 & 0xFF) / 255.0f, (col & 0xFF) / 255.0f);
+}
+
+} // namespace drawingOperations
+} // namespace client

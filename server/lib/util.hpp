@@ -5,5 +5,6 @@
 
 #include "format.h"
 
-
+namespace server {
 std::string IPaddress_AsString(IPaddress *address);
+}

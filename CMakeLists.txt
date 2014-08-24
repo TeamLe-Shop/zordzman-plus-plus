@@ -28,7 +28,6 @@ endif()
 
 add_library(json11 common/extlib/json11/json11.cpp)
 
-include_directories(server/lib)
 add_library(server server/lib/Server.cpp)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
@@ -50,6 +49,7 @@ if(GATSAN)
         add_compile_options(-stdlib=libc++)
 endif()
 
+include_directories(.)
 include_directories(client)
 
 file(GLOB_RECURSE CLIENT_SOURCES client/*.*pp)

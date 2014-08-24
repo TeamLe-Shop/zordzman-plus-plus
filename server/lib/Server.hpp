@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <initializer_list>
 #include <string>
 
@@ -8,7 +7,9 @@
 
 #include "Client.hpp"
 
+#define RECV_BUFFER_SIZE 8192
 
+namespace server {
 class Server {
 
 public:
@@ -31,7 +32,6 @@ private:
         print_messages(messages...);
     }
 
-
     /// @brief Accept all pending connections
     ///
     /// This accept(2)s all pending connections on the listening socket. These
@@ -47,3 +47,4 @@ private:
     std::vector<Client> m_clients;
     SDLNet_SocketSet m_socket_set;
 };
+}

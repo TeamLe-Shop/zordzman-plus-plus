@@ -1,16 +1,14 @@
-
 #include "Client.hpp"
 #include "format.h"
 #include "util.hpp"
 
-
+namespace server {
 Client::Client(TCPsocket socket) {
     m_socket = socket;
     m_state = PENDING;
     m_buffer.reserve(RECV_BUFFER_SIZE);
     log("Client connected");
 }
-
 
 void Client::log(std::string message) {
     IPaddress *address = SDLNet_TCP_GetPeerAddress(m_socket);
@@ -21,11 +19,7 @@ void Client::log(std::string message) {
     fmt::print("{}: {}\n", IPaddress_AsString(address), message);
 }
 
-
-bool Client::checkProtocolVersion() {
-    return true;
-}
-
+bool Client::checkProtocolVersion() { return true; }
 
 void Client::recv() {
     if (SDLNet_SocketReady(m_socket) == 0
@@ -42,4 +36,5 @@ void Client::recv() {
             m_buffer.push_back(buffer[i]);
         }
     }
+}
 }

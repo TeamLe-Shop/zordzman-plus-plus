@@ -19,8 +19,6 @@ enum Direction {
 /// @param d The direction
 std::string directionName(Direction d);
 
-using namespace mob;
-
 class Mob : public Entity {
 
 public:

@@ -10,10 +10,8 @@
 #include "format.h"
 #include "json11.hpp"
 
-
 #define PROTOCOL_VERSION 0x00
 #define MAGIC_NUMEBER 0xCAC35500 | PROTOCOL_VERSION
-
 
 Server::Server(IPaddress *address) {
     m_address = address;
@@ -22,18 +20,11 @@ Server::Server(IPaddress *address) {
     const SDL_version *link_version = SDLNet_Linked_Version();
     SDL_NET_VERSION(&compile_version);
 
-    fmt::print(
-        "[INFO] Compiled with SDL_net version: {:d}.{:d}.{:d}\n",
-        compile_version.major,
-        compile_version.minor,
-        compile_version.patch
-    );
-    fmt::print(
-        "[INFO] Running with SDL_net version: {:d}.{:d}.{:d}\n\n",
-        link_version->major,
-        link_version->minor,
-        link_version->patch
-    );
+    fmt::print("[INFO] Compiled with SDL_net version: {:d}.{:d}.{:d}\n",
+               compile_version.major, compile_version.minor,
+               compile_version.patch);
+    fmt::print("[INFO] Running with SDL_net version: {:d}.{:d}.{:d}\n\n",
+               link_version->major, link_version->minor, link_version->patch);
     if (SDL_Init(0) == -1) {
         fprintf(stderr, "[ERROR] SDL_Init: %s\n", SDL_GetError());
         fprintf(stderr,
@@ -52,11 +43,7 @@ Server::Server(IPaddress *address) {
     log("Bound to interface", IPaddress_AsString(m_address));
 }
 
-
-Server::~Server() {
-    printf("[INFO] Server shut down.\n\n");
-}
-
+Server::~Server() { printf("[INFO] Server shut down.\n\n"); }
 
 void Server::acceptConnections() {
     while (true) {
@@ -71,7 +58,6 @@ void Server::acceptConnections() {
         }
     }
 }
-
 
 int Server::exec() {
     while (true) {

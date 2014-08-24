@@ -5,5 +5,4 @@
 
 #include "format.h"
 
-
 std::string IPaddress_AsString(IPaddress *address);

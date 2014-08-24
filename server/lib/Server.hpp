@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <initializer_list>
 #include <string>
 
@@ -8,9 +7,7 @@
 
 #include "Client.hpp"
 
-
 #define RECV_BUFFER_SIZE 8192
-
 
 class Server {
 
@@ -33,7 +30,6 @@ private:
         fmt::print(stderr, "{} ", message);
         print_messages(messages...);
     }
-
 
     /// @brief Accept all pending connections
     ///

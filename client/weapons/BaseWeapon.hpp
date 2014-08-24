@@ -31,6 +31,7 @@ public:
 
 public:
     const int x_tile, y_tile;
+
 private:
     std::string m_name;
     WeaponSlot m_slot;

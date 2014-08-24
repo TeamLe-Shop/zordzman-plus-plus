@@ -4,11 +4,14 @@
 namespace weapon {
 
 enum WeaponSlot {
-    COMBAT, SPECIAL, BOTH
+    COMBAT,
+    SPECIAL,
+    BOTH
 };
 
 enum WeaponType {
-    BLANK, ZORD
+    BLANK,
+    ZORD
 };
 
 } // namespace weapons

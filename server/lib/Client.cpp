@@ -1,12 +1,10 @@
 
 #include "Client.hpp"
 
-
 Client::Client(TCPsocket socket) {
     m_socket = socket;
     log("Client connected");
 }
-
 
 void Client::log(std::string message) {
     IPaddress *address = SDLNet_TCP_GetPeerAddress(m_socket);
@@ -17,7 +15,4 @@ void Client::log(std::string message) {
     fmt::print("{}:{}: {}\n", address->host, address->port, message);
 }
 
-
-bool Client::checkProtocolVersion() {
-    return true;
-}
+bool Client::checkProtocolVersion() { return true; }

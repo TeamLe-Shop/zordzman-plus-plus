@@ -24,6 +24,7 @@ public:
     /// @brief Join a game server.
     void joinServer(std::string host);
     void drawUI();
+
 private:
     Game(const Game &) = delete;
     Game &operator=(const Game &) = delete;

@@ -32,6 +32,7 @@ public:
     bool holdingSpecialWeapon();
 
     BaseWeapon getCurrentWeapon();
+
 private:
     /// @brief Check for input form the keyboard.
     void input();

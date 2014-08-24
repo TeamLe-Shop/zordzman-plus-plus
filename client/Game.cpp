@@ -79,13 +79,17 @@ void Game::drawUI() {
     // Draw the names of the weapons as smaller components
 
     glColor3f(0.6, 0.6, 0.6);
-    if (holdingcombat) { glColor3f(0, 1, 0); }
+    if (holdingcombat) {
+        glColor3f(0, 1, 0);
+    }
 
     drawText(combatwep, 0 + 64, 0 + height - 32 + 16, 8, 8);
 
     glColor3f(0.6, 0.6, 0.6);
 
-    if (holdingspecial) { glColor3f(0, 1, 0); }
+    if (holdingspecial) {
+        glColor3f(0, 1, 0);
+    }
 
     drawText(specialwep, 0 + 64, 0 + height - 32 + 24, 8, 8);
 

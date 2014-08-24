@@ -8,5 +8,4 @@ using namespace weapon;
 namespace weaponList {
 
 const BaseWeapon BlankWeapon("Blank Nigs", -1, -1, BOTH, BLANK);
-
 }

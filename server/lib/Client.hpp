@@ -1,13 +1,11 @@
 
 #pragma once
 
-
 #include <string>
 
 #include <SDL_net.h>
 
 #include "format.h"
-
 
 /// @brief Represents a connected client
 ///

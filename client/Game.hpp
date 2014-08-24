@@ -8,11 +8,12 @@
 #include "Config.hpp"
 #include "ResourceManager.hpp"
 #include "Server.hpp"
+#include "HUDConfig.hpp"
 
 class Game {
 public:
     /// @brief Initialize the resources, player and level
-    Game(Config const &cfg);
+    Game(Config const &cfg, HUD hud);
     /// @brief Destructor
     ~Game();
     /// @brief Game loop.
@@ -23,7 +24,8 @@ public:
     sys::RenderWindow &getWindow();
     /// @brief Join a game server.
     void joinServer(std::string host);
-
+    /// @brief Draw the HUD.
+    void drawHUD();
 private:
     Game(const Game &) = delete;
     Game &operator=(const Game &) = delete;
@@ -38,4 +40,5 @@ private:
     Level m_level;
     Player *m_player;
     Config const &m_cfg;
+    HUD m_hud;
 };

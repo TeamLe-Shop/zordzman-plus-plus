@@ -5,7 +5,7 @@ using namespace tile;
 namespace tile {
 
 byte render(byte a, int ticks) {
-    int animticks = ticks % 180;
+    int animticks = ticks % 240;
     switch (a) {
     case GRASS:
         return 0;
@@ -16,6 +16,8 @@ byte render(byte a, int ticks) {
             return 3;
         } else if (animticks >= 120 && animticks < 180) {
             return 4;
+        } else if (animticks >= 180 && animticks < 240) {
+            return 3;
         }
         return 2;
     }

@@ -107,4 +107,15 @@ void drawText(std::string const &text, int x, int y, int w, int h) {
     }
 }
 
+void setColor(int r, int g, int b, int a) {
+    glColor4f(r/255.0, g/255.0, b/255.0, a/255.0);
+}
+
+void setColor(uint32_t col) {
+     glColor4f((col >> 24 & 0xFF)/255.0f,
+              (col >> 16 & 0xFF)/255.0f,
+              (col >> 8 & 0xFF)/255.0f,
+              (col & 0xFF)/255.0f);
+}
+
 } // My little namespaaaaaace

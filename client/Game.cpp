@@ -15,11 +15,11 @@ Game *game_instance;
 std::string const title = "Zordzman v0.0.2";
 }
 
-Game::Game(Config const &cfg)
+Game::Game(Config const &cfg, HUD hud)
     : m_window(800, 600, title), m_level("kek.lvl"),
       m_player(
           new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5)),
-      m_cfg(cfg) {
+      m_cfg(cfg), m_hud(hud) {
     game_instance = this;
 
     // Add the player to level.
@@ -45,34 +45,40 @@ void Game::exec() {
         // Render the level's tiles and entities n hsit
         m_level.render();
 
-        using namespace drawingOperations;
-        auto const width = m_window.getWidth();
-        auto const height = m_window.getHeight();
-
-        // Draw the rectangle/box which contains information about the player.
-        glColor3f(0.2, 0.2, 0.2);
-        drawRectangle(0, 0 + height - 32, width, 32, true);
-        glColor3f(0.7, 0.7, 0.7);
-
-        // Draw the health string.
-        auto hptext = fmt::format("HP: {}", m_player->getHealth());
-        drawText(hptext, 0, 0 + height - 32, 16, 16);
-        drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
-        glColor3f(0, 1, 0);
-        // Draw the names of the weapons as smaller components
-        drawText("Zord", 0 + 64, 0 + height - 32 + 16, 8, 8);
-        glColor3f(0.6, 0.6, 0.6);
-        drawText("Chicken", 0 + 64, 0 + height - 32 + 24, 8, 8);
-
-        // Line border to seperate the actual game from the UI
-        glColor3f(0, 0, 0.5);
-        drawLine(0, 0 + height - 32, 0 + width, 0 + height - 32);
-        drawLine(0, 0 + height - 33, 0 + width, 0 + height - 33);
+        drawHUD();
 
         glColor3f(1, 1, 1);
 
         m_window.present();
     }
+}
+
+void Game::drawHUD() {
+    using namespace drawingOperations;
+    auto const width = m_window.getWidth();
+    auto const height = m_window.getHeight();
+
+    // Draw the rectangle HUD box which contains information about the player.
+    setColor(m_hud.bg_color);
+
+    drawRectangle(0, 0 + height - 32, width, 32, true);
+
+    glColor4f(0.7, 0.7, 0.7, 1);
+
+    // Draw the health string.
+    auto hptext = fmt::format("HP: {}", m_player->getHealth());
+    drawText(hptext, 0, 0 + height - 32, 16, 16);
+    drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
+    glColor3f(0, 1, 0);
+    // Draw the names of the weapons as smaller components
+    drawText("Zord", 0 + 64, 0 + height - 32 + 16, 8, 8);
+    glColor3f(0.6, 0.6, 0.6);
+    drawText("Chicken", 0 + 64, 0 + height - 32 + 24, 8, 8);
+
+    // Line border to seperate the actual game from the UI
+    setColor(m_hud.border_color);
+    drawLine(0, 0 + height - 32, 0 + width, 0 + height - 32);
+    drawLine(0, 0 + height - 33, 0 + width, 0 + height - 33);
 }
 
 Game &Game::get() {

@@ -7,15 +7,10 @@
 
 using namespace json11;
 
-char *trim(char *string) {
-    while (isspace(*string))
-        string++;
-    return string;
-}
-
 HUD::HUD(std::string hud) {
     std::ifstream hudfile(hud);
 
+    // Throw a runtime error if file not found.
     if (!hudfile.is_open()) {
         std::string error("Error loading hud file ");
         error += hud;
@@ -25,6 +20,7 @@ HUD::HUD(std::string hud) {
     std::string line;
     std::string jsonStr;
 
+    // Ignore lines starting with '#'.
     while (getline(hudfile, line)) {
         if (line[0] == '#')
             continue;
@@ -34,6 +30,7 @@ HUD::HUD(std::string hud) {
     std::string err;
     auto json = Json::parse(jsonStr, err);
 
+    // Find and set all the variables...
     setint(border.x, json["border"]["x"]);
     setint(border.y, json["border"]["y"]);
     setint(border.width, json["border"]["width"]);

@@ -46,7 +46,11 @@ Level::Level(std::string const levelname) {
     // Resize the vector to match the width and height.
     m_tiles.resize(m_width * m_height);
     // Copy over the level data over to the vector.
-    std::copy(data.begin() + 4, data.end(), m_tiles.begin());
+
+    // NOTE: Only read m_width * m_height bytes
+    // To avoid reading more information than the tiles
+    std::copy(data.begin() + 4, data.begin() + 4 + m_width * m_height,
+              m_tiles.begin());
 }
 
 Level::Level(int width, int height, std::vector<byte> tiles)

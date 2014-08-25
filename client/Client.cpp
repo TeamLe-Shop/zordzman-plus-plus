@@ -4,6 +4,7 @@
 #include "net/net.hpp"
 #include "json11.hpp"
 #include "gfx/SpriteSheet.hpp"
+#include "weapons/weaponList.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -24,6 +25,7 @@ Client::Client(Config const &cfg, HUD hud)
       m_cfg(cfg), m_hud(hud) {
     game_instance = this;
 
+    m_player->setCombatWeapon(weaponList::zord);
     // Add the player to level.
     m_level.add(m_player);
 }
@@ -69,9 +71,9 @@ void Client::drawHUD() {
     // Format the health string & weapon strings
     auto hptext = fmt::format("HP: {}", m_player->getHealth());
 
-    auto combatwep = m_player->getCombatWeapon().getName();
+    auto combatwep = m_player->getCombatWeapon()->getName();
     bool holdingcombat = m_player->holdingCombatWeapon();
-    auto specialwep = m_player->getSpecialWeapon().getName();
+    auto specialwep = m_player->getSpecialWeapon()->getName();
     bool holdingspecial = m_player->holdingSpecialWeapon();
 
     drawText(hptext, 0, 0 + height - 32, 16, 16);
@@ -96,8 +98,8 @@ void Client::drawHUD() {
 
     glColor3f(1, 1, 1);
 
-    drawSpriteFromSheet(sheet, m_player->getCurrentWeapon().x_tile,
-                        m_player->getCurrentWeapon().y_tile, 0 + 200,
+    drawSpriteFromSheet(sheet, m_player->getCurrentWeapon()->x_tile,
+                        m_player->getCurrentWeapon()->y_tile, 0 + 140,
                         0 + height - 32, 32, 32);
 
     // Line border to seperate the actual game from the HUD

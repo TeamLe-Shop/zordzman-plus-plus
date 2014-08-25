@@ -29,6 +29,9 @@ public:
     WeaponSlot getSlot();
     /// @brief Get the type of weapon this is.
     WeaponType getType();
+    /// @brief Called when using the item.
+    virtual void use();
+    virtual ~BaseWeapon();
 
 public:
     const int x_tile, y_tile;

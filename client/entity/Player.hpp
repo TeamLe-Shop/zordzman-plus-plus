@@ -24,16 +24,19 @@ public:
     void tick();
     /// @brief Clone the player
     Player *clone() const;
-    /// @brief Return the player's m_m_m_username.
+    /// @brief Return the player's m_username.
     std::string getUsername() const;
 
-    BaseWeapon getCombatWeapon();
+    BaseWeapon* getCombatWeapon();
+    void setCombatWeapon(BaseWeapon *b);
     bool holdingCombatWeapon();
-    BaseWeapon getSpecialWeapon();
+
+    BaseWeapon* getSpecialWeapon();
+    void setSpecialWeapon(BaseWeapon *b);
     bool holdingSpecialWeapon();
 
-    BaseWeapon getCurrentWeapon();
-
+    BaseWeapon* getCurrentWeapon();
+    void setCurrentWeapon(WeaponSlot slot);
 private:
     /// @brief Check for input form the keyboard.
     void input();
@@ -50,7 +53,8 @@ private:
     // How many "pixels" the player has walked.
     float m_distanceWalked = 0;
 
-    BaseWeapon m_combat_weapon = BlankWeapon, m_special_weapon = BlankWeapon;
-    BaseWeapon *m_current_weapon = &m_combat_weapon;
+    BaseWeapon *m_combat_weapon = BlankWeapon;
+    BaseWeapon *m_special_weapon = BlankWeapon;
+    char m_current_weapon = 0;
 };
 }

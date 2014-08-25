@@ -2,12 +2,17 @@
 
 #include "weapons/weapon.hpp"
 #include "weapons/BaseWeapon.hpp"
+#include "weapons/Zord.hpp"
+
+using namespace client;
+using namespace weapon;
 
 namespace client {
-using namespace weapon;
 
 namespace weaponList {
 
-const BaseWeapon BlankWeapon("Blank Nigs", -1, -1, BOTH, BLANK);
+extern BaseWeapon *BlankWeapon;
+extern Zord *zord;
+
 }
 }

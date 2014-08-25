@@ -1,4 +1,4 @@
-Contributers
+Contributors
 ============
 
 Microcoding - Drawing some of the art in Zordzman and commiting

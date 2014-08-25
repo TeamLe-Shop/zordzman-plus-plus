@@ -1,7 +1,7 @@
 Contributers
 ============
 
-Microcoding - Drawing of the art in Zordzman and commiting
+Microcoding - Drawing some of the art in Zordzman and commiting
               some code
 
 Holiverh - Most of the networking code for the server,

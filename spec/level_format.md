@@ -1,4 +1,4 @@
-Zordzman level format
+Zordzman Level Format
 =====================
 
 The first two bytes represent width and height. The next two are the player spawn point X and Y position.

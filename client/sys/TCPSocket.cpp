@@ -55,4 +55,4 @@ void TCPSocket::close() {
 
 TCPSocket::~TCPSocket() { close(); }
 } // namespace net
-}
+} // namespace client

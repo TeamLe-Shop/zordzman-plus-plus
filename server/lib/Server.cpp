@@ -13,7 +13,7 @@
 #include "json11.hpp"
 
 #define PROTOCOL_VERSION 0x00
-#define MAGIC_NUMEBER 0xCAC35500 | PROTOCOL_VERSION
+#define MAGIC_NUMBER 0xCAC35500 | PROTOCOL_VERSION
 
 namespace server {
 Server::Server(IPaddress *address, unsigned int max_clients) {
@@ -41,6 +41,7 @@ Server::Server(IPaddress *address, unsigned int max_clients) {
                 "[ERROR] Failed to initialize SDL. Quitting zordz-server...\n");
         exit(1);
     }
+
     if (!(m_socket = SDLNet_TCP_Open(address))) {
         log("Failed to bind to interface", IPaddress_AsString(address));
     }
@@ -53,9 +54,9 @@ void Server::acceptConnections() {
     while (true) {
         // Returns immediately with NULL if no pending connections
         TCPsocket client_socket = SDLNet_TCP_Accept(m_socket);
-        if (!client_socket) {
-            break;
-        }
+
+        if (!client_socket) break;
+
         if (m_clients.size() >= m_max_clients) {
             // Perhaps issue some kind of "server full" warning. But how would
             // this be done as the client would be in the PENDING state
@@ -73,7 +74,7 @@ int Server::exec() {
     while (true) {
         acceptConnections();
         SDLNet_CheckSockets(m_socket_set, 0);
-        for (auto client: m_clients) {
+        for (auto client : m_clients) {
             if (client.m_state == PENDING
                 || client.m_state == CONNECTED) {
                 client.recv();

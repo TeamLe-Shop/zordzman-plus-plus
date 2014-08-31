@@ -8,7 +8,7 @@
 namespace client {
 namespace sys {
 
-// The TCPSocket class. Hurr durr?
+/// @brief A TCPSocket object one can use to send and receive data.
 class TCPSocket {
 public:
     /// @brief Connect to a host.

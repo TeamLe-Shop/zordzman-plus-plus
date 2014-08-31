@@ -55,7 +55,9 @@ void Server::acceptConnections() {
         // Returns immediately with NULL if no pending connections
         TCPsocket client_socket = SDLNet_TCP_Accept(m_socket);
 
-        if (!client_socket) break;
+        if (!client_socket) {
+            break;
+        }
 
         if (m_clients.size() >= m_max_clients) {
             // Perhaps issue some kind of "server full" warning. But how would

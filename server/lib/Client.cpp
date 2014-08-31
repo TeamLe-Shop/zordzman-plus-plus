@@ -22,16 +22,15 @@ void Client::log(std::string message) {
 bool Client::checkProtocolVersion() { return true; }
 
 void Client::recv() {
-    if (SDLNet_SocketReady(m_socket) == 0
-        || m_buffer.size() == RECV_BUFFER_SIZE) {
-        return;
-    }
     char buffer[RECV_BUFFER_SIZE];
+    memset(buffer, 0, RECV_BUFFER_SIZE);
     int bytes_recv = SDLNet_TCP_Recv(m_socket, buffer,
                                      RECV_BUFFER_SIZE - m_buffer.size());
     if (bytes_recv <= 0) {
         m_state = DISCONNECTED;
+        log("Client disconnected");
     } else {
+        fmt::print("{}\n", buffer);
         for (int i = 0; i < bytes_recv; i++) {
             m_buffer.push_back(buffer[i]);
         }

@@ -10,6 +10,11 @@ using namespace client;
 int main(int argc, char *argv[]) {
     try {
         Config cfg;
+
+        // Load in the default HUD.
+        // The contents of default_hud.json could just be '{}',
+        // but all the default values are filled in there for
+        // a customizer's reference.
         HUD hud("resources/default_hud.json");
 
         if (argc > 1) {

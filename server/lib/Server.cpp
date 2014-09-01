@@ -1,17 +1,12 @@
-
 #include "Server.hpp"
 #include "Client.hpp"
-
-#include <algorithm>
-#include <iostream>
-#include <iterator>
-#include <string.h>
-
-#include <SDL_net.h>
 #include "util.hpp"
-#include "format.h"
-#include "json11.hpp"
 #include "common/util/container.hpp"
+
+#include <format.h>
+#include <json11.hpp>
+#include <SDL_net.h>
+
 namespace cont = common::util::container;
 
 #define PROTOCOL_VERSION 0x00

@@ -7,6 +7,7 @@
 #include <SDL_net.h>
 
 #include "format.h"
+#include "common/logger/Logger.hpp"
 
 #define RECV_BUFFER_SIZE 8192
 
@@ -29,11 +30,6 @@ public:
     ///
     /// The client's initial state will be set to PENDING.
     Client(TCPsocket socket);
-
-    /// @brief Convenience logging that includes the peers's address
-    ///
-    /// Messages are printed to stderr.
-    void log(std::string message);
 
     /// @brief Assert the client is using the correct protocol version
     /// @return True if the correct version, false otherwise
@@ -64,5 +60,6 @@ private:
     ClientState m_state;
     std::vector<char> m_buffer;
     TCPsocket m_socket;
+    common::Logger m_logger;
 };
 }

@@ -16,7 +16,7 @@ void Client::log(std::string message) {
         // lol what am i meant to do here?
         return;
     }
-    fmt::print("{}: {}\n", IPaddress_AsString(address), message);
+    fmt::print("{}: {}\n", *address, message);
 }
 
 bool Client::checkProtocolVersion() { return true; }

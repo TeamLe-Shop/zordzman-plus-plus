@@ -45,9 +45,9 @@ Server::Server(IPaddress *address, unsigned int max_clients) {
     }
 
     if (!(m_socket = SDLNet_TCP_Open(address))) {
-        log("Failed to bind to interface", IPaddress_AsString(address));
+        log("Failed to bind to interface", fmt::format("{}", *address));
     }
-    log("Bound to interface", IPaddress_AsString(m_address));
+    log("Bound to interface", fmt::format("{}", *m_address));
 }
 
 Server::~Server() { printf("[INFO] Server shut down.\n\n"); }

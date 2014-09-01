@@ -27,21 +27,21 @@ Server::Server(IPaddress address, unsigned int max_clients)
     const SDL_version *link_version = SDLNet_Linked_Version();
     SDL_NET_VERSION(&compile_version);
 
-    fmt::print("[INFO] Compiled with SDL_net version: {:d}.{:d}.{:d}\n",
-               compile_version.major, compile_version.minor,
-               compile_version.patch);
-    fmt::print("[INFO] Running with SDL_net version: {:d}.{:d}.{:d}\n\n",
-               link_version->major, link_version->minor, link_version->patch);
+    m_logger.log("[INFO] Compiled with SDL_net version: {:d}.{:d}.{:d}\n",
+                 compile_version.major, compile_version.minor,
+                 compile_version.patch);
+    m_logger.log("[INFO] Running with SDL_net version: {:d}.{:d}.{:d}\n\n",
+                 link_version->major, link_version->minor, link_version->patch);
     if (SDL_Init(0) == -1) {
-        fprintf(stderr, "[ERROR] SDL_Init: %s\n", SDL_GetError());
-        fprintf(stderr,
-                "[ERROR] Failed to initialize SDL. Quitting zordz-server...\n");
+        m_logger.log("[ERROR] SDL_Init: {}\n", SDL_GetError());
+        m_logger.log(
+            "[ERROR] Failed to initialize SDL. Quitting zordz-server...\n");
         exit(1);
     }
     if (SDLNet_Init() == -1) {
-        fprintf(stderr, "[ERROR] SDLNet_Init: %s\n", SDLNet_GetError());
-        fprintf(stderr,
-                "[ERROR] Failed to initialize SDL. Quitting zordz-server...\n");
+        m_logger.log("[ERROR] SDLNet_Init: {}\n", SDLNet_GetError());
+        m_logger.log(
+            "[ERROR] Failed to initialize SDL. Quitting zordz-server...\n");
         exit(1);
     }
 
@@ -51,7 +51,7 @@ Server::Server(IPaddress address, unsigned int max_clients)
     m_logger.log("Bound to interface {}", m_address);
 }
 
-Server::~Server() { printf("[INFO] Server shut down.\n\n"); }
+Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }
 
 void Server::acceptConnections() {
     while (true) {

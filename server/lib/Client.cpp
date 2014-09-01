@@ -36,4 +36,19 @@ void Client::recv() {
         }
     }
 }
+
+ClientState Client::getState() const { return m_state; }
+
+Client::Client(Client &&other)
+    : m_state(other.m_state), m_buffer(std::move(other.m_buffer)),
+      m_socket(other.m_socket) {}
+
+Client &Client::operator=(Client &&other) {
+    m_state = other.m_state;
+    m_buffer = std::move(other.m_buffer);
+    m_socket = other.m_socket;
+    return *this;
+}
+
+Client::~Client() { SDLNet_TCP_Close(m_socket); }
 }

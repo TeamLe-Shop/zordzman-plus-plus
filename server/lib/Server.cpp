@@ -67,8 +67,7 @@ void Server::acceptConnections() {
             // intially.
             SDLNet_TCP_Close(client_socket);
         } else {
-            Client client(client_socket);
-            m_clients.push_back(client);
+            m_clients.emplace_back(client_socket);
             SDLNet_TCP_AddSocket(m_socket_set, client_socket);
         }
     }
@@ -78,14 +77,15 @@ int Server::exec() {
     while (true) {
         acceptConnections();
         SDLNet_CheckSockets(m_socket_set, 0);
-        for (auto client : m_clients) {
-            if (client.m_state == PENDING || client.m_state == CONNECTED) {
+        for (auto &client : m_clients) {
+            if (client.getState() == PENDING ||
+                client.getState() == CONNECTED) {
                 client.recv();
             }
         }
         // Remove disconnected clients
         cont::remove_if(m_clients, [](Client const &client) {
-            return client.m_state == DISCONNECTED;
+            return client.getState() == DISCONNECTED;
         });
     }
     return 1;

@@ -47,10 +47,21 @@ public:
     /// SDLNet_CheckSockets on the socket set containing the client's socket.
     void recv();
 
-    // lol getters and setters
-    ClientState m_state;
+    ClientState getState() const;
+
+    // Forbid copying
+    Client(const Client &) = delete;
+    Client &operator=(const Client &) = delete;
+
+    // Move operations
+    Client(Client &&);
+    Client &operator=(Client &&);
+
+    // Destructor
+    ~Client();
 
 private:
+    ClientState m_state;
     std::vector<char> m_buffer;
     TCPsocket m_socket;
 };

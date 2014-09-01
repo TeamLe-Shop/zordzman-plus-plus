@@ -6,10 +6,8 @@
 #include "gfx/SpriteSheet.hpp"
 #include "weapons/weaponList.hpp"
 
-#include <SDL.h>
-#include <SDL_image.h>
 #include <stdexcept>
-#include "format.h"
+#include <format.h>
 #include <thread>
 
 namespace client {

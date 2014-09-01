@@ -7,7 +7,6 @@
 #include "entity/Player.hpp"
 #include "Config.hpp"
 #include "ResourceManager.hpp"
-#include "server/lib/Server.hpp"
 #include "HUDConfig.hpp"
 
 namespace client {

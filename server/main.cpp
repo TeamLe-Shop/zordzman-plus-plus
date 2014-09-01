@@ -1,4 +1,3 @@
-
 #include <SDL_net.h>
 
 #include "lib/Server.hpp"

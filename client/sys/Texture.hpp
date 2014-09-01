@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-
 #include <SDL_opengl.h>
 
 namespace client {

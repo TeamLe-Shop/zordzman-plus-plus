@@ -1,8 +1,7 @@
 #include "drawingOperations.hpp"
-#include <cassert>
-#include <cstddef>
-#include <SDL_opengl.h>
 #include "Client.hpp"
+
+#include <SDL_opengl.h>
 #include <string.h>
 
 namespace client {

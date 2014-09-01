@@ -2,8 +2,6 @@
 #include "gfx/drawingOperations.hpp"
 #include "Client.hpp"
 
-#include <SDL.h>
-
 namespace client {
 Player::Player(std::string username, float x, float y, float speed)
     : Mob(x, y, speed), m_username(username) {

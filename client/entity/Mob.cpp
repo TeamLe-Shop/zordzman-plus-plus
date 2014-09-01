@@ -1,7 +1,5 @@
 #include "Mob.hpp"
 
-#include <string>
-
 namespace client {
 namespace mob {
 

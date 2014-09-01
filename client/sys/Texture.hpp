@@ -31,6 +31,7 @@ public:
     // Forbid copying
     Texture(const Texture &) = delete;
     Texture &operator=(const Texture &) = delete;
+
 private:
     GLuint m_handle;
     int m_width, m_height;

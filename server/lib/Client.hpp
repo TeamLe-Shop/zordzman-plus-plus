@@ -12,11 +12,6 @@
 #define RECV_BUFFER_SIZE 8192
 
 namespace server {
-enum ClientState {
-    PENDING,      /// Connection established but protocol version not asserted
-    CONNECTED,    /// Connected and protocol version checked; normal operation
-    DISCONNECTED, /// The socket is, or is in the process of disconnecting
-};
 
 /// @brief Represents a connected client
 ///
@@ -26,6 +21,14 @@ enum ClientState {
 class Client {
 
 public:
+    enum State {
+        /// Connection established but protocol version not asserted
+        Pending,
+        /// Connected and protocol version checked; normal operation
+        Connected,
+        /// The socket is, or is in the process of disconnecting
+        Disconnected,
+    };
     /// @brief Construct a new Client instance
     ///
     /// The client's initial state will be set to PENDING.
@@ -43,7 +46,7 @@ public:
     /// SDLNet_CheckSockets on the socket set containing the client's socket.
     void recv();
 
-    ClientState getState() const;
+    State getState() const;
 
     // Forbid copying
     Client(const Client &) = delete;
@@ -57,7 +60,7 @@ public:
     ~Client();
 
 private:
-    ClientState m_state;
+    State m_state;
     std::vector<char> m_buffer;
     TCPsocket m_socket;
     common::Logger m_logger;

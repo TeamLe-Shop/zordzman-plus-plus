@@ -79,14 +79,14 @@ int Server::exec() {
         acceptConnections();
         SDLNet_CheckSockets(m_socket_set, 0);
         for (auto &client : m_clients) {
-            if (client.getState() == PENDING ||
-                client.getState() == CONNECTED) {
+            if (client.getState() == Client::Pending ||
+                client.getState() == Client::Connected) {
                 client.recv();
             }
         }
         // Remove disconnected clients
         cont::remove_if(m_clients, [](Client const &client) {
-            return client.getState() == DISCONNECTED;
+            return client.getState() == Client::Disconnected;
         });
     }
     return 1;

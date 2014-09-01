@@ -13,7 +13,7 @@ Client::Client(TCPsocket socket)
           }
       }) {
     m_socket = socket;
-    m_state = PENDING;
+    m_state = Pending;
     m_buffer.reserve(RECV_BUFFER_SIZE);
     m_logger.log("Client connected");
 }
@@ -26,7 +26,7 @@ void Client::recv() {
     int bytes_recv =
         SDLNet_TCP_Recv(m_socket, buffer, RECV_BUFFER_SIZE - m_buffer.size());
     if (bytes_recv <= 0) {
-        m_state = DISCONNECTED;
+        m_state = Disconnected;
         m_logger.log("Client disconnected");
     } else {
         m_logger.log("{}\n", buffer);
@@ -36,7 +36,7 @@ void Client::recv() {
     }
 }
 
-ClientState Client::getState() const { return m_state; }
+Client::State Client::getState() const { return m_state; }
 
 Client::Client(Client &&other)
     : m_state(other.m_state), m_buffer(std::move(other.m_buffer)),

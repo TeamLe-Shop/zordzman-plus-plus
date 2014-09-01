@@ -11,6 +11,8 @@
 #include "util.hpp"
 #include "format.h"
 #include "json11.hpp"
+#include "common/util/container.hpp"
+namespace cont = common::util::container;
 
 #define PROTOCOL_VERSION 0x00
 #define MAGIC_NUMBER 0xCAC35500 | PROTOCOL_VERSION
@@ -81,13 +83,10 @@ int Server::exec() {
                 client.recv();
             }
         }
-        // lol is copy neccesary? can i into modify in-place?
-        std::vector<Client> filtered_clients;
-        std::copy_if(m_clients.begin(), m_clients.end(),
-                     std::back_inserter(filtered_clients), [](Client client) {
+        // Remove disconnected clients
+        cont::remove_if(m_clients, [](Client const &client) {
             return client.m_state == DISCONNECTED;
         });
-        m_clients = filtered_clients;
     }
     return 1;
 }

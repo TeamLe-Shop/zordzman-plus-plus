@@ -10,12 +10,11 @@
 
 #define RECV_BUFFER_SIZE 8192
 
-
 namespace server {
 enum ClientState {
-    PENDING,  /// Connection established but protocol version not asserted
-    CONNECTED,   /// Connected and protocol version checked; normal operation
-    DISCONNECTED,  /// The socket is, or is in the process of disconnecting
+    PENDING,      /// Connection established but protocol version not asserted
+    CONNECTED,    /// Connected and protocol version checked; normal operation
+    DISCONNECTED, /// The socket is, or is in the process of disconnecting
 };
 
 /// @brief Represents a connected client

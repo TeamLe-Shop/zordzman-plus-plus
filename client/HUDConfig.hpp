@@ -27,6 +27,7 @@ public:
     /// @param json The json object, which is expected to be an integer.
     /// @param base The base number, by default 10.
     void setint(int &i, Json json, int base = 10);
+
 public:
     /// @brief The font color used when an item is currently selected.
     ///        By default, this is green, or (0x00FF00FF).

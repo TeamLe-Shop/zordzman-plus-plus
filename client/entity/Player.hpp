@@ -27,16 +27,17 @@ public:
     /// @brief Return the player's m_username.
     std::string getUsername() const;
 
-    BaseWeapon* getCombatWeapon();
+    BaseWeapon *getCombatWeapon();
     void setCombatWeapon(BaseWeapon *b);
     bool holdingCombatWeapon();
 
-    BaseWeapon* getSpecialWeapon();
+    BaseWeapon *getSpecialWeapon();
     void setSpecialWeapon(BaseWeapon *b);
     bool holdingSpecialWeapon();
 
-    BaseWeapon* getCurrentWeapon();
+    BaseWeapon *getCurrentWeapon();
     void setCurrentWeapon(WeaponSlot slot);
+
 private:
     /// @brief Check for input form the keyboard.
     void input();

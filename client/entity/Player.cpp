@@ -116,23 +116,19 @@ Player *Player::clone() const { return new Player(*this); }
 
 std::string Player::getUsername() const { return m_username; }
 
-BaseWeapon* Player::getCombatWeapon() { return m_combat_weapon; }
+BaseWeapon *Player::getCombatWeapon() { return m_combat_weapon; }
 
 void Player::setCombatWeapon(BaseWeapon *b) { m_combat_weapon = b; }
 
-bool Player::holdingCombatWeapon() {
-    return m_current_weapon == 0;
-}
+bool Player::holdingCombatWeapon() { return m_current_weapon == 0; }
 
-BaseWeapon* Player::getSpecialWeapon() { return m_special_weapon; }
+BaseWeapon *Player::getSpecialWeapon() { return m_special_weapon; }
 
 void Player::setSpecialWeapon(BaseWeapon *b) { m_special_weapon = b; }
 
-bool Player::holdingSpecialWeapon() {
-    return m_current_weapon == 1;
-}
+bool Player::holdingSpecialWeapon() { return m_current_weapon == 1; }
 
-BaseWeapon* Player::getCurrentWeapon() {
+BaseWeapon *Player::getCurrentWeapon() {
     return m_current_weapon == 0 ? m_combat_weapon : m_special_weapon;
 }
 }

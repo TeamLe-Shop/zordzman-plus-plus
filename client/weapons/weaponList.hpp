@@ -13,6 +13,5 @@ namespace weaponList {
 
 extern BaseWeapon *BlankWeapon;
 extern Zord *zord;
-
 }
 }

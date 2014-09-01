@@ -24,8 +24,8 @@ bool Client::checkProtocolVersion() { return true; }
 void Client::recv() {
     char buffer[RECV_BUFFER_SIZE];
     memset(buffer, 0, RECV_BUFFER_SIZE);
-    int bytes_recv = SDLNet_TCP_Recv(m_socket, buffer,
-                                     RECV_BUFFER_SIZE - m_buffer.size());
+    int bytes_recv =
+        SDLNet_TCP_Recv(m_socket, buffer, RECV_BUFFER_SIZE - m_buffer.size());
     if (bytes_recv <= 0) {
         m_state = DISCONNECTED;
         log("Client disconnected");

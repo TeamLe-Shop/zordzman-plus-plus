@@ -1,10 +1,7 @@
 #pragma once
 
 #include <string>
-
-#include "json11.hpp"
-
-using json11::Json;
+#include <json11.hpp>
 
 /// @brief The HUD. This contains various variables
 ///        for how to render the HUD.
@@ -20,13 +17,13 @@ public:
     /// @param i The color variable. This function modifies it directly.
     /// @param json The json object. This is expected to be a string of hex.
     /// @param base The base number. The default value is 10.
-    void setcol(uint32_t &i, Json json, int base = 10);
+    void setcol(uint32_t &i, json11::Json json, int base = 10);
     /// @brief Set an integer variable.
     ///
     /// @param i The integer variable. This function modifies it directly.
     /// @param json The json object, which is expected to be an integer.
     /// @param base The base number, by default 10.
-    void setint(int &i, Json json, int base = 10);
+    void setint(int &i, json11::Json json, int base = 10);
 
 public:
     /// @brief The font color used when an item is currently selected.

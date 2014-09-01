@@ -1,13 +1,10 @@
 #pragma once
 
-#include <vector>
-#include <initializer_list>
-#include <string>
-
-#include <SDL_net.h>
-
 #include "Client.hpp"
 #include "common/logger/Logger.hpp"
+
+#include <vector>
+#include <SDL_net.h>
 
 #define RECV_BUFFER_SIZE 8192
 

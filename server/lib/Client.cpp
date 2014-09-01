@@ -41,12 +41,15 @@ ClientState Client::getState() const { return m_state; }
 
 Client::Client(Client &&other)
     : m_state(other.m_state), m_buffer(std::move(other.m_buffer)),
-      m_socket(other.m_socket) {}
+      m_socket(other.m_socket) {
+    other.m_socket = nullptr;
+}
 
 Client &Client::operator=(Client &&other) {
     m_state = other.m_state;
     m_buffer = std::move(other.m_buffer);
     m_socket = other.m_socket;
+    other.m_socket = nullptr;
     return *this;
 }
 

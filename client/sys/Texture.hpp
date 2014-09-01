@@ -26,10 +26,12 @@ public:
     static void unbind();
     /// @brief Destroy the texture.
     ~Texture();
-    Texture(const Texture &) = delete;
     /// @brief Construct the texture from a file
     Texture(std::string const &filename);
 
+    // Forbid copying
+    Texture(const Texture &) = delete;
+    Texture &operator=(const Texture &) = delete;
 private:
     GLuint m_handle;
     int m_width, m_height;

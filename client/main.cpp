@@ -20,6 +20,9 @@ int main(int argc, char *argv[]) {
         if (argc > 1) {
             cfg.host = argv[1];
         }
+        if (argc > 2) {
+            cfg.port = std::stoi(argv[2]);
+        }
         // Initialize the game.
         Client game(cfg, hud);
         // Start the game loop.

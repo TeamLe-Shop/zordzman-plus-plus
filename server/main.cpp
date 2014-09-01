@@ -10,6 +10,6 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    server::Server server(&address, 2);
+    server::Server server(address, 2);
     server.exec();
 }

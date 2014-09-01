@@ -18,7 +18,7 @@ namespace cont = common::util::container;
 #define MAGIC_NUMBER 0xCAC35500 | PROTOCOL_VERSION
 
 namespace server {
-Server::Server(IPaddress *address, unsigned int max_clients) {
+Server::Server(IPaddress address, unsigned int max_clients) {
     m_address = address;
     m_max_clients = max_clients;
     m_socket_set = SDLNet_AllocSocketSet(m_max_clients * 1);
@@ -44,10 +44,10 @@ Server::Server(IPaddress *address, unsigned int max_clients) {
         exit(1);
     }
 
-    if (!(m_socket = SDLNet_TCP_Open(address))) {
-        log("Failed to bind to interface", fmt::format("{}", *address));
+    if (!(m_socket = SDLNet_TCP_Open(&address))) {
+        log("Failed to bind to interface", fmt::format("{}", address));
     }
-    log("Bound to interface", fmt::format("{}", *m_address));
+    log("Bound to interface", fmt::format("{}", m_address));
 }
 
 Server::~Server() { printf("[INFO] Server shut down.\n\n"); }

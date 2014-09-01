@@ -1,13 +1,9 @@
 #pragma once
 
-#include <vector>
-#include <array>
-#include <string>
-
-#include <SDL_net.h>
-
-#include "format.h"
 #include "common/logger/Logger.hpp"
+
+#include <vector>
+#include <SDL_net.h>
 
 #define RECV_BUFFER_SIZE 8192
 

@@ -7,6 +7,7 @@
 #include <SDL_net.h>
 
 #include "Client.hpp"
+#include "common/logger/Logger.hpp"
 
 #define RECV_BUFFER_SIZE 8192
 
@@ -18,21 +19,7 @@ public:
     ~Server();
     int exec();
 
-    template <typename... Args>
-    void log(std::string message, Args... messages) {
-        print_messages("SERVER:", message, messages...);
-        fmt::print(stderr, "\n");
-    }
-
 private:
-    void print_messages() {}
-
-    template <typename... Args>
-    void print_messages(std::string message, Args... messages) {
-        fmt::print(stderr, "{} ", message);
-        print_messages(messages...);
-    }
-
     /// @brief Accept all pending connections
     ///
     /// This accept(2)s all pending connections on the listening socket. These
@@ -47,5 +34,6 @@ private:
     IPaddress m_address;
     std::vector<Client> m_clients;
     SDLNet_SocketSet m_socket_set;
+    common::Logger m_logger;
 };
 }

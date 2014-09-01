@@ -29,6 +29,7 @@ endif()
 add_library(json11 common/extlib/json11/json11.cpp)
 
 add_library(server server/lib/Server.cpp)
+add_library(logger common/logger/Logger.hpp common/logger/Logger.cpp)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 
@@ -63,5 +64,5 @@ target_link_libraries(zordzman
     ${OPENGL_LIBRARY} json11 cppformat server)
 
 target_link_libraries(zordzman-server
-    ${SDL2_LIBRARY} ${SDLNET_LIBRARY} server json11 cppformat
+    ${SDL2_LIBRARY} ${SDLNET_LIBRARY} server json11 cppformat logger
 )

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dirs='client server common/util'
+dirs='client server common/util common/logger'
 
 for dir in $dirs; do
 	find $dir -name '*.*pp' -exec clang-format -style=file -i '{}' \;;

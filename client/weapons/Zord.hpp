@@ -1,13 +1,15 @@
 #pragma once
 
-#include "entity/Player.hpp"
 #include "weapons/BaseWeapon.hpp"
 
+class Player;
+
 /// @brief The main weapon of the gayme.
+
 class Zord : public client::weapon::BaseWeapon {
 public:
     Zord();
     ~Zord();
-    // I want void use(Player* player)
-    void use();
+
+    void use(Player* player);
 };

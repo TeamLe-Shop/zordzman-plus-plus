@@ -3,9 +3,8 @@
 #include "weapons/weapon.hpp"
 #include <string>
 
-#include "entity/Player.hpp"
-
 namespace client {
+
 namespace weapon {
 
 /// @brief The base weapon for every weapon in the game
@@ -32,7 +31,6 @@ public:
     /// @brief Get the type of weapon this is.
     WeaponType getType();
     /// @brief Called when using the item.
-    // virtual void use(Player* player);
     virtual void use();
     virtual ~BaseWeapon();
 

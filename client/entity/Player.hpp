@@ -7,8 +7,8 @@
 
 namespace client {
 using namespace mob;
-using namespace weapon;
 using namespace weaponList;
+using namespace weapon;
 
 class Player : public Mob {
 public:

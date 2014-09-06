@@ -14,6 +14,7 @@ WeaponSlot BaseWeapon::getSlot() { return m_slot; }
 
 WeaponType BaseWeapon::getType() { return m_type; }
 
+// void BaseWeapon::use(Player* player) {}
 void BaseWeapon::use() {}
 
 BaseWeapon::~BaseWeapon() {}

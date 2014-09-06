@@ -1,7 +1,13 @@
 #include "weapons/Zord.hpp"
 
-using namespace client::weapon;
+#include <iostream>
 
 Zord::Zord() : BaseWeapon("Zord", 0, 7, COMBAT, ZORD) {}
 
-void Zord::use() {}
+Zord::~Zord() {}
+
+// I want void Zord::use(Player* player)
+void Zord::use() {
+    std::cout << "hmm yiss\n";
+}
+

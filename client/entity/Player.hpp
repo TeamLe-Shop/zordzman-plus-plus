@@ -38,6 +38,8 @@ public:
     BaseWeapon *getCurrentWeapon();
     void setCurrentWeapon(WeaponSlot slot);
 
+    // The delay between using a weapon
+    int weapon_delay = 0;
 private:
     /// @brief Check for input form the keyboard.
     void input();

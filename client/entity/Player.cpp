@@ -55,12 +55,20 @@ void Player::tick() {
         m_distanceWalked = 0;
     else if (m_distanceWalked < 0)
         m_distanceWalked = 60;
+
+    if (weapon_delay) weapon_delay--;
 }
 
 void Player::input() {
     // Get the current keyboard state. This will have information
     // about what keys are pressed n shit
     Uint8 const *keys = SDL_GetKeyboardState(nullptr);
+
+    if (!weapon_delay) {
+        if (keys[SDL_SCANCODE_SPACE]) {
+            getCurrentWeapon()->use();
+        }
+    }
 
     // Check if they've pressed the arrow keys, and move them if they have.
     if (keys[SDL_SCANCODE_LEFT]) {

@@ -1,5 +1,6 @@
 zordzman-plus-plus
 ==================
+
 ![](http://servers.tf:8080/buildStatus/icon?job=zordzman-plus-plus)
 
 (Note: The above icon may show the incorrect build status due to GitHub cacheing the images.)
@@ -15,7 +16,8 @@ Dependencies
 =========
 
 It uses SDL, SDL_Image and OpenGL for about everything right now.
-It also uses [json11](https://github.com/dropbox/json11) for parsing JSON.
+It also uses [json11](https://github.com/dropbox/json11) for parsing JSON,
+and [cppformat](http://cppformat.github.io/) for formatting.
 
 We are using SDL_Net for networking.
 

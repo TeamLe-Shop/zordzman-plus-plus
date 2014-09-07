@@ -15,7 +15,6 @@ enum Direction { NORTH, SOUTH, WEST, EAST };
 std::string directionName(Direction d);
 
 class Mob : public Entity {
-
 public:
     /// @brief Initialize and set the mob's x, y, speed and direction.
     ///

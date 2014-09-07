@@ -11,7 +11,6 @@ SpriteSheet const * currentSheet = nullptr;
 
 void drawSpriteFromSheet(SpriteSheet const & spritesheet, int xOff, int yOff,
                          float x, float y, float w, float h, char flip) {
-
     if (xOff < 0 || yOff < 0)
         return;
 

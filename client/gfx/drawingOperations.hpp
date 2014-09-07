@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SpriteSheet.hpp"
+#include "sys/Texture.hpp"
 
 namespace client {
 /// @brief Various drawing operations
@@ -20,9 +20,9 @@ char const NO_FLIP = 0, X_FLIP = 1, Y_FLIP = 2;
 ///
 /// If the projection size differs from the tile size of the sprite sheet,
 /// the sprite will be scaled.
-void drawSpriteFromSheet(SpriteSheet const & spritesheet, int xOff, int yOff,
-                         float x, float y, float w, float h,
-                         char flip = NO_FLIP);
+void drawSpriteFromTexture(sys::Texture const & texture, int xOff, int yOff,
+                           float x, float y, float w, float h, float spriteSize,
+                           char flip = NO_FLIP);
 
 /// @brief Draw a rectangle
 ///

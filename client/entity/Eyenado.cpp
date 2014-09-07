@@ -25,11 +25,9 @@ void Eyenado::render() const {
         idx = 5;
     }
     // Draw it
-    SpriteSheet & sheet = Client::get().resources.getSheet("main");
-    using drawingOperations::drawSpriteFromSheet;
-    sheet.setSpriteSize(16);
-    drawSpriteFromSheet(sheet, idx, 4, m_x, m_y, 32, 32);
-    sheet.setSpriteSize(8);
+    sys::Texture & texture = Client::get().resources.getTexture("main");
+    using drawingOperations::drawSpriteFromTexture;
+    drawSpriteFromTexture(texture, idx, 4, m_x, m_y, 32, 32, 16);
 }
 
 Eyenado * Eyenado::clone() const { return new Eyenado(*this); }

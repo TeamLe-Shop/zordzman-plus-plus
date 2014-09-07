@@ -7,14 +7,14 @@
 namespace client {
 ResourceManager::ResourceManager() {
     // Load the spritesheets n shit
-    m_sheets.emplace(std::piecewise_construct, std::forward_as_tuple("main"),
-                     std::forward_as_tuple("resources/spritesheet.png", 8));
+    m_textures.emplace(std::piecewise_construct, std::forward_as_tuple("main"),
+                       std::forward_as_tuple("resources/spritesheet.png"));
 }
 
-SpriteSheet & ResourceManager::getSheet(char const * const key) {
-    auto iter = m_sheets.find(key);
+sys::Texture & ResourceManager::getTexture(char const * const key) {
+    auto iter = m_textures.find(key);
 
-    if (iter == m_sheets.end()) {
+    if (iter == m_textures.end()) {
         // Throw a runtime error if we couldn't find the spritesheet.
         std::string error("Fuck I couldn't find spritesheet ");
         error += key;

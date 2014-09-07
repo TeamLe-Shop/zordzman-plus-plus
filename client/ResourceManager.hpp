@@ -1,5 +1,5 @@
 #pragma once
-#include "gfx/SpriteSheet.hpp"
+#include "sys/Texture.hpp"
 
 #include <unordered_map>
 
@@ -9,12 +9,12 @@ public:
     /// @brief Initialize the resources.
     ResourceManager();
     /// @brief Get a spritesheet by its name.
-    SpriteSheet & getSheet(char const * const key);
+    sys::Texture & getTexture(char const * const key);
 
 private:
     ResourceManager(ResourceManager const &) = delete;
     ResourceManager operator=(ResourceManager const &) = delete;
     // The map containing spritesheets that can be referred to by their name.
-    std::unordered_map<std::string, SpriteSheet> m_sheets;
+    std::unordered_map<std::string, sys::Texture> m_textures;
 };
 }

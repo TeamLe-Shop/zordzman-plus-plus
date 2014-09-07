@@ -7,25 +7,25 @@
 namespace client {
 namespace drawingOperations {
 
-SpriteSheet const * currentSheet = nullptr;
+sys::Texture const * currentTexture = nullptr;
 
-void drawSpriteFromSheet(SpriteSheet const & spritesheet, int xOff, int yOff,
-                         float x, float y, float w, float h, char flip) {
+void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
+                           float x, float y, float w, float h, float sprSize,
+                           char flip) {
     if (xOff < 0 || yOff < 0)
         return;
 
     // Transform the coordinates to OpenGL texture coordinates
-    float const sprSize = spritesheet.getSpriteSize();
-    float const texSpriteW = sprSize / spritesheet.getWidth();
-    float const texSpriteH = sprSize / spritesheet.getHeight();
+    float const texSpriteW = sprSize / texture.getWidth();
+    float const texSpriteH = sprSize / texture.getHeight();
     float const texc_left = texSpriteW * xOff;
     float const texc_top = texSpriteH * yOff;
     // If the spritesheet passed in isn't the currentSheet, bind
     // the spritesheet instead, and set currentSheet to the address
     // of spritesheet.
-    if (&spritesheet != currentSheet) {
-        sys::Texture::bind(spritesheet);
-        currentSheet = &spritesheet;
+    if (&texture != currentTexture) {
+        sys::Texture::bind(texture);
+        currentTexture = &texture;
     }
     // Draw a textured quad that represents the sprite
     glBegin(GL_QUADS);
@@ -58,9 +58,9 @@ void drawSpriteFromSheet(SpriteSheet const & spritesheet, int xOff, int yOff,
 void drawRectangle(float x, float y, float w, float h, bool filled) {
     // Unbind any textures if we have any bound. This will avoid
     // our rectangle being fucked up beyond recgonition.
-    if (currentSheet) {
+    if (currentTexture) {
         sys::Texture::unbind();
-        currentSheet = nullptr;
+        currentTexture = nullptr;
     }
     // We can choose between a filled whole rectangle, or just an outline.
     if (filled) {
@@ -79,9 +79,9 @@ void drawRectangle(float x, float y, float w, float h, bool filled) {
 }
 
 void drawLine(float x1, float y1, float x2, float y2) {
-    if (currentSheet) {
+    if (currentTexture) {
         sys::Texture::unbind();
-        currentSheet = nullptr;
+        currentTexture = nullptr;
     }
 
     glBegin(GL_LINES);
@@ -91,7 +91,7 @@ void drawLine(float x1, float y1, float x2, float y2) {
 }
 
 void drawText(std::string const & text, int x, int y, int w, int h) {
-    SpriteSheet const & sheet = Client::get().resources.getSheet("main");
+    sys::Texture const & texture = Client::get().resources.getTexture("main");
     for (char c : text) {
         char const * const chars = "abcdefghijklmnopqrstuvwxyz      "
                                    "                                "
@@ -102,8 +102,8 @@ void drawText(std::string const & text, int x, int y, int w, int h) {
         if (char_index) {
             ptrdiff_t index = char_index - chars;
             // Find it and draw it.
-            drawSpriteFromSheet(sheet, (index % 32), 26 + (index / 32), x, y, w,
-                                h);
+            drawSpriteFromTexture(texture, (index % 32), 26 + (index / 32), x,
+                                  y, w, h, 8);
             x += w;
         }
     }

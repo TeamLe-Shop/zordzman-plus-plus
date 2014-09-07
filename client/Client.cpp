@@ -3,7 +3,6 @@
 #include "gfx/drawingOperations.hpp"
 #include "net/net.hpp"
 #include "json11.hpp"
-#include "gfx/SpriteSheet.hpp"
 #include "weapons/weaponList.hpp"
 #include "entity/Eyenado.hpp"
 
@@ -59,7 +58,7 @@ void Client::exec() {
 
 void Client::drawHUD() {
     using namespace drawingOperations;
-    SpriteSheet & sheet = Client::get().resources.getSheet("main");
+    sys::Texture & texture = Client::get().resources.getTexture("main");
     auto const height = m_window.getHeight();
 
     // Draw the rectangle/box which contains information about the player.
@@ -98,9 +97,9 @@ void Client::drawHUD() {
 
     glColor3f(1, 1, 1);
 
-    drawSpriteFromSheet(sheet, m_player->getCurrentWeapon()->x_tile,
-                        m_player->getCurrentWeapon()->y_tile, 0 + 140,
-                        0 + height - 32, 32, 32);
+    drawSpriteFromTexture(texture, m_player->getCurrentWeapon()->x_tile,
+                          m_player->getCurrentWeapon()->y_tile, 0 + 140,
+                          0 + height - 32, 32, 32, 8);
 
     // Line border to seperate the actual game from the HUD
     setColor(m_hud.border.color);

@@ -10,32 +10,28 @@ Player::Player(std::string username, float x, float y, float speed)
 
 void Player::render() const {
     using namespace drawingOperations;
-    SpriteSheet & sheet = Client::get().resources.getSheet("main");
+    sys::Texture & tex = Client::get().resources.getTexture("main");
 
-    // Set the spritesize to 16 x 16 for now.
-    sheet.setSpriteSize(16);
     // Depending on their direction, render a different sprite.
     // The sprite will animate based on how many "steps" it has taken.
     switch (m_direction) {
     case SOUTH:
-        drawSpriteFromSheet(sheet, 0, 2, m_x, m_y, 32, 32,
-                            m_distanceWalked < 30 ? NO_FLIP : X_FLIP);
+        drawSpriteFromTexture(tex, 0, 2, m_x, m_y, 32, 32, 16,
+                              m_distanceWalked < 30 ? NO_FLIP : X_FLIP);
         break;
     case NORTH:
-        drawSpriteFromSheet(sheet, 3, 2, m_x, m_y, 32, 32,
-                            m_distanceWalked < 30 ? NO_FLIP : X_FLIP);
+        drawSpriteFromTexture(tex, 3, 2, m_x, m_y, 32, 32, 16,
+                              m_distanceWalked < 30 ? NO_FLIP : X_FLIP);
         break;
     case WEST:
-        drawSpriteFromSheet(sheet, m_distanceWalked < 30 ? 1 : 2, 2, m_x, m_y,
-                            32, 32, X_FLIP);
+        drawSpriteFromTexture(tex, m_distanceWalked < 30 ? 1 : 2, 2, m_x, m_y,
+                              32, 32, 16, X_FLIP);
         break;
     case EAST:
-        drawSpriteFromSheet(sheet, m_distanceWalked < 30 ? 1 : 2, 2, m_x, m_y,
-                            32, 32, NO_FLIP);
+        drawSpriteFromTexture(tex, m_distanceWalked < 30 ? 1 : 2, 2, m_x, m_y,
+                              32, 32, 16, NO_FLIP);
         break;
     }
-    // Set the sprite size back to 8x8.
-    sheet.setSpriteSize(8);
 
     float username_x = (m_x + 16) - m_username.size() * 4;
     float username_y = m_y - 12;

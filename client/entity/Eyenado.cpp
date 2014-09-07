@@ -8,7 +8,7 @@ namespace mob {
 
 Eyenado::Eyenado(float x, float y) : Mob(x, y, 1.8f, SOUTH) { m_health = 45; }
 
-void Eyenado::render() {
+void Eyenado::render() const {
     // i'm currently using Player.cpp as a drawing reference
     SpriteSheet & sheet = Client::get().resources.getSheet("main");
     sheet.setSpriteSize(16);
@@ -26,18 +26,18 @@ void Eyenado::render() {
         drawSpriteFromSheet(sheet, 4, 4, m_x, m_y, 32, 32);
     } else if (ticks >= 180 && ticks < 210) {
         drawSpriteFromSheet(sheet, 5, 4, m_x, m_y, 32, 32);
-    } else if (ticks >= 240) {
-        ticks = 0;
     }
-    // AI
-    tick();
     // reset
     sheet.setSpriteSize(8);
-    // increase tick, for the animation
-    ticks++;
 }
 
-void Eyenado::tick() {}
+void Eyenado::tick() {
+    // increase tick, for the animation
+    ticks++;
+    if (ticks >= 240) {
+        ticks = 0;
+    }
+}
 
 void Eyenado::attack() {}
 }

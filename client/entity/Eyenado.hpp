@@ -7,7 +7,7 @@ namespace mob {
 class Eyenado : public Mob {
 public:
     Eyenado(float x, float y);
-    void render();
+    void render() const;
 
 private:
     void tick();

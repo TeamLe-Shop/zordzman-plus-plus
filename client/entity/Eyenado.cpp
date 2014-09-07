@@ -31,12 +31,16 @@ void Eyenado::render() const {
     sheet.setSpriteSize(8);
 }
 
+Eyenado * Eyenado::clone() const { return new Eyenado(*this); }
+
 void Eyenado::tick() {
     // increase tick, for the animation
     ticks++;
     if (ticks >= 240) {
         ticks = 0;
     }
+    m_x += 0.1;
+    m_y += 0.1;
 }
 
 void Eyenado::attack() {}

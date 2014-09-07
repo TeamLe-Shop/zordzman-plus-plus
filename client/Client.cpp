@@ -5,6 +5,7 @@
 #include "json11.hpp"
 #include "gfx/SpriteSheet.hpp"
 #include "weapons/weaponList.hpp"
+#include "entity/Eyenado.hpp"
 
 #include <stdexcept>
 #include <format.h>
@@ -26,6 +27,7 @@ Client::Client(Config const & cfg, HUD hud)
     m_player->setCombatWeapon(weaponList::zord);
     // Add the player to level.
     m_level.add(m_player);
+    m_level.add(new Eyenado(100, 100));
 }
 
 Client::~Client() { game_instance = nullptr; }

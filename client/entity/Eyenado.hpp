@@ -8,6 +8,7 @@ class Eyenado : public Mob {
 public:
     Eyenado(float x, float y);
     void render() const;
+    Eyenado * clone() const;
 
 private:
     void tick();

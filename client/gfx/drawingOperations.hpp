@@ -19,7 +19,7 @@ enum class SpriteFlip { None, Horizontal, Vertical };
 /// @param h Height of the projection
 ///
 /// If the projection size defined by (w, h) differs from spriteSize,
-/// the sprite will be scaled.
+/// the sprite will be scaled accordingly.
 void drawSpriteFromTexture(sys::Texture const & texture, int xOff, int yOff,
                            float x, float y, float w, float h, float spriteSize,
                            SpriteFlip flip = SpriteFlip::None);

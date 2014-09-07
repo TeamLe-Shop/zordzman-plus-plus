@@ -17,19 +17,21 @@ void Player::render() const {
     switch (m_direction) {
     case SOUTH:
         drawSpriteFromTexture(tex, 0, 2, m_x, m_y, 32, 32, 16,
-                              m_distanceWalked < 30 ? NO_FLIP : X_FLIP);
+                              m_distanceWalked < 30 ? SpriteFlip::None
+                                                    : SpriteFlip::Horizontal);
         break;
     case NORTH:
         drawSpriteFromTexture(tex, 3, 2, m_x, m_y, 32, 32, 16,
-                              m_distanceWalked < 30 ? NO_FLIP : X_FLIP);
+                              m_distanceWalked < 30 ? SpriteFlip::None
+                                                    : SpriteFlip::Horizontal);
         break;
     case WEST:
         drawSpriteFromTexture(tex, m_distanceWalked < 30 ? 1 : 2, 2, m_x, m_y,
-                              32, 32, 16, X_FLIP);
+                              32, 32, 16, SpriteFlip::Horizontal);
         break;
     case EAST:
         drawSpriteFromTexture(tex, m_distanceWalked < 30 ? 1 : 2, 2, m_x, m_y,
-                              32, 32, 16, NO_FLIP);
+                              32, 32, 16, SpriteFlip::None);
         break;
     }
 

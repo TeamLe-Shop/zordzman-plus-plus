@@ -6,7 +6,7 @@ namespace client {
 /// @brief Various drawing operations
 namespace drawingOperations {
 
-char const NO_FLIP = 0, X_FLIP = 1, Y_FLIP = 2;
+enum class SpriteFlip { None, Horizontal, Vertical };
 
 /// @brief Draw a sprite from a Texture
 ///
@@ -22,7 +22,7 @@ char const NO_FLIP = 0, X_FLIP = 1, Y_FLIP = 2;
 /// the sprite will be scaled.
 void drawSpriteFromTexture(sys::Texture const & texture, int xOff, int yOff,
                            float x, float y, float w, float h, float spriteSize,
-                           char flip = NO_FLIP);
+                           SpriteFlip flip = SpriteFlip::None);
 
 /// @brief Draw a rectangle
 ///

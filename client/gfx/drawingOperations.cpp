@@ -3,6 +3,7 @@
 
 #include <SDL_opengl.h>
 #include <string.h>
+#include <stdexcept>
 
 namespace client {
 namespace drawingOperations {
@@ -11,7 +12,7 @@ sys::Texture const * currentTexture = nullptr;
 
 void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
                            float x, float y, float w, float h, float sprSize,
-                           char flip) {
+                           SpriteFlip flip) {
     if (xOff < 0 || yOff < 0)
         return;
 
@@ -29,7 +30,7 @@ void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
     // Draw a textured quad that represents the sprite
     glBegin(GL_QUADS);
     switch (flip) {
-    case NO_FLIP:
+    case SpriteFlip::None:
         glTexCoord2f(texc_left, texc_top);
         glVertex2f(x, y);
         glTexCoord2f(texc_left + texSpriteW, texc_top);
@@ -39,7 +40,7 @@ void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
         glTexCoord2f(texc_left, texc_top + texSpriteH);
         glVertex2f(x, y + h);
         break;
-    case X_FLIP:
+    case SpriteFlip::Horizontal:
         glTexCoord2f(texc_left, texc_top);
         glVertex2f(x + w, y);
         glTexCoord2f(texc_left + texSpriteW, texc_top);
@@ -49,6 +50,8 @@ void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
         glTexCoord2f(texc_left, texc_top + texSpriteH);
         glVertex2f(x + w, y + h);
         break;
+    case SpriteFlip::Vertical:
+        throw std::runtime_error("Unimplemented!");
     }
 
     glEnd();

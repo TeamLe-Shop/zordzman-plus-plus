@@ -13,15 +13,15 @@ namespace client {
 class Client {
 public:
     /// @brief Initialize the resources, player and level
-    Client(Config const &cfg, HUD hud);
+    Client(Config const & cfg, HUD hud);
     /// @brief Destructor
     ~Client();
     /// @brief Game loop.
     void exec();
     /// @brief Get the active game instance
-    static Client &get();
+    static Client & get();
     /// @brief Get the window on which things are rendered.
-    sys::RenderWindow &getWindow();
+    sys::RenderWindow & getWindow();
     /// @brief Join a game server.
     void joinServer(std::string host);
     /// @brief Draw the HUD.
@@ -29,7 +29,7 @@ public:
 
 private:
     Client(const Client &) = delete;
-    Client &operator=(const Client &) = delete;
+    Client & operator=(const Client &) = delete;
     sys::System m_system;
     sys::RenderWindow m_window;
     sys::TCPSocket m_socket;
@@ -39,8 +39,8 @@ public:
 
 private:
     Level m_level;
-    Player *m_player;
-    Config const &m_cfg;
+    Player * m_player;
+    Config const & m_cfg;
     HUD m_hud;
 };
 }

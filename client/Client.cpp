@@ -12,11 +12,11 @@
 
 namespace client {
 namespace {
-Client *game_instance;
+Client * game_instance;
 std::string const title = "Zordzman v0.0.2";
 }
 
-Client::Client(Config const &cfg, HUD hud)
+Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_level("kek.lvl"),
       m_player(
           new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5)),
@@ -57,7 +57,7 @@ void Client::exec() {
 
 void Client::drawHUD() {
     using namespace drawingOperations;
-    SpriteSheet &sheet = Client::get().resources.getSheet("main");
+    SpriteSheet & sheet = Client::get().resources.getSheet("main");
     auto const height = m_window.getHeight();
 
     // Draw the rectangle/box which contains information about the player.
@@ -106,12 +106,12 @@ void Client::drawHUD() {
                   m_hud.border.height);
 }
 
-Client &Client::get() {
+Client & Client::get() {
     if (!game_instance) {
         throw std::runtime_error("Game::get(): Game instance is null.");
     }
     return *game_instance;
 }
 
-sys::RenderWindow &Client::getWindow() { return m_window; }
+sys::RenderWindow & Client::getWindow() { return m_window; }
 }

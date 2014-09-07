@@ -32,14 +32,14 @@ public:
     /// @param The amount of bytes to send.
     ///
     /// @return If the sending was successful.
-    bool send(const void *buf, int len);
+    bool send(const void * buf, int len);
     /// @brief Send numeric data to the host
     ///
     /// @param data - The number to send
     ///
     /// return If the sending was successful.
     template <typename T, REQUIRES(std::is_arithmetic<T>())>
-    bool send(T const &data) {
+    bool send(T const & data) {
         return send(&data, sizeof(T));
     }
     /// @brief Close the socket.

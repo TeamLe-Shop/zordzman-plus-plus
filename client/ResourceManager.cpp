@@ -11,7 +11,7 @@ ResourceManager::ResourceManager() {
                      std::forward_as_tuple("resources/spritesheet.png", 8));
 }
 
-SpriteSheet &ResourceManager::getSheet(char const *const key) {
+SpriteSheet & ResourceManager::getSheet(char const * const key) {
     auto iter = m_sheets.find(key);
 
     if (iter == m_sheets.end()) {

@@ -12,11 +12,11 @@ struct TexResult {
     GLuint handle;
     int width, height;
 };
-TexResult const TexFail = TexResult{ false, 0, 0, 0 };
+TexResult const TexFail = TexResult{false, 0, 0, 0};
 
 // Kindly provided by Krootushas.
-TexResult load_texture(char const *const filename) {
-    SDL_Surface *surface = IMG_Load(filename);
+TexResult load_texture(char const * const filename) {
+    SDL_Surface * surface = IMG_Load(filename);
 
     if (!surface) {
         return TexFail;
@@ -57,7 +57,7 @@ TexResult load_texture(char const *const filename) {
 
     glTexImage2D(GL_TEXTURE_2D, 0, bytesPerPixel, surface->w, surface->h, 0,
                  texture_format, GL_UNSIGNED_BYTE, surface->pixels);
-    TexResult result{ true, tex, surface->w, surface->h };
+    TexResult result{true, tex, surface->w, surface->h};
     SDL_FreeSurface(surface);
 
     // Unbind the texture and return the result.
@@ -66,7 +66,7 @@ TexResult load_texture(char const *const filename) {
 }
 }
 
-bool Texture::loadFromFile(std::string const &filename) {
+bool Texture::loadFromFile(std::string const & filename) {
     TexResult result = load_texture(filename.c_str());
     if (!result.ok) {
         return false;
@@ -81,14 +81,14 @@ int Texture::getWidth() const { return m_width; }
 
 int Texture::getHeight() const { return m_height; }
 
-void Texture::bind(Texture const &texture) {
+void Texture::bind(Texture const & texture) {
     glBindTexture(GL_TEXTURE_2D, texture.m_handle);
 }
 void Texture::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 Texture::~Texture() { glDeleteTextures(1, &m_handle); }
 
-Texture::Texture(std::string const &filename) {
+Texture::Texture(std::string const & filename) {
     if (!loadFromFile(filename)) {
         throw std::runtime_error("Failed to construct texture.");
     }

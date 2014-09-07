@@ -11,5 +11,5 @@ public:
     Zord();
     ~Zord();
 
-    void use(Player* player);
+    void use(Player * player);
 };

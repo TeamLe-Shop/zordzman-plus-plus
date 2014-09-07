@@ -7,12 +7,7 @@ namespace client {
 namespace mob {
 
 /// @brief A direction enum for cardinal directions.
-enum Direction {
-    NORTH,
-    SOUTH,
-    WEST,
-    EAST
-};
+enum Direction { NORTH, SOUTH, WEST, EAST };
 
 /// @brief Return the string name of a direction.
 ///

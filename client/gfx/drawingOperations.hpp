@@ -20,7 +20,7 @@ char const NO_FLIP = 0, X_FLIP = 1, Y_FLIP = 2;
 ///
 /// If the projection size differs from the tile size of the sprite sheet,
 /// the sprite will be scaled.
-void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
+void drawSpriteFromSheet(SpriteSheet const & spritesheet, int xOff, int yOff,
                          float x, float y, float w, float h,
                          char flip = NO_FLIP);
 
@@ -43,7 +43,7 @@ void drawRectangle(float x, float y, float w, float h, bool filled = true);
 void drawLine(float x1, float y1, float x2, float y2);
 
 /// @brief Draw text
-void drawText(std::string const &text, int x, int y, int w, int h);
+void drawText(std::string const & text, int x, int y, int w, int h);
 
 void setColor(int r, int g, int b, int a);
 

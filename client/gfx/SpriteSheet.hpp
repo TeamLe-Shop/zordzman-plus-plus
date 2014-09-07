@@ -21,7 +21,7 @@ public:
     ///
     /// @param filename File that contains the sprite sheet
     /// @param spriteSize The sprite size of the sprite sheet
-    SpriteSheet(std::string const &filename, unsigned int spriteSize);
+    SpriteSheet(std::string const & filename, unsigned int spriteSize);
 
 private:
     unsigned int m_spriteSize;

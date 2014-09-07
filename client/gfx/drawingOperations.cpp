@@ -7,9 +7,9 @@
 namespace client {
 namespace drawingOperations {
 
-SpriteSheet const *currentSheet = nullptr;
+SpriteSheet const * currentSheet = nullptr;
 
-void drawSpriteFromSheet(SpriteSheet const &spritesheet, int xOff, int yOff,
+void drawSpriteFromSheet(SpriteSheet const & spritesheet, int xOff, int yOff,
                          float x, float y, float w, float h, char flip) {
 
     if (xOff < 0 || yOff < 0)
@@ -91,14 +91,14 @@ void drawLine(float x1, float y1, float x2, float y2) {
     glEnd();
 }
 
-void drawText(std::string const &text, int x, int y, int w, int h) {
-    SpriteSheet const &sheet = Client::get().resources.getSheet("main");
+void drawText(std::string const & text, int x, int y, int w, int h) {
+    SpriteSheet const & sheet = Client::get().resources.getSheet("main");
     for (char c : text) {
-        char const *const chars = "abcdefghijklmnopqrstuvwxyz      "
-                                  "                                "
-                                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ      "
-                                  "0123456789.,:;'\"!?$%()-=+/*_    ";
-        char const *char_index = strchr(chars, c);
+        char const * const chars = "abcdefghijklmnopqrstuvwxyz      "
+                                   "                                "
+                                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ      "
+                                   "0123456789.,:;'\"!?$%()-=+/*_    ";
+        char const * char_index = strchr(chars, c);
         // If the current character is found in chars...
         if (char_index) {
             ptrdiff_t index = char_index - chars;

@@ -45,14 +45,14 @@ HUD::HUD(std::string hud) {
     setcol(font_color_active, json["font-color-active"], 16);
 }
 
-void HUD::setcol(uint32_t &i, Json json, int base) {
+void HUD::setcol(uint32_t & i, Json json, int base) {
     auto x = json;
     if (x.dump() != "null") {
         i = std::stoul(x.string_value(), nullptr, base);
     }
 }
 
-void HUD::setint(int &i, Json json, int base) {
+void HUD::setint(int & i, Json json, int base) {
     auto x = json;
     if (x.dump() != "null") {
         i = std::stoul(x.dump(), nullptr, base);

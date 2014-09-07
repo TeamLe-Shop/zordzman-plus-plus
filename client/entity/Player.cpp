@@ -10,7 +10,7 @@ Player::Player(std::string username, float x, float y, float speed)
 
 void Player::render() const {
     using namespace drawingOperations;
-    SpriteSheet &sheet = Client::get().resources.getSheet("main");
+    SpriteSheet & sheet = Client::get().resources.getSheet("main");
 
     // Set the spritesize to 16 x 16 for now.
     sheet.setSpriteSize(16);
@@ -56,13 +56,14 @@ void Player::tick() {
     else if (m_distanceWalked < 0)
         m_distanceWalked = 60;
 
-    if (weapon_delay) weapon_delay--;
+    if (weapon_delay)
+        weapon_delay--;
 }
 
 void Player::input() {
     // Get the current keyboard state. This will have information
     // about what keys are pressed n shit
-    Uint8 const *keys = SDL_GetKeyboardState(nullptr);
+    Uint8 const * keys = SDL_GetKeyboardState(nullptr);
 
     if (!weapon_delay) {
         if (keys[SDL_SCANCODE_SPACE]) {
@@ -118,23 +119,23 @@ void Player::moveRight() {
     m_direction = EAST;
 }
 
-Player *Player::clone() const { return new Player(*this); }
+Player * Player::clone() const { return new Player(*this); }
 
 std::string Player::getUsername() const { return m_username; }
 
-BaseWeapon *Player::getCombatWeapon() { return m_combat_weapon; }
+BaseWeapon * Player::getCombatWeapon() { return m_combat_weapon; }
 
-void Player::setCombatWeapon(BaseWeapon *b) { m_combat_weapon = b; }
+void Player::setCombatWeapon(BaseWeapon * b) { m_combat_weapon = b; }
 
 bool Player::holdingCombatWeapon() { return m_current_weapon == 0; }
 
-BaseWeapon *Player::getSpecialWeapon() { return m_special_weapon; }
+BaseWeapon * Player::getSpecialWeapon() { return m_special_weapon; }
 
-void Player::setSpecialWeapon(BaseWeapon *b) { m_special_weapon = b; }
+void Player::setSpecialWeapon(BaseWeapon * b) { m_special_weapon = b; }
 
 bool Player::holdingSpecialWeapon() { return m_current_weapon == 1; }
 
-BaseWeapon *Player::getCurrentWeapon() {
+BaseWeapon * Player::getCurrentWeapon() {
     return m_current_weapon == 0 ? m_combat_weapon : m_special_weapon;
 }
 }

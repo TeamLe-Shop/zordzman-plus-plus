@@ -23,9 +23,9 @@ public:
                  unsigned int flags = SDL_WINDOW_OPENGL);
     /// @brief Destroy the window
     ~RenderWindow();
-    RenderWindow(RenderWindow const &other) = delete;
+    RenderWindow(RenderWindow const & other) = delete;
     /// @brief Assign a window to another
-    RenderWindow &operator=(RenderWindow const &other) = delete;
+    RenderWindow & operator=(RenderWindow const & other) = delete;
     /// @brief Show the window's contents.
     void present();
     /// @brief Return the width of the window.
@@ -34,7 +34,7 @@ public:
     unsigned getHeight() const;
 
 private:
-    SDL_Window *m_handle;
+    SDL_Window * m_handle;
     SDL_GLContext m_glContext;
     unsigned m_width, m_height;
 };

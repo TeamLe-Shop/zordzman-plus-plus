@@ -13,7 +13,7 @@ public:
     /// @brief Update logic for an entity.
     virtual void tick();
     virtual ~Entity();
-    virtual Entity *clone() const = 0;
+    virtual Entity * clone() const = 0;
 
 protected:
     float m_x;

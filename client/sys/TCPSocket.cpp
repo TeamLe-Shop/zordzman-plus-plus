@@ -34,7 +34,7 @@ bool TCPSocket::send(std::string buf) {
     return send(static_cast<const void *>(buf.c_str()), buf.size() + 1);
 }
 
-bool TCPSocket::send(const void *buf, int len) {
+bool TCPSocket::send(const void * buf, int len) {
     if (!m_open)
         return false;
     // Report an error if we sent less bytes than we should have.

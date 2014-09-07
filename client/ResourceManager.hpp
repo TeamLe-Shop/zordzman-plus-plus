@@ -9,7 +9,7 @@ public:
     /// @brief Initialize the resources.
     ResourceManager();
     /// @brief Get a spritesheet by its name.
-    SpriteSheet &getSheet(char const *const key);
+    SpriteSheet & getSheet(char const * const key);
 
 private:
     ResourceManager(ResourceManager const &) = delete;

@@ -13,7 +13,7 @@ namespace {
 int ticks = 0;
 
 // Read all data from a stream into a vector of char
-std::vector<char> readAllFromStream(std::istream &stream) {
+std::vector<char> readAllFromStream(std::istream & stream) {
     std::vector<char> data;
     auto size = stream.tellg();
     data.resize(size);
@@ -76,7 +76,7 @@ void Level::setTileAt(int x, int y, byte tile) {
 
 void Level::render() const {
     using namespace drawingOperations;
-    auto &window = Client::get().getWindow();
+    auto & window = Client::get().getWindow();
 
     // Borders for the renders.
     int minX = (int)(0 / 32);
@@ -105,23 +105,23 @@ void Level::render() const {
     }
 
     // Render and update the entities.
-    for (auto const &e : entities) {
+    for (auto const & e : entities) {
         e->render();
         e->tick();
     }
     ticks++;
 }
 
-void Level::add(Entity *e) {
+void Level::add(Entity * e) {
     entities.push_back(std::move(std::unique_ptr<Entity>(e)));
 }
 
-Level &Level::operator=(const Level &other) {
+Level & Level::operator=(const Level & other) {
     m_width = other.m_width;
     m_height = other.m_height;
     m_tiles = other.m_tiles;
 
-    for (auto const &e : other.entities) {
+    for (auto const & e : other.entities) {
         entities.push_back(std::move(std::unique_ptr<Entity>(e->clone())));
     }
 

@@ -7,7 +7,7 @@
 
 using namespace client;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char * argv[]) {
     try {
         Config cfg;
 
@@ -27,8 +27,7 @@ int main(int argc, char *argv[]) {
         Client game(cfg, hud);
         // Start the game loop.
         game.exec();
-    }
-    catch (std::exception const &except) {
+    } catch (std::exception const & except) {
         fmt::print(stderr, "Fatal exception: {}\n", except.what());
         return 1;
     }

@@ -23,23 +23,24 @@ public:
     /// @brief Update logic and variables, like position n shit
     void tick();
     /// @brief Clone the player
-    Player *clone() const;
+    Player * clone() const;
     /// @brief Return the player's m_username.
     std::string getUsername() const;
 
-    BaseWeapon *getCombatWeapon();
-    void setCombatWeapon(BaseWeapon *b);
+    BaseWeapon * getCombatWeapon();
+    void setCombatWeapon(BaseWeapon * b);
     bool holdingCombatWeapon();
 
-    BaseWeapon *getSpecialWeapon();
-    void setSpecialWeapon(BaseWeapon *b);
+    BaseWeapon * getSpecialWeapon();
+    void setSpecialWeapon(BaseWeapon * b);
     bool holdingSpecialWeapon();
 
-    BaseWeapon *getCurrentWeapon();
+    BaseWeapon * getCurrentWeapon();
     void setCurrentWeapon(WeaponSlot slot);
 
     // The delay between using a weapon
     int weapon_delay = 0;
+
 private:
     /// @brief Check for input form the keyboard.
     void input();
@@ -56,8 +57,8 @@ private:
     // How many "pixels" the player has walked.
     float m_distanceWalked = 0;
 
-    BaseWeapon *m_combat_weapon = BlankWeapon;
-    BaseWeapon *m_special_weapon = BlankWeapon;
+    BaseWeapon * m_combat_weapon = BlankWeapon;
+    BaseWeapon * m_special_weapon = BlankWeapon;
     char m_current_weapon = 0;
 };
 }

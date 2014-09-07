@@ -8,17 +8,17 @@ namespace drawingOperations {
 
 char const NO_FLIP = 0, X_FLIP = 1, Y_FLIP = 2;
 
-/// @brief Draw a sprite from a SpriteSheet
+/// @brief Draw a sprite from a Texture
 ///
-/// @param spritesheet The sprite sheet to use
-/// @param xOff The x offset of the sprite in the sheet
-/// @param yOff The y offset of the sprite in the sheet
+/// @param texture The texture to use
+/// @param xOff The x offset of the sprite in the texture
+/// @param yOff The y offset of the sprite in the texture
 /// @param x Horizontal position to draw the sprite at
 /// @param y Vertical position to draw the sprite at
 /// @param w Width of the projection
 /// @param h Height of the projection
 ///
-/// If the projection size differs from the tile size of the sprite sheet,
+/// If the projection size defined by (w, h) differs from spriteSize,
 /// the sprite will be scaled.
 void drawSpriteFromTexture(sys::Texture const & texture, int xOff, int yOff,
                            float x, float y, float w, float h, float spriteSize,

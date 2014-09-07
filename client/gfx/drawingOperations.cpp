@@ -20,9 +20,8 @@ void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
     float const texSpriteH = sprSize / texture.getHeight();
     float const texc_left = texSpriteW * xOff;
     float const texc_top = texSpriteH * yOff;
-    // If the spritesheet passed in isn't the currentSheet, bind
-    // the spritesheet instead, and set currentSheet to the address
-    // of spritesheet.
+    // Avoid binding the same texture again, if it was previously bound, as
+    // texture binding is an expensive operation
     if (&texture != currentTexture) {
         sys::Texture::bind(texture);
         currentTexture = &texture;

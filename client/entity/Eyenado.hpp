@@ -4,6 +4,7 @@
 
 namespace client {
 namespace mob {
+
 class Eyenado : public Mob {
 public:
     Eyenado(float x, float y);
@@ -15,5 +16,6 @@ private:
     void attack();
     int ticks = 0;
 };
-}
-}
+
+} // namespace mob
+} // namespace client

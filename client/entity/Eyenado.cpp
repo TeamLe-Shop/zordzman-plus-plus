@@ -43,5 +43,6 @@ void Eyenado::tick() {
 }
 
 void Eyenado::attack() {}
-}
-}
+
+} // namespace mob
+} // namespace client

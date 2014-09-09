@@ -28,5 +28,6 @@ void Mob::setHealth(int health) { m_health = health; }
 Direction Mob::getDirection() { return m_direction; }
 
 void Mob::setDirection(Direction d) { m_direction = d; }
-}
-}
+
+} // namespace mob
+} // namespace client

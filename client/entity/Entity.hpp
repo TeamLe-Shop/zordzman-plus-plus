@@ -1,5 +1,7 @@
 #pragma once
 
+class Level;
+
 namespace client {
 class Entity {
 public:
@@ -18,5 +20,7 @@ public:
 protected:
     float m_x;
     float m_y;
+
+    Level * m_level;
 };
-}
+} // namespace client

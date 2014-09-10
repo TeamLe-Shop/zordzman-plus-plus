@@ -36,6 +36,8 @@ public:
     void render() const;
     /// @brief Add an entity to the level
     void add(Entity * e);
+    /// @brief Remove an entity
+    void remove(Entity * e);
     /// @brief Copy level data
     Level & operator=(const Level & other);
     Level() = default;

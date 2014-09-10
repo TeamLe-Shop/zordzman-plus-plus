@@ -21,7 +21,7 @@ std::vector<char> readAllFromStream(std::istream & stream) {
     stream.read(data.data(), size);
     return data;
 }
-}
+} // Level
 
 Level::Level(std::string const levelname) {
     std::ifstream file(("resources/levels/" + levelname),
@@ -113,7 +113,14 @@ void Level::render() const {
 }
 
 void Level::add(Entity * e) {
+    e->setLevel(this);
     entities.push_back(std::move(std::unique_ptr<Entity>(e)));
+}
+
+void Level::remove(Entity * e) {
+    e->setLevel(nullptr);
+    entities.erase(std::remove(entities.begin(), entities.end(),
+                   std::move(std::unique_ptr<Entity>(e))), entities.end());
 }
 
 Level & Level::operator=(const Level & other) {
@@ -127,4 +134,5 @@ Level & Level::operator=(const Level & other) {
 
     return *this;
 }
-}
+
+} // namespace client

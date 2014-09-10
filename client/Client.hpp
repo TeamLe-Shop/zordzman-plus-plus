@@ -14,7 +14,6 @@ class Client {
 public:
     /// @brief Initialize the resources, player and level
     Client(Config const & cfg, HUD hud);
-    /// @brief Destructor
     ~Client();
     /// @brief Game loop.
     void exec();

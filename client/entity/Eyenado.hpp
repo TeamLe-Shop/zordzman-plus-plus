@@ -13,7 +13,9 @@ public:
 
 private:
     void tick();
+    /// @brief Called when eyenado attempts to attack something.
     void attack();
+    // Used for animation.
     int ticks = 0;
 };
 

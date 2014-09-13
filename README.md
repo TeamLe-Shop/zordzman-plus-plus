@@ -15,7 +15,7 @@ rather than one person.
 server
 ======
 
-The server code was originally located in `server/`, but now [Holiverh](https://github.com/Holiverh)
+The original server code is located in `server/`, but now [Holiverh](https://github.com/Holiverh)
 has started work on the new [Zordzman Server](https://github.com/TeamLe-Shop/operation-ungrateful-gull) in python.
 
 Dependencies

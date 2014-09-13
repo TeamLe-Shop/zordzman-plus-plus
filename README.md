@@ -35,16 +35,17 @@ and [Linux](https://github.com/TeamLe-Shop/zordzman-plus-plus#linux) below.
 
 ### Mac OS X ###
 
-Download SDL2, SDL2_image and SDL2net.
+Download SDL2, SDL2_image and SDL2\_net.
 
-Then, after you've opened your SDL2.dmg, copy the SDL2.framework and
-move it into /Library/Frameworks directory. You can find this by navigating to Macintosh HD (usually by double clicking the icon on the desktop) and going to /Library/Frameworks.
-Then, do the same with the SDL2_image.dmg, and SDL2net.dmg.
+Then, after you've opened your `SDL2.dmg`, copy the `SDL2.framework` and
+move it into `/Library/Frameworks` directory. You can find this by navigating to Macintosh HD (usually by double clicking the icon on the desktop) and going to `/Library/Frameworks`.
+Then, do the same with the `SDL2_image.dmg`, and `SDL2net.dmg`.
 
 The next part requires [XCode](https://developer.apple.com/xcode/downloads/), and what you need to do is find your XCode.app, right click, select "Show Package Contents" and
 you'll be brought to the folder "Contents".
-Navigate to Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.x.sdk/Developer/System/Library/Frameworks
-and copy OpenGL.framework into /Library/Frameworks (back where you put the SDL stuff).
+Navigate to
+`Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.x.sdk/Developer/System/Library/Frameworks`
+and copy `OpenGL.framework` into `/Library/Frameworks` (back where you put the SDL stuff).
 
 Then navigate back to the zordzman-plus-plus folder, and proceed to do the CMake instructions for Linux. They are almost the exact same.
 

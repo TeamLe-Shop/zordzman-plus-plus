@@ -9,23 +9,22 @@ The best game that ever existed!
 
 Zordzman-plus-plus (Zordzman++) will be a remake of
 the original Zordzman created by JavaCakess in, well, Java.
-This remake shall be in C++, and will be developed by a team
+This remake shall be in C++, and will be developed by a [team](CONTRIBUTORS.md)
 rather than one person.
 
 Dependencies
-=========
+============
 
-It uses SDL, SDL_Image and OpenGL for about everything right now.
+It mainly uses SDL and other SDL libraries.
+
 It also uses [json11](https://github.com/dropbox/json11) for parsing JSON,
 and [cppformat](http://cppformat.github.io/) for formatting.
 
-We are using SDL_Net for networking.
-
 SDL: https://libsdl.org/download-2.0.php (Required: 2.0.0 or greater)
 
-SDL-Image: https://libsdl.org/projects/SDL_image/ (Required: 2.0.0 or greater)
+SDL\_Image: https://libsdl.org/projects/SDL_image/ (Required: 2.0.0 or greater)
 
-SDL-Net: https://libsdl.org/projects/SDL_net/ (Required: 2.0.0 or greater)
+SDL\_Net: https://libsdl.org/projects/SDL_net/ (Required: 2.0.0 or greater)
 
 Building
 ========

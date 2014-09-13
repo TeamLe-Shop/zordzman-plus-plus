@@ -27,15 +27,34 @@ public:
     /// @brief Return the player's m_username.
     std::string getUsername() const;
 
+    /// @brief Get the combat weapon the player has equipped.
+    ///
+    /// It returns a pointer to a const BaseWeapon.
     BaseWeapon * getCombatWeapon();
+
+    /// @brief Change the combat weapon the player has.
     void setCombatWeapon(BaseWeapon * b);
+
+    /// @brief Return if the player is holding their combat weapon.
     bool holdingCombatWeapon();
 
+    /// @brief Get the special weapon the player has equipped.
+    ///
+    /// It returns a pointer to a const BaseWeapon.
     BaseWeapon * getSpecialWeapon();
+
+    /// @brief Change the special weapon the player has.
     void setSpecialWeapon(BaseWeapon * b);
+
+    /// @brief Return whether the player is holding their special weapon.
     bool holdingSpecialWeapon();
 
+    /// @brief Get the current weapon the player is holding.
+    ///
+    /// Returns pointer to a const BaseWeapon.
     BaseWeapon * getCurrentWeapon();
+
+    /// @brief Change whether the player is holding their combat or special.
     void setCurrentWeapon(WeaponSlot slot);
 
     // The delay between using a weapon

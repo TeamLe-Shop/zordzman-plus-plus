@@ -20,7 +20,10 @@ HUD::HUD(std::string hud) {
 
     // Ignore lines starting with '#'.
     while (getline(hudfile, line)) {
-        if (line[0] == '#')
+        int start = 0;
+        while (isspace(line[start]))
+            start++;
+        if (line[start] == '#')
             continue;
         jsonStr += line;
     }

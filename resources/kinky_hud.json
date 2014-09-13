@@ -1,8 +1,8 @@
 # This is a Zordzman HUD JSON file!
 # Have fun customizing!
 {
-#   Colors are hex numbers in strings.
-#   The hex numbers must be strings.
+    # Colors are hex numbers in strings.
+    # The hex numbers must be strings.
     "border": {
         "x": 0,
         "y": 499,

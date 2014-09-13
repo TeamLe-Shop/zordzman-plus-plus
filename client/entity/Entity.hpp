@@ -1,6 +1,9 @@
 #pragma once
 
+
+
 namespace client {
+class Level;
 class Entity {
 public:
     /// @brief Entity Constructor.
@@ -15,8 +18,12 @@ public:
     virtual ~Entity();
     virtual Entity * clone() const = 0;
 
+    Level * getLevel();
+    void setLevel(Level * level);
 protected:
     float m_x;
     float m_y;
+
+    Level * m_level;
 };
-}
+} // namespace client

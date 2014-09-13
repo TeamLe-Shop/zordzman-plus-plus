@@ -1,14 +1,16 @@
 Contributors
 ============
 
-Microcoding - Drawing some of the art in Zordzman and commiting
-              some code
+vividMario52/JavaCakess - Creator
 
-Holiverh - Most of the networking code for the server,
+Microcoding - Drawing some of the art in Zordzman and [commiting some code](https://github.com/Microcoding/zordzman-plus-plus)
+
+Holiverh - Networking code for the server,
            various beneficial suggestions and and having
-           Jenkins' continuous integration
-           
-8BitBuff - Supplying a working texture loading function
+           [Jenkins](http://www.servers.tf:8080/view/zordzman/job/zordzman-plus-plus/)'
+           continuous integration
+
+8BitBuff - Supplying a working [texture loading function](https://github.com/TeamLe-Shop/zordzman-plus-plus/blob/master/client/sys/Texture.cpp#L18)
 
 Seabasschan - OPTIMIZATIONS
 

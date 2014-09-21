@@ -30,6 +30,7 @@ add_library(json11 common/extlib/json11/json11.cpp)
 
 add_library(server server/lib/Server.cpp)
 add_library(logger common/logger/Logger.hpp common/logger/Logger.cpp)
+add_library(zjson common/zjson/zjson.hpp common/zjson/zjson.cpp)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 
@@ -61,8 +62,8 @@ add_executable(zordzman-server ${SERVER_SOURCES})
 
 target_link_libraries(zordzman
     ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLNET_LIBRARY}
-    ${OPENGL_LIBRARY} json11 cppformat server)
+    ${OPENGL_LIBRARY} json11 cppformat server zjson)
 
 target_link_libraries(zordzman-server
-    ${SDL2_LIBRARY} ${SDLNET_LIBRARY} server json11 cppformat logger
+    ${SDL2_LIBRARY} ${SDLNET_LIBRARY} server json11 cppformat logger zjson
 )

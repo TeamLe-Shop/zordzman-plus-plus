@@ -2,34 +2,12 @@
 
 #include <fstream>
 #include <stdexcept>
+#include "common/zjson/zjson.hpp"
 
 using namespace json11;
 
 HUD::HUD(std::string hud) {
-    std::ifstream hudfile(hud);
-
-    // Throw a runtime error if file not found.
-    if (!hudfile.is_open()) {
-        std::string error("Error loading hud file ");
-        error += hud;
-        throw std::runtime_error(error);
-    }
-
-    std::string line;
-    std::string jsonStr;
-
-    // Ignore lines starting with '#'.
-    while (getline(hudfile, line)) {
-        int start = 0;
-        while (isspace(line[start]))
-            start++;
-        if (line[start] == '#')
-            continue;
-        jsonStr += line;
-    }
-
-    std::string err;
-    auto json = Json::parse(jsonStr, err);
+    Json json = zjson::load(hud);
 
     // Find and set all the variables...
     setint(border.x, json["border"]["x"]);

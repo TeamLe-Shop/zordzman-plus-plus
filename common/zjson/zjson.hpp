@@ -1,6 +1,7 @@
 #include "json11.hpp"
 
 #include <string>
+#include <stdexcept>
 
 using namespace json11;
 

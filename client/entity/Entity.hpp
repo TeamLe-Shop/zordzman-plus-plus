@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 namespace client {
 class Level;
 class Entity {
@@ -20,6 +18,7 @@ public:
 
     Level * getLevel();
     void setLevel(Level * level);
+
 protected:
     float m_x;
     float m_y;

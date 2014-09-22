@@ -120,7 +120,8 @@ void Level::add(Entity * e) {
 void Level::remove(Entity * e) {
     e->setLevel(nullptr);
     entities.erase(std::remove(entities.begin(), entities.end(),
-                   std::move(std::unique_ptr<Entity>(e))), entities.end());
+                               std::move(std::unique_ptr<Entity>(e))),
+                   entities.end());
 }
 
 Level & Level::operator=(const Level & other) {

@@ -3,8 +3,9 @@
 #include <string>
 
 namespace client {
-// The configuration structure that holds
-// different config variables.
+
+/// @brief The configuration structure that holds
+///  different config variables.
 struct Config {
     std::string host = "localhost";
     int port = 4544;

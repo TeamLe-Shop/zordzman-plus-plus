@@ -55,5 +55,6 @@ private:
     // Whether it is open or not.
     bool m_open = false;
 };
-}
-}
+
+} // namespace sys
+} // namespace client

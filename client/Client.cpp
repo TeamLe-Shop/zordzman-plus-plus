@@ -26,7 +26,6 @@ Client::Client(Config const & cfg, HUD hud)
     m_player->setCombatWeapon(weaponList::zord);
     // Add the player to level.
     m_level.add(m_player);
-    m_level.add(new Eyenado(100, 100));
 }
 
 Client::~Client() { game_instance = nullptr; }
@@ -45,7 +44,7 @@ void Client::exec() {
         // Clear the screen.
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Render the level's tiles and entities n hsit
+        // Render the level's tiles and entities
         m_level.render();
 
         drawHUD();

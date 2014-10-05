@@ -34,8 +34,7 @@ Client::~Client() { game_instance = nullptr; }
 
 void Client::joinServer() {
     m_socket.connectToHost(m_cfg.host, m_cfg.port);
-    m_socket.send("kek\n");
-    m_socket.close();
+    m_socket.send(&net::MAGIC_NUMBER, 4);
 }
 
 void Client::exec() {

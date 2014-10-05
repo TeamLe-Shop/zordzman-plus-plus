@@ -2,6 +2,9 @@
 #include "format.h"
 #include "util.hpp"
 
+#define PROTOCOL_VERSION 0x00
+#define MAGIC_NUMBER 0xCAC35500 | PROTOCOL_VERSION
+
 namespace server {
 Client::Client(TCPsocket socket)
     : m_logger(stderr, [=] {
@@ -29,7 +32,23 @@ void Client::recv() {
         m_state = Disconnected;
         m_logger.log("Client disconnected");
     } else {
-        m_logger.log("{}\n", buffer);
+        // Here we're checking if we received 4 bytes,
+        // and if the client is still in `Pending` state.
+        // If their data matches our magic number, they're changed to
+        // `Connected` state, other wise they're put in `Disconnected`
+        // state.
+        if (bytes_recv == 4) {
+            if (m_state == Pending) {
+                int magic_num = MAGIC_NUMBER;
+                if (memcmp(buffer, &magic_num, 4) == 0) {
+                    m_state = Connected;
+                } else {
+                    m_state = Disconnected;
+                    m_logger.log("Client disconnected");
+                }
+            }
+        }
+        m_logger.log("{}\n", m_state);
         for (int i = 0; i < bytes_recv; i++) {
             m_buffer.push_back(buffer[i]);
         }

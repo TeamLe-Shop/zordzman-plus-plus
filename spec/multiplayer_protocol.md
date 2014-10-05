@@ -13,6 +13,7 @@ Everything (apart from the handshake) sent over TCP will be in JSON. An example:
     "type": "credentials",
     "entity": {
         "username": "octozordz"
+        "udp-port": 60134
     }
 }
 ```

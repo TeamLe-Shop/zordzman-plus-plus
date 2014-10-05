@@ -23,12 +23,20 @@ Client::Client(Config const & cfg, HUD hud)
       m_cfg(cfg), m_hud(hud) {
     game_instance = this;
 
+    joinServer();
+
     m_player->setCombatWeapon(weaponList::zord);
     // Add the player to level.
     m_level.add(m_player);
 }
 
 Client::~Client() { game_instance = nullptr; }
+
+void Client::joinServer() {
+    m_socket.connectToHost(m_cfg.host, m_cfg.port);
+    m_socket.send("kek\n");
+    m_socket.close();
+}
 
 void Client::exec() {
     for (;;) {

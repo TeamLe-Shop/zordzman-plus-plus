@@ -22,7 +22,7 @@ public:
     /// @brief Get the window on which things are rendered.
     sys::RenderWindow & getWindow();
     /// @brief Join a game server.
-    void joinServer(std::string host);
+    void joinServer();
     /// @brief Draw the HUD.
     void drawHUD();
 

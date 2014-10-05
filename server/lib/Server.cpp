@@ -77,6 +77,7 @@ int Server::exec() {
             if (client.getState() == Client::Pending ||
                 client.getState() == Client::Connected) {
                 client.recv();
+                m_logger.log("Recv'd message\n");
             }
         }
         // Remove disconnected clients

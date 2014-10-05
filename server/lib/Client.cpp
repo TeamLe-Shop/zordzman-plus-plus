@@ -53,4 +53,6 @@ Client &Client::operator=(Client &&other) {
 }
 
 Client::~Client() { SDLNet_TCP_Close(m_socket); }
+
+TCPsocket Client::getSocket() { return m_socket; }
 }

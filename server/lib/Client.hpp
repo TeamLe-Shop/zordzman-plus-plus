@@ -55,6 +55,8 @@ public:
     // Destructor
     ~Client();
 
+    TCPsocket getSocket();
+
 private:
     State m_state;
     std::vector<char> m_buffer;

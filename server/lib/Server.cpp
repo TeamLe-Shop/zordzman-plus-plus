@@ -81,9 +81,14 @@ int Server::exec() {
             }
         }
         // Remove disconnected clients
-        cont::remove_if(m_clients, [](Client const &client) {
-            return client.getState() == Client::Disconnected;
-        });
+        for (size_t i = 0; i < m_clients.size(); ++i) {
+            Client &client = m_clients[i];
+
+            if (client.getState() == Client::Disconnected) {
+                SDLNet_TCP_DelSocket(m_socket_set, client.getSocket());
+                m_clients.erase(m_clients.begin() + i);
+            }
+        }
     }
     return 1;
 }

@@ -42,6 +42,11 @@ public:
     /// SDLNet_CheckSockets on the socket set containing the client's socket.
     void recv();
 
+    /// @brief Disconnect for `reason`
+    ///
+    /// @param reason Reason for disconnection
+    void disconnect(std::string reason);
+
     State getState() const;
 
     // Forbid copying

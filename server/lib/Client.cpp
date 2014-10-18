@@ -43,10 +43,15 @@ void Client::recv() {
                 if (memcmp(buffer, &magic_num, 4) == 0) {
                     m_state = Connected;
                 } else {
+                    disconnect("Incorrect protocol version/magic number");
                     m_state = Disconnected;
                     m_logger.log("Client disconnected");
                 }
             }
+        } else {
+            disconnect("Incorrect protocol version/magic number");
+            m_state = Disconnected;
+            m_logger.log("Client disconnected");
         }
         m_logger.log("{}\n", m_state);
         for (int i = 0; i < bytes_recv; i++) {
@@ -74,4 +79,23 @@ Client &Client::operator=(Client &&other) {
 Client::~Client() { SDLNet_TCP_Close(m_socket); }
 
 TCPsocket Client::getSocket() { return m_socket; }
+
+void Client::disconnect(std::string reason) {
+    std::string str =
+    "{\n"
+    "   \"type\": \"disconnect\",\n"
+    "   \"entity\": {\n"
+    "       \"reason\": \"" + reason + "\"\n"
+    "   }\n"
+    "}\n";
+
+    int len = str.size();
+    int result = SDLNet_TCP_Send(m_socket, str.c_str(), len);
+
+    // Error sending.
+    if (result < len) {
+        fmt::print("SDLNet_TCP_Send: {:s}\n", SDLNet_GetError());
+        m_state = Disconnected;
+    }
+}
 }

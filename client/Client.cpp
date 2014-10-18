@@ -59,6 +59,8 @@ void Client::exec() {
         glColor3f(1, 1, 1);
 
         m_window.present();
+
+        //m_socket.recv();
     }
 }
 

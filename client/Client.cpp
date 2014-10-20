@@ -60,7 +60,7 @@ void Client::exec() {
 
         m_window.present();
 
-        //m_socket.recv();
+
     }
 }
 

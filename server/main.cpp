@@ -20,8 +20,8 @@ int main(int argc, char **argv) {
     for (int i = 1; i < argc; i++) {
         if (starts(argv[i], "port=")) {
             int temp_port = strtol(argv[i] + 5, NULL, 10);
-            if (temp_port < 1 && temp_port > 65535) {
-                printf("Invalid port! 1 - 65535.\n");
+            if (temp_port < 1 || temp_port > 65535) {
+                printf("Invalid port! Must be between 1 and 65535.\n");
                 exit(1);
             } else {
                 port = temp_port;

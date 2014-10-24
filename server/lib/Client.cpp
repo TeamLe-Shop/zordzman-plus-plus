@@ -81,13 +81,13 @@ Client::~Client() { SDLNet_TCP_Close(m_socket); }
 TCPsocket Client::getSocket() { return m_socket; }
 
 void Client::disconnect(std::string reason) {
-    std::string str =
-    "{\n"
-    "   \"type\": \"disconnect\",\n"
-    "   \"entity\": {\n"
-    "       \"reason\": \"" + reason + "\"\n"
-    "   }\n"
-    "}\n";
+    std::string str = "{\n"
+                      "   \"type\": \"disconnect\",\n"
+                      "   \"entity\": {\n"
+                      "       \"reason\": \"" +
+                      reason + "\"\n"
+                               "   }\n"
+                               "}\n";
 
     int len = str.size();
     int result = SDLNet_TCP_Send(m_socket, str.c_str(), len);

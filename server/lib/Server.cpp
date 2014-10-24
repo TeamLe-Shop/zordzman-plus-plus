@@ -75,7 +75,10 @@ int Server::exec() {
         acceptConnections();
         int active = SDLNet_CheckSockets(m_socket_set, 16);
         // Does this make it NON BLOCKING? I hope so.
-        if (!active) continue; else active_count++;
+        if (!active)
+            continue;
+        else
+            active_count++;
         for (auto &client : m_clients) {
             if (client.getState() == Client::Pending ||
                 client.getState() == Client::Connected) {

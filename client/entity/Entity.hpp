@@ -23,6 +23,6 @@ protected:
     float m_x;
     float m_y;
 
-    Level * m_level;
+    Level * m_level = nullptr;
 };
 } // namespace client

@@ -38,20 +38,18 @@ Level::Level(std::string const levelname) {
     auto data = readAllFromStream(file);
     file.close();
 
-    // Map ID (16 bytes)
-
     // Width, height, spawn X and spawn Y are the first 4 bytes.
-    m_width = data[16];
-    m_height = data[17];
-    m_spawnx = data[18] * 32;
-    m_spawny = data[19] * 32;
+    m_width = data[0];
+    m_height = data[1];
+    m_spawnx = data[2] * 32;
+    m_spawny = data[3] * 32;
     // Resize the vector to match the width and height.
     m_tiles.resize(m_width * m_height);
     // Copy over the level data over to the vector.
 
     // NOTE: Only read m_width * m_height bytes
     // To avoid reading more information than the tiles
-    std::copy(data.begin() + 20, data.begin() + 20 + m_width * m_height,
+    std::copy(data.begin() + 4, data.begin() + 4 + m_width * m_height,
               m_tiles.begin());
 }
 

@@ -13,16 +13,18 @@ namespace cont = common::util::container;
 #define MAGIC_NUMBER 0xCAC35500 | PROTOCOL_VERSION
 
 namespace server {
-Server::Server(IPaddress address, unsigned int max_clients)
+Server::Server(IPaddress address, unsigned int max_clients,
+               std::string map_name)
     : m_logger(stderr, [] { return "SERVER: "; }) {
     m_address = address;
     m_max_clients = max_clients;
-    m_socket_set = SDLNet_AllocSocketSet(m_max_clients * 1);
+    m_map_name = map_name;
+    m_socket_set = SDLNet_AllocSocketSet(m_max_clients * 1); //what the fuck
     SDL_version compile_version;
     const SDL_version *link_version = SDLNet_Linked_Version();
     SDL_NET_VERSION(&compile_version);
 
-    m_logger.log("Compiled with SDL_net version: {:d}.{:d}.{:d}",
+    m_logger.log("[INFO] Compiled with SDL_net version: {:d}.{:d}.{:d}",
                  compile_version.major, compile_version.minor,
                  compile_version.patch);
     m_logger.log("[INFO] Running with SDL_net version: {:d}.{:d}.{:d}\n",

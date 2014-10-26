@@ -5,6 +5,9 @@
 #include <iostream>
 #include <fstream>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include "lib/Server.hpp"
 
 #include "lib/util.hpp"
@@ -21,7 +24,6 @@ int main(int argc, char **argv) {
 
     bool map_given = false;
     std::string map_name;
-    bool map_list_given = false;
 
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--port")) {
@@ -44,18 +46,9 @@ int main(int argc, char **argv) {
                 printf("SERVER: [ERR]  Nothing given for map.\n");
                 exit(1);
             }
-            printf("SERVER: [INFO] Map set to '%s'\n", argv[i + 1]);
             map_name = argv[i + 1];
             i++;
             map_given = true;
-        } else if (!strcmp(argv[i], "--map-list")) {
-            if (i == argc - 1) {
-                printf("SERVER: [ERR] Argument must be supplied after "
-                       "`--map-list`.\n");
-                exit(1);
-            }
-            printf("SERVER: [INFO] Using map list `%s`.\n", argv[i + 1]);
-            map_list_given = true;
         }
     }
 
@@ -70,23 +63,33 @@ int main(int argc, char **argv) {
 
     if (!map_file.is_open()) {
         printf("SERVER: [ERR]  Looks like that map file doesn't exist.\n");
+        map_file.close();
         exit(1);
-    }
+    } else {
 
-    if (!map_list_given) {
-        printf("\n");
-        printf("SERVER: [WARN] ");
-        printf("Though not necessary, I'd recommend also giving a ");
-        printf("map list\n");
-        printf("       to avoid typing out the map hash.\n");
-        printf("\n");
+#ifdef _WIN32
+        struct _stat st;
+        _stat(map_name.c_str(), &st);
+        if (st.st_mode & _S_IFDIR) {
+#else
+        struct stat st;
+        stat(map_name.c_str(), &st);
+        if (st.st_mode & S_IFDIR) {
+#endif
+            printf("SERVER: [ERR]  I need a map FILE, silly, not a "
+                   "folder.\n");
+            map_file.close();
+            exit(1);
+        }
+        printf("SERVER: [INFO] Map set to '%s'\n", map_name.c_str());
     }
+    map_file.close();
 
     if (SDLNet_ResolveHost(&address, nullptr, port) < 0) {
         fprintf(stderr, "SDLNet_ResolveHost: %s\n", SDLNet_GetError());
         exit(EXIT_FAILURE);
     }
 
-    server::Server server(address, 2);
+    server::Server server(address, 2, map_name);
     server.exec();
 }

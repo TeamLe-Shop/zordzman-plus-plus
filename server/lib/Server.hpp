@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <SDL_net.h>
+#include <fstream>
 
 #define RECV_BUFFER_SIZE 8192
 
@@ -12,7 +13,7 @@ namespace server {
 class Server {
 
 public:
-    Server(IPaddress address, unsigned int max_clients);
+    Server(IPaddress address, unsigned int max_clients, std::string map_name);
     ~Server();
     int exec();
 
@@ -32,5 +33,6 @@ private:
     std::vector<Client> m_clients;
     SDLNet_SocketSet m_socket_set;
     common::Logger m_logger;
+    std::string m_map_name;
 };
 }

@@ -23,11 +23,32 @@ bool TCPSocket::connectToHost(std::string host, int portnum) {
     }
     // Set the open flag to true.
     m_open = true;
+
+    m_socketset = SDLNet_AllocSocketSet(1);
+
+    if (SDLNet_TCP_AddSocket(m_socketset, m_socket) < 0) {
+        print(stderr, "[ERROR] SDLNet_TCP_AddSocket: {}\n", SDLNet_GetError());
+        return false;
+    }
+
     return true;
 }
 
-void TCPSocket::startReading() {
-    // Nothing here yet!
+std::string TCPSocket::read() {
+    if (!SDLNet_CheckSockets(m_socketset, 16)) {
+        return std::string();
+    } else {
+        char buffer[8192];
+        memset(buffer, 0, 8192);
+        int bytes_recv = SDLNet_TCP_Recv(m_socket, buffer, 8192);
+
+        if (bytes_recv <= 0) {
+            close();
+            return std::string();
+        } else {
+            return std::string(buffer);
+        }
+    }
 }
 
 bool TCPSocket::send(std::string buf) {
@@ -46,8 +67,9 @@ bool TCPSocket::send(const void * buf, int len) {
 }
 
 void TCPSocket::close() {
-    // Check if it's open, and close it if it is.
+    // Check if it's open, and close it if is.
     if (m_open) {
+        SDLNet_TCP_DelSocket(m_socketset, m_socket);
         SDLNet_TCP_Close(m_socket);
         m_open = false;
     }

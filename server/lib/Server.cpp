@@ -82,7 +82,7 @@ void Server::acceptConnections() {
         if (m_clients.size() >= m_max_clients) {
             // Perhaps issue some kind of "server full" warning. But how would
             // this be done as the client would be in the PENDING state
-            // intially.
+            // intially?
             SDLNet_TCP_Close(client_socket);
         } else {
             m_clients.emplace_back(client_socket);

@@ -59,6 +59,13 @@ void Client::exec() {
         glColor3f(1, 1, 1);
 
         m_window.present();
+
+        // Read shit from socket
+        std::string data = m_socket.read();
+        data += "\0";
+        if (data.size() > 0) {
+            printf("Message: %s", data.c_str());
+        }
     }
 }
 

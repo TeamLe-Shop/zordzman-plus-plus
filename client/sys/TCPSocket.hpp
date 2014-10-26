@@ -19,7 +19,9 @@ public:
     /// @return Whether or not connecting to the host was successful.
     bool connectToHost(std::string host, int portnum);
     /// @brief Receive data from the host.
-    void startReading();
+    ///
+    /// @return Received data.
+    std::string read();
     /// @brief Send a string to the host.
     ///
     /// @param buf The string to send.
@@ -54,6 +56,12 @@ private:
     TCPsocket m_socket;
     // Whether it is open or not.
     bool m_open = false;
+    // Socket set. This will only contain one socket.
+    // The purpose of this is so we can check for activity and avoid
+    // waiting for a message and pausing the game.
+
+    // dont blame me blame sdlnet's accent
+    SDLNet_SocketSet m_socketset;
 };
 
 } // namespace sys

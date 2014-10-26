@@ -23,8 +23,9 @@ Dependencies
 
 It mainly uses SDL and other SDL libraries.
 
-It also uses [json11](https://github.com/dropbox/json11) for parsing JSON,
-and [cppformat](http://cppformat.github.io/) for formatting.
+It uses [json11](https://github.com/dropbox/json11) for parsing JSON,
+[cppformat](http://cppformat.github.io/) for formatting, and
+[hash-library](http://create.stephan-brumme.com/hash-library/) for hashing.
 
 SDL: https://libsdl.org/download-2.0.php (Required: 2.0.0 or greater)
 

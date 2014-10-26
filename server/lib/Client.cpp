@@ -49,9 +49,11 @@ void Client::recv() {
                 }
             }
         } else {
-            disconnect("Incorrect protocol version/magic number");
-            m_state = Disconnected;
-            m_logger.log("Client disconnected");
+            if (m_state == Pending) {
+                disconnect("Incorrect protocol version/magic number");
+                m_state = Disconnected;
+                m_logger.log("Client disconnected");
+            }
         }
         m_logger.log("{}\n", m_state);
         for (int i = 0; i < bytes_recv; i++) {

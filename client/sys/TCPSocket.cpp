@@ -21,6 +21,9 @@ bool TCPSocket::connectToHost(std::string host, int portnum) {
         print(stderr, "[ERROR] Could not open socket\n");
         return false;
     }
+
+    close();
+
     // Set the open flag to true.
     m_open = true;
 
@@ -35,6 +38,7 @@ bool TCPSocket::connectToHost(std::string host, int portnum) {
 }
 
 std::string TCPSocket::read() {
+    if (!m_open) { return std::string(); }
     if (!SDLNet_CheckSockets(m_socketset, 16)) {
         return std::string();
     } else {

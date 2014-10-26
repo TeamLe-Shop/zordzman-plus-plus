@@ -35,6 +35,7 @@ Client::~Client() { game_instance = nullptr; }
 void Client::joinServer() {
     m_socket.connectToHost(m_cfg.host, m_cfg.port);
     m_socket.send(&net::MAGIC_NUMBER, 4);
+    m_socket.send("ayy bby gurl\n");
 }
 
 void Client::exec() {

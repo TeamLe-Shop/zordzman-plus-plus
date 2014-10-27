@@ -32,29 +32,30 @@ void Client::recv() {
         m_state = Disconnected;
         m_logger.log("Client disconnected");
     } else {
+        printf("MSG [%d]: %.*s\n\n", bytes_recv, bytes_recv, buffer);
+
         // Here we're checking if we received 4 bytes,
         // and if the client is still in `Pending` state.
         // If their data matches our magic number, they're changed to
         // `Connected` state, other wise they're put in `Disconnected`
         // state.
-        if (bytes_recv == 4) {
-            if (m_state == Pending) {
+
+        if (m_state == Pending) {
+            if (bytes_recv == 4) {
                 int magic_num = MAGIC_NUMBER;
                 if (memcmp(buffer, &magic_num, 4) == 0) {
                     m_state = Connected;
                 } else {
                     disconnect("Incorrect protocol version/magic number");
-                    m_state = Disconnected;
-                    m_logger.log("Client disconnected");
+
                 }
-            }
-        } else {
-            if (m_state == Pending) {
+            } else {
                 disconnect("Incorrect protocol version/magic number");
                 m_state = Disconnected;
                 m_logger.log("Client disconnected");
             }
         }
+
         m_logger.log("{}\n", m_state);
         for (int i = 0; i < bytes_recv; i++) {
             m_buffer.push_back(buffer[i]);
@@ -83,6 +84,9 @@ Client::~Client() { SDLNet_TCP_Close(m_socket); }
 TCPsocket Client::getSocket() { return m_socket; }
 
 void Client::disconnect(std::string reason) {
+    m_state = Disconnected;
+    m_logger.log("Client disconnected ({})", reason);
+
     std::string str = "{\n"
                       "   \"type\": \"disconnect\",\n"
                       "   \"entity\": {\n"

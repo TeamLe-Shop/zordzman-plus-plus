@@ -94,7 +94,7 @@ void Server::acceptConnections() {
 int Server::exec() {
     while (true) {
         acceptConnections();
-        int active = SDLNet_CheckSockets(m_socket_set, 16);
+        int active = SDLNet_CheckSockets(m_socket_set, 0);
         // Does this make it NON BLOCKING? I hope so.
         if (!active)
             continue;

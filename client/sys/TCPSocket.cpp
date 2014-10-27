@@ -1,6 +1,7 @@
 #include "TCPSocket.hpp"
 
 #include <format.h>
+#include <SDL.h>
 
 namespace client {
 namespace sys {
@@ -60,13 +61,17 @@ bool TCPSocket::send(std::string buf) {
 }
 
 bool TCPSocket::send(const void * buf, int len) {
-    if (!m_open)
+    if (!m_open || buf == NULL)
         return false;
+
     // Report an error if we sent less bytes than we should have.
     if (SDLNet_TCP_Send(m_socket, buf, len) < len) {
         print(stderr, "SDLNet_TCP_Send: {}\n", SDLNet_GetError());
         return false;
     }
+    // This delay helps prevent the data being "stuck on" to the
+    // data sent previously. Think of it like a flush.
+    SDL_Delay(2);
     return true;
 }
 

@@ -7,7 +7,7 @@
 #include <SDL_net.h>
 #include <fstream>
 
-#define RECV_BUFFER_SIZE 8192
+#define RECV_BUFFER_SIZE 1024
 
 namespace server {
 class Server {

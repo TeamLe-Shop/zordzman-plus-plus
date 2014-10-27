@@ -43,12 +43,16 @@ find_package(SDL2_image REQUIRED)
 include_directories(${SDLIMAGE_INCLUDE_DIR})
 find_package(SDL2_net REQUIRED)
 include_directories(${SDLNET_INCLUDE_DIR})
+find_package(SDL2_mixer REQUIRED)
+include_directories(${SDLMIXER_INCLUDE_DIR})
 
 if(GATSAN)
 	set(SDLIMAGE_LIBRARY /Library/Frameworks/SDL2_image.framework)
 	set(SDLIMAGE_INCLUDE_DIR /Library/Frameworks/SDL2_image.framework/Headers)
 	set(SDLNET_LIBRARY /Library/Frameworks/SDL2_net.framework)
 	set(SDLNET_INCLUDE_DIR /Library/Frameworks/SDL2_net.framework/Headers)
+	set(SDLMIXER_LIBRARY /Library/Frameworks/SDL2_mixer.framework)
+	set(SDLMIXER_INCLUDE_DIR /Library/Frameworks/SDL2_mixer.framework/Headers)
         add_compile_options(-stdlib=libc++)
 endif()
 
@@ -63,7 +67,7 @@ add_executable(zordzman-server ${SERVER_SOURCES})
 
 target_link_libraries(zordzman
     ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLNET_LIBRARY}
-    ${OPENGL_LIBRARY} json11 cppformat server zjson hash-library)
+    ${OPENGL_LIBRARY} ${SDLMIXER_LIBRARY} json11 cppformat server zjson hash-library)
 
 target_link_libraries(zordzman-server
     ${SDL2_LIBRARY} ${SDLNET_LIBRARY} server json11 cppformat logger zjson

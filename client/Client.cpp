@@ -10,10 +10,13 @@
 #include <format.h>
 #include <thread>
 
+#include <SDL_mixer.h>
+
 namespace client {
 namespace {
 Client * game_instance;
 std::string const title = "Zordzman v0.0.2";
+Mix_Music *music = nullptr;
 }
 
 Client::Client(Config const & cfg, HUD hud)
@@ -28,6 +31,17 @@ Client::Client(Config const & cfg, HUD hud)
     m_player->setCombatWeapon(weaponList::zord);
     // Add the player to level.
     m_level.add(m_player);
+
+    // music n shit
+    music = Mix_LoadMUS("resources/music/soundtrack/Lively.ogg");
+
+    if (music == nullptr) {
+        printf("Unable to load Ogg file: %s\n", Mix_GetError());
+        exit(1);
+    }
+
+    Mix_PlayMusic(music, -1);
+
 }
 
 Client::~Client() { game_instance = nullptr; }

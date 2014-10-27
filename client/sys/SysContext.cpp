@@ -17,10 +17,10 @@ SysContext::SysContext() {
         throw std::runtime_error(fmt::format(__VA_ARGS__));                    \
     }
 
-#define AUDIO_RATE 44100
-#define AUDIO_FORMAT AUDIO_S16SYS
-#define AUDIO_CHANNELS 2
-#define AUDIO_BUFFERS 4096
+    int const AUDIO_RATE = 44100;
+    Uint16 const AUDIO_FORMAT = AUDIO_S16SYS;
+    int const AUDIO_CHANNELS = 2;
+    int const AUDIO_CHUNK_SIZE = 4096;
 
     INIT_OR_THROW(SDL_Init(SDL_INIT_EVERYTHING) == 0,
                   "Failed to initialize SDL: {}", SDL_GetError());
@@ -29,7 +29,7 @@ SysContext::SysContext() {
     INIT_OR_THROW(SDLNet_Init() != -1, "Failed to initialize SDL_net: {}",
                   SDLNet_GetError());
     INIT_OR_THROW(Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS,
-                                AUDIO_BUFFERS) > -1,
+                                AUDIO_CHUNK_SIZE) > -1,
                   "Failed to initialize SDL_mixer: {}", Mix_GetError());
 
 #undef INIT_OR_THROW

@@ -47,7 +47,6 @@ void Client::recv() {
                     m_state = Connected;
                 } else {
                     disconnect("Incorrect protocol version/magic number");
-
                 }
             } else {
                 disconnect("Incorrect protocol version/magic number");

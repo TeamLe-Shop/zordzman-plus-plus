@@ -39,7 +39,9 @@ bool TCPSocket::connectToHost(std::string host, int portnum) {
 }
 
 std::string TCPSocket::read() {
-    if (!m_open) { return std::string(); }
+    if (!m_open) {
+        return std::string();
+    }
     if (!SDLNet_CheckSockets(m_socketset, 16)) {
         return std::string();
     } else {

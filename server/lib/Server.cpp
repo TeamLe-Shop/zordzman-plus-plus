@@ -20,7 +20,7 @@ Server::Server(IPaddress address, unsigned int max_clients,
     m_address = address;
     m_max_clients = max_clients;
     m_map_name = map_name;
-    m_socket_set = SDLNet_AllocSocketSet(m_max_clients * 1); //what the fuck
+    m_socket_set = SDLNet_AllocSocketSet(m_max_clients * 1); // what the fuck
     SDL_version compile_version;
     const SDL_version *link_version = SDLNet_Linked_Version();
     SDL_NET_VERSION(&compile_version);
@@ -49,7 +49,7 @@ Server::Server(IPaddress address, unsigned int max_clients,
     }
     m_logger.log("[INFO] Bound to interface {}", m_address);
 
-    std::ifstream file(map_name, std::ios::in|std::ios::binary);
+    std::ifstream file(map_name, std::ios::in | std::ios::binary);
     char *memblock;
     std::streampos size;
     MD5 md5;
@@ -117,5 +117,4 @@ int Server::exec() {
 
     return 1;
 }
-
 }

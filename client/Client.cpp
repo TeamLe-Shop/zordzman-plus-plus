@@ -16,7 +16,7 @@ namespace client {
 namespace {
 Client * game_instance;
 std::string const title = "Zordzman v0.0.2";
-Mix_Music *music = nullptr;
+Mix_Music * music = nullptr;
 }
 
 Client::Client(Config const & cfg, HUD hud)
@@ -41,7 +41,6 @@ Client::Client(Config const & cfg, HUD hud)
     }
 
     Mix_PlayMusic(music, -1);
-
 }
 
 Client::~Client() { game_instance = nullptr; }

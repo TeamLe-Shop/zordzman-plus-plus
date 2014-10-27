@@ -29,8 +29,8 @@ SysContext::SysContext() {
     INIT_OR_THROW(SDLNet_Init() != -1, "Failed to initialize SDL_net: {}",
                   SDLNet_GetError());
     INIT_OR_THROW(Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS,
-                  AUDIO_BUFFERS) > -1, "Failed to initialize SDL_mixer: {}",
-                  Mix_GetError());
+                                AUDIO_BUFFERS) > -1,
+                  "Failed to initialize SDL_mixer: {}", Mix_GetError());
 
 #undef INIT_OR_THROW
 }

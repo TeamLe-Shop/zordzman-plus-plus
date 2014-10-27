@@ -27,6 +27,7 @@ if(USING_GCC OR USING_CLANG OR GATSAN)
 endif()
 
 add_library(json11 common/extlib/json11/json11.cpp)
+add_library(hash-library common/extlib/hash-library/md5.cpp)
 
 add_library(server server/lib/Server.cpp)
 add_library(logger common/logger/Logger.hpp common/logger/Logger.cpp)
@@ -62,8 +63,9 @@ add_executable(zordzman-server ${SERVER_SOURCES})
 
 target_link_libraries(zordzman
     ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLNET_LIBRARY}
-    ${OPENGL_LIBRARY} json11 cppformat server zjson)
+    ${OPENGL_LIBRARY} json11 cppformat server zjson hash-library)
 
 target_link_libraries(zordzman-server
     ${SDL2_LIBRARY} ${SDLNET_LIBRARY} server json11 cppformat logger zjson
+    hash-library
 )

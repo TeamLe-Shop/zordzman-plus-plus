@@ -1,4 +1,4 @@
-#include "System.hpp"
+#include "SysContext.hpp"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -11,7 +11,7 @@
 namespace client {
 namespace sys {
 
-System::System() {
+SysContext::SysContext() {
 #define INIT_OR_THROW(cond, ...)                                               \
     if (!(cond)) {                                                             \
         throw std::runtime_error(fmt::format(__VA_ARGS__));                    \
@@ -35,7 +35,7 @@ System::System() {
 #undef INIT_OR_THROW
 }
 
-System::~System() {
+SysContext::~SysContext() {
     SDLNet_Quit();
     IMG_Quit();
     Mix_Quit();

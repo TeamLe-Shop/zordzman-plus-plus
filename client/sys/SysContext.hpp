@@ -5,10 +5,10 @@ namespace sys {
 
 /// @brief Provides the context which the other sys components
 /// depend on
-class System {
+class SysContext {
 public:
-    System();
-    ~System();
+    SysContext();
+    ~SysContext();
 };
 }
 }

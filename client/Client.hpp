@@ -1,7 +1,7 @@
 #pragma once
 
 #include "sys/RenderWindow.hpp"
-#include "sys/System.hpp"
+#include "sys/SysContext.hpp"
 #include "level/Level.hpp"
 #include "sys/TCPSocket.hpp"
 #include "entity/Player.hpp"
@@ -29,7 +29,7 @@ public:
 private:
     Client(const Client &) = delete;
     Client & operator=(const Client &) = delete;
-    sys::System m_system;
+    sys::SysContext m_system;
     sys::RenderWindow m_window;
     sys::TCPSocket m_socket;
 

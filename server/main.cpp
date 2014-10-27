@@ -26,6 +26,13 @@ int main(int argc, char **argv) {
     std::string map_name;
 
     for (int i = 1; i < argc; i++) {
+        if (!strcmp(argv[i], "--help")) {
+            printf("HELP:\n");
+            printf("    --map <mapfile> : Specify map to load\n");
+            printf("    --port <port>   : Listen on port <port>\n\n");
+            printf("Default port: 4544\n");
+            exit(0);
+        }
         if (!strcmp(argv[i], "--port")) {
             if (i == argc - 1) {
                 printf("SERVER: [ERR]  Argument must be supplied after"

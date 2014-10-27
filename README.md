@@ -25,13 +25,16 @@ It mainly uses SDL and other SDL libraries.
 
 It uses [json11](https://github.com/dropbox/json11) for parsing JSON,
 [cppformat](http://cppformat.github.io/) for formatting, and
-[hash-library](http://create.stephan-brumme.com/hash-library/) for hashing.
+[hash-library](http://create.stephan-brumme.com/hash-library/) for, guess what,
+hashing. (HOLY SIT)
 
 SDL: https://libsdl.org/download-2.0.php (Required: 2.0.0 or greater)
 
 SDL\_Image: https://libsdl.org/projects/SDL_image/ (Required: 2.0.0 or greater)
 
 SDL\_Net: https://libsdl.org/projects/SDL_net/ (Required: 2.0.0 or greater)
+
+SDL\_Mixer: http://www.libsdl.org/projects/SDL_mixer/ (Required: 2.0.0 or greater)
 
 Building
 ========
@@ -41,11 +44,11 @@ and [Linux](https://github.com/TeamLe-Shop/zordzman-plus-plus#linux) below.
 
 ### Mac OS X ###
 
-Download SDL2, SDL2_image and SDL2\_net.
+Download SDL2, SDL2_image, SDL\_mixer and SDL2\_net.
 
 Then, after you've opened your `SDL2.dmg`, copy the `SDL2.framework` and
 move it into `/Library/Frameworks` directory. You can find this by navigating to Macintosh HD (usually by double clicking the icon on the desktop) and going to `/Library/Frameworks`.
-Then, do the same with the `SDL2_image.dmg`, and `SDL2net.dmg`.
+Then, do the same with the `SDL2_image.dmg`, `SDL2_net.dmg` and `SDL2_mixer.dmg`.
 
 The next part requires [XCode](https://developer.apple.com/xcode/downloads/), and what you need to do is find your XCode.app, right click, select "Show Package Contents" and
 you'll be brought to the folder "Contents".

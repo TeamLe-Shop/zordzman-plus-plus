@@ -28,9 +28,11 @@ SysContext::SysContext() {
                   "Failed to initialize SDL_image: {}", IMG_GetError());
     INIT_OR_THROW(SDLNet_Init() != -1, "Failed to initialize SDL_net: {}",
                   SDLNet_GetError());
+    INIT_OR_THROW(Mix_Init(MIX_INIT_OGG) == MIX_INIT_OGG,
+                  "Failed to initialize SDL_mixer: {}", Mix_GetError());
     INIT_OR_THROW(Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS,
                                 AUDIO_CHUNK_SIZE) > -1,
-                  "Failed to initialize SDL_mixer: {}", Mix_GetError());
+                  "Failed to open audio: {}", Mix_GetError());
 
 #undef INIT_OR_THROW
 }
@@ -38,6 +40,7 @@ SysContext::SysContext() {
 SysContext::~SysContext() {
     SDLNet_Quit();
     IMG_Quit();
+    Mix_CloseAudio();
     Mix_Quit();
     SDL_Quit();
 }

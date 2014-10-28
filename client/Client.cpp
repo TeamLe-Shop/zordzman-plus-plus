@@ -12,6 +12,8 @@
 
 #include <SDL_mixer.h>
 
+#include "json11.hpp"
+
 namespace client {
 namespace {
 Client * game_instance;
@@ -74,11 +76,26 @@ void Client::exec() {
 
         m_window.present();
 
-        // Read shit from socket
-        std::string data = m_socket.read();
-        data += "\0";
-        if (data.size() > 0) {
-            printf("Message: %s", data.c_str());
+        readData();
+    }
+}
+
+void Client::readData() {
+    // Read shit from socket
+    std::string data = m_socket.read();
+    data += "\0";
+    if (data.size() > 1) {
+        std::string err;
+        json11::Json json = json11::Json::parse(data, err);
+
+        if (!err.empty()) {
+            printf("Server sent bad JSON string\n");
+            return;
+        }
+
+        if (json["type"].string_value() == "disconnect") {
+            printf("Disconnected: %s\n",
+                    json["entity"]["reason"].string_value().c_str());
         }
     }
 }

@@ -67,5 +67,7 @@ private:
     std::vector<char> m_buffer;
     TCPsocket m_socket;
     common::Logger m_logger;
+
+    bool sent_map = false;
 };
 }

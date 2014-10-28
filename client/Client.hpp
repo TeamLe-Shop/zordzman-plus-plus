@@ -25,6 +25,8 @@ public:
     void joinServer();
     /// @brief Draw the HUD.
     void drawHUD();
+    /// @brief Read data from m_socket
+    void readData();
 
 private:
     Client(const Client &) = delete;

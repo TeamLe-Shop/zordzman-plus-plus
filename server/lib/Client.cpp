@@ -83,7 +83,10 @@ void Client::disconnect(std::string reason, bool send) {
     m_state = Disconnected;
     m_logger.log("Client disconnected ({})", reason);
 
-    if (!send) { return; }
+    // YA LIKE THAT CHUCKLEBUTT
+    if (!send) {
+        return;
+    }
 
     std::string str = "{\n"
                       "   \"type\": \"disconnect\",\n"

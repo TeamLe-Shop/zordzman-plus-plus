@@ -45,7 +45,7 @@ public:
     /// @brief Disconnect for `reason`
     ///
     /// @param reason Reason for disconnection
-    void disconnect(std::string reason);
+    void disconnect(std::string reason, bool send);
 
     State getState() const;
 

@@ -29,8 +29,7 @@ void Client::recv() {
     int bytes_recv =
         SDLNet_TCP_Recv(m_socket, buffer, RECV_BUFFER_SIZE - m_buffer.size());
     if (bytes_recv <= 0) {
-        m_state = Disconnected;
-        m_logger.log("Client disconnected");
+        disconnect("Left server", false);
     } else {
         printf("MSG [%d]: %.*s\n\n", bytes_recv, bytes_recv, buffer);
 
@@ -46,12 +45,10 @@ void Client::recv() {
                 if (memcmp(buffer, &magic_num, 4) == 0) {
                     m_state = Connected;
                 } else {
-                    disconnect("Incorrect protocol version/magic number");
+                    disconnect("Incorrect protocol version/magic number", true);
                 }
             } else {
-                disconnect("Incorrect protocol version/magic number");
-                m_state = Disconnected;
-                m_logger.log("Client disconnected");
+                disconnect("Incorrect protocol version/magic number", true);
             }
         }
 
@@ -82,9 +79,11 @@ Client::~Client() { SDLNet_TCP_Close(m_socket); }
 
 TCPsocket Client::getSocket() { return m_socket; }
 
-void Client::disconnect(std::string reason) {
+void Client::disconnect(std::string reason, bool send) {
     m_state = Disconnected;
     m_logger.log("Client disconnected ({})", reason);
+
+    if (!send) return;
 
     std::string str = "{\n"
                       "   \"type\": \"disconnect\",\n"

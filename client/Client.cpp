@@ -95,7 +95,7 @@ void Client::readData() {
 
         if (json["type"].string_value() == "disconnect") {
             printf("Disconnected: %s\n",
-                    json["entity"]["reason"].string_value().c_str());
+                   json["entity"]["reason"].string_value().c_str());
         }
     }
 }

@@ -46,7 +46,7 @@ Download SDL2, SDL2_image, SDL\_mixer and SDL2\_net.
 
 Then, after you've opened your `SDL2.dmg`, copy the `SDL2.framework` and
 move it into `/Library/Frameworks` directory. You can find this by navigating to Macintosh HD (usually by double clicking the icon on the desktop) and going to `/Library/Frameworks`.
-Then, do the same with the `SDL2_image.dmg`, `SDL2_net.dmg` and `SDL2_mixer.dmg`.
+Then, do the same with `SDL2_image.dmg`, `SDL2_net.dmg` and `SDL2_mixer.dmg`.
 
 The next part requires [XCode](https://developer.apple.com/xcode/downloads/), and what you need to do is find your XCode.app, right click, select "Show Package Contents" and
 you'll be brought to the folder "Contents".

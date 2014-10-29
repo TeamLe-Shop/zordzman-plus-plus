@@ -36,10 +36,10 @@ public:
 
     /// @brief Read bytes from the socket into the buffer
     ///
-    /// Reads up to RECV_BUFFER_SIZE bytes into the buffer. This calls
-    /// SDLNet_ReadySocket and only attempts to read if the socket has data
-    /// pending. Therefore the caller is responsible for calling
-    /// SDLNet_CheckSockets on the socket set containing the client's socket.
+    /// Reads up to RECV_BUFFER_SIZE bytes into the buffer.
+    /// Therefore the caller is responsible for calling both
+    /// SDLNet_CheckSockets and SDLNet_SocketReady
+    /// on the socket set containing the client's socket.
     void recv();
 
     /// @brief Disconnect for `reason`

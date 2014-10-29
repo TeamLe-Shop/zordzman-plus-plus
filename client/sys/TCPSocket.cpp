@@ -73,7 +73,7 @@ bool TCPSocket::send(const void * buf, int len) {
     }
     // This delay helps prevent the data being "stuck on" to the
     // data sent previously. Think of it like a flush.
-    SDL_Delay(2);
+    SDL_Delay(4);
     return true;
 }
 

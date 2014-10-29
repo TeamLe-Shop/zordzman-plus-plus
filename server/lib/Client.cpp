@@ -31,8 +31,6 @@ void Client::recv() {
     if (bytes_recv <= 0) {
         disconnect("Left server", false);
     } else {
-        printf("MSG [%d]: %.*s\n\n", bytes_recv, bytes_recv, buffer);
-
         // Here we're checking if we received 4 bytes,
         // and if the client is still in `Pending` state.
         // If their data matches our magic number, they're changed to
@@ -51,8 +49,6 @@ void Client::recv() {
                 disconnect("Incorrect protocol version/magic number", true);
             }
         }
-
-        m_logger.log("{}\n", m_state);
         for (int i = 0; i < bytes_recv; i++) {
             m_buffer.push_back(buffer[i]);
         }

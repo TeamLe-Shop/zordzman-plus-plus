@@ -99,6 +99,9 @@ int Server::exec() {
         if (!active)
             continue;
         for (auto &client : m_clients) {
+            if (!SDLNet_SocketReady(client.getSocket())) {
+                continue;
+            }
             if (client.getState() == Client::Pending ||
                 client.getState() == Client::Connected) {
                 client.recv();

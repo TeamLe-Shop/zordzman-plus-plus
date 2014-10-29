@@ -97,6 +97,6 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    server::Server server(address, 2, map_name);
+    server::Server server(address, 5, map_name);
     server.exec();
 }

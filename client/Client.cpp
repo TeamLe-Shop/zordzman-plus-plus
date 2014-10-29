@@ -22,9 +22,9 @@ Mix_Music * music = nullptr;
 }
 
 Client::Client(Config const & cfg, HUD hud)
-    : m_window(800, 600, title), m_level("kek.lvl"),
+    : m_window(800, 600, title),
       m_player(
-          new Player("gatsan", m_level.getSpawnX(), m_level.getSpawnY(), 1.5)),
+          new Player("gatsan", 0, 0, 1.5)),
       m_cfg(cfg), m_hud(hud) {
     game_instance = this;
 

@@ -3,6 +3,7 @@
 #include "util.hpp"
 #include "common/util/container.hpp"
 #include "common/extlib/hash-library/md5.h"
+#include "Map.hpp"
 
 #include <format.h>
 #include <json11.hpp>
@@ -49,23 +50,8 @@ Server::Server(IPaddress address, unsigned int max_clients,
     }
     m_logger.log("[INFO] Bound to interface {}", m_address);
 
-    std::ifstream file(map_name, std::ios::in | std::ios::binary);
-    char *memblock;
-    std::streampos size;
-    MD5 md5;
-
-    size = file.tellg();
-    memblock = new char[size];
-    file.seekg(0, std::ios::beg);
-    file.read(memblock, size);
-    file.close();
-
-    md5.add(memblock, size);
-
-    file.close();
-    delete[] memblock;
-
-    m_logger.log("[INFO] Map hash: {}", md5.getHash());
+    // Generates different hashes from before??
+    m_logger.log("Map hash: {}", map::map_hash(map_name));
 }
 
 Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }

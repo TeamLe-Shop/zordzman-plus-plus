@@ -51,7 +51,9 @@ Server::Server(IPaddress address, unsigned int max_clients,
     m_logger.log("[INFO] Bound to interface {}", m_address);
 
     // Generates different hashes from before??
-    m_logger.log("Map hash: {}", map::map_hash(map_name));
+    // They're correct now anyway.
+    m_map_hash = map::map_hash(map_name);
+    m_logger.log("Map hash: {}", m_map_hash);
 }
 
 Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }
@@ -91,6 +93,24 @@ int Server::exec() {
             if (client.getState() == Client::Pending ||
                 client.getState() == Client::Connected) {
                 client.recv();
+
+                if (client.getState() == Client::Connected
+                    && client.sent_map_hash == false) {
+                    std::string json =
+                    "{"
+                    "\"type\": \"map-hash\","
+                    "\"entity\": {"
+                    "  \"hash\": \"" + m_map_hash + "\""
+                    "}"
+                    "}";
+
+                    printf("%s\n", json.c_str());
+
+                    SDLNet_TCP_Send(client.getSocket(),
+                                    json.c_str(),
+                                    json.size());
+                    client.sent_map_hash = true;
+                }
             }
         }
         // Remove disconnected clients

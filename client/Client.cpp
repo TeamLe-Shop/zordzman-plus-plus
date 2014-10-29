@@ -85,11 +85,13 @@ void Client::readData() {
     std::string data = m_socket.read();
     data += "\0";
     if (data.size() > 1) {
+        printf("Message: %s\n", data.c_str());
         std::string err;
         json11::Json json = json11::Json::parse(data, err);
 
         if (!err.empty()) {
             printf("Server sent bad JSON string\n");
+            printf("Error: %s\n", err.c_str());
             return;
         }
 

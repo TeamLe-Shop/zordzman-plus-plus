@@ -45,6 +45,7 @@ public:
     /// @brief Disconnect for `reason`
     ///
     /// @param reason Reason for disconnection
+    /// @param send Whether to inform the client of the reason of disconnection.
     void disconnect(std::string reason, bool send);
 
     State getState() const;
@@ -62,12 +63,11 @@ public:
 
     TCPsocket getSocket();
 
+    bool sent_map_hash = false;
 private:
     State m_state;
     std::vector<char> m_buffer;
     TCPsocket m_socket;
     common::Logger m_logger;
-
-    bool sent_map = false;
 };
 }

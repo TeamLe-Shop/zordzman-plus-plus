@@ -6,6 +6,7 @@
 #define MAGIC_NUMBER 0xCAC35500 | PROTOCOL_VERSION
 
 namespace server {
+
 Client::Client(TCPsocket socket)
     : m_logger(stderr, [=] {
           IPaddress *address = SDLNet_TCP_GetPeerAddress(m_socket);
@@ -42,6 +43,7 @@ void Client::recv() {
                 int magic_num = MAGIC_NUMBER;
                 if (memcmp(buffer, &magic_num, 4) == 0) {
                     m_state = Connected;
+
                 } else {
                     disconnect("Incorrect protocol version/magic number", true);
                 }

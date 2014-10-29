@@ -33,6 +33,6 @@ private:
     std::vector<Client> m_clients;
     SDLNet_SocketSet m_socket_set;
     common::Logger m_logger;
-    std::string m_map_name;
+    std::string m_map_name, m_map_hash;
 };
 }

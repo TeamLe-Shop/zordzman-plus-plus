@@ -12,12 +12,6 @@ the original Zordzman created by JavaCakess in, well, Java.
 This remake shall be in C++, and will be developed by a [team](CONTRIBUTORS.md)
 rather than one person.
 
-server
-======
-
-The original server code is located in `server/`, but now [Holiverh](https://github.com/Holiverh)
-has started work on the new [Zordzman Server](https://github.com/TeamLe-Shop/operation-ungrateful-gull) in python.
-
 Dependencies
 ============
 
@@ -27,6 +21,10 @@ It uses [json11](https://github.com/dropbox/json11) for parsing JSON,
 [cppformat](http://cppformat.github.io/) for formatting, and
 [hash-library](http://create.stephan-brumme.com/hash-library/) for, guess what,
 hashing. (HOLY SIT)
+
+All three libraries are located in `common/extlib/libname/`.
+
+Our own written libs are in `common/libname`.
 
 SDL: https://libsdl.org/download-2.0.php (Required: 2.0.0 or greater)
 

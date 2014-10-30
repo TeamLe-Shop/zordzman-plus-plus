@@ -11,7 +11,6 @@ namespace weapon {
 class Zord : public BaseWeapon {
 public:
     Zord();
-    ~Zord();
 
     void use_with_player(Player * player);
 };

@@ -19,11 +19,11 @@ public:
     /// @speed The speed, by default 1.0f.
     Player(std::string username, float x, float y, float speed = 1.0f);
     /// @brief Render the player.
-    void render() const;
+    void render() const override;
     /// @brief Update logic and variables, like position n shit
-    void tick();
+    void tick() override;
     /// @brief Clone the player
-    Player * clone() const;
+    Player * clone() const override;
     /// @brief Return the player's m_username.
     std::string getUsername() const;
 

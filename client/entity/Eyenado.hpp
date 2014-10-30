@@ -8,11 +8,11 @@ namespace mob {
 class Eyenado : public Mob {
 public:
     Eyenado(float x, float y);
-    void render() const;
-    Eyenado * clone() const;
+    void render() const override;
+    Eyenado * clone() const override;
 
 private:
-    void tick();
+    void tick() override;
     /// @brief Called when eyenado attempts to attack something.
     void attack();
     // Used for animation.

@@ -39,7 +39,13 @@ void Client::recv() {
         // state.
 
         if (m_state == Pending) {
-            if (bytes_recv == 4) {
+            // The client still sometimes gets disconnected
+            // because it can't flush and ends up sending a glob
+            // of data which contains the magic number and some other
+            // garbage.
+            // Allowing the initial message to be
+            // over 4 bytes should prevent this.
+            if (bytes_recv >= 4) {
                 int magic_num = MAGIC_NUMBER;
                 if (memcmp(buffer, &magic_num, 4) == 0) {
                     m_state = Connected;

@@ -15,7 +15,7 @@ using namespace common::util;
 
 void Level::load_level(std::string map_name) {
     std::ifstream file(map_name, std::ios::in | std::ios::binary);
-    std::vector<char> data = stream::readAll(file);
+    std::vector<char> data = stream::readToEnd(file);
 
     // Width, height, spawn X and spawn Y are the first 4 bytes.
     m_width = data[0];
@@ -33,7 +33,7 @@ void Level::load_level(std::string map_name) {
 /// @brief Generate hash from a map
 std::string map_hash(std::string map_name) {
     std::ifstream file(map_name, std::ios::in | std::ios::binary);
-    std::vector<char> data = stream::readAll(file);
+    std::vector<char> data = stream::readToEnd(file);
     MD5 md5;
     md5.add(data.data(), data.size());
     return md5.getHash();

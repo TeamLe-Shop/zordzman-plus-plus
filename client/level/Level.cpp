@@ -28,7 +28,7 @@ Level::Level(std::string const levelname) {
     }
 
     // Right now, we're just taking in some basic information about the map.
-    auto data = stream::readAll(file);
+    auto data = stream::readToEnd(file);
     file.close();
 
     // Width, height, spawn X and spawn Y are the first 4 bytes.

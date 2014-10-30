@@ -3,6 +3,7 @@
 #include <string>
 #include <json11.hpp>
 
+namespace client {
 /// @brief The HUD. This contains various variables
 ///        for how to render the HUD.
 class HUD {
@@ -63,3 +64,4 @@ public:
         uint32_t color = 0x00007FFF;
     } border;
 };
+} // namespace client

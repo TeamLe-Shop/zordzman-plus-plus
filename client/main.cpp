@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include "format.h"
 #include "Config.hpp"
-#include "HUDConfig.hpp"
+#include "HUD.hpp"
 
 using namespace client;
 

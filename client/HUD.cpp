@@ -1,9 +1,10 @@
-#include "HUDConfig.hpp"
+#include "HUD.hpp"
 
 #include <fstream>
 #include <stdexcept>
 #include "common/zjson/zjson.hpp"
 
+namespace client {
 using namespace json11;
 
 HUD::HUD(std::string hud) {
@@ -39,3 +40,4 @@ void HUD::setint(int & i, Json json, int base) {
         i = std::stoul(x.dump(), nullptr, base);
     }
 }
+} // namespace client

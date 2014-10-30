@@ -108,4 +108,4 @@ void Client::disconnect(std::string reason, bool send) {
         m_state = Disconnected;
     }
 }
-}
+} // namespace server

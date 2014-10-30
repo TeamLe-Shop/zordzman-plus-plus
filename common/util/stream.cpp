@@ -13,6 +13,6 @@ std::vector<char> readToEnd(std::istream & stream) {
     stream.read(data.data(), size);
     return data;
 }
-}
-}
-}
+} // namespace stream
+} // namespace util
+} // namespace common

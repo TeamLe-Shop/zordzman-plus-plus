@@ -48,5 +48,5 @@ void drawText(std::string const & text, int x, int y, int w, int h);
 void setColor(int r, int g, int b, int a);
 
 void setColor(uint32_t col);
-}
-}
+} // namespace drawingOperations
+} // namespace client

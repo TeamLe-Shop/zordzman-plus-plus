@@ -20,7 +20,7 @@ namespace {
 Client * game_instance;
 std::string const title = "Zordzman v0.0.2";
 Mix_Music * music = nullptr;
-}
+} // Anonymous namespace
 
 Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_player(new Player("gatsan", 0, 0, 1)),
@@ -186,4 +186,4 @@ Client & Client::get() {
 }
 
 sys::RenderWindow & Client::getWindow() { return m_window; }
-}
+} // namespace client

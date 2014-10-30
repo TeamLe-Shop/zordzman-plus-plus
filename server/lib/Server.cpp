@@ -125,4 +125,4 @@ int Server::exec() {
 
     return 1;
 }
-}
+} // namespace server

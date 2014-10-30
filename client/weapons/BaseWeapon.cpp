@@ -17,5 +17,5 @@ WeaponType BaseWeapon::getType() { return m_type; }
 void BaseWeapon::use() {}
 
 BaseWeapon::~BaseWeapon() {}
-}
-}
+} // namespace weapon
+} // namespace client

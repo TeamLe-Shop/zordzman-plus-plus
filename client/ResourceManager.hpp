@@ -16,4 +16,4 @@ private:
     ResourceManager operator=(ResourceManager const &) = delete;
     std::unordered_map<std::string, sys::Texture> m_textures;
 };
-}
+} // namespace client

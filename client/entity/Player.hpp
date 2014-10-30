@@ -80,4 +80,4 @@ private:
     BaseWeapon * m_special_weapon = BlankWeapon;
     char m_current_weapon = 0;
 };
-}
+} // namespace client

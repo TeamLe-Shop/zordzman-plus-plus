@@ -44,4 +44,4 @@ private:
     Config const & m_cfg;
     HUD m_hud;
 };
-}
+} // namespace client

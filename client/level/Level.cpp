@@ -12,7 +12,7 @@
 namespace client {
 namespace {
 int ticks = 0;
-} // Level
+} // Anonymous namespace
 
 using namespace common::util;
 

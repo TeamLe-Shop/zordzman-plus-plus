@@ -17,7 +17,7 @@ template <typename... Args> void try_init(bool cond, Args... args) {
         throw std::runtime_error(fmt::format(args...));
     }
 }
-}
+} // Anonymous namespace
 
 SysContext::SysContext() {
     int const AUDIO_RATE = 44100;
@@ -45,5 +45,5 @@ SysContext::~SysContext() {
     Mix_Quit();
     SDL_Quit();
 }
-}
-}
+} // namespace sys
+} // namespace client

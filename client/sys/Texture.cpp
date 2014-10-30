@@ -64,7 +64,7 @@ TexResult load_texture(char const * const filename) {
     glBindTexture(GL_TEXTURE_2D, 0);
     return result;
 }
-}
+} // Anonymous namespace
 
 bool Texture::loadFromFile(std::string const & filename) {
     TexResult result = load_texture(filename.c_str());
@@ -93,5 +93,5 @@ Texture::Texture(std::string const & filename) {
         throw std::runtime_error("Failed to construct texture.");
     }
 }
-}
-}
+} // namespace sys
+} // namespace client

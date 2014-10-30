@@ -8,5 +8,5 @@ enum WeaponSlot { COMBAT, SPECIAL, BOTH };
 
 enum WeaponType { BLANK, ZORD };
 
-} // namespace weapons
+} // namespace weapon
 } // namespace client

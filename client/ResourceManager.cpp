@@ -21,4 +21,4 @@ sys::Texture & ResourceManager::getTexture(char const * const key) {
 
     return iter->second;
 }
-}
+} // namespace client

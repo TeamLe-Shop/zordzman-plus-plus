@@ -10,5 +10,5 @@ public:
     SysContext();
     ~SysContext();
 };
-}
-}
+} // namespace sys
+} // namespace client

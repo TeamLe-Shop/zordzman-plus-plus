@@ -38,5 +38,5 @@ private:
     SDL_GLContext m_glContext;
     unsigned m_width, m_height;
 };
-}
-}
+} // namespace sys
+} // namespace client

@@ -36,5 +36,5 @@ private:
     GLuint m_handle;
     int m_width, m_height;
 };
-}
-}
+} // namespace sys
+} // namespace client

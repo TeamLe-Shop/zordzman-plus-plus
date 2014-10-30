@@ -10,6 +10,6 @@ namespace stream {
 ///
 /// The original position of the stream is not restored.
 std::vector<char> readToEnd(std::istream & stream);
-}
-}
-}
+} // namespace stream
+} // namespace util
+} // namespace common

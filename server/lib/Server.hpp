@@ -35,4 +35,4 @@ private:
     common::Logger m_logger;
     std::string m_map_name, m_map_hash;
 };
-}
+} // namespace server

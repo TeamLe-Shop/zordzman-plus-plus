@@ -21,7 +21,7 @@ void initGL(int width, int height) {
     glEnableClientState(GL_COLOR_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
-}
+} // Anonymous namespace
 
 RenderWindow::RenderWindow(unsigned width, unsigned height,
                            std::string const title, int x, int y,
@@ -42,5 +42,5 @@ void RenderWindow::present() { SDL_GL_SwapWindow(m_handle); }
 unsigned RenderWindow::getWidth() const { return m_width; }
 
 unsigned RenderWindow::getHeight() const { return m_height; }
-}
-}
+} // namespace sys
+} // namespace client

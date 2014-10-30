@@ -136,4 +136,4 @@ bool Player::holdingSpecialWeapon() { return m_current_weapon == 1; }
 BaseWeapon * Player::getCurrentWeapon() {
     return m_current_weapon == 0 ? m_combat_weapon : m_special_weapon;
 }
-}
+} // namespace client

@@ -18,4 +18,4 @@ private:
     std::function<std::string()> m_prefix;
     static std::string no_prefix();
 };
-}
+} // namespace common

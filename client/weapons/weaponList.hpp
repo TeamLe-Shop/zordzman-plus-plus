@@ -9,5 +9,5 @@ namespace weaponList {
 
 extern client::weapon::BaseWeapon * BlankWeapon;
 extern Zord * zord;
-}
-}
+} // namespace weaponList
+} // namespace client

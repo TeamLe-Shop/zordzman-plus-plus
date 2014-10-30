@@ -11,4 +11,4 @@ Entity::~Entity() {}
 
 Level * Entity::getLevel() { return m_level; }
 void Entity::setLevel(Level * level) { m_level = level; }
-}
+} // namespace client

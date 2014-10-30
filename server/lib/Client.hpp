@@ -71,4 +71,4 @@ private:
     TCPsocket m_socket;
     common::Logger m_logger;
 };
-}
+} // namespace server

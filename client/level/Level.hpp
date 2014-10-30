@@ -48,4 +48,4 @@ private:
     std::vector<byte> m_tiles;
     std::vector<std::unique_ptr<Entity>> entities;
 };
-}
+} // namespace client

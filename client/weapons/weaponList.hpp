@@ -7,7 +7,7 @@ namespace client {
 
 namespace weaponList {
 
-extern client::weapon::BaseWeapon * BlankWeapon;
-extern Zord * zord;
+extern weapon::BaseWeapon * BlankWeapon;
+extern weapon::Zord * zord;
 } // namespace weaponList
 } // namespace client

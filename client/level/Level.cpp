@@ -4,7 +4,7 @@
 #include "Client.hpp"
 #include "level/tiles/Tile.hpp"
 #include "format.h"
-#include "common/util/fileutil.hpp"
+#include "common/util/stream.hpp"
 
 #include <fstream>
 #include <algorithm>
@@ -18,7 +18,7 @@ using namespace common::util;
 
 Level::Level(std::string const levelname) {
     std::ifstream file(("resources/levels/" + levelname),
-                       std::ios::in | std::ios::binary | std::ios::ate);
+                       std::ios::in | std::ios::binary);
 
     // Complain if that Level couldn't be found / opened.
     if (!file.is_open()) {
@@ -28,7 +28,7 @@ Level::Level(std::string const levelname) {
     }
 
     // Right now, we're just taking in some basic information about the map.
-    auto data = readAllFromStream(file);
+    auto data = stream::readAll(file);
     file.close();
 
     // Width, height, spawn X and spawn Y are the first 4 bytes.

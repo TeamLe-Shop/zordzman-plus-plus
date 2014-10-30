@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <format.h>
 #include <thread>
+#include <dirent.h>
 
 #include <SDL_mixer.h>
 
@@ -24,7 +25,7 @@ Mix_Music * music = nullptr;
 Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title),
       m_player(
-          new Player("gatsan", 0, 0, 1.5)),
+          new Player("gatsan", 0, 0, 1)),
       m_cfg(cfg), m_hud(hud) {
     game_instance = this;
 
@@ -77,6 +78,8 @@ void Client::exec() {
         m_window.present();
 
         readData();
+
+        SDL_Delay(1000 / 60);
     }
 }
 
@@ -84,20 +87,46 @@ void Client::readData() {
     // Read shit from socket
     std::string data = m_socket.read();
     data += "\0";
-    if (data.size() > 1) {
-        printf("Message: %s\n", data.c_str());
-        std::string err;
-        json11::Json json = json11::Json::parse(data, err);
+    if (data.size() < 1) {
+        return;
+    }
+    printf("Message: %s\n", data.c_str());
+    std::string err;
+    json11::Json json = json11::Json::parse(data, err);
 
-        if (!err.empty()) {
-            printf("Server sent bad JSON string\n");
-            printf("Error: %s\n", err.c_str());
-            return;
+    if (!err.empty()) {
+        printf("Server sent bad JSON string\n");
+        printf("Error: %s\n", err.c_str());
+        return;
+    }
+
+    if (json["type"].string_value() == "disconnect") {
+        printf("Disconnected: %s\n",
+               json["entity"]["reason"].string_value().c_str());
+    } else if (json["type"].string_value() == "map-hash") {
+        bool found_match = false;
+
+        // The client is going to now look for that map file.
+        DIR * dir;
+        struct dirent * ent;
+
+        if ((dir = opendir("resources/levels/")) == NULL) {
+            throw std::runtime_error(
+            fmt::format("Couldn't open directory \"{}\"",
+                        "resources/levels"));
         }
 
-        if (json["type"].string_value() == "disconnect") {
-            printf("Disconnected: %s\n",
-                   json["entity"]["reason"].string_value().c_str());
+        while ((ent = readdir(dir)) != NULL) {
+            if (!strcmp(ent->d_name,
+                json["entity"]["hash"].string_value().c_str())) {
+
+                printf("I've found a match!\n");
+                found_match = true;
+            }
+        }
+
+        if (!found_match) {
+            printf("I didn't find a match.\n");
         }
     }
 }

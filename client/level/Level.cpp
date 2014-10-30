@@ -4,6 +4,7 @@
 #include "Client.hpp"
 #include "level/tiles/Tile.hpp"
 #include "format.h"
+#include "common/util/fileutil.hpp"
 
 #include <fstream>
 #include <algorithm>
@@ -11,17 +12,9 @@
 namespace client {
 namespace {
 int ticks = 0;
-
-// Read all data from a stream into a vector of char
-std::vector<char> readAllFromStream(std::istream & stream) {
-    std::vector<char> data;
-    auto size = stream.tellg();
-    data.resize(size);
-    stream.seekg(0, std::ios::beg);
-    stream.read(data.data(), size);
-    return data;
-}
 } // Level
+
+using namespace common::util;
 
 Level::Level(std::string const levelname) {
     std::ifstream file(("resources/levels/" + levelname),

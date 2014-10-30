@@ -64,6 +64,7 @@ public:
     TCPsocket getSocket();
 
     bool sent_map_hash = false;
+
 private:
     State m_state;
     std::vector<char> m_buffer;

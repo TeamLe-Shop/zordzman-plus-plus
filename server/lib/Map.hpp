@@ -15,6 +15,7 @@ public:
     std::string hash;
     /// Load a level.
     void load_level(std::string map);
+
 private:
     byte m_width, m_height;
     unsigned int m_spawn_x, m_spawn_y;

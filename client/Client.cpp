@@ -23,9 +23,7 @@ Mix_Music * music = nullptr;
 }
 
 Client::Client(Config const & cfg, HUD hud)
-    : m_window(800, 600, title),
-      m_player(
-          new Player("gatsan", 0, 0, 1)),
+    : m_window(800, 600, title), m_player(new Player("gatsan", 0, 0, 1)),
       m_cfg(cfg), m_hud(hud) {
     game_instance = this;
 
@@ -111,15 +109,13 @@ void Client::readData() {
         struct dirent * ent;
 
         if ((dir = opendir("resources/levels/")) == NULL) {
-            throw std::runtime_error(
-            fmt::format("Couldn't open directory \"{}\"",
-                        "resources/levels"));
+            throw std::runtime_error(fmt::format(
+                "Couldn't open directory \"{}\"", "resources/levels"));
         }
 
         while ((ent = readdir(dir)) != NULL) {
             if (!strcmp(ent->d_name,
-                json["entity"]["hash"].string_value().c_str())) {
-
+                        json["entity"]["hash"].string_value().c_str())) {
                 printf("I've found a match!\n");
                 found_match = true;
             }

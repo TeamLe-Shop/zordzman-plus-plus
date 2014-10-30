@@ -14,6 +14,5 @@ std::vector<char> readAllFromStream(std::istream & stream) {
     stream.read(data.data(), size);
     return data;
 }
-
 }
 }

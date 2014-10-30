@@ -94,20 +94,19 @@ int Server::exec() {
                 client.getState() == Client::Connected) {
                 client.recv();
 
-                if (client.getState() == Client::Connected
-                    && client.sent_map_hash == false) {
-                    std::string json =
-                    "{"
-                    "\"type\": \"map-hash\","
-                    "\"entity\": {"
-                    "  \"hash\": \"" + m_map_hash + "\""
-                    "}"
-                    "}";
+                if (client.getState() == Client::Connected &&
+                    client.sent_map_hash == false) {
+                    std::string json = "{"
+                                       "\"type\": \"map-hash\","
+                                       "\"entity\": {"
+                                       "  \"hash\": \"" +
+                                       m_map_hash + "\""
+                                                    "}"
+                                                    "}";
 
                     printf("%s\n", json.c_str());
 
-                    SDLNet_TCP_Send(client.getSocket(),
-                                    json.c_str(),
+                    SDLNet_TCP_Send(client.getSocket(), json.c_str(),
                                     json.size());
                     client.sent_map_hash = true;
                 }

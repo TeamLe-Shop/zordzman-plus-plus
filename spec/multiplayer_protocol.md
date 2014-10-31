@@ -21,3 +21,9 @@ Each JSON message will have a "type" field that specifies the type of message.
 The above example shows a "map-hash" message, for when the server asks the client
 if it has a certain map.
 The additional fields specific to that message is inside "entity".
+
+After the handshake, the server sends over a hash of the current map to the client,
+who then checks if they have the map or not by running through their directory of maps
+and seeing if any of their filenames match the hash.
+
+...

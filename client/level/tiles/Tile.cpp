@@ -3,9 +3,9 @@
 namespace client {
 namespace tile {
 
-byte render(byte a, int ticks) {
+byte render(byte id, int ticks) {
     int animticks = ticks % 240;
-    switch (a) {
+    switch (id) {
     case GRASS:
         return 0;
     case FLOWER:

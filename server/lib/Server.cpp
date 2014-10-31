@@ -3,6 +3,7 @@
 #include "util.hpp"
 #include "common/util/container.hpp"
 #include "common/extlib/hash-library/md5.h"
+#include "common/util/stream.hpp"
 #include "Map.hpp"
 
 #include <format.h>
@@ -50,10 +51,15 @@ Server::Server(IPaddress address, unsigned int max_clients,
     }
     m_logger.log("[INFO] Bound to interface {}", m_address);
 
-    // Generates different hashes from before??
-    // They're correct now anyway.
     m_map_hash = map::map_hash(map_name);
+
     m_logger.log("Map hash: {}", m_map_hash);
+
+    std::ifstream somefile("server.sh", std::ios::in | std::ios::binary);
+
+    if (!somefile.is_open()) {
+        printf("Failed to open?\n");
+    }
 }
 
 Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }

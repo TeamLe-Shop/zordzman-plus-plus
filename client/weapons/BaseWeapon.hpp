@@ -30,7 +30,7 @@ public:
     WeaponSlot getSlot();
     /// @brief Get the type of weapon this is.
     WeaponType getType();
-    /// @brief Called when using the item.
+    /// @brief Called when the player uses the item.
     virtual void use();
     virtual ~BaseWeapon();
 

@@ -11,9 +11,9 @@ typedef unsigned char byte;
 
 class Level {
 public:
-    /// MD5 hash for the level.
+    /// @brief MD5 hash for the level.
     std::string hash;
-    /// Load a level.
+    /// @brief Load a level.
     void load_level(std::string map);
 
 private:
@@ -24,8 +24,6 @@ private:
 
 /// @brief Generate hash from a map
 std::string map_hash(std::string map_name);
-
-std::vector<char> read_map(std::string map_name);
 
 } // namespace map
 

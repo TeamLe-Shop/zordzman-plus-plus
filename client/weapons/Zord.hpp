@@ -12,6 +12,7 @@ class Zord : public BaseWeapon {
 public:
     Zord();
 
+    /// @brief Function called when the Player uses this item.
     void use_with_player(Player * player);
 };
 } // namespace weapon

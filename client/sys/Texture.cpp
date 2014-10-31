@@ -14,7 +14,7 @@ struct TexResult {
 };
 TexResult const TexFail = TexResult{false, 0, 0, 0};
 
-// Kindly provided by Krootushas.
+// Kindly provided by Krootushas / 8BitBuff.
 TexResult load_texture(char const * const filename) {
     SDL_Surface * surface = IMG_Load(filename);
 

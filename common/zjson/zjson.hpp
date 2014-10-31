@@ -7,5 +7,10 @@ using namespace json11;
 
 namespace zjson {
 
+/// @brief Load a Zordzman JSON HUD file.
+///
+/// When reading the file, lines starting with `#` are ignored.
+///
+/// @param hud The filename of the HUD file.
 Json load(std::string hud);
 }

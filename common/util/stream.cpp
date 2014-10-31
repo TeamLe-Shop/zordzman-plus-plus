@@ -10,6 +10,7 @@ std::vector<char> readToEnd(std::istream & stream) {
     auto end = stream.tellg();
     auto size = end - originalPos;
     data.resize(size);
+    stream.seekg(originalPos);
     stream.read(data.data(), size);
     return data;
 }

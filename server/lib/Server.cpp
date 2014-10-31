@@ -54,12 +54,6 @@ Server::Server(IPaddress address, unsigned int max_clients,
     m_map_hash = map::map_hash(map_name);
 
     m_logger.log("Map hash: {}", m_map_hash);
-
-    std::ifstream somefile("server.sh", std::ios::in | std::ios::binary);
-
-    if (!somefile.is_open()) {
-        printf("Failed to open?\n");
-    }
 }
 
 Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }

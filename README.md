@@ -42,6 +42,8 @@ and [Linux](https://github.com/TeamLe-Shop/zordzman-plus-plus#linux) below.
 
 ### Mac OS X ###
 
+REQUIRES XCODE (free), download from the App store
+
 Download SDL2, SDL2_image, SDL\_mixer and SDL2\_net.
 
 Then, after you've opened your `SDL2.dmg`, copy the `SDL2.framework` and

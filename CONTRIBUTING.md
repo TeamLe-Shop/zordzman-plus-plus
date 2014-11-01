@@ -13,6 +13,11 @@ working towards support for most operating systems.
 You can always help by trying to build zordzman-plus-plus for yourself on Windows
 and report any errors or bugs.
 
+### Talk with us! ###
+
+Network: `irc.caffie.net`
+Channel: `#munchtoss`
+
 ### Including OpenGL headers ###
 
 You must always use `<SDL_opengl.h>` instead of `<GL/gl.h>`, as the latter is

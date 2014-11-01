@@ -48,7 +48,10 @@ public:
     void close();
     /// @brief Close the socket when destroyed.
     ~TCPSocket();
-
+    /// @brief Get the IP of the server
+    IPaddress getServerAddress();
+    /// @brief Return IP address of server formatted
+    std::string getFormattedServerAddr();
 private:
     // The address of the server.
     IPaddress m_server;

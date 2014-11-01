@@ -77,6 +77,16 @@ bool TCPSocket::send(const void * buf, int len) {
     return true;
 }
 
+IPaddress TCPSocket::getServerAddress() { return m_server; }
+
+std::string TCPSocket::getFormattedServerAddr() {
+    IPaddress addr = m_server;
+    Uint32 host = SDLNet_Read32(&addr.host);
+    Uint16 port = SDLNet_Read16(&addr.port);
+    return fmt::format("{}.{}.{}.{}\n", host >> 24 & 0xFF, host >> 16 & 0xFF,
+               host >> 8 & 0xFF, host >> 0 & 0xFF, port);
+}
+
 void TCPSocket::close() {
     // Check if it's open, and close it if is.
     if (m_open) {

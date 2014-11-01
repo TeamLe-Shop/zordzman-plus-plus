@@ -198,7 +198,7 @@ void Client::drawHUD() {
 
     drawText(specialwep, 0 + 64, 0 + height - 32 + 24, 8, 8);
 
-    glColor3f(1, 1, 1);
+    setColor(1, 1, 1, 1);
 
     drawSpriteFromTexture(texture, m_player->getCurrentWeapon()->x_tile,
                           m_player->getCurrentWeapon()->y_tile, 0 + 140,
@@ -208,6 +208,13 @@ void Client::drawHUD() {
     setColor(m_hud.border.color);
     drawRectangle(m_hud.border.x, m_hud.border.y, m_hud.border.width,
                   m_hud.border.height);
+
+    glColor3f(1, 1, 1);
+    std::string serverstr = fmt::format("Server: {}",
+                                        m_socket.getFormattedServerAddr());
+    drawText(serverstr,
+             800 - (8 * serverstr.size()),
+             m_hud.border.y - 8, 8, 8);
 }
 
 Client & Client::get() {

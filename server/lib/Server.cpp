@@ -61,7 +61,8 @@ void Server::initSDL() {
     if (SDLNet_Init() == -1) {
         m_logger.log("[ERR]  SDLNet_Init: {}\n", SDLNet_GetError());
         m_logger.log(
-            "[ERR]  Failed to initialize SDL. Quitting zordzman-server...\n");
+            "[ERR]  Failed to initialize SDLNet. Quitting"
+            " zordzman-server...\n");
         exit(1);
     }
 }
@@ -111,8 +112,9 @@ int Server::exec() {
                         { "entity", Json::object { { "hash", m_map_hash } } }
                     };
 
-                    std::string str = json.string_value();
+                    std::string str = json.dump();
 
+                    printf("%s", str.c_str());
                     SDLNet_TCP_Send(client.getSocket(), str.c_str(),
                                     str.size());
                     client.sent_map_hash = true;

@@ -14,6 +14,8 @@
 #include <SDL_mixer.h>
 
 #include "json11.hpp"
+#include "common/util/stream.hpp"
+#include "common/extlib/hash-library/md5.h"
 
 namespace client {
 
@@ -95,7 +97,7 @@ void Client::readData() {
     }
     printf("Message: %s\n", data.c_str());
     std::string err;
-    json11::Json json = json11::Json::parse(data, err);
+    Json json = Json::parse(data, err);
 
     if (!err.empty()) {
         printf("Server sent bad JSON string\n");
@@ -121,8 +123,22 @@ void Client::readData() {
         while ((ent = readdir(dir)) != NULL) {
             if (!strcmp(ent->d_name,
                         json["entity"]["hash"].string_value().c_str())) {
-                printf("I've found a match!\n");
-                found_match = true;
+
+                std::ifstream mapfile(fmt::format("resources/levels/{}",
+                                      ent->d_name),
+                                      std::ios::binary | std::ios::in);
+
+                std::vector<char> mapdata =
+                common::util::stream::readToEnd(mapfile);
+
+                MD5 md5;
+                md5.add(mapdata.data(), mapdata.size());
+                printf("%s", md5.getHash().c_str());
+                if (!strcmp(md5.getHash().c_str(), ent->d_name)) {
+                    found_match = true;
+                }
+
+                mapfile.close();
             }
         }
 

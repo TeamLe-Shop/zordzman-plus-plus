@@ -40,7 +40,10 @@ Client::Client(Config const & cfg, HUD hud)
     music = Mix_LoadMUS("resources/music/soundtrack/Lively.ogg");
 
     if (music == nullptr) {
-        printf("Unable to load Ogg file: %s\n", Mix_GetError());
+        throw std::runtime_error(
+            fmt::format("Couldn't load sound \"{}\", ({})",
+                        "resources/music/soundtrack/Lively.ogg",
+                        std::string(Mix_GetError())));
         exit(1);
     }
 

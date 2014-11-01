@@ -25,7 +25,24 @@ Server::Server(IPaddress address, unsigned int max_clients,
     m_address = address;
     m_max_clients = max_clients;
     m_map_name = map_name;
-    m_socket_set = SDLNet_AllocSocketSet(m_max_clients * 1); // what the fuck
+    m_socket_set = SDLNet_AllocSocketSet(m_max_clients);
+
+    initSDL();
+
+    if (!(m_socket = SDLNet_TCP_Open(&address))) {
+        m_logger.log("[ERR]  Failed to bind to interface {}", address);
+        exit(1);
+    }
+    m_logger.log("[INFO] Bound to interface {}", m_address);
+
+    m_map_hash = map::map_hash(map_name);
+
+    m_logger.log("Map hash: {}", m_map_hash);
+}
+
+Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }
+
+void Server::initSDL() {
     SDL_version compile_version;
     const SDL_version *link_version = SDLNet_Linked_Version();
     SDL_NET_VERSION(&compile_version);
@@ -47,19 +64,7 @@ Server::Server(IPaddress address, unsigned int max_clients,
             "[ERR]  Failed to initialize SDL. Quitting zordzman-server...\n");
         exit(1);
     }
-
-    if (!(m_socket = SDLNet_TCP_Open(&address))) {
-        m_logger.log("[ERR]  Failed to bind to interface {}", address);
-        exit(1);
-    }
-    m_logger.log("[INFO] Bound to interface {}", m_address);
-
-    m_map_hash = map::map_hash(map_name);
-
-    m_logger.log("Map hash: {}", m_map_hash);
 }
-
-Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }
 
 void Server::acceptConnections() {
     while (true) {

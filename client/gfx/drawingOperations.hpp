@@ -45,8 +45,18 @@ void drawLine(float x1, float y1, float x2, float y2);
 /// @brief Draw text
 void drawText(std::string const & text, int x, int y, int w, int h);
 
+/// @brief Set the current color.
+///
+/// @param r Red value.
+/// @param g Green value.
+/// @param b Blue value.
+/// @param a Alpha value.
 void setColor(int r, int g, int b, int a);
 
+/// @brief Set the current color.
+///
+/// @param col The color.
+///            The first byte represents red, second green, third blue and last ///            alpha.
 void setColor(uint32_t col);
 } // namespace drawingOperations
 } // namespace client

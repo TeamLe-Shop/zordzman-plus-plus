@@ -2,10 +2,14 @@
 #include "format.h"
 #include "util.hpp"
 
+#include "json11.hpp"
+
 #define PROTOCOL_VERSION 0x00
 #define MAGIC_NUMBER 0xCAC35500 | PROTOCOL_VERSION
 
 namespace server {
+
+using namespace json11;
 
 Client::Client(TCPsocket socket)
     : m_logger(stderr, [=] {
@@ -87,13 +91,12 @@ void Client::disconnect(std::string reason, bool send) {
         return;
     }
 
-    std::string str = "{\n"
-                      "   \"type\": \"disconnect\",\n"
-                      "   \"entity\": {\n"
-                      "       \"reason\": \"" +
-                      reason + "\"\n"
-                               "   }\n"
-                               "}\n";
+
+    Json json = Json::object {
+        { "type", "disconnect" },
+        { "entity", Json::object { { "reason", reason } } }
+    };
+    std::string str = json.string_value();
 
     int len = str.size();
     int result = SDLNet_TCP_Send(m_socket, str.c_str(), len);

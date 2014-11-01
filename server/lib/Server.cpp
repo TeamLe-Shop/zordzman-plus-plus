@@ -16,6 +16,9 @@ namespace cont = common::util::container;
 #define MAGIC_NUMBER 0xCAC35500 | PROTOCOL_VERSION
 
 namespace server {
+
+using namespace json11;
+
 Server::Server(IPaddress address, unsigned int max_clients,
                std::string map_name)
     : m_logger(stderr, [] { return "SERVER: "; }) {
@@ -96,18 +99,17 @@ int Server::exec() {
 
                 if (client.getState() == Client::Connected &&
                     client.sent_map_hash == false) {
-                    std::string json = "{"
-                                       "\"type\": \"map-hash\","
-                                       "\"entity\": {"
-                                       "  \"hash\": \"" +
-                                       m_map_hash + "\""
-                                                    "}"
-                                                    "}";
 
-                    printf("%s\n", json.c_str());
+                    Json json =
+                    Json::object {
+                        { "type", "map-hash" },
+                        { "entity", Json::object { { "hash", m_map_hash } } }
+                    };
 
-                    SDLNet_TCP_Send(client.getSocket(), json.c_str(),
-                                    json.size());
+                    std::string str = json.string_value();
+
+                    SDLNet_TCP_Send(client.getSocket(), str.c_str(),
+                                    str.size());
                     client.sent_map_hash = true;
                 }
             }

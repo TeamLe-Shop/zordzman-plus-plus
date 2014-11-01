@@ -26,4 +26,6 @@ After the handshake, the server sends over a hash of the current map to the clie
 who then checks if they have the map or not by running through their directory of maps
 and seeing if any of their filenames match the hash.
 
-...
+The client must respond whether or not it has this map. If it does,
+the client can just proceed to joining the game, if not the server sends the map to the client
+encoded in Base 64.

@@ -2,6 +2,7 @@
 #include "json11.hpp"
 
 #include <fstream>
+#include "format.h"
 #include <string>
 
 namespace zjson {
@@ -13,8 +14,7 @@ Json load(std::string hud) {
 
     // Throw a runtime error if file not found.
     if (!hudfile.is_open()) {
-        std::string error("Error loading file ");
-        error += hud;
+        std::string error = fmt::format("Error loading file {}", hud);
         throw std::runtime_error(error);
     }
 

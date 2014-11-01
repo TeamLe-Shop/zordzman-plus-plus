@@ -32,11 +32,7 @@ void Client::recv() {
     if (bytes_recv <= 0) {
         disconnect("Left server", false);
     } else {
-        // Here we're checking if we received 4 bytes,
-        // and if the client is still in `Pending` state.
-        // If their data matches our magic number, they're changed to
-        // `Connected` state, other wise they're put in `Disconnected`
-        // state.
+        printf("Message: %.*s\n", bytes_recv, buffer);
 
         if (m_state == Pending) {
             // The client still sometimes gets disconnected

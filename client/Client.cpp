@@ -16,6 +16,9 @@
 #include "json11.hpp"
 
 namespace client {
+
+using namespace json11;
+
 namespace {
 Client * game_instance;
 std::string const title = "Zordzman v0.0.2";
@@ -49,7 +52,6 @@ Client::~Client() { game_instance = nullptr; }
 void Client::joinServer() {
     m_socket.connectToHost(m_cfg.host, m_cfg.port);
     m_socket.send(&net::MAGIC_NUMBER, 4);
-    m_socket.send("lul", 4);
 }
 
 void Client::exec() {
@@ -123,7 +125,18 @@ void Client::readData() {
 
         if (!found_match) {
             printf("I didn't find a match.\n");
+
         }
+
+        Json json = Json::object {
+            { "type", "has-map" },
+            { "entity",
+            Json::object {
+                { "has-map", found_match }
+            }
+            }
+        };
+        m_socket.send(json.dump());
     }
 }
 

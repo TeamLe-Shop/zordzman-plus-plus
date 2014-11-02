@@ -152,6 +152,7 @@ void Client::checkForMap(Json json) {
             md5.add(mapdata.data(), mapdata.size());
             if (!strcmp(md5.getHash().c_str(), ent->d_name)) {
                 found_match = true;
+                m_level = Level(json["entity"]["hash"].string_value());
             }
 
             mapfile.close();

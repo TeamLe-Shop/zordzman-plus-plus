@@ -23,8 +23,6 @@ bool TCPSocket::connectToHost(std::string host, int portnum) {
         return false;
     }
 
-    // Set the open flag to true.
-    m_open = true;
 
     m_socketset = SDLNet_AllocSocketSet(1);
 
@@ -32,6 +30,9 @@ bool TCPSocket::connectToHost(std::string host, int portnum) {
         print(stderr, "[ERROR] SDLNet_TCP_AddSocket: {}\n", SDLNet_GetError());
         return false;
     }
+
+    // Set the open flag to true.
+    m_open = true;
 
     return true;
 }

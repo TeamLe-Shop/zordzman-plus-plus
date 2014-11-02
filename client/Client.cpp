@@ -15,6 +15,7 @@
 
 #include "json11.hpp"
 #include "common/util/stream.hpp"
+#include "common/util/fileutil.hpp"
 #include "common/extlib/hash-library/md5.h"
 
 namespace client {
@@ -23,7 +24,7 @@ using namespace json11;
 
 namespace {
 Client * game_instance;
-std::string const title = "Zordzman v0.0.2";
+std::string const title = "Zordzman v0.0.3";
 Mix_Music * music = nullptr;
 } // Anonymous namespace
 
@@ -118,9 +119,10 @@ void Client::readData() {
 }
 
 void Client::checkForMap(Json json) {
+    using namespace common::util::file;
     bool found_match = false;
 
-    m_map_name = json["entity"]["name"].dump();
+    m_map_name = fileFromPath(json["entity"]["name"].string_value());
 
     // The client is going to now look for that map file.
     DIR * dir;

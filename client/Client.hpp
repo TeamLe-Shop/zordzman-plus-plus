@@ -9,6 +9,10 @@
 #include "ResourceManager.hpp"
 #include "HUD.hpp"
 
+#include "json11.hpp"
+
+using namespace json11;
+
 namespace client {
 class Client {
 public:
@@ -27,6 +31,8 @@ public:
     void drawHUD();
     /// @brief Read data from m_socket
     void readData();
+    /// @brief Check of the client has the map the server has
+    void checkForMap(Json json);
 
 private:
     Client(const Client &) = delete;

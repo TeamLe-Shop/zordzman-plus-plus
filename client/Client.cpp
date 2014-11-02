@@ -49,6 +49,7 @@ Client::Client(Config const & cfg, HUD hud)
         exit(1);
     }
 
+    // Infinitely loop the music
     Mix_PlayMusic(music, -1);
 }
 
@@ -56,7 +57,7 @@ Client::~Client() { game_instance = nullptr; }
 
 void Client::joinServer() {
     m_socket.connectToHost(m_cfg.host, m_cfg.port);
-    m_socket.send(&net::MAGIC_NUMBER, 4);
+    m_socket.send(&net::MAGIC_NUMBER, 4); // Hand shake
 }
 
 void Client::exec() {
@@ -92,12 +93,15 @@ void Client::readData() {
     // Read shit from socket
     std::string data = m_socket.read();
     data += "\0";
-    if (data.size() < 1) {
+    if (data.size() < 1) { // The connection may have ended or
+                           // an error may have occured.
         return;
     }
-    printf("Message: %s\n", data.c_str());
+
     std::string err;
-    Json json = Json::parse(data, err);
+
+    Json json = Json::parse(data, err); // Turn it into a Json object
+                                        // so we can access members
 
     if (!err.empty()) {
         printf("Server sent bad JSON string\n");
@@ -109,54 +113,57 @@ void Client::readData() {
         printf("Disconnected: %s\n",
                json["entity"]["reason"].string_value().c_str());
     } else if (json["type"].string_value() == "map-hash") {
-        bool found_match = false;
-
-        // The client is going to now look for that map file.
-        DIR * dir;
-        struct dirent * ent;
-
-        if ((dir = opendir("resources/levels/")) == NULL) {
-            throw std::runtime_error(fmt::format(
-                "Couldn't open directory \"{}\"", "resources/levels"));
-        }
-
-        while ((ent = readdir(dir)) != NULL) {
-            if (!strcmp(ent->d_name,
-                        json["entity"]["hash"].string_value().c_str())) {
-
-                std::ifstream mapfile(fmt::format("resources/levels/{}",
-                                      ent->d_name),
-                                      std::ios::binary | std::ios::in);
-
-                std::vector<char> mapdata =
-                common::util::stream::readToEnd(mapfile);
-
-                MD5 md5;
-                md5.add(mapdata.data(), mapdata.size());
-                printf("%s", md5.getHash().c_str());
-                if (!strcmp(md5.getHash().c_str(), ent->d_name)) {
-                    found_match = true;
-                }
-
-                mapfile.close();
-            }
-        }
-
-        if (!found_match) {
-            printf("I didn't find a match.\n");
-
-        }
-
-        Json json = Json::object {
-            { "type", "has-map" },
-            { "entity",
-            Json::object {
-                { "has-map", found_match }
-            }
-            }
-        };
-        m_socket.send(json.dump());
+        checkForMap(json);
     }
+}
+
+void Client::checkForMap(Json json) {
+    bool found_match = false;
+
+    // The client is going to now look for that map file.
+    DIR * dir;
+    struct dirent * ent;
+
+    if ((dir = opendir("resources/levels/")) == NULL) {
+        throw std::runtime_error(fmt::format(
+            "Couldn't open directory \"{}\"", "resources/levels"));
+    }
+
+    while ((ent = readdir(dir)) != NULL) {
+        // Does the map hash match the file name?
+        if (!strcmp(ent->d_name,
+                    json["entity"]["hash"].string_value().c_str())) {
+
+            // Open a stream to the file.
+            std::ifstream mapfile(fmt::format("resources/levels/{}",
+                                  ent->d_name),
+                                  std::ios::binary | std::ios::in);
+
+            // Read all data...
+            std::vector<char> mapdata =
+            common::util::stream::readToEnd(mapfile);
+
+            MD5 md5;
+            /// Generate a hash from the map data
+            md5.add(mapdata.data(), mapdata.size());
+            if (!strcmp(md5.getHash().c_str(), ent->d_name)) {
+                found_match = true;
+            }
+
+            mapfile.close();
+        }
+    }
+
+    // Send to the server whether or not we have the map.
+    Json hasmap = Json::object {
+        { "type", "has-map" },
+        { "entity",
+        Json::object {
+            { "has-map", found_match }
+        }
+        }
+    };
+    m_socket.send(hasmap.dump());
 }
 
 void Client::drawHUD() {

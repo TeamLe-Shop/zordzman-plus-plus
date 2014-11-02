@@ -36,7 +36,8 @@ void Client::recv() {
     if (bytes_recv <= 0) {
         disconnect("Left server", false);
     } else {
-        printf("Message [%d]: %.*s\n", bytes_recv, bytes_recv, buffer);
+        printf("Message [%d]: %.*s", bytes_recv, bytes_recv, buffer);
+        printf("\n");
 
         if (m_state == Pending) {
             // The client still sometimes gets disconnected

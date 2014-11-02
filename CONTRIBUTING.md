@@ -16,6 +16,7 @@ and report any errors or bugs.
 ### Talk with us! ###
 
 Network: `irc.caffie.net`
+
 Channel: `#munchtoss`
 
 ### Including OpenGL headers ###

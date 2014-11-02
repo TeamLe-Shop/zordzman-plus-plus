@@ -23,7 +23,6 @@ bool TCPSocket::connectToHost(std::string host, int portnum) {
         return false;
     }
 
-
     m_socketset = SDLNet_AllocSocketSet(1);
 
     if (SDLNet_TCP_AddSocket(m_socketset, m_socket) < 0) {
@@ -79,6 +78,7 @@ bool TCPSocket::send(const void * buf, int len) {
 IPaddress TCPSocket::getServerAddress() { return m_server; }
 
 std::string TCPSocket::getFormattedServerAddr() {
+    if (!m_open) return "- Not connected -";
     IPaddress addr = m_server;
     Uint32 host = SDLNet_Read32(&addr.host);
     Uint16 port = SDLNet_Read16(&addr.port);

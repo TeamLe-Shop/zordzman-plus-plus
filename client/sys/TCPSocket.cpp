@@ -23,8 +23,6 @@ bool TCPSocket::connectToHost(std::string host, int portnum) {
         return false;
     }
 
-    close();
-
     // Set the open flag to true.
     m_open = true;
 

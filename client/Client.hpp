@@ -46,6 +46,7 @@ public:
 
 private:
     Level m_level;
+    std::string m_map_name;
     Player * m_player;
     Config const & m_cfg;
     HUD m_hud;

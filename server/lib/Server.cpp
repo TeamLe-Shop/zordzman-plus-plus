@@ -109,7 +109,8 @@ int Server::exec() {
                     Json json =
                     Json::object {
                         { "type", "map-hash" },
-                        { "entity", Json::object { { "hash", m_map_hash } } }
+                        { "entity", Json::object { { "hash", m_map_hash },
+                                                   { "name", m_map_name } } }
                     };
 
                     std::string str = json.dump();

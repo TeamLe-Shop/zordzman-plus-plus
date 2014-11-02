@@ -120,6 +120,8 @@ void Client::readData() {
 void Client::checkForMap(Json json) {
     bool found_match = false;
 
+    m_map_name = json["entity"]["name"].dump();
+
     // The client is going to now look for that map file.
     DIR * dir;
     struct dirent * ent;
@@ -219,9 +221,13 @@ void Client::drawHUD() {
     glColor3f(1, 1, 1);
     std::string serverstr = fmt::format("Server: {}",
                                         m_socket.getFormattedServerAddr());
+    std::string mapstr = fmt::format("Map: {}", m_map_name);
     drawText(serverstr,
              800 - (8 * serverstr.size()),
              m_hud.border.y - 8, 8, 8);
+    drawText(mapstr,
+             800 - (8 * mapstr.size()),
+             m_hud.border.y - 16, 8, 8);
 }
 
 Client & Client::get() {

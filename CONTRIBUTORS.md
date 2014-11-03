@@ -16,3 +16,5 @@ vividMario52/JavaCakess - Creator
 
 [crumblingstatue](https://github.com/crumblingstatue) - A huge help with libs, keeping the project clean
               and giving up his time to fix issues
+
+[cyanboy](https://github.com/cyanboy) - FIXING TYPOS (https://github.com/cyanboy/zordzman-plus-plus)

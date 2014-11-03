@@ -44,7 +44,7 @@ and [Linux](https://github.com/TeamLe-Shop/zordzman-plus-plus#linux) below.
 
 REQUIRES XCODE (free), download from the App store
 
-Download SDL2, SDL2_image, SDL\_mixer and SDL2\_net.
+Download SDL2, SDL2_image, SDL2\_mixer and SDL2\_net.
 
 Then, after you've opened your `SDL2.dmg`, copy the `SDL2.framework` and
 move it into `/Library/Frameworks` directory. You can find this by navigating to Macintosh HD (usually by double clicking the icon on the desktop) and going to `/Library/Frameworks`.

@@ -78,12 +78,13 @@ bool TCPSocket::send(const void * buf, int len) {
 IPaddress TCPSocket::getServerAddress() { return m_server; }
 
 std::string TCPSocket::getFormattedServerAddr() {
-    if (!m_open) return "- Not connected -";
+    if (!m_open)
+        return "- Not connected -";
     IPaddress addr = m_server;
     Uint32 host = SDLNet_Read32(&addr.host);
     Uint16 port = SDLNet_Read16(&addr.port);
     return fmt::format("{}.{}.{}.{}\n", host >> 24 & 0xFF, host >> 16 & 0xFF,
-               host >> 8 & 0xFF, host >> 0 & 0xFF, port);
+                       host >> 8 & 0xFF, host >> 0 & 0xFF, port);
 }
 
 void TCPSocket::close() {

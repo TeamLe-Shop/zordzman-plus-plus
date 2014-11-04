@@ -129,23 +129,22 @@ void Client::checkForMap(Json json) {
     struct dirent * ent;
 
     if ((dir = opendir("resources/levels/")) == NULL) {
-        throw std::runtime_error(fmt::format(
-            "Couldn't open directory \"{}\"", "resources/levels"));
+        throw std::runtime_error(
+            fmt::format("Couldn't open directory \"{}\"", "resources/levels"));
     }
 
     while ((ent = readdir(dir)) != NULL) {
         // Does the map hash match the file name?
         if (!strcmp(ent->d_name,
                     json["entity"]["hash"].string_value().c_str())) {
-
             // Open a stream to the file.
-            std::ifstream mapfile(fmt::format("resources/levels/{}",
-                                  ent->d_name),
-                                  std::ios::binary | std::ios::in);
+            std::ifstream mapfile(
+                fmt::format("resources/levels/{}", ent->d_name),
+                std::ios::binary | std::ios::in);
 
             // Read all data...
             std::vector<char> mapdata =
-            common::util::stream::readToEnd(mapfile);
+                common::util::stream::readToEnd(mapfile);
 
             MD5 md5;
             /// Generate a hash from the map data
@@ -160,14 +159,9 @@ void Client::checkForMap(Json json) {
     }
 
     // Send to the server whether or not we have the map.
-    Json hasmap = Json::object {
-        { "type", "has-map" },
-        { "entity",
-        Json::object {
-            { "has-map", found_match }
-        }
-        }
-    };
+    Json hasmap =
+        Json::object{{"type", "has-map"},
+                     {"entity", Json::object{{"has-map", found_match}}}};
     m_socket.send(hasmap.dump());
 }
 
@@ -222,15 +216,11 @@ void Client::drawHUD() {
                   m_hud.border.height);
 
     glColor3f(1, 1, 1);
-    std::string serverstr = fmt::format("Server: {}",
-                                        m_socket.getFormattedServerAddr());
+    std::string serverstr =
+        fmt::format("Server: {}", m_socket.getFormattedServerAddr());
     std::string mapstr = fmt::format("Map: {}", m_map_name);
-    drawText(serverstr,
-             800 - (8 * serverstr.size()),
-             m_hud.border.y - 8, 8, 8);
-    drawText(mapstr,
-             800 - (8 * mapstr.size()),
-             m_hud.border.y - 16, 8, 8);
+    drawText(serverstr, 800 - (8 * serverstr.size()), m_hud.border.y - 8, 8, 8);
+    drawText(mapstr, 800 - (8 * mapstr.size()), m_hud.border.y - 16, 8, 8);
 }
 
 Client & Client::get() {

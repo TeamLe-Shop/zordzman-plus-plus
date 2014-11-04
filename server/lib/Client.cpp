@@ -36,9 +36,6 @@ void Client::recv() {
     if (bytes_recv <= 0) {
         disconnect("Left server", false);
     } else {
-        printf("Message [%d]: %.*s", bytes_recv, bytes_recv, buffer);
-        printf("\n");
-
         if (m_state == Pending) {
             // The client still sometimes gets disconnected
             // because it can't flush and ends up sending a glob
@@ -52,10 +49,10 @@ void Client::recv() {
                     m_state = Connected;
 
                 } else {
-                    disconnect("Incorrect protocol version/magic number", true);
+                    disconnect("Incorrect protocol version", true);
                 }
             } else {
-                disconnect("Incorrect protocol version/magic number", true);
+                disconnect("Incorrect protocol version", true);
             }
         }
         for (int i = 0; i < bytes_recv; i++) {
@@ -104,7 +101,7 @@ void Client::disconnect(std::string reason, bool send) {
 
     // Error sending.
     if (result < len) {
-        fmt::print("SDLNet_TCP_Send: {:s}\n", SDLNet_GetError());
+        m_logger.log("SDLNet_TCP_Send: {:s}, SDLNet_GetError());
         m_state = Disconnected;
     }
 }

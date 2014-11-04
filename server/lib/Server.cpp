@@ -53,7 +53,7 @@ void Server::initSDL() {
     m_logger.log("[INFO] Running with SDL_net version: {:d}.{:d}.{:d}\n",
                  link_version->major, link_version->minor, link_version->patch);
     if (SDL_Init(0) == -1) {
-        m_logger.log("[ERR]  SDL_Init: {}\n", SDL_GetError());
+        m_logger.log("[ERR]  SDL_Init: {}", SDL_GetError());
         m_logger.log("[ERR]  Failed to initialize SDL. Quitting "
                      "zordzman-server...\n");
         exit(1);

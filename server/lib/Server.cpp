@@ -115,7 +115,6 @@ int Server::exec() {
 
                     std::string str = json.dump();
 
-                    printf("%s", str.c_str());
                     SDLNet_TCP_Send(client.getSocket(), str.c_str(),
                                     str.size());
                     client.sent_map_hash = true;

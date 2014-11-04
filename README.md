@@ -42,7 +42,7 @@ and [Linux](https://github.com/TeamLe-Shop/zordzman-plus-plus#linux) below.
 
 ### Mac OS X ###
 
-REQUIRES XCODE (free), download from the App store
+REQUIRES XCODE (atleast 4.2, free), download from the App store
 
 Download SDL2, SDL2_image, SDL2\_mixer and SDL2\_net.
 

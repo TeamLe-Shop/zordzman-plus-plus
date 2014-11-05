@@ -56,7 +56,8 @@ void setColor(int r, int g, int b, int a);
 /// @brief Set the current color.
 ///
 /// @param col The color.
-///            The first byte represents red, second green, third blue and last ///            alpha.
+///            The first byte represents red, second green, third blue and last
+///            ///            alpha.
 void setColor(uint32_t col);
 } // namespace drawingOperations
 } // namespace client

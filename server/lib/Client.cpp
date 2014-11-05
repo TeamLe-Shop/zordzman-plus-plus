@@ -89,11 +89,9 @@ void Client::disconnect(std::string reason, bool send) {
         return;
     }
 
-
-    Json json = Json::object {
-        { "type", "disconnect" },
-        { "entity", Json::object { { "reason", reason } } }
-    };
+    Json json =
+        Json::object{ { "type", "disconnect" },
+                      { "entity", Json::object{ { "reason", reason } } } };
     std::string str = json.string_value();
 
     int len = str.size();

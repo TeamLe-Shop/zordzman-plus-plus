@@ -34,6 +34,7 @@ add_library(logger common/logger/Logger.hpp common/logger/Logger.cpp)
 file(GLOB_RECURSE COMMON_UTIL_SOURCES common/util/*.*pp)
 add_library(common_util ${COMMON_UTIL_SOURCES})
 add_library(zjson common/zjson/zjson.hpp common/zjson/zjson.cpp)
+add_library(base64 common/extlib/base64/base64.hpp common/extlib/base64/base64.cpp)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 

@@ -101,7 +101,7 @@ void Client::disconnect(std::string reason, bool send) {
 
     // Error sending.
     if (result < len) {
-        m_logger.log("SDLNet_TCP_Send: {:s}, SDLNet_GetError());
+        m_logger.log("SDLNet_TCP_Send: {:s}", SDLNet_GetError());
         m_state = Disconnected;
     }
 }

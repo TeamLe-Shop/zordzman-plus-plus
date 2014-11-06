@@ -29,35 +29,29 @@ Client::Client(TCPsocket socket)
 bool Client::checkProtocolVersion() { return true; }
 
 void Client::recv() {
+    if (m_state == Disconnected) {
+        return;
+    }
     char buffer[RECV_BUFFER_SIZE];
     memset(buffer, 0, RECV_BUFFER_SIZE);
-    int bytes_recv =
-        SDLNet_TCP_Recv(m_socket, buffer, RECV_BUFFER_SIZE - m_buffer.size());
-    if (bytes_recv <= 0) {
-        disconnect("Left server", false);
-    } else {
-        if (m_state == Pending) {
-            // The client still sometimes gets disconnected
-            // because it can't flush and ends up sending a glob
-            // of data which contains the magic number and some other
-            // garbage.
-            // Allowing the initial message to be
-            // over 4 bytes should prevent this.
-            if (bytes_recv >= 4) {
-                int magic_num = MAGIC_NUMBER;
-                if (memcmp(buffer, &magic_num, 4) == 0) {
-                    m_state = Connected;
-
-                } else {
-                    disconnect("Incorrect protocol version", true);
-                }
-            } else {
-                disconnect("Incorrect protocol version", true);
-            }
+    if (SDLNet_SocketReady(m_socket)) {
+        int bytes_recv = SDLNet_TCP_Recv(m_socket,
+                                         buffer,
+                                         RECV_BUFFER_SIZE - m_buffer.size());
+        if (bytes_recv <= 0) {
+            disconnect(
+                fmt::format("Left server (recv: {})", bytes_recv), false);
         }
         for (int i = 0; i < bytes_recv; i++) {
             m_buffer.push_back(buffer[i]);
         }
+    }
+    if (m_state == Pending) {
+        // TODO: Check for Harry Potter
+        m_state = Connected;
+    }
+    else if (m_state == Connected) {
+        processMessages();
     }
 }
 
@@ -102,5 +96,11 @@ void Client::disconnect(std::string reason, bool send) {
         m_logger.log("SDLNet_TCP_Send: {:s}", SDLNet_GetError());
         m_state = Disconnected;
     }
+}
+
+void Client::processMessages() {
+    int delimi = std::find(m_buffer.begin(),
+                           m_buffer.end(), '\0') - m_buffer.begin();
+    fmt::print("delimi: {}\n", delimi);
 }
 } // namespace server

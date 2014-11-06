@@ -91,33 +91,8 @@ int Server::exec() {
     while (true) {
         acceptConnections();
         int active = SDLNet_CheckSockets(m_socket_set, 1);
-        // Does this make it NON BLOCKING? I hope so.
-        if (!active)
-            continue;
         for (auto &client : m_clients) {
-            if (!SDLNet_SocketReady(client.getSocket())) {
-                continue;
-            }
-            if (client.getState() == Client::Pending ||
-                client.getState() == Client::Connected) {
-                client.recv();
-
-                if (client.getState() == Client::Connected &&
-                    client.sent_map_hash == false) {
-
-                    Json json = Json::object{
-                        { "type", "map-hash" },
-                        { "entity", Json::object{ { "hash", m_map_hash },
-                                                  { "name", m_map_name } } }
-                    };
-
-                    std::string str = json.dump();
-
-                    SDLNet_TCP_Send(client.getSocket(), str.c_str(),
-                                    str.size());
-                    client.sent_map_hash = true;
-                }
-            }
+            client.recv();
         }
         // Remove disconnected clients
         for (size_t i = 0; i < m_clients.size(); ++i) {

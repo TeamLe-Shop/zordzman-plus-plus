@@ -83,6 +83,23 @@ private:
     ///
     /// The magic number is consumed from the buffer.
     void checkProtocolVersion();
+
+    /// @brief Process JSON-encoded messages from the buffer
+    ///
+    /// This parses all whitespace-delimited JSON objects from the buffer and
+    /// calls the appropriate handlers for the the message types.
+    ///
+    /// Each JSON message should be an object at the top level with a string
+    /// 'type' field. There should also be a 'entity' field which can be of any
+    /// type. It is this entity field object that's passed to the message
+    /// handler so it's up to the handler to determine validity.
+    ///
+    /// If a JSON message is not an object, missing the 'type' field or the
+    /// type field is the wrong type then the message is ignored. The buffer
+    /// will still be consumed as with well formed messages.
+    ///
+    /// If the buffer contains incomplete or malformed JSON then no messages
+    /// are processed. No handlers called. The buffer is not consumed.
     void processMessages();
 };
 } // namespace server

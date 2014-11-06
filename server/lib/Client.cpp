@@ -5,7 +5,7 @@
 #include "json11.hpp"
 
 // Last octet can be the protocol version if we ever decide to care
-#define MAGIC_NUMBER "\xCA\xC3\x55\x00"
+#define MAGIC_NUMBER "\xCA\xC3\x55\x01"
 
 namespace server {
 
@@ -66,7 +66,6 @@ void Client::exec() {
                 fmt::format("Left server (recv: {})", bytes_recv), false);
         }
         for (int i = 0; i < bytes_recv; i++) {
-            //printf("char recv: %c\n", buffer[i]);
             m_buffer.push_back(buffer[i]);
         }
     }
@@ -77,9 +76,36 @@ void Client::exec() {
 }
 
 void Client::processMessages() {
-    int delimi = std::find(m_buffer.begin(),
-                           m_buffer.end(), '\0') - m_buffer.begin();
-    //fmt::print("delimi: {}\n", delimi);
+    if (m_buffer.empty()) {
+        return;
+    }
+    std::string json_error;
+    // Well this seems stupidly inefficient. Why can't m_buffer be a
+    // std::string?
+    std::string raw(m_buffer.begin(), m_buffer.end());
+    std::vector<json11::Json> messages =
+        json11::Json::parse_multi(raw, json_error);
+    // Parsing will fail if the buffer contains a partial message, so the JSON
+    // may be well formed but incomplete. This is not ideal. Ideally we should
+    // be able to read all the complete messages and only leave the incomplete
+    // one in the buffer.
+    if (json_error.size()) {
+        m_logger.log(fmt::format("JSON decode failed: {}", json_error));
+    } else {
+        for (auto &message : messages) {
+            // We can't use message.has_shape() here because we don't want to
+            // make assumptions about the type of the message entity
+            if (message.is_object()) {
+                json11::Json type = message["type"];
+                // If the 'type' field doesn't exist then is_string() is falsey
+                if (type.is_string()) {
+                    // Call handlers for the type
+                }
+            }
+        }
+        // Consume the buffer
+        m_buffer.erase(m_buffer.begin(), m_buffer.end());
+    }
 }
 
 Client::State Client::getState() const { return m_state; }

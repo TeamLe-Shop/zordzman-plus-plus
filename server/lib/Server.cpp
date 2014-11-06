@@ -90,7 +90,7 @@ void Server::acceptConnections() {
 int Server::exec() {
     while (true) {
         acceptConnections();
-        int active = SDLNet_CheckSockets(m_socket_set, 1);
+        SDLNet_CheckSockets(m_socket_set, 1);
         for (auto &client : m_clients) {
             client.exec();
         }

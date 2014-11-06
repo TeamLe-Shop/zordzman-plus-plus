@@ -4,12 +4,12 @@ import socket
 import struct
 
 
-MAGIC = b"\xCA\xC3\x55\x00"
+MAGIC = b"\xCA\xC3\x55\x01"
 
 
 def encode_message(type_, entity):
     return json.dumps({"type": str(type_),
-                       "entity": entity}).encode("utf-8")
+                       "entity": entity}).encode("utf-8") + b" "
 
 
 if __name__ == "__main__":
@@ -17,6 +17,7 @@ if __name__ == "__main__":
     try:
         sock.connect(("localhost", 4544))
         sock.sendall(MAGIC)
+        sock.sendall(encode_message("hello", "world"))
         sock.sendall(encode_message("hello", "world"))
         if input("close socket?"):
             pass

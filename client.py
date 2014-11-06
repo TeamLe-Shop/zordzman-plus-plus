@@ -18,7 +18,7 @@ if __name__ == "__main__":
         sock.connect(("localhost", 4544))
         sock.sendall(MAGIC)
         sock.sendall(encode_message("hello", "world"))
-        sock.sendall(encode_message("hello", "world"))
+        sock.sendall(encode_message("hello", "bye"))
         if input("close socket?"):
             pass
     finally:

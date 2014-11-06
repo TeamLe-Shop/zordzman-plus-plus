@@ -2,14 +2,18 @@
 #include "format.h"
 #include "util.hpp"
 
-#include "json11.hpp"
-
 // Last octet can be the protocol version if we ever decide to care
 #define MAGIC_NUMBER "\xCA\xC3\x55\x01"
 
 namespace server {
 
 using namespace json11;
+
+void hello_handler(Client *client, Json entity) {
+    if (entity.is_string()) {
+        fmt::print("Entity: {}\n", entity.string_value());
+    }
+}
 
 Client::Client(TCPsocket socket)
     : m_logger(stderr, [=] {
@@ -22,7 +26,8 @@ Client::Client(TCPsocket socket)
       }) {
     m_socket = socket;
     m_state = Pending;
-    m_logger.log("Client connected");
+    m_logger.log("Client connected (state = Pending)");
+    addHandler("hello", hello_handler);
 }
 
 void Client::checkProtocolVersion() {
@@ -75,6 +80,12 @@ void Client::exec() {
     }
 }
 
+void Client::addHandler(std::string type,
+        void (*handler)(Client *, json11::Json)) {
+    m_handlers[type].push_back(handler);
+    return;
+}
+
 void Client::processMessages() {
     if (m_buffer.empty()) {
         return;
@@ -99,7 +110,9 @@ void Client::processMessages() {
                 json11::Json type = message["type"];
                 // If the 'type' field doesn't exist then is_string() is falsey
                 if (type.is_string()) {
-                    // Call handlers for the type
+                    for (auto &handler : m_handlers[type.string_value()]) {
+                        handler(this, message["entity"]);
+                    }
                 }
             }
         }

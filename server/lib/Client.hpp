@@ -1,9 +1,14 @@
 #pragma once
 
-#include "common/logger/Logger.hpp"
-
 #include <deque>
+#include <map>
+#include <string>
+#include <vector>
+
 #include <SDL_net.h>
+#include "json11.hpp"
+
+#include "common/logger/Logger.hpp"
 
 #define RECV_BUFFER_SIZE 1024
 
@@ -29,6 +34,13 @@ public:
     ///
     /// The client's initial state will be set to PENDING.
     Client(TCPsocket socket);
+
+    /// @brief Add a message handler
+    ///
+    /// When a message of the given type is received all handlers for that
+    /// message type are called with the message 'entity' field as the Json
+    /// parameter.
+    void addHandler(std::string type, void (*handler)(Client *, json11::Json));
 
     // TODO: Rewrite this completely fucking wrong doc string or whatever
     // you call it
@@ -69,6 +81,8 @@ private:
     std::deque<char> m_buffer;
     TCPsocket m_socket;
     common::Logger m_logger;
+    std::map<std::string,
+             std::vector<void (*)(Client *, json11::Json)>> m_handlers;
 
     /// @brief Assert the client is using the correct protocol version
     ///

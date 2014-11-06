@@ -26,14 +26,18 @@ Client::Client(TCPsocket socket)
 }
 
 void Client::checkProtocolVersion() {
+    // TODO: This needs timeout logic so that if the magic number is not
+    // found after some time then client is also disconnected. Otherwise this
+    // would enable rouge clients to perform DoS by holding their sockets open
+    // but not actually sending anything.
     if (m_state != Pending) {
         return;
     }
-    if (m_buffer.size() < 4) {
+    if (m_buffer.size() < strlen(MAGIC_NUMBER)) {
         return;
     } else {
         char magic[] = MAGIC_NUMBER;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < strlen(MAGIC_NUMBER); i++) {
             char front = m_buffer.front();
             m_buffer.pop_front();
             if (front != magic[i]) {

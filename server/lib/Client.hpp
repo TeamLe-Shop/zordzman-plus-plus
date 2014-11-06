@@ -71,8 +71,17 @@ private:
     common::Logger m_logger;
 
     /// @brief Assert the client is using the correct protocol version
-    /// Checks if the buffer contains the magic number, if so the state is set
-    /// to Connected, otherwise it is left as-is.
+    ///
+    /// If the client state is Pending this checks if the buffer contains the
+    /// magic number. If the correct magic number is at the front of the buffer
+    /// then the client state is set to connected. If the front of the buffer
+    /// doesn't match the magic number the client is disconnected.
+    ///
+    /// If the client is any state other than Pending or the buffer does not
+    /// at least contain the minimum number of bytes for the magic number,
+    /// this method has no effect.
+    ///
+    /// The magic number is consumed from the buffer.
     void checkProtocolVersion();
     void processMessages();
 };

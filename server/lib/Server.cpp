@@ -92,7 +92,7 @@ int Server::exec() {
         acceptConnections();
         int active = SDLNet_CheckSockets(m_socket_set, 1);
         for (auto &client : m_clients) {
-            client.recv();
+            client.exec();
         }
         // Remove disconnected clients
         for (size_t i = 0; i < m_clients.size(); ++i) {

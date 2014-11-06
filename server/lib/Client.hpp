@@ -2,7 +2,7 @@
 
 #include "common/logger/Logger.hpp"
 
-#include <vector>
+#include <deque>
 #include <SDL_net.h>
 
 #define RECV_BUFFER_SIZE 1024
@@ -30,17 +30,15 @@ public:
     /// The client's initial state will be set to PENDING.
     Client(TCPsocket socket);
 
-    /// @brief Assert the client is using the correct protocol version
-    /// @return True if the correct version, false otherwise
-    bool checkProtocolVersion();
-
+    // TODO: Rewrite this completely fucking wrong doc string or whatever
+    // you call it
     /// @brief Read bytes from the socket into the buffer
     ///
     /// Reads up to RECV_BUFFER_SIZE bytes into the buffer.
     /// Therefore the caller is responsible for calling both
     /// SDLNet_CheckSockets and SDLNet_SocketReady
     /// on the socket set containing the client's socket.
-    void recv();
+    void exec();
 
     /// @brief Disconnect for `reason`
     ///
@@ -68,9 +66,14 @@ public:
 
 private:
     State m_state;
-    std::vector<char> m_buffer;
+    std::deque<char> m_buffer;
     TCPsocket m_socket;
     common::Logger m_logger;
+
+    /// @brief Assert the client is using the correct protocol version
+    /// Checks if the buffer contains the magic number, if so the state is set
+    /// to Connected, otherwise it is left as-is.
+    void checkProtocolVersion();
     void processMessages();
 };
 } // namespace server

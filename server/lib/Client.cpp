@@ -4,8 +4,8 @@
 
 #include "json11.hpp"
 
-#define PROTOCOL_VERSION 0x00
-#define MAGIC_NUMBER 0xCAC35500 | PROTOCOL_VERSION
+// Last octet can be the protocol version if we ever decide to care
+#define MAGIC_NUMBER "\xCA\xC3\x55\x00"
 
 namespace server {
 
@@ -22,13 +22,31 @@ Client::Client(TCPsocket socket)
       }) {
     m_socket = socket;
     m_state = Pending;
-    m_buffer.reserve(RECV_BUFFER_SIZE);
     m_logger.log("Client connected");
 }
 
-bool Client::checkProtocolVersion() { return true; }
+void Client::checkProtocolVersion() {
+    if (m_state != Pending) {
+        return;
+    }
+    if (m_buffer.size() < 4) {
+        return;
+    } else {
+        char magic[] = MAGIC_NUMBER;
+        for (int i = 0; i < 4; i++) {
+            char front = m_buffer.front();
+            m_buffer.pop_front();
+            if (front != magic[i]) {
+                disconnect(fmt::format("Bad magic number at pos {}", i), false);
+                return;
+            }
+        }
+        m_state = Connected;
+        m_logger.log("Correct magic number (state = Connected)");
+    }
+}
 
-void Client::recv() {
+void Client::exec() {
     if (m_state == Disconnected) {
         return;
     }
@@ -38,21 +56,26 @@ void Client::recv() {
         int bytes_recv = SDLNet_TCP_Recv(m_socket,
                                          buffer,
                                          RECV_BUFFER_SIZE - m_buffer.size());
+        m_logger.log(fmt::format("Bytes received: {}", bytes_recv));
         if (bytes_recv <= 0) {
             disconnect(
                 fmt::format("Left server (recv: {})", bytes_recv), false);
         }
         for (int i = 0; i < bytes_recv; i++) {
+            //printf("char recv: %c\n", buffer[i]);
             m_buffer.push_back(buffer[i]);
         }
     }
-    if (m_state == Pending) {
-        // TODO: Check for Harry Potter
-        m_state = Connected;
-    }
-    else if (m_state == Connected) {
+    checkProtocolVersion();
+    if (m_state == Connected) {
         processMessages();
     }
+}
+
+void Client::processMessages() {
+    int delimi = std::find(m_buffer.begin(),
+                           m_buffer.end(), '\0') - m_buffer.begin();
+    //fmt::print("delimi: {}\n", delimi);
 }
 
 Client::State Client::getState() const { return m_state; }
@@ -96,11 +119,5 @@ void Client::disconnect(std::string reason, bool send) {
         m_logger.log("SDLNet_TCP_Send: {:s}", SDLNet_GetError());
         m_state = Disconnected;
     }
-}
-
-void Client::processMessages() {
-    int delimi = std::find(m_buffer.begin(),
-                           m_buffer.end(), '\0') - m_buffer.begin();
-    fmt::print("delimi: {}\n", delimi);
 }
 } // namespace server

@@ -36,13 +36,6 @@ public:
     /// The client's initial state will be set to PENDING.
     Client(TCPsocket socket);
 
-    /// @brief Add a message handler
-    ///
-    /// When a message of the given type is received all handlers for that
-    /// message type are called with the message 'entity' field as the Json
-    /// parameter.
-    void addHandler(std::string type, void (*handler)(Client *, json11::Json));
-
     /// @brief Enqueue a message to be sent to the client
     ///
     /// The message will be encoded as a JSON object with two fields: the
@@ -66,7 +59,9 @@ public:
     /// Therefore the caller is responsible for calling both
     /// SDLNet_CheckSockets and SDLNet_SocketReady
     /// on the socket set containing the client's socket.
-    void exec();
+    ///
+    /// Returns all the messages that were received by the client.
+    std::vector<json11::Json> exec();
 
     /// @brief Disconnect for `reason`
     ///
@@ -97,8 +92,6 @@ private:
     std::deque<char> m_buffer;
     TCPsocket m_socket;
     common::Logger m_logger;
-    std::map<std::string,
-             std::vector<void (*)(Client *, json11::Json)>> m_handlers;
     std::queue<json11::Json> m_send_queue;
 
     /// @brief Assert the client is using the correct protocol version
@@ -131,7 +124,10 @@ private:
     ///
     /// If the buffer contains incomplete or malformed JSON then no messages
     /// are processed. No handlers called. The buffer is not consumed.
-    void processMessages();
+    ///
+    /// All the parsed messages are returned in a vector. The vector may be
+    /// be empty.
+    std::vector<json11::Json> processMessages();
 
     /// @brief Encode and dend all enqueued messages to the client
     ///

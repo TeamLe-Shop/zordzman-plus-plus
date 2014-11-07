@@ -9,16 +9,6 @@ namespace server {
 
 using namespace json11;
 
-void hello_handler(Client *client, Json entity) {
-    if (entity.is_string()) {
-        fmt::print("Entity: {}\n", entity.string_value());
-    }
-}
-
-void echo_handler(Client *client, Json entity) {
-    client->send("echo", entity);
-}
-
 Client::Client(TCPsocket socket)
     : m_logger(stderr, [=] {
           IPaddress *address = SDLNet_TCP_GetPeerAddress(m_socket);
@@ -31,8 +21,6 @@ Client::Client(TCPsocket socket)
     m_socket = socket;
     m_state = Pending;
     m_logger.log("Client connected (state = Pending)");
-    addHandler("hello", hello_handler);
-    addHandler("echo", echo_handler);
 }
 
 void Client::checkProtocolVersion() {
@@ -60,9 +48,9 @@ void Client::checkProtocolVersion() {
     }
 }
 
-void Client::exec() {
+std::vector<Json> Client::exec() {
     if (m_state == Disconnected) {
-        return;
+        return std::vector<Json>();
     }
     char buffer[RECV_BUFFER_SIZE];
     memset(buffer, 0, RECV_BUFFER_SIZE);
@@ -81,14 +69,10 @@ void Client::exec() {
     }
     checkProtocolVersion();
     if (m_state == Connected) {
-        processMessages();
         flushSendQueue();
+        return processMessages();
     }
-}
-
-void Client::addHandler(std::string type,
-        void (*handler)(Client *, Json)) {
-    m_handlers[type].push_back(handler);
+    return std::vector<Json>();
 }
 
 void Client::send(std::string type, Json entity) {
@@ -117,16 +101,15 @@ void Client::flushSendQueue() {
     }
 }
 
-void Client::processMessages() {
+std::vector<Json> Client::processMessages() {
     if (m_buffer.empty()) {
-        return;
+        return std::vector<Json>();
     }
     std::string json_error;
     // Well this seems stupidly inefficient. Why can't m_buffer be a
     // std::string?
     std::string raw(m_buffer.begin(), m_buffer.end());
-    std::vector<json11::Json> messages =
-        json11::Json::parse_multi(raw, json_error);
+    std::vector<Json> messages = Json::parse_multi(raw, json_error);
     // Parsing will fail if the buffer contains a partial message, so the JSON
     // may be well formed but incomplete. This is not ideal. Ideally we should
     // be able to read all the complete messages and only leave the incomplete
@@ -134,22 +117,10 @@ void Client::processMessages() {
     if (json_error.size()) {
         m_logger.log(fmt::format("JSON decode failed: {}", json_error));
     } else {
-        for (auto &message : messages) {
-            // We can't use message.has_shape() here because we don't want to
-            // make assumptions about the type of the message entity
-            if (message.is_object()) {
-                json11::Json type = message["type"];
-                // If the 'type' field doesn't exist then is_string() is falsey
-                if (type.is_string()) {
-                    for (auto &handler : m_handlers[type.string_value()]) {
-                        handler(this, message["entity"]);
-                    }
-                }
-            }
-        }
         // Consume the buffer
         m_buffer.erase(m_buffer.begin(), m_buffer.end());
     }
+    return messages;
 }
 
 Client::State Client::getState() const { return m_state; }

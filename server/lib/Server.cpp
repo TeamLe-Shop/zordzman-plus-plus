@@ -107,6 +107,11 @@ void Server::acceptConnections() {
             SDLNet_TCP_Close(client_socket);
         } else {
             m_clients.emplace_back(client_socket);
+            Json map_hash_ent = Json::object {
+                {"name", m_map_name},
+                {"hash", m_map_hash},
+            };
+            m_clients.back().send("map-hash", map_hash_ent);
             SDLNet_TCP_AddSocket(m_socket_set, client_socket);
         }
     }

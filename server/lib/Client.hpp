@@ -85,8 +85,6 @@ public:
     /// @brief Return the socket the server uses to communicate with the client.
     TCPsocket getSocket();
 
-    bool sent_map_hash = false;
-
 private:
     State m_state;
     std::deque<char> m_buffer;

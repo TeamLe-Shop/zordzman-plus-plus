@@ -66,6 +66,12 @@ void Server::initSDL() {
     }
 }
 
+void Server::sendAll(std::string type, json11::Json entity) {
+    for (auto &client : m_clients) {
+        client.send(type, entity);
+    }
+}
+
 void Server::acceptConnections() {
     while (true) {
         // Returns immediately with NULL if no pending connections

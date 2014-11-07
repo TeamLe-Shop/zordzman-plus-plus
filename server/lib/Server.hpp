@@ -2,6 +2,7 @@
 
 #include "Client.hpp"
 #include "common/logger/Logger.hpp"
+#include "json11.hpp"
 
 #include <vector>
 #include <SDL_net.h>
@@ -18,6 +19,11 @@ public:
     void initSDL();
     ~Server();
     int exec();
+
+    /// @brief Broadcast a message to all clients
+    ///
+    /// See Client::send().
+    void sendAll(std::string type, json11::Json entity);
 
 private:
     /// @brief Accept all pending connections

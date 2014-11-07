@@ -2,6 +2,7 @@
 
 #include <deque>
 #include <map>
+#include <queue>
 #include <string>
 #include <vector>
 
@@ -41,6 +42,21 @@ public:
     /// message type are called with the message 'entity' field as the Json
     /// parameter.
     void addHandler(std::string type, void (*handler)(Client *, json11::Json));
+
+    /// @brief Enqueue a message to be sent to the client
+    ///
+    /// The message will be encoded as a JSON object with two fields: the
+    /// 'type' and 'entity' which will be set to given corresponding
+    /// parameters.
+    ///
+    /// Note that this doesn't send message immediately. Rather a buffer of
+    /// pending messages is sent with each call to exec(). Also note that
+    /// messages are only actually sent when the client is in the Connected
+    /// state, but messages can be enqueued whilst the client is in any state.
+    ///
+    /// The order in which messages are enqueued is guarateed to be the order
+    /// they arrive at the client in.
+    void send(std::string type, json11::Json entity);
 
     // TODO: Rewrite this completely fucking wrong doc string or whatever
     // you call it
@@ -83,6 +99,7 @@ private:
     common::Logger m_logger;
     std::map<std::string,
              std::vector<void (*)(Client *, json11::Json)>> m_handlers;
+    std::queue<json11::Json> m_send_queue;
 
     /// @brief Assert the client is using the correct protocol version
     ///
@@ -115,5 +132,13 @@ private:
     /// If the buffer contains incomplete or malformed JSON then no messages
     /// are processed. No handlers called. The buffer is not consumed.
     void processMessages();
+
+    /// @brief Encode and dend all enqueued messages to the client
+    ///
+    /// Each JSON message that has been enqueued by send() is encoded into JSON
+    /// and is sent to the client with a whitespace terminator.
+    ///
+    /// This consumes the send queue entirely.
+    void flushSendQueue();
 };
 } // namespace server

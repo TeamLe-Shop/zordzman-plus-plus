@@ -19,7 +19,9 @@ if __name__ == "__main__":
         sock.sendall(MAGIC)
         sock.sendall(encode_message("hello", "world"))
         sock.sendall(encode_message("hello", "bye"))
+        sock.sendall(encode_message("echo", "echo ... echo ... echo"))
         if input("close socket?"):
             pass
+        print("recv:", sock.recv(8192))
     finally:
         sock.close()

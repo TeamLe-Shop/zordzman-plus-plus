@@ -15,6 +15,10 @@ void hello_handler(Client *client, Json entity) {
     }
 }
 
+void echo_handler(Client *client, Json entity) {
+    client->send("echo", entity);
+}
+
 Client::Client(TCPsocket socket)
     : m_logger(stderr, [=] {
           IPaddress *address = SDLNet_TCP_GetPeerAddress(m_socket);
@@ -28,6 +32,7 @@ Client::Client(TCPsocket socket)
     m_state = Pending;
     m_logger.log("Client connected (state = Pending)");
     addHandler("hello", hello_handler);
+    addHandler("echo", echo_handler);
 }
 
 void Client::checkProtocolVersion() {
@@ -77,13 +82,39 @@ void Client::exec() {
     checkProtocolVersion();
     if (m_state == Connected) {
         processMessages();
+        flushSendQueue();
     }
 }
 
 void Client::addHandler(std::string type,
-        void (*handler)(Client *, json11::Json)) {
+        void (*handler)(Client *, Json)) {
     m_handlers[type].push_back(handler);
-    return;
+}
+
+void Client::send(std::string type, Json entity) {
+    Json message = Json::object {
+        {"type", type},
+        {"entity", entity},
+    };
+    m_send_queue.push(message);
+}
+
+void Client::flushSendQueue() {
+    while (!m_send_queue.empty()) {
+        json11::Json message = m_send_queue.front();
+        m_send_queue.pop();
+        std::string encoded_message = message.dump() + " ";
+        // Using cppformat or the logger with the encoded_message causes
+        // wierdness I don't understand
+        printf("Send: %s\n", encoded_message.c_str());
+        if (SDLNet_TCP_Send(
+                m_socket,
+                encoded_message.data(),
+                encoded_message.length()) < encoded_message.length()) {
+            disconnect(
+                fmt::format("Failed to send: {}", SDLNet_GetError()), false);
+        }
+    }
 }
 
 void Client::processMessages() {

@@ -2,8 +2,6 @@
 #include "format.h"
 #include "util.hpp"
 
-#include "json11.hpp"
-
 // Last octet can be the protocol version if we ever decide to care
 #define MAGIC_NUMBER "\xCA\xC3\x55\x01"
 
@@ -22,7 +20,7 @@ Client::Client(TCPsocket socket)
       }) {
     m_socket = socket;
     m_state = Pending;
-    m_logger.log("Client connected");
+    m_logger.log("Client connected (state = Pending)");
 }
 
 void Client::checkProtocolVersion() {
@@ -50,9 +48,9 @@ void Client::checkProtocolVersion() {
     }
 }
 
-void Client::exec() {
+std::vector<Json> Client::exec() {
     if (m_state == Disconnected) {
-        return;
+        return std::vector<Json>();
     }
     char buffer[RECV_BUFFER_SIZE];
     memset(buffer, 0, RECV_BUFFER_SIZE);
@@ -71,20 +69,47 @@ void Client::exec() {
     }
     checkProtocolVersion();
     if (m_state == Connected) {
-        processMessages();
+        flushSendQueue();
+        return processMessages();
+    }
+    return std::vector<Json>();
+}
+
+void Client::send(std::string type, Json entity) {
+    Json message = Json::object {
+        {"type", type},
+        {"entity", entity},
+    };
+    m_send_queue.push(message);
+}
+
+void Client::flushSendQueue() {
+    while (!m_send_queue.empty()) {
+        json11::Json message = m_send_queue.front();
+        m_send_queue.pop();
+        std::string encoded_message = message.dump() + " ";
+        // Using cppformat or the logger with the encoded_message causes
+        // wierdness I don't understand
+        printf("Send: %s\n", encoded_message.c_str());
+        if (SDLNet_TCP_Send(
+                m_socket,
+                encoded_message.data(),
+                encoded_message.length()) < encoded_message.length()) {
+            disconnect(
+                fmt::format("Failed to send: {}", SDLNet_GetError()), false);
+        }
     }
 }
 
-void Client::processMessages() {
+std::vector<Json> Client::processMessages() {
     if (m_buffer.empty()) {
-        return;
+        return std::vector<Json>();
     }
     std::string json_error;
     // Well this seems stupidly inefficient. Why can't m_buffer be a
     // std::string?
     std::string raw(m_buffer.begin(), m_buffer.end());
-    std::vector<json11::Json> messages =
-        json11::Json::parse_multi(raw, json_error);
+    std::vector<Json> messages = Json::parse_multi(raw, json_error);
     // Parsing will fail if the buffer contains a partial message, so the JSON
     // may be well formed but incomplete. This is not ideal. Ideally we should
     // be able to read all the complete messages and only leave the incomplete
@@ -92,20 +117,10 @@ void Client::processMessages() {
     if (json_error.size()) {
         m_logger.log(fmt::format("JSON decode failed: {}", json_error));
     } else {
-        for (auto &message : messages) {
-            // We can't use message.has_shape() here because we don't want to
-            // make assumptions about the type of the message entity
-            if (message.is_object()) {
-                json11::Json type = message["type"];
-                // If the 'type' field doesn't exist then is_string() is falsey
-                if (type.is_string()) {
-                    // Call handlers for the type
-                }
-            }
-        }
         // Consume the buffer
         m_buffer.erase(m_buffer.begin(), m_buffer.end());
     }
+    return messages;
 }
 
 Client::State Client::getState() const { return m_state; }

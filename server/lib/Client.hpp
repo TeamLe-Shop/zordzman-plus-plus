@@ -1,9 +1,15 @@
 #pragma once
 
-#include "common/logger/Logger.hpp"
-
 #include <deque>
+#include <map>
+#include <queue>
+#include <string>
+#include <vector>
+
 #include <SDL_net.h>
+#include "json11.hpp"
+
+#include "common/logger/Logger.hpp"
 
 #define RECV_BUFFER_SIZE 1024
 
@@ -30,6 +36,21 @@ public:
     /// The client's initial state will be set to PENDING.
     Client(TCPsocket socket);
 
+    /// @brief Enqueue a message to be sent to the client
+    ///
+    /// The message will be encoded as a JSON object with two fields: the
+    /// 'type' and 'entity' which will be set to given corresponding
+    /// parameters.
+    ///
+    /// Note that this doesn't send message immediately. Rather a buffer of
+    /// pending messages is sent with each call to exec(). Also note that
+    /// messages are only actually sent when the client is in the Connected
+    /// state, but messages can be enqueued whilst the client is in any state.
+    ///
+    /// The order in which messages are enqueued is guarateed to be the order
+    /// they arrive at the client in.
+    void send(std::string type, json11::Json entity);
+
     // TODO: Rewrite this completely fucking wrong doc string or whatever
     // you call it
     /// @brief Read bytes from the socket into the buffer
@@ -38,7 +59,9 @@ public:
     /// Therefore the caller is responsible for calling both
     /// SDLNet_CheckSockets and SDLNet_SocketReady
     /// on the socket set containing the client's socket.
-    void exec();
+    ///
+    /// Returns all the messages that were received by the client.
+    std::vector<json11::Json> exec();
 
     /// @brief Disconnect for `reason`
     ///
@@ -62,13 +85,12 @@ public:
     /// @brief Return the socket the server uses to communicate with the client.
     TCPsocket getSocket();
 
-    bool sent_map_hash = false;
-
 private:
     State m_state;
     std::deque<char> m_buffer;
     TCPsocket m_socket;
     common::Logger m_logger;
+    std::queue<json11::Json> m_send_queue;
 
     /// @brief Assert the client is using the correct protocol version
     ///
@@ -100,6 +122,17 @@ private:
     ///
     /// If the buffer contains incomplete or malformed JSON then no messages
     /// are processed. No handlers called. The buffer is not consumed.
-    void processMessages();
+    ///
+    /// All the parsed messages are returned in a vector. The vector may be
+    /// be empty.
+    std::vector<json11::Json> processMessages();
+
+    /// @brief Encode and dend all enqueued messages to the client
+    ///
+    /// Each JSON message that has been enqueued by send() is encoded into JSON
+    /// and is sent to the client with a whitespace terminator.
+    ///
+    /// This consumes the send queue entirely.
+    void flushSendQueue();
 };
 } // namespace server

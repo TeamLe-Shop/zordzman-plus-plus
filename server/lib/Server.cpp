@@ -19,6 +19,16 @@ namespace server {
 
 using namespace json11;
 
+void hello_handler(Server *server, Client *client, Json entity) {
+    if (entity.is_string()) {
+        fmt::print("Entity: {}\n", entity.string_value());
+    }
+}
+
+void echo_handler(Server *server, Client *client, Json entity) {
+    client->send("echo", entity);
+}
+
 Server::Server(IPaddress address, unsigned int max_clients,
                std::string map_name)
     : m_logger(stderr, [] { return "SERVER: "; }) {
@@ -38,6 +48,8 @@ Server::Server(IPaddress address, unsigned int max_clients,
     m_map_hash = map::map_hash(map_name);
 
     m_logger.log("Map hash: {}", m_map_hash);
+    addHandler("hello", hello_handler);
+    addHandler("echo", echo_handler);
 }
 
 Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }
@@ -66,6 +78,19 @@ void Server::initSDL() {
     }
 }
 
+void Server::sendAll(std::string type, Json entity) {
+    for (auto &client : m_clients) {
+        client.send(type, entity);
+    }
+}
+
+
+void Server::addHandler(std::string type,
+        void (*handler)(Server *, Client *, Json)) {
+    m_handlers[type].push_back(handler);
+}
+
+
 void Server::acceptConnections() {
     while (true) {
         // Returns immediately with NULL if no pending connections
@@ -82,6 +107,11 @@ void Server::acceptConnections() {
             SDLNet_TCP_Close(client_socket);
         } else {
             m_clients.emplace_back(client_socket);
+            Json map_hash_ent = Json::object {
+                {"name", m_map_name},
+                {"hash", m_map_hash},
+            };
+            m_clients.back().send("map-hash", map_hash_ent);
             SDLNet_TCP_AddSocket(m_socket_set, client_socket);
         }
     }
@@ -92,7 +122,20 @@ int Server::exec() {
         acceptConnections();
         SDLNet_CheckSockets(m_socket_set, 1);
         for (auto &client : m_clients) {
-            client.exec();
+            for (auto &message : client.exec()) {
+                // We can't use message.has_shape() here because we don't want
+                // to make assumptions about the type of the message entity
+                if (message.is_object()) {
+                    Json type = message["type"];
+                    // If the 'type' field doesn't exist then is_string()
+                    // is falsey
+                    if (type.is_string()) {
+                        for (auto &handler : m_handlers[type.string_value()]) {
+                            handler(this, &client, message["entity"]);
+                        }
+                    }
+                }
+            }
         }
         // Remove disconnected clients
         for (size_t i = 0; i < m_clients.size(); ++i) {

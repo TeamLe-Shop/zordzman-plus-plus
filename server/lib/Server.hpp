@@ -2,6 +2,7 @@
 
 #include "Client.hpp"
 #include "common/logger/Logger.hpp"
+#include "json11.hpp"
 
 #include <vector>
 #include <SDL_net.h>
@@ -18,6 +19,19 @@ public:
     void initSDL();
     ~Server();
     int exec();
+
+    /// @brief Broadcast a message to all clients
+    ///
+    /// See Client::send().
+    void sendAll(std::string type, json11::Json entity);
+
+    /// @brief Add a message handler
+    ///
+    /// When a message of the given type is received all handlers for that
+    /// message type are called with the message 'entity' field as the Json
+    /// parameter.
+    void addHandler(std::string type,
+                    void (*handler)(Server *, Client *, json11::Json));
 
 private:
     /// @brief Accept all pending connections
@@ -36,5 +50,8 @@ private:
     SDLNet_SocketSet m_socket_set;
     common::Logger m_logger;
     std::string m_map_name, m_map_hash;
+    std::map<
+        std::string,
+        std::vector<void (*)(Server *, Client *, json11::Json)>> m_handlers;
 };
 } // namespace server

@@ -12,9 +12,6 @@
 
 namespace cont = common::util::container;
 
-#define PROTOCOL_VERSION 0x00
-#define MAGIC_NUMBER 0xCAC35500 | PROTOCOL_VERSION
-
 namespace server {
 
 using namespace json11;

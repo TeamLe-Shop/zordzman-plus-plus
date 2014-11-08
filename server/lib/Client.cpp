@@ -5,6 +5,7 @@
 // Last octet can be the protocol version if we ever decide to care
 #define MAGIC_NUMBER "\xCA\xC3\x55\x01"
 
+
 namespace server {
 
 using namespace json11;
@@ -35,7 +36,7 @@ void Client::checkProtocolVersion() {
         return;
     } else {
         char magic[] = MAGIC_NUMBER;
-        for (int i = 0; i < strlen(MAGIC_NUMBER); i++) {
+        for (std::size_t i = 0; i < strlen(MAGIC_NUMBER); i++) {
             char front = m_buffer.front();
             m_buffer.pop_front();
             if (front != magic[i]) {
@@ -94,7 +95,7 @@ void Client::flushSendQueue() {
         if (SDLNet_TCP_Send(
                 m_socket,
                 encoded_message.data(),
-                encoded_message.length()) < encoded_message.length()) {
+                encoded_message.length()) < (int)encoded_message.length()) {
             disconnect(
                 fmt::format("Failed to send: {}", SDLNet_GetError()), false);
         }

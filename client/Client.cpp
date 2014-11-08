@@ -58,7 +58,7 @@ Client::~Client() { game_instance = nullptr; }
 
 void Client::joinServer() {
     m_socket.connectToHost(m_cfg.host, m_cfg.port);
-    m_socket.send(&net::MAGIC_NUMBER, 4); // Hand shake
+    m_socket.send(net::MAGIC_NUMBER); // Hand shake
 }
 
 void Client::exec() {

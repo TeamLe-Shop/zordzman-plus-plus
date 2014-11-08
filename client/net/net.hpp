@@ -4,9 +4,7 @@
 
 namespace client {
 namespace net {
-
-char PROTOCOL_VERSION = 0;
-Uint32 MAGIC_NUMBER = 0xCAC35500 | PROTOCOL_VERSION;
+std::string MAGIC_NUMBER = "\xCA\xC3\x55\x01";
 
 } // namespace net
 } // namespace client

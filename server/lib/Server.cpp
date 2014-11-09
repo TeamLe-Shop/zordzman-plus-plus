@@ -35,7 +35,7 @@ Server::Server(IPaddress address, unsigned int max_clients,
         exit(1);
     }
     m_logger.log("[INFO] Bound to interface {}", m_address);
-    addHandler("map_request",
+    addHandler("map.request",
                std::bind(&server::Server::handleMapRequest, this, _1, _2, _3));
 }
 
@@ -81,7 +81,7 @@ void Server::addHandler(std::string type,
 
 void Server::handleMapRequest(Server *server,
                               Client *client, json11::Json entity) {
-    client->send("map", m_map.asBase64());
+    client->send("map.contents", m_map.asBase64());
 }
 
 
@@ -101,7 +101,7 @@ void Server::acceptConnections() {
             SDLNet_TCP_Close(client_socket);
         } else {
             m_clients.emplace_back(client_socket);
-            m_clients.back().send("map_offer", m_map.md5.getHash());
+            m_clients.back().send("map.offer", m_map.md5.getHash());
             SDLNet_TCP_AddSocket(m_socket_set, client_socket);
         }
     }

@@ -23,20 +23,18 @@ Server::Server(IPaddress address, unsigned int max_clients,
     : m_logger(stderr, [] { return "SERVER: "; }) {
     m_address = address;
     m_max_clients = max_clients;
-    m_map_name = map_name;
     m_socket_set = SDLNet_AllocSocketSet(m_max_clients);
 
     initSDL();
+    m_map.loadLevel(map_name);
+    // Log this in the map loader maybe?
+    m_logger.log("Map hash: {}", m_map.md5.getHash());
 
     if (!(m_socket = SDLNet_TCP_Open(&address))) {
         m_logger.log("[ERR]  Failed to bind to interface {}", address);
         exit(1);
     }
     m_logger.log("[INFO] Bound to interface {}", m_address);
-
-    m_map_hash = map::map_hash(map_name);
-
-    m_logger.log("Map hash: {}", m_map_hash);
     addHandler("map_request",
                std::bind(&server::Server::handleMapRequest, this, _1, _2, _3));
 }
@@ -102,7 +100,7 @@ void Server::acceptConnections() {
             SDLNet_TCP_Close(client_socket);
         } else {
             m_clients.emplace_back(client_socket);
-            m_clients.back().send("map_offer", m_map_hash);
+            m_clients.back().send("map_offer", m_map.md5.getHash());
             SDLNet_TCP_AddSocket(m_socket_set, client_socket);
         }
     }

@@ -2,9 +2,11 @@
 
 #include <functional>
 
-#include "Client.hpp"
 #include "common/logger/Logger.hpp"
 #include "json11.hpp"
+
+#include "Client.hpp"
+#include "Map.hpp"
 
 #include <vector>
 #include <SDL_net.h>
@@ -59,7 +61,7 @@ private:
     std::vector<Client> m_clients;
     SDLNet_SocketSet m_socket_set;
     common::Logger m_logger;
-    std::string m_map_name, m_map_hash;
+    map::Level m_map;
     std::map<
         std::string,
         std::vector<std::function<void(Server *server,

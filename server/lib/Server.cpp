@@ -81,6 +81,7 @@ void Server::addHandler(std::string type,
 
 void Server::handleMapRequest(Server *server,
                               Client *client, json11::Json entity) {
+    client->send("map", m_map.asBase64());
 }
 
 

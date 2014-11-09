@@ -4,6 +4,7 @@
 #include <string>
 
 #include "common/extlib/hash-library/md5.h"
+#include "base64.hpp"
 
 namespace server {
 
@@ -15,13 +16,20 @@ class Level {
 public:
     /// @brief MD5 hash for the level.
     MD5 md5;
+
+    /// @brief Get the Base64-encoded raw level data
+    std::string asBase64();
+
     /// @brief Load a level.
     void loadLevel(std::string map);
 
 private:
-    byte m_width, m_height;
-    unsigned int m_spawn_x, m_spawn_y;
+    byte m_width;
+    byte m_height;
+    unsigned int m_spawn_x;
+    unsigned int m_spawn_y;
     std::vector<byte> m_tiles;
+    std::string m_base64;
 };
 
 } // namespace map

@@ -13,6 +13,7 @@ endif()
 
 include_directories(common/extlib/json11)
 include_directories(common/extlib/cppformat)
+include_directories(common/extlib/base64)
 
 add_library(cppformat common/extlib/cppformat/format.cc)
 
@@ -22,7 +23,8 @@ if(USING_GCC OR USING_CLANG OR GATSAN)
                       -Wmissing-declarations -Wnon-virtual-dtor)
   if(SANITIZE)
     add_compile_options(-fsanitize=${SANITIZE})
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=${SANITIZE}")
+    set(CMAKE_EXE_LINKER_FLAGS
+        "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=${SANITIZE}")
   endif()
 endif()
 
@@ -34,7 +36,8 @@ add_library(logger common/logger/Logger.hpp common/logger/Logger.cpp)
 file(GLOB_RECURSE COMMON_UTIL_SOURCES common/util/*.*pp)
 add_library(common_util ${COMMON_UTIL_SOURCES})
 add_library(zjson common/zjson/zjson.hpp common/zjson/zjson.cpp)
-add_library(base64 common/extlib/base64/base64.hpp common/extlib/base64/base64.cpp)
+add_library(base64
+            common/extlib/base64/base64.hpp common/extlib/base64/base64.cpp)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 
@@ -50,13 +53,13 @@ find_package(SDL2_mixer REQUIRED)
 include_directories(${SDLMIXER_INCLUDE_DIR})
 
 if(GATSAN)
-	set(SDLIMAGE_LIBRARY /Library/Frameworks/SDL2_image.framework)
-	set(SDLIMAGE_INCLUDE_DIR /Library/Frameworks/SDL2_image.framework/Headers)
-	set(SDLNET_LIBRARY /Library/Frameworks/SDL2_net.framework)
-	set(SDLNET_INCLUDE_DIR /Library/Frameworks/SDL2_net.framework/Headers)
-	set(SDLMIXER_LIBRARY /Library/Frameworks/SDL2_mixer.framework)
-	set(SDLMIXER_INCLUDE_DIR /Library/Frameworks/SDL2_mixer.framework/Headers)
-        add_compile_options(-stdlib=libc++)
+    set(SDLIMAGE_LIBRARY /Library/Frameworks/SDL2_image.framework)
+    set(SDLIMAGE_INCLUDE_DIR /Library/Frameworks/SDL2_image.framework/Headers)
+    set(SDLNET_LIBRARY /Library/Frameworks/SDL2_net.framework)
+    set(SDLNET_INCLUDE_DIR /Library/Frameworks/SDL2_net.framework/Headers)
+    set(SDLMIXER_LIBRARY /Library/Frameworks/SDL2_mixer.framework)
+    set(SDLMIXER_INCLUDE_DIR /Library/Frameworks/SDL2_mixer.framework/Headers)
+    add_compile_options(-stdlib=libc++)
 endif()
 
 include_directories(.)
@@ -69,11 +72,28 @@ file(GLOB_RECURSE SERVER_SOURCES server/*.*pp)
 add_executable(zordzman-server ${SERVER_SOURCES})
 
 target_link_libraries(zordzman
-    ${SDL2_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLNET_LIBRARY}
-    ${OPENGL_LIBRARY} ${SDLMIXER_LIBRARY} json11 cppformat server zjson hash-library
-    common_util)
+    ${SDL2_LIBRARY}
+    ${SDLIMAGE_LIBRARY}
+    ${SDLNET_LIBRARY}
+    ${OPENGL_LIBRARY}
+    ${SDLMIXER_LIBRARY}
+    json11
+    cppformat
+    server
+    zjson
+    hash-library
+    common_util
+)
 
 target_link_libraries(zordzman-server
-    ${SDL2_LIBRARY} ${SDLNET_LIBRARY} server json11 cppformat logger zjson
-    hash-library common_util
+    ${SDL2_LIBRARY}
+    ${SDLNET_LIBRARY}
+    server
+    json11
+    cppformat
+    logger
+    zjson
+    base64
+    hash-library
+    common_util
 )

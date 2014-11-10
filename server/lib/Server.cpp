@@ -14,39 +14,29 @@ namespace cont = common::util::container;
 
 namespace server {
 
+using namespace std::placeholders;
 using namespace json11;
 
-void hello_handler(Server *server, Client *client, Json entity) {
-    if (entity.is_string()) {
-        fmt::print("Entity: {}\n", entity.string_value());
-    }
-}
-
-void echo_handler(Server *server, Client *client, Json entity) {
-    client->send("echo", entity);
-}
 
 Server::Server(IPaddress address, unsigned int max_clients,
                std::string map_name)
     : m_logger(stderr, [] { return "SERVER: "; }) {
     m_address = address;
     m_max_clients = max_clients;
-    m_map_name = map_name;
     m_socket_set = SDLNet_AllocSocketSet(m_max_clients);
 
     initSDL();
+    m_map.loadLevel(map_name);
+    // Log this in the map loader maybe?
+    m_logger.log("Map hash: {}", m_map.md5.getHash());
 
     if (!(m_socket = SDLNet_TCP_Open(&address))) {
         m_logger.log("[ERR]  Failed to bind to interface {}", address);
         exit(1);
     }
     m_logger.log("[INFO] Bound to interface {}", m_address);
-
-    m_map_hash = map::map_hash(map_name);
-
-    m_logger.log("Map hash: {}", m_map_hash);
-    addHandler("hello", hello_handler);
-    addHandler("echo", echo_handler);
+    addHandler("map.request",
+               std::bind(&server::Server::handleMapRequest, this, _1, _2, _3));
 }
 
 Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }
@@ -83,8 +73,15 @@ void Server::sendAll(std::string type, Json entity) {
 
 
 void Server::addHandler(std::string type,
-        void (*handler)(Server *, Client *, Json)) {
+        std::function<void(Server *server,
+                           Client *client, json11::Json entity)> handler) {
     m_handlers[type].push_back(handler);
+}
+
+
+void Server::handleMapRequest(Server *server,
+                              Client *client, json11::Json entity) {
+    client->send("map.contents", m_map.asBase64());
 }
 
 
@@ -104,11 +101,7 @@ void Server::acceptConnections() {
             SDLNet_TCP_Close(client_socket);
         } else {
             m_clients.emplace_back(client_socket);
-            Json map_hash_ent = Json::object {
-                {"name", m_map_name},
-                {"hash", m_map_hash},
-            };
-            m_clients.back().send("map-hash", map_hash_ent);
+            m_clients.back().send("map.offer", m_map.md5.getHash());
             SDLNet_TCP_AddSocket(m_socket_set, client_socket);
         }
     }

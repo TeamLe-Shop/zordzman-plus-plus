@@ -3,6 +3,9 @@
 #include <vector>
 #include <string>
 
+#include "common/extlib/hash-library/md5.h"
+#include "base64.hpp"
+
 namespace server {
 
 namespace map {
@@ -12,18 +15,22 @@ typedef unsigned char byte;
 class Level {
 public:
     /// @brief MD5 hash for the level.
-    std::string hash;
+    MD5 md5;
+
+    /// @brief Get the Base64-encoded raw level data
+    std::string asBase64();
+
     /// @brief Load a level.
-    void load_level(std::string map);
+    void loadLevel(std::string map);
 
 private:
-    byte m_width, m_height;
-    unsigned int m_spawn_x, m_spawn_y;
+    byte m_width;
+    byte m_height;
+    unsigned int m_spawn_x;
+    unsigned int m_spawn_y;
     std::vector<byte> m_tiles;
+    std::string m_base64;
 };
-
-/// @brief Generate hash from a map
-std::string map_hash(std::string map_name);
 
 } // namespace map
 

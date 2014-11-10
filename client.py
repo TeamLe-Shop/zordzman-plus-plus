@@ -17,9 +17,8 @@ if __name__ == "__main__":
     try:
         sock.connect(("localhost", 4544))
         sock.sendall(MAGIC)
-        sock.sendall(encode_message("hello", "world"))
-        sock.sendall(encode_message("hello", "bye"))
-        sock.sendall(encode_message("echo", "echo ... echo ... echo"))
+        sock.sendall(encode_message("map.request",
+                                    "a9531495903a650967c81781c1694d05"))
         if input("close socket?"):
             pass
         print("recv:", sock.recv(8192))

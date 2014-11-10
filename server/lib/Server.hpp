@@ -1,8 +1,12 @@
 #pragma once
 
-#include "Client.hpp"
+#include <functional>
+
 #include "common/logger/Logger.hpp"
 #include "json11.hpp"
+
+#include "Client.hpp"
+#include "Map.hpp"
 
 #include <vector>
 #include <SDL_net.h>
@@ -11,6 +15,10 @@
 #define RECV_BUFFER_SIZE 1024
 
 namespace server {
+
+// pls help
+//typedef std::function<void(Server *server, Client *client, json11::Json entity)> MessageHandler;
+
 class Server {
 
 public:
@@ -30,8 +38,10 @@ public:
     /// When a message of the given type is received all handlers for that
     /// message type are called with the message 'entity' field as the Json
     /// parameter.
-    void addHandler(std::string type,
-                    void (*handler)(Server *, Client *, json11::Json));
+    void addHandler(
+        std::string type,
+        std::function<void(Server *server,
+                           Client *client, json11::Json entity)> handler);
 
 private:
     /// @brief Accept all pending connections
@@ -43,15 +53,19 @@ private:
     /// disconnected immediately.
     void acceptConnections();
 
+    void handleMapRequest(Server *server, Client *client, json11::Json entity);
+
     unsigned int m_max_clients;
     TCPsocket m_socket;
     IPaddress m_address;
     std::vector<Client> m_clients;
     SDLNet_SocketSet m_socket_set;
     common::Logger m_logger;
-    std::string m_map_name, m_map_hash;
+    map::Level m_map;
     std::map<
         std::string,
-        std::vector<void (*)(Server *, Client *, json11::Json)>> m_handlers;
+        std::vector<std::function<void(Server *server,
+                                       Client *client, json11::Json entity)>>
+        > m_handlers;
 };
 } // namespace server

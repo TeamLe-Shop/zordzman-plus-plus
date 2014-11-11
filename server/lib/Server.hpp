@@ -13,6 +13,7 @@
 #include <fstream>
 
 #define RECV_BUFFER_SIZE 1024
+#define UDP_PORT 4545
 
 namespace server {
 
@@ -55,8 +56,19 @@ private:
 
     void handleMapRequest(Server *server, Client *client, json11::Json entity);
 
+    /// @brief Handle `net.udp` message from clients
+    ///
+    /// net.udp is used by the client to specify the port number of its UDP
+    /// socket. The message entity should be a valid port number as an integer.
+    ///
+    /// The handler will attempt to reserve a socket channel for the client,
+    /// disconnecting if it fails to. If successful the client's m_channel is
+    /// set to the allocated channel.
+    void handleNetUDP(Server *server, Client *client, json11::Json entity);
+
     unsigned int m_max_clients;
     TCPsocket m_socket;
+    UDPsocket m_udp_socket;
     IPaddress m_address;
     std::vector<Client> m_clients;
     SDLNet_SocketSet m_socket_set;

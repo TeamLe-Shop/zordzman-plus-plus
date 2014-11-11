@@ -31,12 +31,18 @@ Server::Server(IPaddress address, unsigned int max_clients,
     m_logger.log("Map hash: {}", m_map.md5.getHash());
 
     if (!(m_socket = SDLNet_TCP_Open(&address))) {
-        m_logger.log("[ERR]  Failed to bind to interface {}", address);
+        m_logger.log("[ERR]  Failed to bind TCP to interface {}", address);
+        exit(1);
+    }
+    if (!(m_udp_socket = SDLNet_UDP_Open(UDP_PORT))) {
+        m_logger.log("[ERR]  Failed to bind UDP interface");
         exit(1);
     }
     m_logger.log("[INFO] Bound to interface {}", m_address);
     addHandler("map.request",
                std::bind(&server::Server::handleMapRequest, this, _1, _2, _3));
+    addHandler("net.udp",
+               std::bind(&server::Server::handleNetUDP, this, _1, _2, _3));
 }
 
 Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }
@@ -85,6 +91,27 @@ void Server::handleMapRequest(Server *server,
 }
 
 
+void Server::handleNetUDP(Server *server,
+                          Client *client, json11::Json entity) {
+    if (entity.is_number()) {
+        IPaddress *remote = SDLNet_TCP_GetPeerAddress(client->getSocket());
+        if (!remote) {
+            client->disconnect(SDLNet_GetError(), true);
+        } else {
+            remote->port = entity.int_value();
+            int channel = SDLNet_UDP_Bind(m_udp_socket, -1, remote);
+            if (channel == -1) {
+                client->disconnect(
+                    fmt::format("Unable to allocate channel: {}",
+                                SDLNet_GetError()), true);
+            } else {
+                client->m_channel = channel;
+            }
+        }
+    }
+}
+
+
 void Server::acceptConnections() {
     while (true) {
         // Returns immediately with NULL if no pending connections
@@ -102,6 +129,7 @@ void Server::acceptConnections() {
         } else {
             m_clients.emplace_back(client_socket);
             m_clients.back().send("map.offer", m_map.md5.getHash());
+            m_clients.back().send("net.udp", UDP_PORT);
             SDLNet_TCP_AddSocket(m_socket_set, client_socket);
         }
     }
@@ -133,6 +161,12 @@ int Server::exec() {
 
             if (client.getState() == Client::Disconnected) {
                 SDLNet_TCP_DelSocket(m_socket_set, client.getSocket());
+                if (client.m_channel != -1) {
+                    // We might get disconnected before we even get chance
+                    // to  assign a channel
+                    SDLNet_UDP_Unbind(m_udp_socket, client.m_channel);
+                    client.m_channel = -1;
+                }
                 m_clients.erase(m_clients.begin() + i);
             }
         }

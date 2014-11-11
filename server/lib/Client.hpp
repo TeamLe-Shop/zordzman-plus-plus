@@ -31,6 +31,10 @@ public:
         /// The socket is, or is in the process of disconnecting
         Disconnected,
     };
+
+    /// @brief UDP socket channel, -1 if no channel set yet
+    int m_channel;
+
     /// @brief Construct a new Client instance
     ///
     /// The client's initial state will be set to PENDING.

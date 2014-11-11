@@ -21,6 +21,7 @@ Client::Client(TCPsocket socket)
       }) {
     m_socket = socket;
     m_state = Pending;
+    m_channel = -1;
     m_logger.log("Client connected (state = Pending)");
 }
 

@@ -5,7 +5,6 @@
 // Last octet can be the protocol version if we ever decide to care
 #define MAGIC_NUMBER "\xCA\xC3\x55\x01"
 
-
 namespace server {
 
 using namespace json11;
@@ -57,8 +56,7 @@ std::vector<Json> Client::exec() {
     memset(buffer, 0, RECV_BUFFER_SIZE);
     auto orig_buffer_size = m_buffer.size();
     if (SDLNet_SocketReady(m_socket)) {
-        int bytes_recv = SDLNet_TCP_Recv(m_socket,
-                                         buffer,
+        int bytes_recv = SDLNet_TCP_Recv(m_socket, buffer,
                                          RECV_BUFFER_SIZE - m_buffer.size());
         m_logger.log(fmt::format("Bytes received: {}", bytes_recv));
         if (bytes_recv <= 0) {
@@ -84,9 +82,8 @@ std::vector<Json> Client::exec() {
 }
 
 void Client::send(std::string type, Json entity) {
-    Json message = Json::object {
-        {"type", type},
-        {"entity", entity},
+    Json message = Json::object{
+        { "type", type }, { "entity", entity },
     };
     m_send_queue.push(message);
 }

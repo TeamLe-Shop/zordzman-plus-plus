@@ -17,7 +17,8 @@
 namespace server {
 
 // pls help
-//typedef std::function<void(Server *server, Client *client, json11::Json entity)> MessageHandler;
+// typedef std::function<void(Server *server, Client *client, json11::Json
+// entity)> MessageHandler;
 
 class Server {
 
@@ -38,10 +39,9 @@ public:
     /// When a message of the given type is received all handlers for that
     /// message type are called with the message 'entity' field as the Json
     /// parameter.
-    void addHandler(
-        std::string type,
-        std::function<void(Server *server,
-                           Client *client, json11::Json entity)> handler);
+    void addHandler(std::string type,
+                    std::function<void(Server *server, Client *client,
+                                       json11::Json entity)> handler);
 
 private:
     /// @brief Accept all pending connections
@@ -62,10 +62,8 @@ private:
     SDLNet_SocketSet m_socket_set;
     common::Logger m_logger;
     map::Level m_map;
-    std::map<
-        std::string,
-        std::vector<std::function<void(Server *server,
-                                       Client *client, json11::Json entity)>>
-        > m_handlers;
+    std::map<std::string,
+             std::vector<std::function<void(Server *server, Client *client,
+                                            json11::Json entity)>>> m_handlers;
 };
 } // namespace server

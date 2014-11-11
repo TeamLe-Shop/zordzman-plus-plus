@@ -55,6 +55,7 @@ std::vector<Json> Client::exec() {
     }
     char buffer[RECV_BUFFER_SIZE];
     memset(buffer, 0, RECV_BUFFER_SIZE);
+    auto orig_buffer_size = m_buffer.size();
     if (SDLNet_SocketReady(m_socket)) {
         int bytes_recv = SDLNet_TCP_Recv(m_socket,
                                          buffer,
@@ -73,7 +74,11 @@ std::vector<Json> Client::exec() {
     checkProtocolVersion();
     if (m_state == Connected) {
         flushSendQueue();
-        return processMessages();
+        if (m_buffer.size() != orig_buffer_size) {
+            // If the buffer hasn't changed size then its not in a parsable
+            // state or its empty
+            return processMessages();
+        }
     }
     return std::vector<Json>();
 }

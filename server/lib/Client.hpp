@@ -65,9 +65,21 @@ public:
 
     /// @brief Disconnect for `reason`
     ///
+    /// This will set client's state to Disconnected and optionally send the
+    /// reason to the client. Sending the disconnect reason to the server
+    /// will result in the send queue being flushed. It's generally ill-advised
+    /// to do this before the client at least enters the Connected state.
+    ///
+    /// Regardless of whether or not the send queue is flushed a message will
+    /// be added to the queue with the type 'disconnect'. The message entity
+    /// will be set to the reason string.
+    ///
     /// @param reason Reason for disconnection
-    /// @param send Whether to inform the client of the reason of disconnection.
-    void disconnect(std::string reason, bool send);
+    /// @param flush Whether or not to flush the send buffer? If false then the
+    ///     disconnect reason will never reach the client.
+    void disconnect(std::string reason, bool flush);
+    void disconnect(std::string reason);
+    void disconnect();
 
     State getState() const;
 

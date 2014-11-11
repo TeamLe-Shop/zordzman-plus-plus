@@ -5,7 +5,6 @@
 // Last octet can be the protocol version if we ever decide to care
 #define MAGIC_NUMBER "\xCA\xC3\x55\x01"
 
-
 namespace server {
 
 using namespace json11;
@@ -56,13 +55,12 @@ std::vector<Json> Client::exec() {
     char buffer[RECV_BUFFER_SIZE];
     memset(buffer, 0, RECV_BUFFER_SIZE);
     if (SDLNet_SocketReady(m_socket)) {
-        int bytes_recv = SDLNet_TCP_Recv(m_socket,
-                                         buffer,
+        int bytes_recv = SDLNet_TCP_Recv(m_socket, buffer,
                                          RECV_BUFFER_SIZE - m_buffer.size());
         m_logger.log(fmt::format("Bytes received: {}", bytes_recv));
         if (bytes_recv <= 0) {
-            disconnect(
-                fmt::format("Left server (recv: {})", bytes_recv), false);
+            disconnect(fmt::format("Left server (recv: {})", bytes_recv),
+                       false);
         }
         for (int i = 0; i < bytes_recv; i++) {
             m_buffer.push_back(buffer[i]);
@@ -77,9 +75,8 @@ std::vector<Json> Client::exec() {
 }
 
 void Client::send(std::string type, Json entity) {
-    Json message = Json::object {
-        {"type", type},
-        {"entity", entity},
+    Json message = Json::object{
+        { "type", type }, { "entity", entity },
     };
     m_send_queue.push(message);
 }
@@ -92,12 +89,11 @@ void Client::flushSendQueue() {
         // Using cppformat or the logger with the encoded_message causes
         // wierdness I don't understand
         printf("Send: %s\n", encoded_message.c_str());
-        if (SDLNet_TCP_Send(
-                m_socket,
-                encoded_message.data(),
-                encoded_message.length()) < (int)encoded_message.length()) {
-            disconnect(
-                fmt::format("Failed to send: {}", SDLNet_GetError()), false);
+        if (SDLNet_TCP_Send(m_socket, encoded_message.data(),
+                            encoded_message.length()) <
+            (int)encoded_message.length()) {
+            disconnect(fmt::format("Failed to send: {}", SDLNet_GetError()),
+                       false);
         }
     }
 }

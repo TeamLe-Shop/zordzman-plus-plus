@@ -16,7 +16,7 @@ void Level::loadLevel(std::string map_name) {
     std::ifstream file(map_name, std::ios::in | std::ios::binary);
     std::vector<char> data = stream::readToEnd(file);
     md5.add(data.data(), data.size());
-    m_base64 = base64_encode((unsigned char*) data.data(), data.size());
+    m_base64 = base64_encode((unsigned char *)data.data(), data.size());
 
     // Width, height, spawn X and spawn Y are the first 4 bytes.
     m_width = data[0];
@@ -30,10 +30,7 @@ void Level::loadLevel(std::string map_name) {
               m_tiles.begin());
 }
 
-
-std::string Level::asBase64() {
-    return m_base64;
-}
+std::string Level::asBase64() { return m_base64; }
 
 } // namespace map
 

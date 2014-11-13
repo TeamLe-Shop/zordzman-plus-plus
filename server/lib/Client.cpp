@@ -5,7 +5,6 @@
 // Last octet can be the protocol version if we ever decide to care
 #define MAGIC_NUMBER "\xCA\xC3\x55\x01"
 
-
 namespace server {
 
 using namespace json11;
@@ -56,12 +55,14 @@ std::vector<Json> Client::exec() {
     }
     char buffer[RECV_BUFFER_SIZE];
     memset(buffer, 0, RECV_BUFFER_SIZE);
+    auto orig_buffer_size = m_buffer.size();
     if (SDLNet_SocketReady(m_socket)) {
-        int bytes_recv = SDLNet_TCP_Recv(m_socket,
-                                         buffer,
+        int bytes_recv = SDLNet_TCP_Recv(m_socket, buffer,
                                          RECV_BUFFER_SIZE - m_buffer.size());
         m_logger.log(fmt::format("Bytes received: {}", bytes_recv));
         if (bytes_recv <= 0) {
+            // Socket is likely closed so there's no reason to send the
+            // disconnect message
             disconnect(
                 fmt::format("Left server (recv: {})", bytes_recv), false);
         }
@@ -72,15 +73,18 @@ std::vector<Json> Client::exec() {
     checkProtocolVersion();
     if (m_state == Connected) {
         flushSendQueue();
-        return processMessages();
+        if (m_buffer.size() != orig_buffer_size) {
+            // If the buffer hasn't changed size then its not in a parsable
+            // state or its empty
+            return processMessages();
+        }
     }
     return std::vector<Json>();
 }
 
 void Client::send(std::string type, Json entity) {
-    Json message = Json::object {
-        {"type", type},
-        {"entity", entity},
+    Json message = Json::object{
+        { "type", type }, { "entity", entity },
     };
     m_send_queue.push(message);
 }
@@ -97,6 +101,8 @@ void Client::flushSendQueue() {
                 m_socket,
                 encoded_message.data(),
                 encoded_message.length()) < (int)encoded_message.length()) {
+            // We just failed a flush, don't try to flush again whilst
+            // disconnecting
             disconnect(
                 fmt::format("Failed to send: {}", SDLNet_GetError()), false);
         }
@@ -145,26 +151,20 @@ Client::~Client() { SDLNet_TCP_Close(m_socket); }
 
 TCPsocket Client::getSocket() { return m_socket; }
 
-void Client::disconnect(std::string reason, bool send) {
+void Client::disconnect(std::string reason, bool flush) {
+    send("disconnect", reason);
+    if (flush) {
+        flushSendQueue();
+    }
     m_state = Disconnected;
-    m_logger.log("Client disconnected ({})", reason);
+    m_logger.log("Client disconnected (state = Disconnected): {} ", reason);
+}
 
-    if (!send) {
-        return;
-    }
+void Client::disconnect(std::string reason) {
+    disconnect(reason, true);
+}
 
-    Json json =
-        Json::object{ { "type", "disconnect" },
-                      { "entity", Json::object{ { "reason", reason } } } };
-    std::string str = json.string_value();
-
-    int len = str.size();
-    int result = SDLNet_TCP_Send(m_socket, str.c_str(), len);
-
-    // Error sending.
-    if (result < len) {
-        m_logger.log("SDLNet_TCP_Send: {:s}", SDLNet_GetError());
-        m_state = Disconnected;
-    }
+void Client::disconnect() {
+    disconnect("You have been disconnected", true);
 }
 } // namespace server

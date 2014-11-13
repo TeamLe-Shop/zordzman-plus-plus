@@ -17,7 +17,6 @@ namespace server {
 using namespace std::placeholders;
 using namespace json11;
 
-
 Server::Server(IPaddress address, unsigned int max_clients,
                std::string map_name)
     : m_logger(stderr, [] { return "SERVER: "; }) {
@@ -77,19 +76,16 @@ void Server::sendAll(std::string type, Json entity) {
     }
 }
 
-
 void Server::addHandler(std::string type,
-        std::function<void(Server *server,
-                           Client *client, json11::Json entity)> handler) {
+                        std::function<void(Server *server, Client *client,
+                                           json11::Json entity)> handler) {
     m_handlers[type].push_back(handler);
 }
 
-
-void Server::handleMapRequest(Server *server,
-                              Client *client, json11::Json entity) {
+void Server::handleMapRequest(Server *server, Client *client,
+                              json11::Json entity) {
     client->send("map.contents", m_map.asBase64());
 }
-
 
 void Server::handleNetUDP(Server *server,
                           Client *client, json11::Json entity) {
@@ -110,7 +106,6 @@ void Server::handleNetUDP(Server *server,
         }
     }
 }
-
 
 void Server::acceptConnections() {
     while (true) {

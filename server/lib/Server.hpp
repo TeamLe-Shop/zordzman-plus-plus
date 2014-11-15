@@ -30,8 +30,6 @@ class Server {
 
 public:
     Server(IPaddress address, unsigned int max_clients, std::string map_name);
-    /// @brief Initialize SDL
-    void initSDL();
     ~Server();
     int exec();
 
@@ -77,7 +75,7 @@ private:
     /// @brief Internet socket address
     struct sockaddr_in m_address;
     UDPsocket m_udp_socket;
-    std::vector<Client> m_clients;
+    std::vector<FILE*> m_clients;
     SDLNet_SocketSet m_socket_set;
     common::Logger m_logger;
     map::Level m_map;

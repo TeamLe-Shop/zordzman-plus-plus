@@ -4,6 +4,7 @@
 #include "common/util/container.hpp"
 #include "common/extlib/hash-library/md5.h"
 #include "common/util/stream.hpp"
+#include "common/util/net.hpp"
 #include "Map.hpp"
 
 #include <format.h>
@@ -27,14 +28,14 @@ Server::Server(int port, unsigned int max_clients,
     m_logger.log("Map hash: {}", m_map.md5.getHash());
 
     if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
-        m_logger.log("[ERR]  Failed to create socket: {}",
-                     std::string(perror("socket")) );
+        m_logger.log("[ERR]  Failed to create socket");
+        perror("socket");
         exit(1);
     }
 
     memset(&m_address, 0, sizeof m_address);
 
-    m_address.sin_family = AF_INET;
+    m_address.sin_family = AF_INET6;
     m_address.sin_port   = port;
 
     if (INADDR_ANY) {
@@ -42,9 +43,9 @@ Server::Server(int port, unsigned int max_clients,
     }
 
     if (bind(m_socket, (struct sockaddr *)&m_address, sizeof m_address) < 0) {
-        m_logger.log("[ERR]  Failed to  bind TCP interface: {}",
-            std::string(perror("bind"));
-            exit(1);
+        m_logger.log("[ERR]  Failed to bind TCP interface");
+        perror("bind");
+        exit(1);
     }
 
     listen(m_socket, m_max_clients);
@@ -53,7 +54,8 @@ Server::Server(int port, unsigned int max_clients,
         m_logger.log("[ERR]  Failed to bind UDP interface");
         exit(1);
     }
-    m_logger.log("[INFO] Bound to interface {}", m_address);
+    m_logger.log("[INFO] Bound to interface {}",
+                 common::util::ipaddr(m_address));
     addHandler("map.request",
                std::bind(&server::Server::handleMapRequest, this, _1, _2, _3));
     addHandler("net.udp",
@@ -61,30 +63,6 @@ Server::Server(int port, unsigned int max_clients,
 }
 
 Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }
-
-void Server::initSDL() {
-    SDL_version compile_version;
-    const SDL_version *link_version = SDLNet_Linked_Version();
-    SDL_NET_VERSION(&compile_version);
-
-    m_logger.log("[INFO] Compiled with SDL_net version: {:d}.{:d}.{:d}",
-                 compile_version.major, compile_version.minor,
-                 compile_version.patch);
-    m_logger.log("[INFO] Running with SDL_net version: {:d}.{:d}.{:d}\n",
-                 link_version->major, link_version->minor, link_version->patch);
-    if (SDL_Init(0) == -1) {
-        m_logger.log("[ERR]  SDL_Init: {}", SDL_GetError());
-        m_logger.log("[ERR]  Failed to initialize SDL. Quitting "
-                     "zordzman-server...\n");
-        exit(1);
-    }
-    if (SDLNet_Init() == -1) {
-        m_logger.log("[ERR]  SDLNet_Init: {}\n", SDLNet_GetError());
-        m_logger.log("[ERR]  Failed to initialize SDLNet. Quitting"
-                     " zordzman-server...\n");
-        exit(1);
-    }
-}
 
 void Server::sendAll(std::string type, Json entity) {
     for (auto &client : m_clients) {
@@ -126,9 +104,9 @@ void Server::handleNetUDP(Server *server,
 void Server::acceptConnections() {
     while (true) {
         // Returns immediately with NULL if no pending connections
-        TCPsocket client_socket = SDLNet_TCP_Accept(m_socket);
+        int client_socket = accept(m_socket, m_address, );
 
-        if (!client_socket) {
+        if (client_socket < 0) {
             break;
         }
 
@@ -136,7 +114,7 @@ void Server::acceptConnections() {
             // Perhaps issue some kind of "server full" warning. But how would
             // this be done as the client would be in the PENDING state
             // intially?
-            SDLNet_TCP_Close(client_socket);
+            close(client_socket);
         } else {
             m_clients.emplace_back(client_socket);
             m_clients.back().send("map.offer", m_map.md5.getHash());

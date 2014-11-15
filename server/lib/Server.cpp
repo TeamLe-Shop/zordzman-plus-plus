@@ -8,7 +8,7 @@
 
 #include <format.h>
 #include <json11.hpp>
-#include <SDL_net.h>
+
 
 namespace cont = common::util::container;
 
@@ -17,22 +17,38 @@ namespace server {
 using namespace std::placeholders;
 using namespace json11;
 
-Server::Server(IPaddress address, unsigned int max_clients,
+Server::Server(int port, unsigned int max_clients,
                std::string map_name)
     : m_logger(stderr, [] { return "SERVER: "; }) {
-    m_address = address;
     m_max_clients = max_clients;
-    m_socket_set = SDLNet_AllocSocketSet(m_max_clients);
 
-    initSDL();
     m_map.loadLevel(map_name);
     // Log this in the map loader maybe?
     m_logger.log("Map hash: {}", m_map.md5.getHash());
 
-    if (!(m_socket = SDLNet_TCP_Open(&address))) {
-        m_logger.log("[ERR]  Failed to bind TCP to interface {}", address);
+    if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
+        m_logger.log("[ERR]  Failed to create socket: {}",
+                     std::string(perror("socket")) );
         exit(1);
     }
+
+    memset(&m_address, 0, sizeof m_address);
+
+    m_address.sin_family = AF_INET;
+    m_address.sin_port   = port;
+
+    if (INADDR_ANY) {
+        m_address.sin_addr.s_addr = htonl(INADDR_ANY);
+    }
+
+    if (bind(m_socket, (struct sockaddr *)&m_address, sizeof m_address) < 0) {
+        m_logger.log("[ERR]  Failed to  bind TCP interface: {}",
+            std::string(perror("bind"));
+            exit(1);
+    }
+
+    listen(m_socket, m_max_clients);
+
     if (!(m_udp_socket = SDLNet_UDP_Open(UDP_PORT))) {
         m_logger.log("[ERR]  Failed to bind UDP interface");
         exit(1);

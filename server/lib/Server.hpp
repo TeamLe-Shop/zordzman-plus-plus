@@ -12,6 +12,11 @@
 #include <SDL_net.h>
 #include <fstream>
 
+#include <sys/socket.h>
+#include <stdio.h>
+#include <string.h>
+#include <netinet/in.h>
+
 #define RECV_BUFFER_SIZE 1024
 #define UDP_PORT 4545
 
@@ -67,9 +72,11 @@ private:
     void handleNetUDP(Server *server, Client *client, json11::Json entity);
 
     unsigned int m_max_clients;
-    TCPsocket m_socket;
+    /// @brief Socket file descriptor
+    int m_socket;
+    /// @brief Internet socket address
+    struct sockaddr_in m_address;
     UDPsocket m_udp_socket;
-    IPaddress m_address;
     std::vector<Client> m_clients;
     SDLNet_SocketSet m_socket_set;
     common::Logger m_logger;

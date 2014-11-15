@@ -85,6 +85,7 @@ target_link_libraries(zordzman
     zjson
     hash-library
     common_util
+    common_net
 )
 
 target_link_libraries(zordzman-server

@@ -18,7 +18,11 @@ typedef int Socket;
 
 template <class ... Args> class MessageProcessor {
 
-using Handler = std::function<void(MessageEntity, Args ...)>;
+using Handler = std::function<void(
+    MessageProcessor<Args ...> *,
+    MessageEntity,
+    Args ...
+)>;
 
 public:
     MessageProcessor(Socket socket) {
@@ -38,7 +42,7 @@ public:
     void dispatch(Args ... args) {
         while (!m_ingress.empty()) {
             for (auto &handler : m_handlers[std::get<0>(m_ingress.front())]) {
-                handler(std::get<1>(m_ingress.front()), args ...);
+                handler(this, std::get<1>(m_ingress.front()), args ...);
             }
             m_ingress.pop();
         }

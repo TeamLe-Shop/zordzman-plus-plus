@@ -16,7 +16,7 @@ typedef std::string MessageType;
 typedef json11::Json MessageEntity;
 typedef int Socket;
 
-template <class T_handler> class MessageProcessor {
+template <class ... Args> class MessageProcessor {
 
 public:
     MessageProcessor(Socket socket) {
@@ -24,10 +24,34 @@ public:
         m_buffer.reserve(8192);
     }
 
-    void addHandler(MessageType type, T_handler handler) {
+    void addHandler(MessageType type,
+                    std::function<void(MessageEntity, Args ...)> handler) {
         m_handlers[type].push_back(handler);
     }
 
+    /// @brief Call all handlers for recieved messages
+    ///
+    /// This will call all the handlers for each message that has been received
+    /// by calls to `process`. The given `args` are passed through to the
+    /// handler calls.
+    void dispatch(Args ... args) {
+        while (!m_ingress.empty()) {
+            for (auto &handler : m_handlers[std::get<0>(m_ingress.front())]) {
+                handler(std::get<1>(m_ingress.front()), args ...);
+            }
+            m_ingress.pop();
+        }
+    }
+
+    /// @brief Receive and parse messages
+    ///
+    /// This will attempt to receive JSON-endoded messages from the associated
+    /// socket. Note that this method doesn't call the message handlers
+    /// immediately. Instead they are enqueued for deferred dispatching via
+    /// `dispatch`.
+    ///
+    /// The order the messages are recevied is the same order they'll be
+    /// dispatched.
     void proccess() {
         // TODO: Propagation of errors
         auto free_buffer = m_buffer.capacity() - m_buffer.size();
@@ -93,7 +117,8 @@ public:
 private:
     Socket m_socket;
     std::string m_buffer;
-    std::map<MessageType, std::vector<T_handler>> m_handlers;
+    std::map<MessageType,
+        std::vector<std::function<void(MessageEntity, Args ...)>>> m_handlers;
     std::queue<std::tuple<MessageType, MessageEntity>> m_ingress;
     std::queue<std::tuple<MessageType, MessageEntity>> m_egress;
 

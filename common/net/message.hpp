@@ -24,14 +24,47 @@ using Handler = std::function<void(
     Args ...
 )>;
 
+using MutedHandler = std::function<void(
+    MessageEntity,
+    Args ...
+)>;
+
 public:
     MessageProcessor(Socket socket) {
         m_socket = socket;
         m_buffer.reserve(8192);
     }
 
+    /// @brief Register a callback for a given message type
+    ///
+    /// The callback -- or rather, the *handler* -- should accept two implicit
+    /// initial arguments. The first is a pointer to the calling message
+    /// proccesor instance, and the second is the MessageEntity for the message
+    /// the handler is called for.
+    ///
+    /// When a message is received that has a type that matches the one the
+    /// handler is registered against, then the handler is called being passed
+    /// the message's entity as the second parameter.
+    ///
+    /// Multiple handlers can be registered for a single type. Each handler is
+    /// called once for each message received.
     void addHandler(MessageType type, Handler handler) {
         m_handlers[type].push_back(handler);
+    }
+
+    /// @brief Register a muted callback for a given message type
+    ///
+    /// Muted handlers are the same as other handlers except they don't
+    /// accept a pointer to the message processor as the first argument.
+    /// Because of this they are unable to send messages back, effectively
+    /// making them read-only or 'muted'.
+    ///
+    /// This mostly exists to save keystrokes.
+    void addHandler(MessageType type, MutedHandler handler) {
+        addHandler(type, [handler](MessageProcessor<Args ...> *processor,
+                MessageEntity entity, Args ... args){
+            return handler(entity, args ...);
+        });
     }
 
     /// @brief Call all handlers for recieved messages

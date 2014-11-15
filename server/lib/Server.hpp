@@ -12,9 +12,11 @@
 #include <SDL_net.h>
 #include <fstream>
 
-#include <sys/socket.h>
 #include <stdio.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <string.h>
+#include <unistd.h>
 #include <netinet/in.h>
 
 #define RECV_BUFFER_SIZE 1024
@@ -29,7 +31,7 @@ namespace server {
 class Server {
 
 public:
-    Server(IPaddress address, unsigned int max_clients, std::string map_name);
+    Server(int port, unsigned int max_clients, std::string map_name);
     ~Server();
     int exec();
 
@@ -75,7 +77,7 @@ private:
     /// @brief Internet socket address
     struct sockaddr_in m_address;
     UDPsocket m_udp_socket;
-    std::vector<FILE*> m_clients;
+    std::vector<Client> m_clients;
     SDLNet_SocketSet m_socket_set;
     common::Logger m_logger;
     map::Level m_map;

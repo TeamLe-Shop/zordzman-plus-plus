@@ -2,6 +2,8 @@
 #include "format.h"
 #include "util.hpp"
 
+#include "common/util/net.hpp"
+
 // Last octet can be the protocol version if we ever decide to care
 #define MAGIC_NUMBER "\xCA\xC3\x55\x01"
 
@@ -9,14 +11,9 @@ namespace server {
 
 using namespace json11;
 
-Client::Client(TCPsocket socket)
+Client::Client(struct sockaddr addr, FILE* socket)
     : m_logger(stderr, [=] {
-          IPaddress *address = SDLNet_TCP_GetPeerAddress(m_socket);
-          if (address) {
-              return fmt::format("{}: ", *address);
-          } else {
-              return std::string("[INVALID IP]: ");
-          }
+            return fmt::format("{}:", common::util::net::ipaddr(addr));
       }) {
     m_socket = socket;
     m_state = Pending;
@@ -149,7 +146,7 @@ Client &Client::operator=(Client &&other) {
 
 Client::~Client() { SDLNet_TCP_Close(m_socket); }
 
-TCPsocket Client::getSocket() { return m_socket; }
+FILE* Client::getSocket() { return m_socket; }
 
 void Client::disconnect(std::string reason, bool flush) {
     send("disconnect", reason);

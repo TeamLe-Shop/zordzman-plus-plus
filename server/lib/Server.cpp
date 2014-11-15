@@ -10,6 +10,12 @@
 #include <format.h>
 #include <json11.hpp>
 
+#include <stdio.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <string.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 namespace cont = common::util::container;
 
@@ -42,7 +48,8 @@ Server::Server(int port, unsigned int max_clients,
         m_address.sin_addr.s_addr = htonl(INADDR_ANY);
     }
 
-    if (bind(m_socket, (struct sockaddr *)&m_address, sizeof m_address) < 0) {
+    if (bind(m_socket, (const struct sockaddr *)&m_address,
+        sizeof m_address) < 0) {
         m_logger.log("[ERR]  Failed to bind TCP interface");
         perror("bind");
         exit(1);
@@ -55,7 +62,7 @@ Server::Server(int port, unsigned int max_clients,
         exit(1);
     }
     m_logger.log("[INFO] Bound to interface {}",
-                 common::util::ipaddr(m_address));
+                 common::util::net::ipaddr(m_address));
     addHandler("map.request",
                std::bind(&server::Server::handleMapRequest, this, _1, _2, _3));
     addHandler("net.udp",
@@ -102,24 +109,33 @@ void Server::handleNetUDP(Server *server,
 }
 
 void Server::acceptConnections() {
+    socklen_t b = sizeof(m_socket);
     while (true) {
         // Returns immediately with NULL if no pending connections
-        int client_socket = accept(m_socket, m_address, );
+        int client_socket = accept(m_socket,
+                                   (struct sockaddr *)&m_address, &b);
 
         if (client_socket < 0) {
+            m_logger.log("Failed to accept client connection");
+            perror("accept");
             break;
         }
+
+        struct sockaddr client_addr;
+        getsockname(client_socket, &client_addr, &b);
+
+        // Putting it into a FILE will let us call fprintf with ease.
+        FILE* client = fdopen(client_socket, "r+");
 
         if (m_clients.size() >= m_max_clients) {
             // Perhaps issue some kind of "server full" warning. But how would
             // this be done as the client would be in the PENDING state
             // intially?
-            close(client_socket);
+            fclose(client);
         } else {
-            m_clients.emplace_back(client_socket);
+            m_clients.emplace_back(client_addr, client);
             m_clients.back().send("map.offer", m_map.md5.getHash());
             m_clients.back().send("net.udp", UDP_PORT);
-            SDLNet_TCP_AddSocket(m_socket_set, client_socket);
         }
     }
 }

@@ -18,14 +18,15 @@ typedef int Socket;
 
 template <class ... Args> class MessageProcessor {
 
+using Handler = std::function<void(MessageEntity, Args ...)>;
+
 public:
     MessageProcessor(Socket socket) {
         m_socket = socket;
         m_buffer.reserve(8192);
     }
 
-    void addHandler(MessageType type,
-                    std::function<void(MessageEntity, Args ...)> handler) {
+    void addHandler(MessageType type, Handler handler) {
         m_handlers[type].push_back(handler);
     }
 
@@ -117,8 +118,7 @@ public:
 private:
     Socket m_socket;
     std::string m_buffer;
-    std::map<MessageType,
-        std::vector<std::function<void(MessageEntity, Args ...)>>> m_handlers;
+    std::map<MessageType, std::vector<Handler>> m_handlers;
     std::queue<std::tuple<MessageType, MessageEntity>> m_ingress;
     std::queue<std::tuple<MessageType, MessageEntity>> m_egress;
 

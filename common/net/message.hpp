@@ -13,7 +13,7 @@
 namespace net {
 
 typedef std::string MessageType;
-typedef std::string MessageEntity;
+typedef json11::Json MessageEntity;
 typedef int Socket;
 
 template <class T_handler> class MessageProcessor {

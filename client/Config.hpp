@@ -4,7 +4,7 @@
 
 namespace client {
 
-/// @brief The configuration structure that holds
+/// The configuration structure that holds
 ///  different config variables.
 struct Config {
     std::string host = "localhost";

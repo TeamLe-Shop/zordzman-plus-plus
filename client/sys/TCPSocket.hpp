@@ -8,34 +8,34 @@
 namespace client {
 namespace sys {
 
-/// @brief A TCPSocket object one can use to send and receive data.
+/// A TCPSocket object one can use to send and receive data.
 class TCPSocket {
 public:
-    /// @brief Connect to a host.
+    /// Connect to a host.
     ///
     /// @param host The host name of the server.
     /// @param portnum The port number.
     ///
     /// @return Whether or not connecting to the host was successful.
     bool connectToHost(std::string host, int portnum);
-    /// @brief Receive data from the host.
+    /// Receive data from the host.
     ///
     /// @return Received data.
     std::string read();
-    /// @brief Send a string to the host.
+    /// Send a string to the host.
     ///
     /// @param buf The string to send.
     ///
     /// @return If sending the data was successful.
     bool send(std::string buf);
-    /// @brief Send data to the host.
+    /// Send data to the host.
     ///
     /// @param The pointer to the data.
     /// @param The amount of bytes to send.
     ///
     /// @return If the sending was successful.
     bool send(const void * buf, int len);
-    /// @brief Send numeric data to the host
+    /// Send numeric data to the host
     ///
     /// @param data - The number to send
     ///
@@ -44,13 +44,13 @@ public:
     bool send(T const & data) {
         return send(&data, sizeof(T));
     }
-    /// @brief Close the socket.
+    /// Close the socket.
     void close();
-    /// @brief Close the socket when destroyed.
+    /// Close the socket when destroyed.
     ~TCPSocket();
-    /// @brief Get the IP of the server
+    /// Get the IP of the server
     IPaddress getServerAddress();
-    /// @brief Return IP address of server formatted
+    /// Return IP address of server formatted
     std::string getFormattedServerAddr();
 
 private:

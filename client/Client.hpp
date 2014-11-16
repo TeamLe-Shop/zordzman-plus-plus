@@ -17,22 +17,22 @@ using namespace json11;
 namespace client {
 class Client {
 public:
-    /// @brief Initialize the resources, player and level
+    /// Initialize the resources, player and level
     Client(Config const & cfg, HUD hud);
     ~Client();
-    /// @brief Game loop.
+    /// Game loop.
     void exec();
-    /// @brief Get the active game instance
+    /// Get the active game instance
     static Client & get();
-    /// @brief Get the window on which things are rendered.
+    /// Get the window on which things are rendered.
     sys::RenderWindow & getWindow();
-    /// @brief Join a game server.
+    /// Join a game server.
     void joinServer();
-    /// @brief Draw the HUD.
+    /// Draw the HUD.
     void drawHUD();
-    /// @brief Read data from m_socket
+    /// Read data from m_socket
     void readData();
-    /// @brief Check of the client has the map the server has
+    /// Check of the client has the map the server has
     void checkForMap(Json json);
 
 private:

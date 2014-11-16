@@ -7,10 +7,10 @@ namespace client {
 
 namespace weapon {
 
-/// @brief The base weapon for every weapon in the game
+/// The base weapon for every weapon in the game
 class BaseWeapon {
 public:
-    /// @brief Constructor for BaseWeapon.
+    /// Constructor for BaseWeapon.
     ///
     /// This should only be called in another weapon's constructor.
     ///
@@ -24,13 +24,13 @@ public:
     BaseWeapon(std::string name, int x_tile, int y_tile, WeaponSlot slot,
                WeaponType type);
 
-    /// @brief Get the name of this weapon
+    /// Get the name of this weapon
     std::string getName();
-    /// @brief Get the slot this weapon goes into.
+    /// Get the slot this weapon goes into.
     WeaponSlot getSlot();
-    /// @brief Get the type of weapon this is.
+    /// Get the type of weapon this is.
     WeaponType getType();
-    /// @brief Called when the player uses the item.
+    /// Called when the player uses the item.
     virtual void use();
     virtual ~BaseWeapon();
 

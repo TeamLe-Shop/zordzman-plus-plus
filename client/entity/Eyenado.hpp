@@ -13,7 +13,7 @@ public:
 
 private:
     void tick() override;
-    /// @brief Called when eyenado attempts to attack something.
+    /// Called when eyenado attempts to attack something.
     void attack();
     // Used for animation.
     int ticks = 0;

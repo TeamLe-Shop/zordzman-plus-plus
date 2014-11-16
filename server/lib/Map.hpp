@@ -14,13 +14,13 @@ typedef unsigned char byte;
 
 class Level {
 public:
-    /// @brief MD5 hash for the level.
+    /// MD5 hash for the level.
     MD5 md5;
 
-    /// @brief Get the Base64-encoded raw level data
+    /// Get the Base64-encoded raw level data
     std::string asBase64();
 
-    /// @brief Load a level.
+    /// Load a level.
     void loadLevel(std::string map);
 
 private:

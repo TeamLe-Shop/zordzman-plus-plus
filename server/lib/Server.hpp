@@ -25,8 +25,6 @@ class Server {
 
 public:
     Server(IPaddress address, unsigned int max_clients, std::string map_name);
-    /// @brief Initialize SDL
-    void initSDL();
     ~Server();
     int exec();
 
@@ -45,6 +43,7 @@ public:
                                        json11::Json entity)> handler);
 
 private:
+    void initSDL();
     /// @brief Accept all pending connections
     ///
     /// This accept(2)s all pending connections on the listening socket. These

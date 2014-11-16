@@ -16,7 +16,7 @@ In file {relpath} on line {lineno}:
 
 def path_to_dotted(path, prefix):
     split_path = [part.replace(".", "_")
-                  for part in path.relative_to(prefix.parent).parts]
+                  for part in ("zordzman",) + path.relative_to(prefix).parts]
     return ".".join(split_path[:-1]), split_path[-1]
 
 

@@ -7,6 +7,11 @@ import xml.etree.ElementTree as etree
 import xml.dom.minidom as minidom
 
 RE_WARN_LOGFILE = re.compile(r"WARN_LOGFILE\s*=\s*(.+)")
+DETAILS_TEMPLATE = """\
+In file {relpath} on line {lineno}:
+
+{message}
+"""
 
 
 def path_to_dotted(path, prefix):
@@ -19,10 +24,11 @@ def build_report(issues, path_prefix):
     tree = etree.ElementTree(etree.Element("testsuite", tests=str(len(issues))))
     test_suite = tree.getroot()
     for issue in issues:
+        issue["relpath"] = issue["path"].relative_to(path_prefix)
         class_, name = path_to_dotted(issue["path"], path_prefix)
         test_case = etree.Element("testcase", classname=class_, name=name)
         failure = etree.Element("failure", type=issue["type"])
-        failure.text = issue["message"]
+        failure.text = DETAILS_TEMPLATE.format(**issue)
         test_case.append(failure)
         test_suite.append(test_case)
     return tree

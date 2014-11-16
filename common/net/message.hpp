@@ -10,12 +10,82 @@
 
 #include "common/extlib/json11/json11.hpp"
 
+/// @brief Networking utilities common to both the server and client
 namespace net {
 
 typedef std::string MessageType;
 typedef json11::Json MessageEntity;
 typedef int Socket;
 
+/// @brief Handle sending and receiving JSON-encoded messages over a socket.
+///
+/// This class operators on a TCP socket to communicate whitespace-separated,
+/// JSON-encoded messages. Each 'message' is a JSON object with two fields.
+/// The `type` field is a string that identifies the type of the message and
+/// is used to map messages to callbacks.
+///
+/// Secondly, the `entity` field can be any JSON type. A string, a number or
+/// even a complex data structure comprised of multiple nested objects and
+/// arrays. Anything is valid in this field. However the structure of the
+/// `entity` field is implied by the value of the `type` field. As such, all
+/// messages of a given type should conform to a defined structure.
+///
+/// Note that this class provides no mechanism for validating message entities
+/// so message handlers must implement that themselves.
+///
+/// @code{.json}
+/// {"type": "example", "entity": ...}
+/// @endcode
+///
+/// As mentioned above, this class introduces a concept of callbacks/handlers.
+/// These are void-returning callable objects that are called in response to
+/// messages of certain types being received. Handlers must be registered on
+/// `MessageProcessor` instances via `MessageProcessor::addHandler`.
+///
+/// This class is generic and can deal with handlers with any signature by
+/// specifying the handler signature in the type declaration. For example:
+///
+/// @code
+/// net::MessageProcessor<int, std::string>
+/// @endcode
+///
+/// Handlers for the above message processor will accept an `int` and
+/// `std::string` argument. However, as well as this, there are two implicit
+/// leading arguments. The first is a pointer to the `MessageProcessor` that
+/// the handler is registered on and the second is the message entity field
+/// as a `json11::Json` (for which the `MessageEntity` typedef is provided
+/// for convenience). Therefore, a handler for the above message processor
+/// would look like:
+///
+/// @code
+/// typedef net::MessageProcessor<int, std::String> Processor;
+///
+/// void handler(Processor *processor,
+///              net::MessageEntity entity, int first, std::string second) {
+///       processor->send("echo", entity);
+///  }
+///
+/// Processor processor(...);
+/// processor.addHandler("example", handler);
+/// processor.dispatch(5, "foo");
+/// @endcode
+///
+/// The handlers can use the processor pointer in order to `send` responses.
+///
+/// There is a slight variation on handlers which are referred to as '*muted
+/// handlers*'. Muted handlers are the same as regular handlers except they
+/// don't accept the initial pointer to the processor instance, therefore they
+/// are unable to `send` responses. Continuing from the above example:
+///
+/// @code
+/// void muted_handler(net::MessageEntity entity,
+///                    int first, std::string second) {
+///     // Mmph mphna mprh.
+/// }
+///
+/// processor.addHandler("example", muted_handler);
+/// processor.dispatch(5, "foo");
+/// @endcode
 template <class ... Args> class MessageProcessor {
 
 using Handler = std::function<void(
@@ -30,6 +100,7 @@ using MutedHandler = std::function<void(
 )>;
 
 public:
+    /// @param socket A connected socket descriptor
     MessageProcessor(Socket socket) {
         m_socket = socket;
         m_buffer.reserve(8192);
@@ -127,7 +198,7 @@ public:
     /// @brief Encode and send all enqueued messages
     ///
     /// Each JSON message that has been enqueued by send() is encoded into JSON
-    /// and is sent over the associated socket with a null temriantor.
+    /// and is sent over the associated socket with a null terminator.
     ///
     /// This consumes the send queue entirely.
     void flushSendQueue() {

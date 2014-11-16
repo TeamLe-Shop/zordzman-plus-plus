@@ -63,8 +63,8 @@ std::vector<Json> Client::exec() {
         if (bytes_recv <= 0) {
             // Socket is likely closed so there's no reason to send the
             // disconnect message
-            disconnect(
-                fmt::format("Left server (recv: {})", bytes_recv), false);
+            disconnect(fmt::format("Left server (recv: {})", bytes_recv),
+                       false);
         }
         for (int i = 0; i < bytes_recv; i++) {
             m_buffer.push_back(buffer[i]);
@@ -97,14 +97,13 @@ void Client::flushSendQueue() {
         // Using cppformat or the logger with the encoded_message causes
         // wierdness I don't understand
         printf("Send: %s\n", encoded_message.c_str());
-        if (SDLNet_TCP_Send(
-                m_socket,
-                encoded_message.data(),
-                encoded_message.length()) < (int)encoded_message.length()) {
+        if (SDLNet_TCP_Send(m_socket, encoded_message.data(),
+                            encoded_message.length()) <
+            (int)encoded_message.length()) {
             // We just failed a flush, don't try to flush again whilst
             // disconnecting
-            disconnect(
-                fmt::format("Failed to send: {}", SDLNet_GetError()), false);
+            disconnect(fmt::format("Failed to send: {}", SDLNet_GetError()),
+                       false);
         }
     }
 }
@@ -160,11 +159,7 @@ void Client::disconnect(std::string reason, bool flush) {
     m_logger.log("Client disconnected (state = Disconnected): {} ", reason);
 }
 
-void Client::disconnect(std::string reason) {
-    disconnect(reason, true);
-}
+void Client::disconnect(std::string reason) { disconnect(reason, true); }
 
-void Client::disconnect() {
-    disconnect("You have been disconnected", true);
-}
+void Client::disconnect() { disconnect("You have been disconnected", true); }
 } // namespace server

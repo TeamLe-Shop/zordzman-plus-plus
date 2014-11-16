@@ -87,8 +87,7 @@ void Server::handleMapRequest(Server *server, Client *client,
     client->send("map.contents", m_map.asBase64());
 }
 
-void Server::handleNetUDP(Server *server,
-                          Client *client, json11::Json entity) {
+void Server::handleNetUDP(Server *server, Client *client, json11::Json entity) {
     if (entity.is_number()) {
         IPaddress *remote = SDLNet_TCP_GetPeerAddress(client->getSocket());
         if (!remote) {
@@ -97,9 +96,9 @@ void Server::handleNetUDP(Server *server,
             remote->port = entity.int_value();
             int channel = SDLNet_UDP_Bind(m_udp_socket, -1, remote);
             if (channel == -1) {
-                client->disconnect(
-                    fmt::format("Unable to allocate channel: {}",
-                                SDLNet_GetError()), true);
+                client->disconnect(fmt::format("Unable to allocate channel: {}",
+                                               SDLNet_GetError()),
+                                   true);
             } else {
                 client->m_channel = channel;
             }

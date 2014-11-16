@@ -13,6 +13,7 @@
 
 using namespace json11;
 
+/// The Zordzman client.
 namespace client {
 class Client {
 public:

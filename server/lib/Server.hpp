@@ -15,6 +15,7 @@
 #define RECV_BUFFER_SIZE 1024
 #define UDP_PORT 4545
 
+/// The Zordsman server
 namespace server {
 
 // pls help

@@ -10,7 +10,7 @@
 #include <format.h>
 #include <json11.hpp>
 
-#include <stdio.h>
+#include <cstdio>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <string.h>
@@ -52,7 +52,6 @@ Server::Server(int port, unsigned int max_clients,
         sizeof m_address) < 0) {
         m_logger.log("[ERR]  Failed to bind TCP interface");
         perror("bind");
-        exit(1);
     }
 
     listen(m_socket, m_max_clients);
@@ -143,7 +142,8 @@ void Server::acceptConnections() {
 int Server::exec() {
     while (true) {
         acceptConnections();
-        SDLNet_CheckSockets(m_socket_set, 1);
+        // What will I replace this with?
+        //SDLNet_CheckSockets(m_socket_set, 1);
         for (auto &client : m_clients) {
             for (auto &message : client.exec()) {
                 // We can't use message.has_shape() here because we don't want

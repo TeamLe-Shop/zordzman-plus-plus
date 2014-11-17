@@ -9,7 +9,6 @@
 #include "Map.hpp"
 
 #include <vector>
-#include <SDL_net.h>
 #include <fstream>
 
 #include <stdio.h>

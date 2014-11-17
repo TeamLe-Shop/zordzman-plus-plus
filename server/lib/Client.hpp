@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-#include <SDL_net.h>
 #include "json11.hpp"
 
 #include <stdio.h>

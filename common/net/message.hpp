@@ -10,14 +10,14 @@
 
 #include "common/extlib/json11/json11.hpp"
 
-/// @brief Networking utilities common to both the server and client
+/// Networking utilities common to both the server and client
 namespace net {
 
 typedef std::string MessageType;
 typedef json11::Json MessageEntity;
 typedef int Socket;
 
-/// @brief Handle sending and receiving JSON-encoded messages over a socket.
+/// Handle sending and receiving JSON-encoded messages over a socket.
 ///
 /// This class operators on a TCP socket to communicate whitespace-separated,
 /// JSON-encoded messages. Each 'message' is a JSON object with two fields.
@@ -106,7 +106,7 @@ public:
         m_buffer.reserve(8192);
     }
 
-    /// @brief Register a callback for a given message type
+    /// Register a callback for a given message type
     ///
     /// The callback -- or rather, the *handler* -- should accept two implicit
     /// initial arguments. The first is a pointer to the calling message
@@ -123,7 +123,7 @@ public:
         m_handlers[type].push_back(handler);
     }
 
-    /// @brief Register a muted callback for a given message type
+    /// Register a muted callback for a given message type
     ///
     /// Muted handlers are the same as other handlers except they don't
     /// accept a pointer to the message processor as the first argument.
@@ -138,7 +138,7 @@ public:
         });
     }
 
-    /// @brief Call all handlers for recieved messages
+    /// Call all handlers for recieved messages
     ///
     /// This will call all the handlers for each message that has been received
     /// by calls to `process`. The given `args` are passed through to the
@@ -152,7 +152,7 @@ public:
         }
     }
 
-    /// @brief Receive and parse messages
+    /// Receive and parse messages
     ///
     /// This will attempt to receive JSON-endoded messages from the associated
     /// socket. Note that this method doesn't call the message handlers
@@ -179,7 +179,7 @@ public:
         parseBuffer();
     }
 
-    /// @brief Enqueue a message to be sent
+    /// Enqueue a message to be sent
     ///
     /// The message will be encoded as a JSON object with two fields: the
     /// `type` and `entity` which will be set to given corresponding
@@ -195,7 +195,7 @@ public:
         m_egress.emplace(type, entity);
     }
 
-    /// @brief Encode and send all enqueued messages
+    /// Encode and send all enqueued messages
     ///
     /// Each JSON message that has been enqueued by send() is encoded into JSON
     /// and is sent over the associated socket with a null terminator.
@@ -230,7 +230,7 @@ private:
     std::queue<std::tuple<MessageType, MessageEntity>> m_ingress;
     std::queue<std::tuple<MessageType, MessageEntity>> m_egress;
 
-    /// @brief Attempt to parse all JSON-encoded messages from the buffer
+    /// Attempt to parse all JSON-encoded messages from the buffer
     ///
     /// This parses all whitespace-delimited JSON objects from the buffer and
     /// calls and adds them to the m_ingress message queue to be dispatched

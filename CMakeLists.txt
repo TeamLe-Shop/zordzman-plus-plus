@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.0)
 
 project(zordzman)
 
-option(GATSAN "You are gatsan" FALSE)
-
 # Detect compiler
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(USING_GCC TRUE)
@@ -54,7 +52,7 @@ include_directories(${SDLNET_INCLUDE_DIR})
 find_package(SDL2_mixer REQUIRED)
 include_directories(${SDLMIXER_INCLUDE_DIR})
 
-if(GATSAN)
+if(OSX)
     set(SDLIMAGE_LIBRARY /Library/Frameworks/SDL2_image.framework)
     set(SDLIMAGE_INCLUDE_DIR /Library/Frameworks/SDL2_image.framework/Headers)
     set(SDLNET_LIBRARY /Library/Frameworks/SDL2_net.framework)
@@ -62,6 +60,7 @@ if(GATSAN)
     set(SDLMIXER_LIBRARY /Library/Frameworks/SDL2_mixer.framework)
     set(SDLMIXER_INCLUDE_DIR /Library/Frameworks/SDL2_mixer.framework/Headers)
     add_compile_options(-stdlib=libc++)
+    add_compile_options(-std=c++11)
 endif()
 
 include_directories(.)

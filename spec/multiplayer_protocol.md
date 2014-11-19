@@ -23,7 +23,7 @@ The additional fields (if the message type has any) are either in entity:
 
 ```javascript
 "entity": {
-    "field1": "some_value"
+    "field1": "some_value",
     "field2": "nogirlsallowed"
 }
 ```

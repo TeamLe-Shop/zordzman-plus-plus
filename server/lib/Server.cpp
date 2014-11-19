@@ -11,11 +11,14 @@
 #include <json11.hpp>
 
 #include <cstdio>
+#include <cerrno>
+#include <string.h>
+#include <unistd.h>
+
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <string.h>
+
 #include <netinet/in.h>
-#include <unistd.h>
 
 namespace cont = common::util::container;
 
@@ -34,8 +37,7 @@ Server::Server(int port, unsigned int max_clients,
     m_logger.log("Map hash: {}", m_map.md5.getHash());
 
     if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
-        m_logger.log("[ERR]  Failed to create socket");
-        perror("socket");
+        m_logger.log("[ERR]  Failed to create socket: {}", strerror(errno));
         exit(1);
     }
 
@@ -50,8 +52,8 @@ Server::Server(int port, unsigned int max_clients,
 
     if (bind(m_socket, (const struct sockaddr *)&m_address,
         sizeof m_address) < 0) {
-        m_logger.log("[ERR]  Failed to bind TCP interface");
-        perror("bind");
+        m_logger.log("[ERR]  Failed to bind TCP interface: {}",
+                     strerror(errno));
     }
 
     listen(m_socket, m_max_clients);
@@ -115,8 +117,8 @@ void Server::acceptConnections() {
                                    (struct sockaddr *)&m_address, &b);
 
         if (client_socket < 0) {
-            m_logger.log("Failed to accept client connection");
-            perror("accept");
+            m_logger.log("Failed to accept client connection: {}",
+                         strerror(errno));
             break;
         }
 

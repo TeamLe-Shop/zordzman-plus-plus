@@ -56,7 +56,7 @@ Server::Server(int port, unsigned int max_clients,
                      strerror(errno));
     }
 
-    listen(m_socket, m_max_clients);
+    listen(m_socket, SOMAXCONN);
 
     if (!(m_udp_socket = SDLNet_UDP_Open(UDP_PORT))) {
         m_logger.log("[ERR]  Failed to bind UDP interface");
@@ -125,14 +125,11 @@ void Server::acceptConnections() {
         struct sockaddr client_addr;
         getsockname(client_socket, &client_addr, &b);
 
-        // Putting it into a FILE will let us call fprintf with ease.
-        FILE* client = fdopen(client_socket, "r+");
-
         if (m_clients.size() >= m_max_clients) {
             // Perhaps issue some kind of "server full" warning. But how would
             // this be done as the client would be in the PENDING state
             // intially?
-            fclose(client);
+            close(client);
         } else {
             m_clients.emplace_back(client_addr, client);
             m_clients.back().send("map.offer", m_map.md5.getHash());
@@ -144,8 +141,7 @@ void Server::acceptConnections() {
 int Server::exec() {
     while (true) {
         acceptConnections();
-        // What will I replace this with?
-        //SDLNet_CheckSockets(m_socket_set, 1);
+        // SDLNet_CheckSockets(m_socket_set, 1);
         for (auto &client : m_clients) {
             for (auto &message : client.exec()) {
                 // We can't use message.has_shape() here because we don't want
@@ -167,7 +163,7 @@ int Server::exec() {
             Client &client = m_clients[i];
 
             if (client.getState() == Client::Disconnected) {
-                SDLNet_TCP_DelSocket(m_socket_set, client.getSocket());
+                close(client.getSocket());
                 if (client.m_channel != -1) {
                     // We might get disconnected before we even get chance
                     // to  assign a channel

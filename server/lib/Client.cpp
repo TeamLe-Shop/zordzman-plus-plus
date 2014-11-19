@@ -11,7 +11,7 @@ namespace server {
 
 using namespace json11;
 
-Client::Client(struct sockaddr addr, FILE* socket)
+Client::Client(struct sockaddr addr, int socket)
     : m_logger(stderr, [=] {
             return fmt::format("{}:", common::util::net::ipaddr(addr));
       }) {
@@ -144,9 +144,9 @@ Client &Client::operator=(Client &&other) {
     return *this;
 }
 
-Client::~Client() { SDLNet_TCP_Close(m_socket); }
+Client::~Client() { close(m_socket); }
 
-FILE* Client::getSocket() { return m_socket; }
+int Client::getSocket() { return m_socket; }
 
 void Client::disconnect(std::string reason, bool flush) {
     send("disconnect", reason);

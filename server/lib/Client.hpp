@@ -45,7 +45,7 @@ public:
     /// @brief Construct a new Client instance
     ///
     /// The client's initial state will be set to PENDING.
-    Client(struct sockaddr addr, FILE* file);
+    Client(struct sockaddr addr, int file);
 
     /// @brief Enqueue a message to be sent to the client
     ///
@@ -106,12 +106,13 @@ public:
     ~Client();
 
     /// @brief Return the socket the server uses to communicate with the client.
-    FILE* getSocket();
+    int getSocket();
 
 private:
     State m_state;
     std::deque<char> m_buffer;
-    FILE* m_socket;
+    // Until it's merged with master can I just typedef this shit?
+    Socket m_socket;
     common::Logger m_logger;
     std::queue<json11::Json> m_send_queue;
 

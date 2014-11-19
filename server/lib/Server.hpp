@@ -23,6 +23,8 @@
 
 namespace server {
 
+typedef int Socket;
+
 // pls help
 // typedef std::function<void(Server *server, Client *client, json11::Json
 // entity)> MessageHandler;
@@ -71,13 +73,13 @@ private:
     void handleNetUDP(Server *server, Client *client, json11::Json entity);
 
     unsigned int m_max_clients;
-    /// @brief Socket file descriptor
-    int m_socket;
-    /// @brief Internet socket address
-    struct sockaddr_in m_address;
-    UDPsocket m_udp_socket;
+    /// @brief TCP Socket file descriptor
+    int m_tcp_socket;
+    /// @brief Internet socket address for the TCP socket
+    struct sockaddr_in m_tcp_address;
+    Socket m_udp_socket;
+    struct sockaddr_in m_udp_address;
     std::vector<Client> m_clients;
-    SDLNet_SocketSet m_socket_set;
     common::Logger m_logger;
     map::Level m_map;
     std::map<std::string,

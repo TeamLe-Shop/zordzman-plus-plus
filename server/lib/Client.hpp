@@ -22,6 +22,8 @@
 
 namespace server {
 
+typedef int Socket;
+
 /// @brief Represents a connected client
 ///
 /// When a message handler is called it is passed the client instance from which
@@ -112,7 +114,7 @@ private:
     State m_state;
     std::deque<char> m_buffer;
     // Until it's merged with master can I just typedef this shit?
-    Socket m_socket;
+    Socket m_tcp_socket;
     common::Logger m_logger;
     std::queue<json11::Json> m_send_queue;
 

@@ -14,6 +14,7 @@
 #include <cerrno>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -36,7 +37,7 @@ Server::Server(int port, unsigned int max_clients,
     // Log this in the map loader maybe?
     m_logger.log("Map hash: {}", m_map.md5.getHash());
 
-    if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
+    if ((m_tcp_socket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
         m_logger.log("[ERR]  Failed to create socket: {}", strerror(errno));
         exit(1);
     }
@@ -50,16 +51,17 @@ Server::Server(int port, unsigned int max_clients,
         m_address.sin_addr.s_addr = htonl(INADDR_ANY);
     }
 
-    if (bind(m_socket, (const struct sockaddr *)&m_address,
+    if (bind(m_tcp_socket, (const struct sockaddr *)&m_address,
         sizeof m_address) < 0) {
         m_logger.log("[ERR]  Failed to bind TCP interface: {}",
                      strerror(errno));
     }
 
-    listen(m_socket, SOMAXCONN);
+    listen(m_tcp_socket, SOMAXCONN);
 
-    if (!(m_udp_socket = SDLNet_UDP_Open(UDP_PORT))) {
-        m_logger.log("[ERR]  Failed to bind UDP interface");
+    if (!(m_udp_socket = socket(AF_INET, SOCK_DGRAM, 0) )) {
+        m_logger.log("[ERR]  Failed to bind UDP interface: {}",
+                     strerror(errno));
         exit(1);
     }
     m_logger.log("[INFO] Bound to interface {}",
@@ -110,10 +112,10 @@ void Server::handleNetUDP(Server *server,
 }
 
 void Server::acceptConnections() {
-    socklen_t b = sizeof(m_socket);
+    socklen_t b = sizeof(m_tcp_socket);
     while (true) {
         // Returns immediately with NULL if no pending connections
-        int client_socket = accept(m_socket,
+        int client_socket = accept(m_tcp_socket,
                                    (struct sockaddr *)&m_address, &b);
 
         if (client_socket < 0) {
@@ -131,7 +133,7 @@ void Server::acceptConnections() {
             // intially?
             close(client);
         } else {
-            m_clients.emplace_back(client_addr, client);
+            m_clients.emplace_back(client_addr, client_socket);
             m_clients.back().send("map.offer", m_map.md5.getHash());
             m_clients.back().send("net.udp", UDP_PORT);
         }
@@ -141,7 +143,7 @@ void Server::acceptConnections() {
 int Server::exec() {
     while (true) {
         acceptConnections();
-        // SDLNet_CheckSockets(m_socket_set, 1);
+        // SDLNet_CheckSockets(m_tcp_socket_set, 1);
         for (auto &client : m_clients) {
             for (auto &message : client.exec()) {
                 // We can't use message.has_shape() here because we don't want

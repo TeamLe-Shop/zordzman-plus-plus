@@ -12,16 +12,27 @@ Everything (apart from the handshake) sent over TCP will be in JSON. An example:
 ```javascript
 {
     "type": "map-hash",
-    "entity": {
-        "hash": "a9531495903a650967c81781c1694d05"
-    }
+    "entity": "a9531495903a650967c81781c1694d05"
 }
 ```
 
 Each JSON message will have a "type" field that specifies the type of message.
 The above example shows a "map-hash" message, for when the server asks the client
 if it has a certain map.
-The additional fields specific to that message is inside "entity".
+The additional fields (if the message type has any) are either in entity:
+
+```javascript
+"entity": {
+    "field1": "some_value"
+    "field2": "nogirlsallowed"
+}
+```
+
+or if there is only one additional field, it's value is in entity:
+
+```javascript
+"entity": "octo-cat"
+```
 
 After the handshake, the server sends over a hash of the current map to the client,
 who then checks if they have the map or not by running through their directory of maps

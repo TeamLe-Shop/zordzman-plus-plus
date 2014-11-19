@@ -34,6 +34,10 @@ or if there is only one additional field, it's value is in entity:
 "entity": "octo-cat"
 ```
 
+Using `MessageProcessor` (found in `common/net`) and json11 (`common/extlib/json11`)
+you can either call `send("some-type", "some-value")` or
+`send("some-type", json11::Json::object { { "field", "value" }, ... })`
+
 After the handshake, the server sends over a hash of the current map to the client,
 who then checks if they have the map or not by running through their directory of maps
 and seeing if any of their filenames match the hash.

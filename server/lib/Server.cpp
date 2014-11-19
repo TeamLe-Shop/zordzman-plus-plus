@@ -122,8 +122,8 @@ void Server::acceptConnections() {
             break;
         }
 
-        struct sockaddr client_addr;
-        getsockname(client_socket, &client_addr, &b);
+        // Set client_socket to non block, woohoo!
+        fcntl(client_socket, F_SETFL, O_NONBLOCK);
 
         if (m_clients.size() >= m_max_clients) {
             // Perhaps issue some kind of "server full" warning. But how would

@@ -105,9 +105,13 @@ void Server::acceptConnections() {
                                    (struct sockaddr *)&m_tcp_address, &b);
 
         if (client_socket < 0) {
-            m_logger.log("Failed to accept client connection: {}",
+            if (errno != EAGAIN && errno != EWOULDBLOCK) {
+                m_logger.log("Failed to accept client connection: {}",
                          strerror(errno));
-            break;
+                break;
+            } else {
+                break;
+            }
         }
 
         struct sockaddr peer_address;

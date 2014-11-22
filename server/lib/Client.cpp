@@ -13,7 +13,7 @@ using namespace json11;
 
 Client::Client(struct sockaddr_in addr, int socket)
     : m_logger(stderr, [=] {
-            return fmt::format("{}:",
+            return fmt::format("{}: ",
                    common::util::net::ipaddr(addr));
       }) {
     m_tcp_socket = socket;
@@ -56,12 +56,15 @@ std::vector<Json> Client::exec() {
     auto orig_buffer_size = m_buffer.size();
     int bytes_recv =
         read(m_tcp_socket, buffer, RECV_BUFFER_SIZE - m_buffer.size());
-    m_logger.log(fmt::format("Bytes received: {}", bytes_recv));
     if (bytes_recv <= 0) {
-        // Socket is likely closed so there's no reason to send the
-        // disconnect message
-        disconnect(
-            fmt::format("Left server (recv: {})", bytes_recv), false);
+        if (errno != EAGAIN && errno != EWOULDBLOCK) {
+            // Socket is likely closed so there's no reason to send the
+            // disconnect message
+            disconnect(
+                fmt::format("Left server (recv: {})", bytes_recv), false);
+        } else {
+            return std::vector<Json>();
+        }
     }
     for (int i = 0; i < bytes_recv; i++) {
         m_buffer.push_back(buffer[i]);

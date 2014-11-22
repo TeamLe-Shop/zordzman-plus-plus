@@ -24,5 +24,5 @@ Channel: `#munchtoss`
 You must always use `<SDL_opengl.h>` instead of `<GL/gl.h>`, as the latter is
 not (always?) present on OS X.
 
-### C++11 features that can't be used because gatsan's old compiler ###
+### C++11 features that can't be used because ~~gatsan's old compiler~~ support for clang 3.2 ###
 - Inheriting constructors

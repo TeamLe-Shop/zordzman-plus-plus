@@ -45,7 +45,7 @@ Server::Server(int port, unsigned int max_clients,
     memset(&m_tcp_address, 0, sizeof m_tcp_address);
 
     m_tcp_address.sin_family = AF_INET;
-    m_tcp_address.sin_port   = port;
+    m_tcp_address.sin_port   = htons(port);
 
     if (INADDR_ANY) {
         m_tcp_address.sin_addr.s_addr = htonl(INADDR_ANY);

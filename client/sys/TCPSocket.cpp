@@ -2,15 +2,14 @@
 
 #include <format.h>
 #include <cerrno>
+#include <netdb.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #include <sys/socket.h>
 #include <sys/types.h>
 
 #include <netinet/in.h>
-
-#include <unistd.h>
-
-#include <fcntl.h>
 
 namespace client {
 namespace sys {
@@ -19,6 +18,18 @@ using fmt::print;
 bool TCPSocket::connectToHost(std::string host, int portnum) {
     if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
         print(stderr, "[ERROR] Could not open socket: {}\n", strerror(errno));
+        return false;
+    }
+
+    memset(&m_address, 0, sizeof m_address);
+    m_address.sin_port = htons(portnum);
+
+    struct addrinfo *result;
+    int error;
+
+    if ((error = getaddrinfo(host.c_str(), NULL, NULL, &result))) {
+        print(stderr, "[ERROR] Could not resolve domain name: {}\n",
+              gai_strerror(error));
         return false;
     }
 

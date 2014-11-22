@@ -11,9 +11,10 @@ namespace server {
 
 using namespace json11;
 
-Client::Client(struct sockaddr addr, int socket)
+Client::Client(struct sockaddr_in addr, int socket)
     : m_logger(stderr, [=] {
-            return fmt::format("{}:", common::util::net::ipaddr(addr));
+            return fmt::format("{}:",
+                   common::util::net::ipaddr(addr));
       }) {
     m_tcp_socket = socket;
     m_state = Pending;
@@ -53,7 +54,8 @@ std::vector<Json> Client::exec() {
     char buffer[RECV_BUFFER_SIZE];
     memset(buffer, 0, RECV_BUFFER_SIZE);
     auto orig_buffer_size = m_buffer.size();
-    bytes_recv = read(m_tcp_socket, buffer, RECV_BUFFER_SIZE - m_buffer.size());
+    int bytes_recv =
+        read(m_tcp_socket, buffer, RECV_BUFFER_SIZE - m_buffer.size());
     m_logger.log(fmt::format("Bytes received: {}", bytes_recv));
     if (bytes_recv <= 0) {
         // Socket is likely closed so there's no reason to send the
@@ -91,13 +93,13 @@ void Client::flushSendQueue() {
         // Using cppformat or the logger with the encoded_message causes
         // wierdness I don't understand
         printf("Send: %s\n", encoded_message.c_str());
-        if (send(m_tcp_socket,
+        if (::send(m_tcp_socket,
                  encoded_message.data(),
                  encoded_message.length(), 0) < (int)encoded_message.length()) {
             // We just failed a flush, don't try to flush again whilst
             // disconnecting
             disconnect(
-                fmt::format("Failed to send: {}", SDLNet_GetError()), false);
+                fmt::format("Failed to send: {}", strerror(errno)), false);
         }
     }
 }
@@ -129,20 +131,18 @@ Client::State Client::getState() const { return m_state; }
 Client::Client(Client &&other)
     : m_state(other.m_state), m_buffer(std::move(other.m_buffer)),
       m_tcp_socket(other.m_tcp_socket) {
-    other.m_tcp_socket = nullptr;
+    other.m_tcp_socket = -1;
 }
 
 Client &Client::operator=(Client &&other) {
     m_state = other.m_state;
     m_buffer = std::move(other.m_buffer);
     m_tcp_socket = other.m_tcp_socket;
-    other.m_tcp_socket = nullptr;
+    other.m_tcp_socket = -1;
     return *this;
 }
 
 Client::~Client() { close(m_tcp_socket); }
-
-int Client::getSocket() { return m_tcp_socket; }
 
 void Client::disconnect(std::string reason, bool flush) {
     send("disconnect", reason);

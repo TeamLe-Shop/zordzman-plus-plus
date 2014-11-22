@@ -1,6 +1,4 @@
-#pragma once
-
-#include <SDL_net.h>
+#pragma oncez
 
 namespace client {
 namespace net {

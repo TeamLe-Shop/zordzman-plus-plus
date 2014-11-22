@@ -42,6 +42,8 @@ Server::Server(int port, unsigned int max_clients,
         exit(1);
     }
 
+    fcntl(m_tcp_socket, F_SETFL, O_NONBLOCK);
+
     memset(&m_tcp_address, 0, sizeof m_tcp_address);
 
     m_tcp_address.sin_family = AF_INET;

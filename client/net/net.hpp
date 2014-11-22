@@ -1,4 +1,4 @@
-#pragma oncez
+#pragma once
 
 namespace client {
 namespace net {

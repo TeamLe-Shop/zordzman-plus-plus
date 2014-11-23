@@ -55,9 +55,9 @@ std::vector<Json> Client::exec() {
     memset(buffer, 0, RECV_BUFFER_SIZE);
     auto orig_buffer_size = m_buffer.size();
     int bytes_recv =
-        read(m_tcp_socket, buffer, RECV_BUFFER_SIZE - m_buffer.size());
+        recv(m_tcp_socket, buffer, RECV_BUFFER_SIZE - m_buffer.size(), 0);
     if (bytes_recv <= 0) {
-        if (errno != EAGAIN && errno != EWOULDBLOCK) {
+        if (bytes_recv == 0) {
             // Socket is likely closed so there's no reason to send the
             // disconnect message
             disconnect(

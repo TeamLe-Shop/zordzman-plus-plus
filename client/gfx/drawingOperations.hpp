@@ -3,12 +3,12 @@
 #include "sys/Texture.hpp"
 
 namespace client {
-/// @brief Various drawing operations
+/// Various drawing operations
 namespace drawingOperations {
 
 enum class SpriteFlip { None, Horizontal, Vertical };
 
-/// @brief Draw a sprite from a Texture
+/// Draw a sprite from a Texture
 ///
 /// @param texture The texture to use
 /// @param xOff The x offset of the sprite in the texture
@@ -24,7 +24,7 @@ void drawSpriteFromTexture(sys::Texture const & texture, int xOff, int yOff,
                            float x, float y, float w, float h, float spriteSize,
                            SpriteFlip flip = SpriteFlip::None);
 
-/// @brief Draw a rectangle
+/// Draw a rectangle
 ///
 /// @param x X position to draw the rectangle at
 /// @param y Y position to draw the rectangle at
@@ -33,7 +33,7 @@ void drawSpriteFromTexture(sys::Texture const & texture, int xOff, int yOff,
 /// @param filled Whether to draw a filled rectangle or a rectangle outline
 void drawRectangle(float x, float y, float w, float h, bool filled = true);
 
-/// @brief Draw a line between two endpoints
+/// Draw a line between two endpoints
 ///
 /// @param x1 Horizontal component of endpoint 1
 /// @param y1 Vertical component of endpoint1
@@ -42,10 +42,10 @@ void drawRectangle(float x, float y, float w, float h, bool filled = true);
 
 void drawLine(float x1, float y1, float x2, float y2);
 
-/// @brief Draw text
+/// Draw text
 void drawText(std::string const & text, int x, int y, int w, int h);
 
-/// @brief Set the current color.
+/// Set the current color.
 ///
 /// @param r Red value.
 /// @param g Green value.
@@ -53,7 +53,7 @@ void drawText(std::string const & text, int x, int y, int w, int h);
 /// @param a Alpha value.
 void setColor(int r, int g, int b, int a);
 
-/// @brief Set the current color.
+/// Set the current color.
 ///
 /// @param col The color.
 ///            The first byte represents red, second green, third blue and last

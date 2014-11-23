@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "json11.hpp"
+#include "common/net/message.hpp"
 
 #include <stdio.h>
 #include <sys/socket.h>
@@ -20,11 +21,11 @@
 
 #define RECV_BUFFER_SIZE 1024
 
+using namespace net;
+
 namespace server {
 
-typedef int Socket;
-
-/// @brief Represents a connected client
+/// Represents a connected client
 ///
 /// When a message handler is called it is passed the client instance from which
 /// the message originated. Therefore this used be used for persisting anything
@@ -41,15 +42,15 @@ public:
         Disconnected,
     };
 
-    /// @brief UDP socket channel, -1 if no channel set yet
+    /// UDP socket channel, -1 if no channel set yet
     int m_channel;
 
-    /// @brief Construct a new Client instance
+    /// Construct a new Client instance
     ///
     /// The client's initial state will be set to PENDING.
     Client(struct sockaddr_in addr, int file);
 
-    /// @brief Enqueue a message to be sent to the client
+    /// Enqueue a message to be sent to the client
     ///
     /// The message will be encoded as a JSON object with two fields: the
     /// 'type' and 'entity' which will be set to given corresponding
@@ -66,7 +67,7 @@ public:
 
     // TODO: Rewrite this completely fucking wrong doc string or whatever
     // you call it
-    /// @brief Read bytes from the socket into the buffer
+    /// Read bytes from the socket into the buffer
     ///
     /// Reads up to RECV_BUFFER_SIZE bytes into the buffer.
     /// Therefore the caller is responsible for calling both
@@ -76,7 +77,7 @@ public:
     /// Returns all the messages that were received by the client.
     std::vector<json11::Json> exec();
 
-    /// @brief Disconnect for `reason`
+    /// Disconnect for `reason`
     ///
     /// This will set client's state to Disconnected and optionally send the
     /// reason to the client. Sending the disconnect reason to the server
@@ -107,7 +108,6 @@ public:
     // Destructor
     ~Client();
 
-    // Until it's merged with master can I just typedef this shit?
     Socket m_tcp_socket;
     Socket m_udp_socket;
 
@@ -118,7 +118,7 @@ private:
     common::Logger m_logger;
     std::queue<json11::Json> m_send_queue;
 
-    /// @brief Assert the client is using the correct protocol version
+    /// Assert the client is using the correct protocol version
     ///
     /// If the client state is Pending this checks if the buffer contains the
     /// magic number. If the correct magic number is at the front of the buffer
@@ -132,7 +132,7 @@ private:
     /// The magic number is consumed from the buffer.
     void checkProtocolVersion();
 
-    /// @brief Process JSON-encoded messages from the buffer
+    /// Process JSON-encoded messages from the buffer
     ///
     /// This parses all whitespace-delimited JSON objects from the buffer and
     /// calls the appropriate handlers for the the message types.
@@ -153,7 +153,7 @@ private:
     /// be empty.
     std::vector<json11::Json> processMessages();
 
-    /// @brief Encode and dend all enqueued messages to the client
+    /// Encode and dend all enqueued messages to the client
     ///
     /// Each JSON message that has been enqueued by send() is encoded into JSON
     /// and is sent to the client with a whitespace terminator.

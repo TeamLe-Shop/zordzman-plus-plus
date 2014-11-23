@@ -6,26 +6,26 @@
 namespace client {
 namespace sys {
 
-/// @brief Texture
+/// Texture
 class Texture {
 public:
-    /// @brief Load the texture from a file
+    /// Load the texture from a file
     ///
     /// @param filename The name of the file to load from
     bool loadFromFile(std::string const & filename);
-    /// @brief Get the width of the texture
+    /// Get the width of the texture
     int getWidth() const;
-    /// @brief Get the height of the texture
+    /// Get the height of the texture
     int getHeight() const;
-    /// @brief Bind a texture for subsequent drawing calls
+    /// Bind a texture for subsequent drawing calls
     ///
     /// @param texture The texture to bind
     static void bind(Texture const & texture);
-    /// @brief Unbind the currently bound texture
+    /// Unbind the currently bound texture
     static void unbind();
-    /// @brief Destroy the texture.
+    /// Destroy the texture.
     ~Texture();
-    /// @brief Construct the texture from a file
+    /// Construct the texture from a file
     Texture(std::string const & filename);
 
     // Forbid copying

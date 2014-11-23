@@ -6,9 +6,9 @@
 namespace client {
 class ResourceManager {
 public:
-    /// @brief Initialize the resources.
+    /// Initialize the resources.
     ResourceManager();
-    /// @brief Get a spritesheet by its name.
+    /// Get a spritesheet by its name.
     sys::Texture & getTexture(char const * const key);
 
 private:

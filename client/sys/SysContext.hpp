@@ -3,7 +3,7 @@
 namespace client {
 namespace sys {
 
-/// @brief Provides the context which the other sys components
+/// Provides the context which the other sys components
 /// depend on
 class SysContext {
 public:

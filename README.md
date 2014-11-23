@@ -18,6 +18,7 @@ Dependencies
 It mainly uses SDL and other SDL libraries.
 
 Note: SDLNet is no longer being used, and our project will be using system sockets instead.
+(For Windows, WinSock may be used.)
 
 It uses [json11](https://github.com/dropbox/json11) for parsing JSON,
 [cppformat](http://cppformat.github.io/) for formatting, and

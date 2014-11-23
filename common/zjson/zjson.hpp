@@ -7,7 +7,7 @@ using namespace json11;
 
 namespace zjson {
 
-/// @brief Load a Zordzman JSON HUD file.
+/// Load a Zordzman JSON HUD file.
 ///
 /// When reading the file, lines starting with `#` are ignored.
 ///

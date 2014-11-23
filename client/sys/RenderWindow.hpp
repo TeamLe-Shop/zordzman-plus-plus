@@ -6,10 +6,10 @@
 namespace client {
 namespace sys {
 
-/// @brief A window that provides a rendering context
+/// A window that provides a rendering context
 class RenderWindow {
 public:
-    /// @brief Initialize the window.
+    /// Initialize the window.
     ///
     /// @param width The width of the window.
     /// @param height The height of the window.
@@ -21,16 +21,16 @@ public:
                  int x = SDL_WINDOWPOS_UNDEFINED,
                  int y = SDL_WINDOWPOS_UNDEFINED,
                  unsigned int flags = SDL_WINDOW_OPENGL);
-    /// @brief Destroy the window
+    /// Destroy the window
     ~RenderWindow();
     RenderWindow(RenderWindow const & other) = delete;
-    /// @brief Assign a window to another
+    /// Assign a window to another
     RenderWindow & operator=(RenderWindow const & other) = delete;
-    /// @brief Show the window's contents.
+    /// Show the window's contents.
     void present();
-    /// @brief Return the width of the window.
+    /// Return the width of the window.
     unsigned getWidth() const;
-    /// @brief Return the height of the window.
+    /// Return the height of the window.
     unsigned getHeight() const;
 
 private:

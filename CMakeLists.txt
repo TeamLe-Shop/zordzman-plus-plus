@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.0)
 
 project(zordzman)
 
-option(GATSAN "You are gatsan" FALSE)
-
 # Detect compiler
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(USING_GCC TRUE)
@@ -33,6 +31,8 @@ add_library(hash-library common/extlib/hash-library/md5.cpp)
 
 add_library(server server/lib/Server.cpp)
 add_library(logger common/logger/Logger.hpp common/logger/Logger.cpp)
+file(GLOB_RECURSE COMMON_NET_SOURCES common/net/*.*pp)
+add_library(common_net ${COMMON_NET_SOURCES})
 file(GLOB_RECURSE COMMON_UTIL_SOURCES common/util/*.*pp)
 add_library(common_util ${COMMON_UTIL_SOURCES})
 add_library(zjson common/zjson/zjson.hpp common/zjson/zjson.cpp)
@@ -50,12 +50,13 @@ include_directories(${SDLIMAGE_INCLUDE_DIR})
 find_package(SDL2_mixer REQUIRED)
 include_directories(${SDLMIXER_INCLUDE_DIR})
 
-if(GATSAN)
+if(OSX)
     set(SDLIMAGE_LIBRARY /Library/Frameworks/SDL2_image.framework)
     set(SDLIMAGE_INCLUDE_DIR /Library/Frameworks/SDL2_image.framework/Headers)
     set(SDLMIXER_LIBRARY /Library/Frameworks/SDL2_mixer.framework)
     set(SDLMIXER_INCLUDE_DIR /Library/Frameworks/SDL2_mixer.framework/Headers)
     add_compile_options(-stdlib=libc++)
+    add_compile_options(-std=c++11)
 endif()
 
 include_directories(.)
@@ -78,6 +79,7 @@ target_link_libraries(zordzman
     zjson
     hash-library
     common_util
+    common_net
 )
 
 target_link_libraries(zordzman-server
@@ -90,4 +92,5 @@ target_link_libraries(zordzman-server
     base64
     hash-library
     common_util
+    common_net
 )

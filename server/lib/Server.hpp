@@ -2,6 +2,8 @@
 
 #include <functional>
 
+#include "common/net/message.hpp"
+
 #include "common/logger/Logger.hpp"
 #include "json11.hpp"
 
@@ -21,9 +23,10 @@
 #define RECV_BUFFER_SIZE 1024
 #define UDP_PORT 4545
 
-namespace server {
+using namespace net;
 
-typedef int Socket;
+/// The Zordzman server
+namespace server {
 
 // pls help
 // typedef std::function<void(Server *server, Client *client, json11::Json
@@ -36,12 +39,12 @@ public:
     ~Server();
     int exec();
 
-    /// @brief Broadcast a message to all clients
+    /// Broadcast a message to all clients
     ///
     /// See Client::send().
     void sendAll(std::string type, json11::Json entity);
 
-    /// @brief Add a message handler
+    /// Add a message handler
     ///
     /// When a message of the given type is received all handlers for that
     /// message type are called with the message 'entity' field as the Json
@@ -51,7 +54,8 @@ public:
                                        json11::Json entity)> handler);
 
 private:
-    /// @brief Accept all pending connections
+    void initSDL();
+    /// Accept all pending connections
     ///
     /// This accept(2)s all pending connections on the listening socket. These
     /// new connections are wrapped in a `Client` and added to the `m_clients`
@@ -62,7 +66,7 @@ private:
 
     void handleMapRequest(Server *server, Client *client, json11::Json entity);
 
-    /// @brief Handle `net.udp` message from clients
+    /// Handle `net.udp` message from clients
     ///
     /// net.udp is used by the client to specify the port number of its UDP
     /// socket. The message entity should be a valid port number as an integer.

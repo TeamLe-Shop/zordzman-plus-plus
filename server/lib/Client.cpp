@@ -156,11 +156,7 @@ void Client::disconnect(std::string reason, bool flush) {
     m_logger.log("Client disconnected (state = Disconnected): {} ", reason);
 }
 
-void Client::disconnect(std::string reason) {
-    disconnect(reason, true);
-}
+void Client::disconnect(std::string reason) { disconnect(reason, true); }
 
-void Client::disconnect() {
-    disconnect("You have been disconnected", true);
-}
+void Client::disconnect() { disconnect("You have been disconnected", true); }
 } // namespace server

@@ -57,7 +57,9 @@ std::string TCPSocket::read() {
     int bytes_recv = ::read(m_socket, buffer, 8192);
 
     if (bytes_recv <= 0) {
-        close();
+        if (errno != EAGAIN && errno != EWOULDBLOCK) {
+            close();
+        }
         return std::string();
     } else {
         return std::string(buffer);

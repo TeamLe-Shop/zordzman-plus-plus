@@ -33,6 +33,9 @@ add_library(server server/lib/Server.cpp)
 add_library(logger common/logger/Logger.hpp common/logger/Logger.cpp)
 file(GLOB_RECURSE COMMON_NET_SOURCES common/net/*.*pp)
 add_library(common_net ${COMMON_NET_SOURCES})
+file(GLOB_RECURSE COMMON_ENTITY_SOURCES
+     common/entity/*.*pp common/entity/components/*.*pp)
+add_library(common_entity ${COMMON_ENTITY_SOURCES})
 file(GLOB_RECURSE COMMON_UTIL_SOURCES common/util/*.*pp)
 add_library(common_util ${COMMON_UTIL_SOURCES})
 add_library(zjson common/zjson/zjson.hpp common/zjson/zjson.cpp)
@@ -85,6 +88,7 @@ target_link_libraries(zordzman
     hash-library
     common_util
     common_net
+    common_entity
 )
 
 target_link_libraries(zordzman-server
@@ -99,4 +103,5 @@ target_link_libraries(zordzman-server
     hash-library
     common_util
     common_net
+    common_entity
 )

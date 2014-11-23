@@ -1,4 +1,3 @@
-#include <SDL_net.h>
 #include <climits>
 #include <cerrno>
 #include <cstdlib>
@@ -15,7 +14,6 @@
 #define PORT_NUMBER 4544 // The default port number.
 
 int main(int argc, char **argv) {
-    IPaddress address;
 
     // We could also load from a configuration file
     // here. This would be done after this variable
@@ -92,11 +90,6 @@ int main(int argc, char **argv) {
     }
     map_file.close();
 
-    if (SDLNet_ResolveHost(&address, nullptr, port) < 0) {
-        fprintf(stderr, "SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-        exit(EXIT_FAILURE);
-    }
-
-    server::Server server(address, 5, map_name);
+    server::Server server(port, 5, map_name);
     server.exec();
 }

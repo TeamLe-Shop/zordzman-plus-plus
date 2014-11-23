@@ -2,6 +2,8 @@
 #include "format.h"
 #include "util.hpp"
 
+#include "common/util/net.hpp"
+
 // Last octet can be the protocol version if we ever decide to care
 #define MAGIC_NUMBER "\xCA\xC3\x55\x01"
 
@@ -9,16 +11,12 @@ namespace server {
 
 using namespace json11;
 
-Client::Client(TCPsocket socket)
+Client::Client(struct sockaddr_in addr, int socket)
     : m_logger(stderr, [=] {
-          IPaddress *address = SDLNet_TCP_GetPeerAddress(m_socket);
-          if (address) {
-              return fmt::format("{}: ", *address);
-          } else {
-              return std::string("[INVALID IP]: ");
-          }
+            return fmt::format("{}: ",
+                   common::util::net::ipaddr(addr));
       }) {
-    m_socket = socket;
+    m_tcp_socket = socket;
     m_state = Pending;
     m_channel = -1;
     m_logger.log("Client connected (state = Pending)");
@@ -56,19 +54,20 @@ std::vector<Json> Client::exec() {
     char buffer[RECV_BUFFER_SIZE];
     memset(buffer, 0, RECV_BUFFER_SIZE);
     auto orig_buffer_size = m_buffer.size();
-    if (SDLNet_SocketReady(m_socket)) {
-        int bytes_recv = SDLNet_TCP_Recv(m_socket, buffer,
-                                         RECV_BUFFER_SIZE - m_buffer.size());
-        m_logger.log(fmt::format("Bytes received: {}", bytes_recv));
-        if (bytes_recv <= 0) {
+    int bytes_recv =
+        read(m_tcp_socket, buffer, RECV_BUFFER_SIZE - m_buffer.size());
+    if (bytes_recv <= 0) {
+        if (errno != EAGAIN && errno != EWOULDBLOCK) {
             // Socket is likely closed so there's no reason to send the
             // disconnect message
-            disconnect(fmt::format("Left server (recv: {})", bytes_recv),
-                       false);
+            disconnect(
+                fmt::format("Left server (recv: {})", bytes_recv), false);
+        } else {
+            return std::vector<Json>();
         }
-        for (int i = 0; i < bytes_recv; i++) {
-            m_buffer.push_back(buffer[i]);
-        }
+    }
+    for (int i = 0; i < bytes_recv; i++) {
+        m_buffer.push_back(buffer[i]);
     }
     checkProtocolVersion();
     if (m_state == Connected) {
@@ -97,13 +96,13 @@ void Client::flushSendQueue() {
         // Using cppformat or the logger with the encoded_message causes
         // wierdness I don't understand
         printf("Send: %s\n", encoded_message.c_str());
-        if (SDLNet_TCP_Send(m_socket, encoded_message.data(),
-                            encoded_message.length()) <
-            (int)encoded_message.length()) {
+        if (::send(m_tcp_socket,
+                 encoded_message.data(),
+                 encoded_message.length(), 0) < (int)encoded_message.length()) {
             // We just failed a flush, don't try to flush again whilst
             // disconnecting
-            disconnect(fmt::format("Failed to send: {}", SDLNet_GetError()),
-                       false);
+            disconnect(
+                fmt::format("Failed to send: {}", strerror(errno)), false);
         }
     }
 }
@@ -134,21 +133,19 @@ Client::State Client::getState() const { return m_state; }
 
 Client::Client(Client &&other)
     : m_state(other.m_state), m_buffer(std::move(other.m_buffer)),
-      m_socket(other.m_socket) {
-    other.m_socket = nullptr;
+      m_tcp_socket(other.m_tcp_socket) {
+    other.m_tcp_socket = -1;
 }
 
 Client &Client::operator=(Client &&other) {
     m_state = other.m_state;
     m_buffer = std::move(other.m_buffer);
-    m_socket = other.m_socket;
-    other.m_socket = nullptr;
+    m_tcp_socket = other.m_tcp_socket;
+    other.m_tcp_socket = -1;
     return *this;
 }
 
-Client::~Client() { SDLNet_TCP_Close(m_socket); }
-
-TCPsocket Client::getSocket() { return m_socket; }
+Client::~Client() { close(m_tcp_socket); }
 
 void Client::disconnect(std::string reason, bool flush) {
     send("disconnect", reason);

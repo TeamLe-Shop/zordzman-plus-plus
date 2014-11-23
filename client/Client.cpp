@@ -29,7 +29,7 @@ Mix_Music * music = nullptr;
 } // Anonymous namespace
 
 Client::Client(Config const & cfg, HUD hud)
-    : m_window(800, 600, title), m_player(new Player("gatsan", 0, 0, 1)),
+    : m_window(800, 600, title), m_player(new Player(cfg.name, 0, 0, 1)),
       m_cfg(cfg), m_hud(hud) {
     game_instance = this;
 

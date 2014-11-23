@@ -9,5 +9,7 @@ namespace client {
 struct Config {
     std::string host = "localhost";
     int port = 4544;
+
+    std::string name = "SneakySnake";
 };
 } // namespace client

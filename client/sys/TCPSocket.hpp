@@ -1,13 +1,22 @@
 #pragma once
 
-#include <SDL_net.h>
 #include <string>
+
+#include <sys/socket.h>
+#include <sys/types.h>
+
+#include <netinet/in.h>
+
+#include <unistd.h>
+
+#include "common/net/message.hpp"
+
+using namespace net;
 
 #define REQUIRES(...) typename std::enable_if<(__VA_ARGS__), int>::type = 0
 
 namespace client {
 namespace sys {
-
 /// A TCPSocket object one can use to send and receive data.
 class TCPSocket {
 public:
@@ -34,7 +43,7 @@ public:
     /// @param The amount of bytes to send.
     ///
     /// @return If the sending was successful.
-    bool send(const void * buf, int len);
+    bool send(const void * buf, size_t len);
     /// Send numeric data to the host
     ///
     /// @param data - The number to send
@@ -49,23 +58,19 @@ public:
     /// Close the socket when destroyed.
     ~TCPSocket();
     /// Get the IP of the server
-    IPaddress getServerAddress();
-    /// Return IP address of server formatted
+    sockaddr_in getServerAddress();
+    /// @brief Return IP address of server formatted
     std::string getFormattedServerAddr();
 
 private:
     // The address of the server.
-    IPaddress m_server;
+    sockaddr_in m_server;
     // The actual socket.
-    TCPsocket m_socket;
+    Socket m_socket;
+    // Our address?
+    sockaddr_in m_address;
     // Whether it is open or not.
     bool m_open = false;
-    // Socket set. This will only contain one socket.
-    // The purpose of this is so we can check for activity and avoid
-    // waiting for a message and pausing the game.
-
-    // dont blame me blame sdlnet's accent
-    SDLNet_SocketSet m_socketset;
 };
 
 } // namespace sys

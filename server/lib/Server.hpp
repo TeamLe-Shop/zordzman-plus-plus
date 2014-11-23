@@ -2,6 +2,8 @@
 
 #include <functional>
 
+#include "common/net/message.hpp"
+
 #include "common/logger/Logger.hpp"
 #include "json11.hpp"
 
@@ -9,13 +11,21 @@
 #include "Map.hpp"
 
 #include <vector>
-#include <SDL_net.h>
 #include <fstream>
+
+#include <stdio.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <string.h>
+#include <unistd.h>
+#include <netinet/in.h>
 
 #define RECV_BUFFER_SIZE 1024
 #define UDP_PORT 4545
 
-/// The Zordsman server
+using namespace net;
+
+/// The Zordzman server
 namespace server {
 
 // pls help
@@ -25,7 +35,7 @@ namespace server {
 class Server {
 
 public:
-    Server(IPaddress address, unsigned int max_clients, std::string map_name);
+    Server(int port, unsigned int max_clients, std::string map_name);
     ~Server();
     int exec();
 
@@ -67,11 +77,13 @@ private:
     void handleNetUDP(Server *server, Client *client, json11::Json entity);
 
     unsigned int m_max_clients;
-    TCPsocket m_socket;
-    UDPsocket m_udp_socket;
-    IPaddress m_address;
+
+    Socket m_tcp_socket;
+    struct sockaddr_in m_tcp_address;
+    Socket m_udp_socket;
+    struct sockaddr_in m_udp_address;
+
     std::vector<Client> m_clients;
-    SDLNet_SocketSet m_socket_set;
     common::Logger m_logger;
     map::Level m_map;
     std::map<std::string,

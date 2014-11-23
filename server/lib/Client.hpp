@@ -6,12 +6,22 @@
 #include <string>
 #include <vector>
 
-#include <SDL_net.h>
 #include "json11.hpp"
+#include "common/net/message.hpp"
+
+#include <stdio.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <string.h>
+#include <netinet/in.h>
+#include <unistd.h>
+
 
 #include "common/logger/Logger.hpp"
 
 #define RECV_BUFFER_SIZE 1024
+
+using namespace net;
 
 namespace server {
 
@@ -38,7 +48,7 @@ public:
     /// Construct a new Client instance
     ///
     /// The client's initial state will be set to PENDING.
-    Client(TCPsocket socket);
+    Client(struct sockaddr_in addr, int file);
 
     /// Enqueue a message to be sent to the client
     ///
@@ -98,13 +108,13 @@ public:
     // Destructor
     ~Client();
 
-    /// Return the socket the server uses to communicate with the client.
-    TCPsocket getSocket();
+    Socket m_tcp_socket;
+    Socket m_udp_socket;
 
 private:
     State m_state;
     std::deque<char> m_buffer;
-    TCPsocket m_socket;
+
     common::Logger m_logger;
     std::queue<json11::Json> m_send_queue;
 

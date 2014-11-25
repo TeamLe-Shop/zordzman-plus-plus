@@ -6,8 +6,10 @@
 
 #include "common/entity/component.hpp"
 
-namespace entity {
+#define COMPONENT(ent, type, as) auto as = \
+    static_cast<type *>(ent[type::getComponentName()])
 
+namespace entity {
 
 class Entity {
 

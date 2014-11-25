@@ -10,7 +10,6 @@
 
 namespace entity {
 
-
 class Component {
 
 public:

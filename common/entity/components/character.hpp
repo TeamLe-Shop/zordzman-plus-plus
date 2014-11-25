@@ -26,9 +26,8 @@ public:
           m_max_health(this, m_name_max_health, health),
           m_alive(this, true) {}
 
-    std::string getName() {
-        return "character";
-    }
+    static std::string getComponentName();
+    std::string getName();
 
     Stateful<std::string> m_name;
     Stateful<int> m_health;

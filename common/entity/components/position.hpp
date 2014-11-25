@@ -17,9 +17,8 @@ public:
         : m_x(this, x),
           m_y(this, y) {};
 
-    std::string getName() {
-        return "position";
-    }
+    static std::string getComponentName();
+    std::string getName();
 
     Stateless<double> m_x;
     Stateless<double> m_y;

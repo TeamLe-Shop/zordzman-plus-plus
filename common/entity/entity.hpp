@@ -29,6 +29,10 @@ public:
     }
 
     void addComponent(Component *component) {
+        auto old_component = m_components[component->getName()];
+        if (old_component != nullptr) {
+            delete old_component;
+        }
         m_components[component->getName()] = component;
     }
 

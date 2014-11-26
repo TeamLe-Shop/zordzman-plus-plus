@@ -1,7 +1,9 @@
 #pragma once
 
 #include <functional>
+#include <initializer_list>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include "common/entity/component.hpp"
@@ -71,23 +73,42 @@ public:
         return m_entities.back();
     }
 
+    void addSystem(System system,
+                   std::initializer_list<std::string> components) {
+        m_systems.emplace_back(system, components);
+    }
+
     void addSystem(System system) {
-        m_systems.push_back(system);
+        addSystem(system, {});
+    }
+
+    void addSystem(SimpleSystem system,
+                   std::initializer_list<std::string> components) {
+        addSystem([system](EntityCollection *c, Entity &e) {
+            return system(e);
+        }, components);
     }
 
     void addSystem(SimpleSystem system) {
-        addSystem([system](EntityCollection *c, Entity &e) {
-            return system(e);
-        });
+        addSystem(system, {});
     }
 
     void cycle() {
         // Of course currently this is horribly inefficient. The hope is that
         // Systems can specify their required components when they register
         // with the collection so the collection can optimise the interation.
-        for (auto &system : m_systems) {
-            for (auto &entity : m_entities) {;
-                system(this, entity);
+        for (auto &system_config : m_systems) {
+            auto system = std::get<0>(system_config);
+            auto components = std::get<1>(system_config);
+            for (auto &entity : m_entities) {
+                bool apply_system = true;
+                for (auto &component : components) {
+                    apply_system =
+                        apply_system && entity.hasComponent(component);
+                }
+                if (apply_system) {
+                    system(this, entity);
+                }
             }
         }
         m_frame++;
@@ -97,7 +118,7 @@ private:
     unsigned int m_entity_id;
     unsigned int m_frame;
     std::vector<Entity> m_entities;
-    std::vector<System> m_systems;
+    std::vector<std::tuple<System, std::vector<std::string>>> m_systems;
 };
 
 

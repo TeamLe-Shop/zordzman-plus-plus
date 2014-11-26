@@ -1,6 +1,5 @@
 #include "Server.hpp"
 #include "Client.hpp"
-#include "util.hpp"
 #include "common/util/container.hpp"
 #include "common/extlib/hash-library/md5.h"
 #include "common/util/stream.hpp"

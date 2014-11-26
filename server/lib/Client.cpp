@@ -1,6 +1,5 @@
 #include "Client.hpp"
 #include "format.h"
-#include "util.hpp"
 
 #include "common/util/net.hpp"
 

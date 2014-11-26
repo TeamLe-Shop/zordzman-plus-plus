@@ -9,8 +9,6 @@
 
 #include "lib/Server.hpp"
 
-#include "lib/util.hpp"
-
 #define PORT_NUMBER 4544 // The default port number.
 
 int main(int argc, char **argv) {

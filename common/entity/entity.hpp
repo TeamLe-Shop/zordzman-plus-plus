@@ -14,6 +14,12 @@
 
 namespace entity {
 
+// Entity ID, component name, field name, new value as JSON
+typedef std::tuple<unsigned int,
+                   std::string, std::string, json11::Json> StateChange;
+typedef std::tuple<std::string, std::string, json11::Json> EntityStateChange;
+
+
 class Entity {
 
 public:
@@ -31,6 +37,18 @@ public:
 
     bool hasComponent(std::string name) {
         return m_components.count(name) == 1;
+    }
+
+    std::vector<EntityStateChange> collectStateChanges() {
+        std::vector<EntityStateChange> changes;
+        for (auto &pair : m_components) {
+            for (auto &state_change : pair.second->collectStateChanges()) {
+                changes.emplace_back(pair.first,
+                                     std::get<0>(state_change),
+                                     std::get<1>(state_change));
+            }
+        }
+        return changes;
     }
 
     Component * operator[](std::string name) {
@@ -82,6 +100,19 @@ public:
 
     void addSystem(SimpleSystem system) {
         addSystem(system, {});
+    }
+
+    std::vector<StateChange> collectStateChanges() {
+        std::vector<StateChange> changes;
+        for (auto &entity : m_entities) {
+            for (auto &entity_changes : entity.collectStateChanges()) {
+                changes.emplace_back(entity.getID(),
+                                     std::get<0>(entity_changes),
+                                     std::get<1>(entity_changes),
+                                     std::get<2>(entity_changes));
+            }
+        }
+        return changes;
     }
 
     void cycle() {

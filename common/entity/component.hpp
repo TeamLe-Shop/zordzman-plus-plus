@@ -7,8 +7,10 @@
 #include "common/extlib/cppformat/format.h"
 #include "common/extlib/json11/json11.hpp"
 
-
 namespace entity {
+
+// Field name, value
+typedef std::tuple<std::string, json11::Json> ComponentStateChange;
 
 class Component {
 
@@ -22,8 +24,12 @@ public:
         m_state_changes.emplace_back(field_name, value);
     }
 
+    std::vector<ComponentStateChange> collectStateChanges() {
+        return m_state_changes;
+    }
+
 private:
-    std::vector<std::tuple<std::string, json11::Json>> m_state_changes;
+    std::vector<ComponentStateChange> m_state_changes;
     bool m_is_dirty;
 };
 

@@ -17,6 +17,8 @@ public:
         : m_x(this, x),
           m_y(this, y) {};
 
+    virtual ~PositionComponent() {}
+
     static std::string getComponentName();
     std::string getName();
 

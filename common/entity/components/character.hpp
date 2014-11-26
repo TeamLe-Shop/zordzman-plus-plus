@@ -26,6 +26,8 @@ public:
           m_max_health(this, m_name_max_health, health),
           m_alive(this, true) {}
 
+    virtual ~CharacterComponent() {}
+
     static std::string getComponentName();
     std::string getName();
 

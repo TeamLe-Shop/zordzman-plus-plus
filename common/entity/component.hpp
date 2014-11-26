@@ -13,6 +13,7 @@ namespace entity {
 class Component {
 
 public:
+    virtual ~Component() {}
     virtual std::string getName() = 0;
 
     bool isDirty() { return m_is_dirty; }

@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <initializer_list>
+#include <memory>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -20,22 +21,12 @@ public:
         m_id = id;
     }
 
-    ~Entity() {
-        for (auto pair : m_components) {
-            delete std::get<1>(pair);
-        }
-    }
-
     unsigned int getID() {
         return m_id;
     }
 
     void addComponent(Component *component) {
-        auto old_component = m_components[component->getName()];
-        if (old_component != nullptr) {
-            delete old_component;
-        }
-        m_components[component->getName()] = component;
+        m_components[component->getName()].reset(component);
     }
 
     bool hasComponent(std::string name) {
@@ -43,12 +34,12 @@ public:
     }
 
     Component * operator[](std::string name) {
-        return m_components[name];
+        return m_components[name].get();
     }
 
 private:
     unsigned int m_id;
-    std::map<std::string, Component *> m_components;
+    std::map<std::string, std::unique_ptr<Component>> m_components;
 };
 
 

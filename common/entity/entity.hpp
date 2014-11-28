@@ -104,6 +104,11 @@ public:
         addSystem(system, {});
     }
 
+    void registerComponent(std::string name,
+                           std::function<Component *()> allocator) {
+        m_component_types[name] = allocator;
+    }
+
     std::vector<StateChange> collectStateChanges() {
         std::vector<StateChange> changes;
         for (auto &entity : m_entities) {
@@ -138,7 +143,11 @@ public:
             ent = &(*ent_it);
         }
         if (!ent->hasComponent(component)) {
-            // Create component
+            if (m_component_types.count(component) == 0) {
+                // We don't know what type of component this is, just give up
+                return;
+            }
+            ent->addComponent(m_component_types[component]());
         }
         // Apply field value
         fmt::print("{}.{}.{} = {}\n",
@@ -171,6 +180,7 @@ private:
     unsigned int m_frame;
     std::vector<Entity> m_entities;
     std::vector<std::tuple<System, std::vector<std::string>>> m_systems;
+    std::map<std::string, std::function<Component *()>> m_component_types;
 
     Entity & createEntity(unsigned int id) {
         m_entities.emplace_back(id);

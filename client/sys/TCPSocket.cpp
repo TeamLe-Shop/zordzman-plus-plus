@@ -5,6 +5,7 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <cstring>
 
 #include <sys/socket.h>
 #include <sys/types.h>

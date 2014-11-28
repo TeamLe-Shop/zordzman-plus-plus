@@ -75,7 +75,7 @@ bool TCPSocket::send(const void * buf, size_t len) {
     if (!m_open || buf == NULL)
         return false;
 
-    int total_bytes_sent = 0;
+    size_t total_bytes_sent = 0;
 
     // Keep sending until we've sent all the data.
     while (total_bytes_sent < len) {

@@ -131,8 +131,9 @@ std::vector<Json> Client::processMessages() {
 Client::State Client::getState() const { return m_state; }
 
 Client::Client(Client &&other)
-    : m_state(other.m_state), m_buffer(std::move(other.m_buffer)),
-      m_tcp_socket(other.m_tcp_socket) {
+    : m_tcp_socket(other.m_tcp_socket),
+      m_state(other.m_state), m_buffer(std::move(other.m_buffer))
+       {
     other.m_tcp_socket = -1;
 }
 

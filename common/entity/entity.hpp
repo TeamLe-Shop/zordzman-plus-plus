@@ -7,6 +7,8 @@
 #include <tuple>
 #include <vector>
 
+#include "common/extlib/json11/json11.hpp"
+
 #include "common/entity/component.hpp"
 
 #define COMPONENT(ent, type, as) auto as = \
@@ -115,6 +117,34 @@ public:
         return changes;
     }
 
+    void handleEntityStateChange(json11::Json entity) {
+        if (!entity["id"].is_number()) { return; }
+        if (!entity["component"].is_string()) { return; }
+        if (!entity["field"].is_string()) { return; }
+
+        int id = entity["id"].int_value();
+        std::string component = entity["component"].string_value();
+        std::string field = entity["field"].string_value();
+        json11::Json value = entity["value"];
+        auto ent_it = std::find_if(
+            m_entities.begin(),
+            m_entities.end(),
+            [=](Entity &entity) { return entity.getID() == id; }
+        );
+        Entity *ent = nullptr;
+        if (ent_it == m_entities.end()) {
+            ent = &createEntity(id);
+        } else {
+            ent = &(*ent_it);
+        }
+        if (!ent->hasComponent(component)) {
+            // Create component
+        }
+        // Apply field value
+        fmt::print("{}.{}.{} = {}\n",
+                   ent->getID(), component, field, entity["value"].dump());
+    }
+
     void cycle() {
         // Of course currently this is horribly inefficient. The hope is that
         // Systems can specify their required components when they register
@@ -141,6 +171,11 @@ private:
     unsigned int m_frame;
     std::vector<Entity> m_entities;
     std::vector<std::tuple<System, std::vector<std::string>>> m_systems;
+
+    Entity & createEntity(unsigned int id) {
+        m_entities.emplace_back(id);
+        return m_entities.back();
+    }
 };
 
 

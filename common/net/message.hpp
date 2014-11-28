@@ -220,7 +220,7 @@ public:
     ///               std::string and the field value as a json11::Json.
     void sendStateChange(entity::StateChange change) {
         json11::Json entity = json11::Json::object{
-            { "entity", (int) std::get<0>(change) },
+            { "id", (int) std::get<0>(change) },
             { "component", std::get<1>(change) },
             { "field", std::get<2>(change) },
             { "value", std::get<3>(change) },

@@ -87,13 +87,13 @@ void Server::addHandler(std::string type,
     m_handlers[type].push_back(handler);
 }
 
-void Server::handleMapRequest(Server *server, Client *client,
-                              json11::Json entity) {
+void Server::handleMapRequest(Server */*server*/, Client *client,
+                              json11::Json /*entity*/) {
     client->send("map.contents", m_map.asBase64());
 }
 
-void Server::handleNetUDP(Server *server,
-                          Client *client, json11::Json entity) {
+void Server::handleNetUDP(Server */*server*/,
+                          Client */*client*/, json11::Json /*entity*/) {
 }
 
 void Server::acceptConnections() {
@@ -117,6 +117,9 @@ void Server::acceptConnections() {
         socklen_t addrlen = sizeof(peer_address);
         int error = getpeername(client_socket, &peer_address,
                                 &addrlen);
+        if (error == -1) {
+            throw std::runtime_error("Error getting peer name.");
+        }
         struct sockaddr_in *addr_in = (struct sockaddr_in *)&peer_address;
 
         fcntl(client_socket, F_SETFL, O_NONBLOCK);

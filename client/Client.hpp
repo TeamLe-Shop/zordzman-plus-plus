@@ -27,7 +27,7 @@ public:
     /// Get the window on which things are rendered.
     sys::RenderWindow & getWindow();
     /// Join a game server.
-    void joinServer();
+    bool joinServer();
     /// Draw the HUD.
     void drawHUD();
     /// Read data from m_socket

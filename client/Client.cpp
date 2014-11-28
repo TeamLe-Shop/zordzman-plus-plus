@@ -33,7 +33,9 @@ Client::Client(Config const & cfg, HUD hud)
       m_cfg(cfg), m_hud(hud) {
     game_instance = this;
 
-    joinServer();
+    if (!joinServer()) {
+        throw std::runtime_error("Couldn't connect to server.");
+    }
 
     m_player->setCombatWeapon(weaponList::zord);
     // Add the player to level.
@@ -56,8 +58,8 @@ Client::Client(Config const & cfg, HUD hud)
 
 Client::~Client() { game_instance = nullptr; }
 
-void Client::joinServer() {
-    m_socket.connectToHost(m_cfg.host, m_cfg.port);
+bool Client::joinServer() {
+    return m_socket.connectToHost(m_cfg.host, m_cfg.port) &&
     m_socket.send(net::MAGIC_NUMBER); // Hand shake
 }
 

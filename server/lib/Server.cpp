@@ -44,6 +44,7 @@ Server::Server(int port, unsigned int max_clients,
                                    + 1)                                  /* 1 for NUL terminator */
     char port_str[DIGIT_STRING_LENGTH(port)];
 
+    sprintf(port_str, "%d", port);
     if (getaddrinfo(host_str, port_str, &(struct addrinfo){ .ai_family = PF_UNSPEC, .ai_socktype = SOCK_STREAM, .ai_flags = AI_PASSIVE }, &m_tcp_address) != 0) {
         m_logger.log("[ERR]  Failed to resolve local stream interface: {}",
                      strerror(errno));

@@ -10,5 +10,9 @@ std::string PositionComponent::getName() {
     return "position";
 }
 
+Component * PositionComponent::new_() {
+    return new PositionComponent();
+}
+
 }  // namespace entity
 

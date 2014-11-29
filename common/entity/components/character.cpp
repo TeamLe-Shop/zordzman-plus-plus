@@ -14,4 +14,8 @@ std::string CharacterComponent::getName() {
     return "character";
 }
 
+Component * CharacterComponent::new_() {
+    return new CharacterComponent();
+}
+
 }  // namespace entity

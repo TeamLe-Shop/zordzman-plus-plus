@@ -31,6 +31,8 @@ public:
     static std::string getComponentName();
     std::string getName();
 
+    static Component * new_();
+
     Stateful<std::string> m_name;
     Stateful<int> m_health;
     Stateful<int> m_max_health;

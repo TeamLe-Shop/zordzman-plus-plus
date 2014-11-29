@@ -22,6 +22,8 @@ public:
     static std::string getComponentName();
     std::string getName();
 
+    static Component * new_();
+
     Stateless<double> m_x;
     Stateless<double> m_y;
 };

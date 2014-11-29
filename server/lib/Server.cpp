@@ -36,6 +36,53 @@ Server::Server(int port, unsigned int max_clients,
     // Log this in the map loader maybe?
     m_logger.log("Map hash: {}", m_map.md5.getHash());
 
+#   ifndef IPV4_ONLY
+#   define host_str "localhost"
+#   define DIGIT_STRING_LENGTH(num) (1                                   /* 1 for sign */ \
+                                   + sizeof (num) * CHAR_BIT / 3         /* ... for digits */ \
+                                   + (sizeof (num) * CHAR_BIT % 3 > 0)   /* ... for remaining digit */ \
+                                   + 1)                                  /* 1 for NUL terminator */
+    char port_str[DIGIT_STRING_LENGTH(port)];
+
+    if (getaddrinfo(host_str, port_str, &(struct addrinfo){ .ai_family = PF_UNSPEC, .ai_socktype = SOCK_STREAM, .ai_flags = AI_PASSIVE }, &m_tcp_address) != 0) {
+        m_logger.log("[ERR]  Failed to resolve local stream interface: {}",
+                     strerror(errno));
+    }
+
+    for (struct addrinfo *a = m_tcp_address; a != NULL; a = a->ai_next) {
+        Socket s = socket(a->ai_family, a->ai_socktype, a->ai_protocol);
+        if (s < 0) {
+            m_logger.log("[WARNING]  Failed to create socket: {}", strerror(errno));
+            continue;
+        }
+
+        if (bind(s, a, a->ai_addrlen) < 0) {
+            m_logger.log("[WARNING]  Failed to bind socket: {}", strerror(errno));
+            goto cleanup;
+	    }
+
+        if (listen(s, SOMAXCONN) == -1) {
+            m_logger.log("[WARNING]  Failed to listen socket: {}", strerror(errno));
+            goto cleanup;
+        }
+
+        if ((fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0) | O_NONBLOCK) == -1) {
+            m_logger.log("[WARNING]  Failed to fcntl socket: {}", strerror(errno));
+            goto cleanup;
+        }
+
+        m_tcp_socket.push_back(s);
+        m_logger.log("[INFO] Bound to interface {}",
+                     common::util::net::ipaddr(a));  /* XXX: Not all stream interfaces are guaranteed to use IP addresses. Will this still work?! */
+        continue;
+cleanup:close(s);
+    }
+
+    if (m_tcp_socket.size() == 0) {
+        m_logger.log("[ERR]  Failed to bind to a stream interface");
+        exit(1);
+    }
+#   else
     if ((m_tcp_socket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
         m_logger.log("[ERR]  Failed to create socket: {}", strerror(errno));
         exit(1);
@@ -67,6 +114,8 @@ Server::Server(int port, unsigned int max_clients,
 //  }
     m_logger.log("[INFO] Bound to interface {}",
                  common::util::net::ipaddr(m_tcp_address));
+#   endif
+
     addHandler("map.request",
                std::bind(&server::Server::handleMapRequest, this, _1, _2, _3));
     //addHandler("net.udp",

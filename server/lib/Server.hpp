@@ -78,10 +78,18 @@ private:
 
     unsigned int m_max_clients;
 
+#   define IPV4_ONLY
+#   ifndef IPV4_ONLY
+    std::vector<Socket> m_tcp_socket;
+    struct sockaddr_in *m_tcp_address;
+    std::vector<Socket> m_udp_socket;
+    struct sockaddr_in *m_udp_address;
+#   else
     Socket m_tcp_socket;
     struct sockaddr_in m_tcp_address;
     Socket m_udp_socket;
     struct sockaddr_in m_udp_address;
+#   endif
 
     std::vector<Client> m_clients;
     common::Logger m_logger;

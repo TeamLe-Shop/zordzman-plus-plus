@@ -116,7 +116,6 @@ private:
     }
 
     void onStateChange(T old, T new_) {
-        fmt::print("Stateful: {} -> {}\n", old, new_);
         m_component->markStateChange(m_name, new_);
 
     }
@@ -134,7 +133,6 @@ public :
 
 private:
     void onStateChange(T old, T new_) {
-        fmt::print("Stateless: {} -> {}\n", old, new_);
         m_component->markDirty();
     }
 };

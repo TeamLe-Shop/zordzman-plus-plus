@@ -11,7 +11,7 @@ Everything (apart from the handshake) sent over TCP will be in JSON. An example:
 
 ```javascript
 {
-    "type": "map-hash",
+    "type": "map.hash",
     "entity": "a9531495903a650967c81781c1694d05"
 }
 ```
@@ -35,8 +35,12 @@ or if there is only one additional field, it's value is in entity:
 ```
 
 Using `MessageProcessor` (found in `common/net`) and json11 (`common/extlib/json11`)
-you can either call `send("some-type", "some-value")` or
-`send("some-type", json11::Json::object { { "field", "value" }, ... })`
+you can either call:
+```cpp
+send("some.type", "some-value")
+// or
+send("some.type", json11::Json::object { { "field", "value" }, ... })
+```
 
 After the handshake, the server sends over a hash of the current map to the client,
 who then checks if they have the map or not by running through their directory of maps

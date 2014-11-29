@@ -81,6 +81,19 @@ protected:
 };
 
 
+class JSONFieldValue {
+
+public:
+    JSONFieldValue(json11::Json value) : m_value(value) {}
+
+    operator int() { return m_value.int_value(); };
+    operator std::string() { return m_value.string_value(); };
+
+private:
+    json11::Json m_value;
+};
+
+
 template <class T>
 class Stateful : public Field<T> {
 
@@ -99,8 +112,7 @@ private:
     std::string m_name;
 
     void setFromJSON(json11::Json value) {
-        fmt::print("{}.{} = {}\n", m_component->getName(), m_name, value.dump());
-        //m_value = fromJSON(value);
+        m_value = static_cast<T>(JSONFieldValue(value));
     }
 
     void onStateChange(T old, T new_) {
@@ -110,7 +122,6 @@ private:
     }
 
 };
-
 
 template <class T>
 class Stateless : public Field<T> {

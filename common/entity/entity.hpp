@@ -149,9 +149,7 @@ public:
             }
             ent->addComponent(m_component_types[component]());
         }
-        // Apply field value
-        fmt::print("{}.{}.{} = {}\n",
-                   ent->getID(), component, field, entity["value"].dump());
+        (*ent)[component]->setField(field, entity["value"]);
     }
 
     void cycle() {

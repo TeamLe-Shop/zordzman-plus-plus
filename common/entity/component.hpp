@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+#include <map>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -14,12 +16,26 @@ typedef std::tuple<std::string, json11::Json> ComponentStateChange;
 
 class Component {
 
+using Setter = std::function<void(json11::Json value)>;
+
 public:
     virtual ~Component() {}
     virtual std::string getName() = 0;
 
     bool isDirty() { return m_is_dirty; }
     void markDirty() { m_is_dirty = true; }
+
+    void setField(std::string field_name, json11::Json value) {
+        if (m_setters.count(field_name) == 1) {
+            m_setters[field_name](value);
+        }
+        // Fail silently?
+    }
+
+    void addStateSetter(std::string field_name, Setter setter) {
+        m_setters[field_name] = setter;
+    }
+
     void markStateChange(std::string field_name, json11::Json value) {
         m_state_changes.emplace_back(field_name, value);
     }
@@ -31,6 +47,7 @@ public:
 private:
     std::vector<ComponentStateChange> m_state_changes;
     bool m_is_dirty;
+    std::map<std::string, Setter> m_setters;
 };
 
 
@@ -68,15 +85,23 @@ template <class T>
 class Stateful : public Field<T> {
 
 using Field<T>::m_component;
+using Field<T>::m_value;
 
 public:
     Stateful(Component *component, std::string name, T initial)
         : Field<T>::Field(component, initial) {
+        m_component->addStateSetter(name,
+            std::bind(&Stateful<T>::setFromJSON, this, std::placeholders::_1));
         m_name = name;
     }
 
 private:
     std::string m_name;
+
+    void setFromJSON(json11::Json value) {
+        fmt::print("{}.{} = {}\n", m_component->getName(), m_name, value.dump());
+        //m_value = fromJSON(value);
+    }
 
     void onStateChange(T old, T new_) {
         fmt::print("Stateful: {} -> {}\n", old, new_);

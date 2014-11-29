@@ -37,9 +37,9 @@ or if there is only one additional field, it's value is in entity:
 Using `MessageProcessor` (found in `common/net`) and json11 (`common/extlib/json11`)
 you can either call:
 ```cpp
-send("some.type", "some-value")
+send("some.type", "some-value");
 // or
-send("some.type", json11::Json::object { { "field", "value" }, ... })
+send("some.type", json11::Json::object { { "field", "value" }, ... });
 ```
 
 After the handshake, the server sends over a hash of the current map to the client,

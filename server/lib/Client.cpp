@@ -59,8 +59,10 @@ std::vector<Json> Client::exec() {
         if (bytes_recv == 0) {
             // Socket is likely closed so there's no reason to send the
             // disconnect message
-            disconnect(
-                fmt::format("Left server (recv: {})", bytes_recv), false);
+            if (errno != EAGAIN) {
+                disconnect(
+                    fmt::format("Left server (recv: {})", bytes_recv), false);
+            }
         } else {
             return std::vector<Json>();
         }

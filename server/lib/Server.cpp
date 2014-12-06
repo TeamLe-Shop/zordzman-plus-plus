@@ -38,14 +38,21 @@ Server::Server(int port, unsigned int max_clients,
 
 #   ifndef IPV4_ONLY
 #   define host_str NULL
-#   define DIGIT_STRING_LENGTH(num) (1                                   /* 1 for sign */ \
-                                   + sizeof (num) * CHAR_BIT / 3         /* ... for digits */ \
-                                   + (sizeof (num) * CHAR_BIT % 3 > 0)   /* ... for remaining digit */ \
-                                   + 1)                                  /* 1 for NUL terminator */
+#   define DIGIT_STRING_LENGTH(num)\
+           (1                                   /* 1 for sign */\
+          + sizeof (num) * CHAR_BIT / 3         /* ... for digits */\
+          + (sizeof (num) * CHAR_BIT % 3 > 0)   /* ... for remaining digit */\
+          + 1)                                  /* 1 for NUL terminator */
+
     char port_str[DIGIT_STRING_LENGTH(port)];
     sprintf(port_str, "%d", port);
 
-    if (getaddrinfo(host_str, port_str, &(struct addrinfo){ .ai_family = PF_UNSPEC, .ai_socktype = SOCK_STREAM, .ai_flags = AI_PASSIVE }, &m_tcp_address) != 0) {
+    if (getaddrinfo(host_str,
+                    port_str,
+                    &(struct addrinfo){ .ai_family = PF_UNSPEC,
+                                        .ai_socktype = SOCK_STREAM,
+                                        .ai_flags = AI_PASSIVE },
+                    &m_tcp_address) != 0) {
         m_logger.log("[ERR]  Failed to resolve local stream interface: {}",
                      strerror(errno));
     }
@@ -53,35 +60,70 @@ Server::Server(int port, unsigned int max_clients,
     for (struct addrinfo *a = m_tcp_address; a != NULL; a = a->ai_next) {
         Socket s = socket(a->ai_family, a->ai_socktype, a->ai_protocol);
         if (s < 0) {
-            m_logger.log("[WARNING]  Failed to create socket: {}", strerror(errno));
+            m_logger.log("[WARNING]  Failed to create socket: {}",
+                         strerror(errno));
             continue;
         }
 
         if (bind(s, a->ai_addr, a->ai_addrlen) < 0) {
-            m_logger.log("[WARNING]  Failed to bind socket: {}", strerror(errno));
+            m_logger.log("[WARNING]  Failed to bind socket: {}",
+                         strerror(errno));
             goto cleanup;
 	    }
 
         if (listen(s, SOMAXCONN) == -1) {
-            m_logger.log("[WARNING]  Failed to listen socket: {}", strerror(errno));
+            m_logger.log("[WARNING]  Failed to listen socket: {}",
+                         strerror(errno));
             goto cleanup;
         }
 
         if ((fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0) | O_NONBLOCK) == -1) {
-            m_logger.log("[WARNING]  Failed to fcntl socket: {}", strerror(errno));
+            m_logger.log("[WARNING]  Failed to fcntl socket: {}",
+                         strerror(errno));
             goto cleanup;
         }
 
+        /* This sucks :( */
+#       define can_double_capacity(v) (v.capacity() < v.max_size() / 2 ||\
+                                      (v.capacity == v.max_size() / 2  &&\
+                                       v.capacity % 2 == 1))
 
-        char host[1024];
-        char service[64];
-        if (getnameinfo(a->ai_addr, a->ai_addrlen, host, sizeof host, service, sizeof service, 0) == 0) {
-            strcpy(host, "UNKNOWN");
-            strcpy(service, "UNKNOWN");
+        std::vector<char> host(15);
+        for (;;) {
+            if (getnameinfo(a->ai_addr, a->ai_addrlen,
+                            host, host.capacity(),
+                            NULL, 0, 0) != 0) {
+                break;
+            }
+
+            if (errno != EAI_OVERFLOW || !can_double_capacity(host)) {
+                strcpy(host, "UNKNOWN");
+                break;
+            }
+
+            host.reserve(host.capacity() * 2 + 1);
+        }
+
+        std::vector<char> service(15);
+        for (;;) {
+            if (getnameinfo(a->ai_addr, a->ai_addrlen,
+                            NULL, 0,
+                            service, service.capacity(), 0) != 0) {
+                break;
+            }
+
+            if (errno != EAI_OVERFLOW || !can_double_capacity(service)) {
+                strcpy(service, "UNKNOWN");
+                break;
+            }
+
+            service.reserve(service.capacity() * 2 + 1);
         }
 
         m_tcp_socket.push_back(s);
-        m_logger.log("[INFO] Bound to interface {}, service {}", std::string(host), std::string(service));
+        m_logger.log("[INFO] Bound to interface {}, service {}",
+                     std::string(host),
+                     std::string(service));
         continue;
 cleanup:close(s);
     }

@@ -37,14 +37,14 @@ Server::Server(int port, unsigned int max_clients,
     m_logger.log("Map hash: {}", m_map.md5.getHash());
 
 #   ifndef IPV4_ONLY
-#   define host_str "localhost"
+#   define host_str NULL
 #   define DIGIT_STRING_LENGTH(num) (1                                   /* 1 for sign */ \
                                    + sizeof (num) * CHAR_BIT / 3         /* ... for digits */ \
                                    + (sizeof (num) * CHAR_BIT % 3 > 0)   /* ... for remaining digit */ \
                                    + 1)                                  /* 1 for NUL terminator */
     char port_str[DIGIT_STRING_LENGTH(port)];
-
     sprintf(port_str, "%d", port);
+
     if (getaddrinfo(host_str, port_str, &(struct addrinfo){ .ai_family = PF_UNSPEC, .ai_socktype = SOCK_STREAM, .ai_flags = AI_PASSIVE }, &m_tcp_address) != 0) {
         m_logger.log("[ERR]  Failed to resolve local stream interface: {}",
                      strerror(errno));
@@ -57,7 +57,7 @@ Server::Server(int port, unsigned int max_clients,
             continue;
         }
 
-        if (bind(s, a, a->ai_addrlen) < 0) {
+        if (bind(s, a->ai_addr, a->ai_addrlen) < 0) {
             m_logger.log("[WARNING]  Failed to bind socket: {}", strerror(errno));
             goto cleanup;
 	    }
@@ -72,9 +72,16 @@ Server::Server(int port, unsigned int max_clients,
             goto cleanup;
         }
 
+
+        char host[1024];
+        char service[64];
+        if (getnameinfo(a->ai_addr, a->ai_addrlen, host, sizeof host, service, sizeof service, 0) == 0) {
+            strcpy(host, "UNKNOWN");
+            strcpy(service, "UNKNOWN");
+        }
+
         m_tcp_socket.push_back(s);
-        m_logger.log("[INFO] Bound to interface {}",
-                     common::util::net::ipaddr(a));  /* XXX: Not all stream interfaces are guaranteed to use IP addresses. Will this still work?! */
+        m_logger.log("[INFO] Bound to interface {}, service {}", std::string(host), std::string(service));
         continue;
 cleanup:close(s);
     }
@@ -147,6 +154,40 @@ void Server::handleNetUDP(Server */*server*/,
 }
 
 void Server::acceptConnections() {
+#   ifndef IPV4ONLY
+    iterator s = m_tcp_socket.begin();
+    while (s != m_tcp_socket.end()) {
+        struct sockaddr_storage a;
+        socklen_t n = sizeof a;
+        Socket c = accept(*s, &a, &n);
+        if (c < 0) {
+            if (errno != EAGAIN && errno != EWOULDBLOCK) {
+                m_logger.log("[WARNING]  Failed to accept client connection: {}", strerror(errno));
+            }
+            goto next;
+        }
+
+        if (fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0) | O_NONBLOCK) == -1) {
+            m_logger.log("[WARNING]  Failed to fcntl socket: {}", strerror(errno));
+            goto next;
+        }
+        
+        if (m_clients.size() >= m_max_clients) {
+            // Perhaps issue some kind of "server full" warning. But how would
+            // this be done as the client would be in the PENDING state
+            // intially?
+            close(client_socket);
+            continue;
+        }
+
+
+        m_clients.emplace_back(a, c); /* XXX: Looks like Client might need a touch of work to accept sockaddr_storage rather than sockaddr_in */
+        m_clients.back().send("map.offer", m_map.md5.getHash());
+        m_clients.back().send("net.udp", UDP_PORT);
+        continue;
+next:   s++;
+    }
+#   else
     socklen_t b = sizeof(m_tcp_socket);
     while (true) {
         // Returns immediately with NULL if no pending connections
@@ -185,6 +226,7 @@ void Server::acceptConnections() {
             m_clients.back().send("net.udp", UDP_PORT);
         }
     }
+#   endif
 }
 
 int Server::exec() {

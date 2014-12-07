@@ -14,17 +14,48 @@ namespace entity {
 // Field name, value
 typedef std::tuple<std::string, json11::Json> ComponentStateChange;
 
+/// Baseclass for implementing entity components.
+///
+/// Components are groupings of 'fields' which hold the state of an entity
+/// for which their containing component belongs to.
+///
+/// There are two types of fields, stateful and stateless. The difference is
+/// how changes in their value are propagated to clients. Stateful fields are
+/// sent over the TCP connection as a `entity.state` message which names the
+/// changed entity component field as well as the new value for that field.
+/// Because of this stateful fields should be reserved for values that change
+/// infrequently but the change of value must be propagated reliably.
+///
+/// Alternately, stateless fields are sent via UDP. When the entities state is
+/// periodically sent to clients the stateless fields are serialised and packed
+/// into a UDP packet.
+///
+/// Each component subclass must have a unique string ID. This is provided
+/// by the @ref getName method but its also advisable to have a static method
+/// which returns the same value.
 class Component {
 
 using Setter = std::function<void(json11::Json value)>;
 
 public:
     virtual ~Component() {}
+
+    /// Get the unique component ID.
+    ///
+    /// This should return the same value for all instances of the component.
     virtual std::string getName() = 0;
 
     bool isDirty() { return m_is_dirty; }
     void markDirty() { m_is_dirty = true; }
 
+    /// Set a stateful field from an arbitrary JSON value.
+    ///
+    /// This calls the setter for the given `field_name` that was previously
+    /// registered @ref addStateSetter, passing the JSON value in as the
+    /// setter argument.
+    ///
+    /// If there was no setter registered for the `field_name` then this method
+    /// does nothing.
     void setField(std::string field_name, json11::Json value) {
         if (m_setters.count(field_name) == 1) {
             m_setters[field_name](value);
@@ -32,6 +63,15 @@ public:
         // Fail silently?
     }
 
+    /// Register a function to be called for setting stateful field values.
+    ///
+    /// The registered function (the *setter*) should take a single json11:Json
+    /// argument which represents the new value for a field. When @ref setField
+    /// is called with the same `field_name` the setter will be called.
+    ///
+    /// Strictly speaking this should never be invoked '*manually*'.
+    /// @ref Stateful fields will register their own setters when they're
+    /// initialised.
     void addStateSetter(std::string field_name, Setter setter) {
         m_setters[field_name] = setter;
     }
@@ -81,6 +121,10 @@ protected:
 };
 
 
+/// Utility class for converting JSON objects to their native equivalents.
+///
+/// This implements a number of conversion operators which converts to
+/// json11:Json objects to C++-native objects.
 class JSONFieldValue {
 
 public:

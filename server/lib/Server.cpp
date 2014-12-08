@@ -56,6 +56,7 @@ Server::Server(int port, unsigned int max_clients,
         sizeof m_tcp_address) < 0) {
         m_logger.log("[ERR]  Failed to bind TCP interface: {}",
                      strerror(errno));
+        exit(1);
     }
 
     listen(m_tcp_socket, SOMAXCONN);

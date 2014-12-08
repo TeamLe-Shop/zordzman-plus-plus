@@ -100,7 +100,7 @@ void Server::acceptConnections() {
     socklen_t b = sizeof(m_tcp_socket);
     while (true) {
         // Returns immediately with NULL if no pending connections
-        int client_socket = accept(m_tcp_socket,
+        Socket client_socket = accept(m_tcp_socket,
                                    (struct sockaddr *)&m_tcp_address, &b);
 
         if (client_socket < 0) {

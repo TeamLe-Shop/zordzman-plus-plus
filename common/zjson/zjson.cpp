@@ -31,6 +31,8 @@ Json load(std::string hud) {
         jsonStr += line;
     }
 
+    hudfile.close();
+
     std::string err;
     return Json::parse(jsonStr, err);
 }

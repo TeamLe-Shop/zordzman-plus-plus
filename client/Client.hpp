@@ -32,7 +32,7 @@ public:
     void drawHUD();
     /// Read data from m_socket
     void readData();
-    /// Check of the client has the map the server has
+    /// Check if the client has the map the server has
     void checkForMap(Json json);
 
 private:

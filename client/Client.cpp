@@ -41,7 +41,6 @@ Client::Client(Config const & cfg, HUD hud)
     // Add the player to level.
     m_level.add(m_player);
 
-    // music n shit
     music = Mix_LoadMUS("resources/music/soundtrack/Lively.ogg");
 
     if (music == nullptr) {

@@ -12,6 +12,8 @@
 
 #include "common/extlib/json11/json11.hpp"
 
+#include "common/entity/entity.hpp"
+
 /// Networking utilities common to both the server and client
 namespace net {
 
@@ -195,6 +197,37 @@ public:
     /// they arrive at host they're sent to.
     void send(MessageType type, MessageEntity entity) {
         m_egress.emplace(type, entity);
+    }
+
+    /// Enqueue a message that represents an entity's change of state
+    ///
+    /// This will enqueue a new message of type `entity.state`. These messages
+    /// are used to convey a change in an entity component's field.
+    ///
+    /// The message entities are objects with the following fields:
+    ///
+    /// - `entity` -- the numeric ID of the entity.
+    /// - `component` -- a string identifying the component on the entity.
+    /// - `field` -- a string identifying the name of the field on the
+    ///              component.
+    /// - `value` -- the new value of the field. The type of this field is
+    ///              dependent on the component and field.
+    ///
+    /// N.B. the order of state change messages matters. This method guarantees
+    /// that state change messages arrive at the endpoint in the order they
+    /// were enqueued. The most recent state change should always be sent last.
+    ///
+    /// @param change A four-tuple containing the entity ID as an int, the
+    ///               component name as a std::string, the field name as a
+    ///               std::string and the field value as a json11::Json.
+    void sendStateChange(entity::StateChange change) {
+        json11::Json entity = json11::Json::object{
+            { "id", (int) std::get<0>(change) },
+            { "component", std::get<1>(change) },
+            { "field", std::get<2>(change) },
+            { "value", std::get<3>(change) },
+        };
+        send("entity.state", entity);
     }
 
     /// Encode and send all enqueued messages

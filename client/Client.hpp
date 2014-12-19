@@ -10,8 +10,10 @@
 #include "HUD.hpp"
 
 #include "json11.hpp"
+#include "common/net/message.hpp"
 
 using namespace json11;
+using namespace net;
 
 /// The Zordzman client.
 namespace client {
@@ -33,14 +35,15 @@ public:
     /// Read data from m_socket
     void readData();
     /// Check if the client has the map the server has
-    void checkForMap(Json json);
+    void checkForMap(std::string map, std::string hash);
 
 private:
     Client(const Client &) = delete;
     Client & operator=(const Client &) = delete;
     sys::SysContext m_system;
     sys::RenderWindow m_window;
-    sys::TCPSocket m_socket;
+    Socket m_socket;
+    struct sockaddr_in m_socket_addr;
 
 public:
     ResourceManager resources;

@@ -36,6 +36,103 @@ Server::Server(int port, unsigned int max_clients,
     // Log this in the map loader maybe?
     m_logger.log("Map hash: {}", m_map.md5.getHash());
 
+#   ifndef IPV4_ONLY
+#   define host_str NULL
+#   define DIGIT_STRING_LENGTH(num)\
+           (1                                   /* 1 for sign */\
+          + sizeof (num) * CHAR_BIT / 3         /* ... for digits */\
+          + (sizeof (num) * CHAR_BIT % 3 > 0)   /* ... for remaining digit */\
+          + 1)                                  /* 1 for NUL terminator */
+
+    char port_str[DIGIT_STRING_LENGTH(port)];
+    sprintf(port_str, "%d", port);
+
+    if (getaddrinfo(host_str,
+                    port_str,
+                    &(struct addrinfo){ .ai_family = PF_UNSPEC,
+                                        .ai_socktype = SOCK_STREAM,
+                                        .ai_flags = AI_PASSIVE },
+                    &m_tcp_address) != 0) {
+        m_logger.log("[ERR]  Failed to resolve local stream interface: {}",
+                     strerror(errno));
+    }
+
+    for (struct addrinfo *a = m_tcp_address; a != NULL; a = a->ai_next) {
+        Socket s = socket(a->ai_family, a->ai_socktype, a->ai_protocol);
+        if (s < 0) {
+            m_logger.log("[WARNING]  Failed to create socket: {}",
+                         strerror(errno));
+            continue;
+        }
+
+        if (bind(s, a->ai_addr, a->ai_addrlen) < 0) {
+            m_logger.log("[WARNING]  Failed to bind socket: {}",
+                         strerror(errno));
+            goto cleanup;
+	    }
+
+        if (listen(s, SOMAXCONN) == -1) {
+            m_logger.log("[WARNING]  Failed to listen socket: {}",
+                         strerror(errno));
+            goto cleanup;
+        }
+
+        if ((fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0) | O_NONBLOCK) == -1) {
+            m_logger.log("[WARNING]  Failed to fcntl socket: {}",
+                         strerror(errno));
+            goto cleanup;
+        }
+
+        /* This sucks :( */
+#       define can_double_capacity(v) (v.capacity() < v.max_size() / 2 ||\
+                                      (v.capacity == v.max_size() / 2  &&\
+                                       v.capacity % 2 == 1))
+
+        std::vector<char> host(15);
+        for (;;) {
+            if (getnameinfo(a->ai_addr, a->ai_addrlen,
+                            host, host.capacity(),
+                            NULL, 0, 0) != 0) {
+                break;
+            }
+
+            if (errno != EAI_OVERFLOW || !can_double_capacity(host)) {
+                strcpy(host, "UNKNOWN");
+                break;
+            }
+
+            host.reserve(host.capacity() * 2 + 1);
+        }
+
+        std::vector<char> service(15);
+        for (;;) {
+            if (getnameinfo(a->ai_addr, a->ai_addrlen,
+                            NULL, 0,
+                            service, service.capacity(), 0) != 0) {
+                break;
+            }
+
+            if (errno != EAI_OVERFLOW || !can_double_capacity(service)) {
+                strcpy(service, "UNKNOWN");
+                break;
+            }
+
+            service.reserve(service.capacity() * 2 + 1);
+        }
+
+        m_tcp_socket.push_back(s);
+        m_logger.log("[INFO] Bound to interface {}, service {}",
+                     std::string(host),
+                     std::string(service));
+        continue;
+cleanup:close(s);
+    }
+
+    if (m_tcp_socket.size() == 0) {
+        m_logger.log("[ERR]  Failed to bind to a stream interface");
+        exit(1);
+    }
+#   else
     if ((m_tcp_socket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
         m_logger.log("[ERR]  Failed to create socket: {}", strerror(errno));
         exit(1);
@@ -68,6 +165,8 @@ Server::Server(int port, unsigned int max_clients,
 //  }
     m_logger.log("[INFO] Bound to interface {}",
                  common::util::net::ipaddr(m_tcp_address));
+#   endif
+
     addHandler("map.request",
                std::bind(&server::Server::handleMapRequest, this, _1, _2, _3));
     //addHandler("net.udp",
@@ -98,6 +197,40 @@ void Server::handleNetUDP(Server */*server*/,
 }
 
 void Server::acceptConnections() {
+#   ifndef IPV4ONLY
+    iterator s = m_tcp_socket.begin();
+    while (s != m_tcp_socket.end()) {
+        struct sockaddr_storage a;
+        socklen_t n = sizeof a;
+        Socket c = accept(*s, &a, &n);
+        if (c < 0) {
+            if (errno != EAGAIN && errno != EWOULDBLOCK) {
+                m_logger.log("[WARNING]  Failed to accept client connection: {}", strerror(errno));
+            }
+            goto next;
+        }
+
+        if (fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0) | O_NONBLOCK) == -1) {
+            m_logger.log("[WARNING]  Failed to fcntl socket: {}", strerror(errno));
+            goto next;
+        }
+        
+        if (m_clients.size() >= m_max_clients) {
+            // Perhaps issue some kind of "server full" warning. But how would
+            // this be done as the client would be in the PENDING state
+            // intially?
+            close(client_socket);
+            continue;
+        }
+
+
+        m_clients.emplace_back(a, c); /* XXX: Looks like Client might need a touch of work to accept sockaddr_storage rather than sockaddr_in */
+        m_clients.back().send("map.offer", m_map.md5.getHash());
+        m_clients.back().send("net.udp", UDP_PORT);
+        continue;
+next:   s++;
+    }
+#   else
     socklen_t b = sizeof(m_tcp_socket);
     while (true) {
         // Returns immediately with NULL if no pending connections
@@ -136,6 +269,7 @@ void Server::acceptConnections() {
             m_clients.back().send("net.udp", UDP_PORT);
         }
     }
+#   endif
 }
 
 int Server::exec() {

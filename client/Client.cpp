@@ -71,23 +71,23 @@ Client::~Client() { close(m_socket); game_instance = nullptr; }
 bool Client::joinServer() {
     memset(&m_socket_addr, 0, sizeof(m_socket_addr));
 
-    // Convert human-readable domain name/ip string to `struct in_addr`.
-    // This will be stored `m_socket_addr.sin_addr.s_addr`.
+    // Convert human-readable domain name/ip string (m_cfg.host)
+    // to `struct sockaddr_in`.
+    struct addrinfo *result;
+    int error;
 
-    struct hostent *he;
-    struct in_addr **addr_list;
-
-    if ((he = gethostbyname(m_cfg.host.c_str())) == NULL) {
-        herror("gethostbyname");
+    if ((error = getaddrinfo(m_cfg.host.c_str(), NULL, NULL, &result))) {
+        fmt::print("Error resolving host name: {}", gai_strerror(error));
         return false;
     }
 
-    memcpy(&(m_socket_addr.sin_addr.s_addr), he->h_addr_list[0],
-           sizeof(in_addr));
-
-    // Set port
+    memcpy(&m_socket_addr, result->ai_addr, sizeof(struct sockaddr_in));
 
     m_socket_addr.sin_port = htons(m_cfg.port);
+
+    fmt::print("Server IP: {}\n", common::util::net::ipaddr(m_socket_addr));
+
+    freeaddrinfo(result);
 
     if (connect(m_socket, (struct sockaddr*)&m_socket_addr, sizeof
         m_socket_addr) < 0) {
@@ -98,7 +98,6 @@ bool Client::joinServer() {
     }
 
     size_t total_sent = 0;
-    // the fuck do i call this?
     size_t additive = 0;
     size_t length = 4;
 

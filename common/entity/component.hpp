@@ -21,7 +21,7 @@ typedef std::tuple<std::string, json11::Json> ComponentStateChange;
 ///
 /// There are two types of fields, stateful and stateless. The difference is
 /// how changes in their value are propagated to clients. Stateful fields are
-/// sent over the TCP connection as a `entity.state` message which names the
+/// sent over the TCP connection as an `entity.state` message which names the
 /// changed entity component field as well as the new value for that field.
 /// Because of this stateful fields should be reserved for values that change
 /// infrequently but the change of value must be propagated reliably.
@@ -124,7 +124,7 @@ protected:
 /// Utility class for converting JSON objects to their native equivalents.
 ///
 /// This implements a number of conversion operators which converts to
-/// json11:Json objects to C++-native objects.
+/// json11::Json objects to C++-native objects.
 class JSONFieldValue {
 
 public:

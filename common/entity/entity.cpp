@@ -120,7 +120,7 @@ void EntityCollection::handleEntityStateChange(json11::Json entity) {
 
 void EntityCollection::cycle() {
     // Of course currently this is horribly inefficient. The hope is that
-    // Systems can specify their required components when they register
+    // systems can specify their required components when they register
     // with the collection so the collection can optimise the interation.
     for (auto &system_config : m_systems) {
         auto system = std::get<0>(system_config);

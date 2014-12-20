@@ -40,10 +40,10 @@
 /// Systems
 /// -------
 /// Systems are routines that act on these traits. They are responsible for
-/// implemented the 'game logic'. Each system is called once for each
+/// implementing the 'game logic'. Each system is called once for each
 /// simulation cycle.
 ///
-/// Systems may registered an interest in entities that only possess certain
+/// Systems may register an interest in entities that only possess certain
 /// components. For example, a trivial system may wish to only be applied to
 /// entities with the aforementioned position component. This system then
 /// might then increment the coordinates each time it is invoked.

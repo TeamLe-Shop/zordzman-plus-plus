@@ -102,10 +102,16 @@ using MutedHandler = std::function<void(
 )>;
 
 public:
+    MessageProcessor() { m_buffer.reserve(8192); }
     /// @param socket A connected socket descriptor
     MessageProcessor(Socket socket) {
         m_socket = socket;
         m_buffer.reserve(8192);
+    }
+
+    /// Set socket descriptor for this processor
+    void setSocket(Socket socket) {
+        m_socket = socket;
     }
 
     /// Register a callback for a given message type
@@ -148,6 +154,7 @@ public:
     void dispatch(Args ... args) {
         while (!m_ingress.empty()) {
             for (auto &handler : m_handlers[std::get<0>(m_ingress.front())]) {
+
                 handler(this, std::get<1>(m_ingress.front()), args ...);
             }
             m_ingress.pop();
@@ -163,7 +170,7 @@ public:
     ///
     /// The order the messages are recevied is the same order they'll be
     /// dispatched.
-    void proccess() {
+    void process() {
         // TODO: Propagation of errors
         auto free_buffer = m_buffer.capacity() - m_buffer.size();
         if (free_buffer == 0) {
@@ -171,13 +178,15 @@ public:
             return;
         }
         ssize_t data_or_error = recv(m_socket,
-             m_buffer().data() + m_buffer.size(), free_buffer);
+             (void*) (m_buffer.data() + m_buffer.size()), free_buffer, 0);
         if (data_or_error == 0) {
             return;
         } else if (data_or_error == -1) {
             // Error, need to check errno, may be EAGAIN/EWOULDBLOCK
             return;
         }
+        printf("Message: %.*s\n", data_or_error,
+               m_buffer.data() + m_buffer.size());
         parseBuffer();
     }
 

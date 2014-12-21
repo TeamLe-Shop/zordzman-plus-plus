@@ -4,15 +4,16 @@
 #include "net/net.hpp"
 #include "json11.hpp"
 #include "weapons/weaponList.hpp"
-#include "entity/Eyenado.hpp"
 
 #include <stdexcept>
 #include <format.h>
 #include <thread>
 #include <dirent.h>
 #include <netdb.h>
+#include <fcntl.h>
 
 #include <sys/socket.h>
+#include <sys/types.h>
 
 #include <SDL_mixer.h>
 
@@ -32,6 +33,13 @@ std::string const title = "Zordzman v0.0.3";
 Mix_Music * music = nullptr;
 } // Anonymous namespace
 
+/* Handler functions */
+void handler_mapoffer(MessageProcessor<> *processor,
+                              MessageEntity entity) {
+    fmt::print("lal wot?\n");
+}
+
+
 Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_player(new Player(cfg.name, 0, 0, 1)),
       m_cfg(cfg), m_hud(hud) {
@@ -41,6 +49,8 @@ Client::Client(Config const & cfg, HUD hud)
         throw std::runtime_error(
             fmt::format("Couldn't create socket: {}", strerror(errno)));
     }
+
+    fcntl(m_socket, F_SETFL, O_NONBLOCK);
 
     m_socket_addr.sin_family = AF_INET;
 
@@ -89,12 +99,22 @@ bool Client::joinServer() {
 
     freeaddrinfo(result);
 
+    Connect:
     if (connect(m_socket, (struct sockaddr*)&m_socket_addr, sizeof
         m_socket_addr) < 0) {
-        fmt::print(stderr, "[ERROR] Could not connect to host: {}\n",
-              strerror(errno));
-        close(m_socket);
-        return false;
+        if (errno != EISCONN) {
+            if (errno != EINPROGRESS && errno != EALREADY) {
+                fmt::print(stderr,
+                           "[ERROR] Could not connect to host: {}\n",
+                           errno, strerror(errno));
+                close(m_socket);
+                return false;
+            } else {
+                goto Connect;
+            }
+        } else {
+            fmt::print("Shit's connectd yo\n");
+        }
     }
 
     size_t total_sent = 0;
@@ -111,6 +131,9 @@ bool Client::joinServer() {
 
         total_sent += additive;
     }
+
+    m_msg_proc.setSocket(m_socket);
+    m_msg_proc.addHandler("map.offer", handler_mapoffer);
 
     return true;
 }
@@ -146,7 +169,8 @@ void Client::exec() {
 
 void Client::readData() {
     // Read shit from socket
-
+    m_msg_proc.process();
+    m_msg_proc.dispatch();
     // check for disconnection & map-hash?
 
 }
@@ -260,4 +284,6 @@ Client & Client::get() {
 }
 
 sys::RenderWindow & Client::getWindow() { return m_window; }
+
+
 } // namespace client

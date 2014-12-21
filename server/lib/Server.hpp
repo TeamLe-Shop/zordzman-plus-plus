@@ -76,7 +76,7 @@ private:
     /// set to the allocated channel.
     void handleNetUDP(Server *server, Client *client, json11::Json entity);
 
-    unsigned int m_max_clients;
+    unsigned int m_max_clients = 10;
 
     Socket m_tcp_socket;
     struct sockaddr_in m_tcp_address;

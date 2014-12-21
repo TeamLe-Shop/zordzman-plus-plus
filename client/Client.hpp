@@ -44,6 +44,7 @@ private:
     sys::RenderWindow m_window;
     Socket m_socket;
     struct sockaddr_in m_socket_addr;
+    MessageProcessor<> m_msg_proc;
 
 public:
     ResourceManager resources;

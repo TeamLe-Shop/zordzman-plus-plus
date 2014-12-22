@@ -8,6 +8,7 @@ namespace client {
 ///  different config variables.
 struct Config {
     std::string host = "127.0.0.1"; // localhost doesn't work
+                                    // (IPv6 not supported)
     int port = 4544;
 
     std::string name = "SneakySnake";

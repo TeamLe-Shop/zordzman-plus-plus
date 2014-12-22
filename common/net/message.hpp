@@ -163,7 +163,7 @@ public:
 
     /// Receive and parse messages
     ///
-    /// This will attempt to receive JSON-endoded messages from the associated
+    /// This will attempt to receive JSON-encoded messages from the associated
     /// socket. Note that this method doesn't call the message handlers
     /// immediately. Instead they are enqueued for deferred dispatching via
     /// `dispatch`.
@@ -244,7 +244,7 @@ private:
     /// Attempt to parse all JSON-encoded messages from the buffer
     ///
     /// This parses all whitespace-delimited JSON objects from the buffer and
-    /// calls and adds them to the m_ingress message queue to be dispatched
+    /// and adds them to the m_ingress message queue to be dispatched
     /// later.
     ///
     /// Each JSON message should be an object at the top level with a string

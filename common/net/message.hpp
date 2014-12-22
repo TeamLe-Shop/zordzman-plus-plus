@@ -185,7 +185,7 @@ public:
             // Error, need to check errno, may be EAGAIN/EWOULDBLOCK
             return;
         }
-        printf("Message: %.*s\n", data_or_error,
+        printf("Message: %.*s\n", (int)data_or_error,
                m_buffer.data() + m_buffer.size());
         parseBuffer();
     }

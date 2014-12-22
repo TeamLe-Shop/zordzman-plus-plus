@@ -100,7 +100,7 @@ bool Client::joinServer() {
     if (connect(m_socket, (struct sockaddr*)&m_socket_addr, sizeof
         m_socket_addr) < 0) {
         fmt::print(stderr,
-                   "[ERROR] Could not connect to host: {}\n",
+                   "[ERROR] ({}) Could not connect to host: {}\n",
                    errno, strerror(errno));
         close(m_socket);
         return false;

@@ -50,8 +50,6 @@ Client::Client(Config const & cfg, HUD hud)
             fmt::format("Couldn't create socket: {}", strerror(errno)));
     }
 
-    fcntl(m_socket, F_SETFL, O_NONBLOCK);
-
     m_socket_addr.sin_family = AF_INET;
 
     if (!joinServer()) {
@@ -99,23 +97,16 @@ bool Client::joinServer() {
 
     freeaddrinfo(result);
 
-    Connect:
     if (connect(m_socket, (struct sockaddr*)&m_socket_addr, sizeof
         m_socket_addr) < 0) {
-        if (errno != EISCONN) {
-            if (errno != EINPROGRESS && errno != EALREADY) {
-                fmt::print(stderr,
-                           "[ERROR] Could not connect to host: {}\n",
-                           errno, strerror(errno));
-                close(m_socket);
-                return false;
-            } else {
-                goto Connect;
-            }
-        } else {
-            fmt::print("Shit's connectd yo\n");
-        }
+        fmt::print(stderr,
+                   "[ERROR] Could not connect to host: {}\n",
+                   errno, strerror(errno));
+        close(m_socket);
+        return false;
     }
+
+    fcntl(m_socket, F_SETFL, O_NONBLOCK);
 
     size_t total_sent = 0;
     size_t additive = 0;
@@ -125,8 +116,9 @@ bool Client::joinServer() {
         additive = send(m_socket, net::MAGIC_NUMBER.c_str(), length, 0);
 
         if (additive == -1) {
-            fmt::print(stderr, "[ERROR] Error sending message: {}\n",
+            fmt::print(stderr, "[ERROR] Error sending magic num: {}\n",
                        strerror(errno));
+            break;
         }
 
         total_sent += additive;

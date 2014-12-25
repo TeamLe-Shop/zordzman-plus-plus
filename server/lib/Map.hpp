@@ -23,6 +23,7 @@ public:
     /// Load a level.
     void loadLevel(std::string map);
 
+    std::string name;
 private:
     byte m_width;
     byte m_height;

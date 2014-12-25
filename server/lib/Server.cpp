@@ -132,7 +132,13 @@ void Server::acceptConnections() {
             close(client_socket);
         } else {
             m_clients.emplace_back(*addr_in, client_socket);
-            m_clients.back().send("map.offer", m_map.md5.getHash());
+            m_clients.back().send("map.offer",
+            Json::object {
+                { "entity", Json::object {
+                    {"name", m_map.name},
+                    {"hash", m_map.md5.getHash()}
+                }
+            }});
         }
     }
 }

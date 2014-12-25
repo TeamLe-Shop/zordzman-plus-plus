@@ -37,7 +37,11 @@ Mix_Music * music = nullptr;
 /* Handler functions */
 void handler_mapoffer(MessageProcessor<> *processor,
                               MessageEntity entity) {
-    printf("pls\n");
+    fmt::print("Object dump: {}\n", entity.dump());
+    fmt::print("Name: {}, Hash: {}\n", entity["entity"]["name"].string_value(),
+               entity["entity"]["hash"].string_value());
+    game_instance->checkForMap(entity["entity"]["name"].string_value(),
+                               entity["entity"]["hash"].string_value());
 }
 
 
@@ -85,8 +89,14 @@ bool Client::joinServer() {
     struct addrinfo *result;
     int error;
 
-    if ((error = getaddrinfo(m_cfg.host.c_str(), NULL, NULL, &result))) {
-        fmt::print("Error resolving host name: {}", gai_strerror(error));
+    struct addrinfo criteria;
+    memset(&criteria, 0, sizeof(criteria));
+    criteria.ai_family = AF_INET;
+    criteria.ai_protocol = SOCK_STREAM;
+    criteria.ai_flags = AI_PASSIVE;
+
+    if ((error = getaddrinfo(m_cfg.host.c_str(), NULL, &criteria, &result))) {
+        fmt::print("Error resolving host name: {}\n", gai_strerror(error));
         return false;
     }
 
@@ -154,18 +164,11 @@ void Client::exec() {
 
         m_window.present();
 
-        readData();
+        m_msg_proc.process();
+        m_msg_proc.dispatch();
 
         SDL_Delay(1000 / 60);
     }
-}
-
-void Client::readData() {
-    // Read shit from socket
-    m_msg_proc.process();
-    m_msg_proc.dispatch();
-    // check for disconnection & map-hash?
-
 }
 
 void Client::checkForMap(std::string map, std::string hash) {

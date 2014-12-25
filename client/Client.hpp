@@ -32,8 +32,6 @@ public:
     bool joinServer();
     /// Draw the HUD.
     void drawHUD();
-    /// Read data from m_socket
-    void readData();
     /// Check if the client has the map the server has
     void checkForMap(std::string map, std::string hash);
 

@@ -133,7 +133,6 @@ void Server::acceptConnections() {
         } else {
             m_clients.emplace_back(*addr_in, client_socket);
             m_clients.back().send("map.offer", m_map.md5.getHash());
-            m_clients.back().send("net.udp", UDP_PORT);
         }
     }
 }

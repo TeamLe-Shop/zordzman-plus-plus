@@ -93,7 +93,7 @@ void Client::flushSendQueue() {
     while (!m_send_queue.empty()) {
         json11::Json message = m_send_queue.front();
         m_send_queue.pop();
-        std::string encoded_message = message.dump() + " ";
+        std::string encoded_message = message.dump();
         // Using cppformat or the logger with the encoded_message causes
         // wierdness I don't understand
         printf("Send: %s\n", encoded_message.c_str());

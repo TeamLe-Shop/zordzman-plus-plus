@@ -6,6 +6,7 @@
 #include <string>
 #include <tuple>
 #include <vector>
+#include <cstring>
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -154,7 +155,6 @@ public:
     void dispatch(Args ... args) {
         while (!m_ingress.empty()) {
             for (auto &handler : m_handlers[std::get<0>(m_ingress.front())]) {
-
                 handler(this, std::get<1>(m_ingress.front()), args ...);
             }
             m_ingress.pop();
@@ -185,8 +185,6 @@ public:
             // Error, need to check errno, may be EAGAIN/EWOULDBLOCK
             return;
         }
-        printf("Message: %.*s\n", (int)data_or_error,
-               m_buffer.data() + m_buffer.size());
         parseBuffer();
     }
 
@@ -260,12 +258,13 @@ private:
     /// are processed. No messages are added to `m_ingress`. The buffer is not
     /// consumed.
     void parseBuffer() {
-        if (m_buffer.empty()) {
+        if (!*m_buffer.data()) {
             return;
         }
         std::string json_error;
+
         std::vector<json11::Json> messages =
-            json11::Json::parse_multi(m_buffer, json_error);
+            json11::Json::parse_multi(m_buffer.c_str(), json_error);
         // Parsing will fail if the buffer contains a partial message, so the
         // JSON may be well formed but incomplete. This is not ideal. Ideally
         // we should be able to read all the complete messages and only leave
@@ -275,7 +274,7 @@ private:
             // TODO: Log JSON decode error?
         } else {
             m_buffer.clear();
-            for (auto &message : messages) {
+            for (json11::Json message : messages) {
                 json11::Json type = message["type"];
                 // If the 'type' field doesn't exist then is_string()
                 // is falsey

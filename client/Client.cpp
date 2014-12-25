@@ -11,6 +11,7 @@
 #include <dirent.h>
 #include <netdb.h>
 #include <fcntl.h>
+#include <iostream>
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -36,7 +37,7 @@ Mix_Music * music = nullptr;
 /* Handler functions */
 void handler_mapoffer(MessageProcessor<> *processor,
                               MessageEntity entity) {
-    fmt::print("lal wot?\n");
+    printf("pls\n");
 }
 
 

@@ -17,6 +17,8 @@
 #include <unistd.h>
 
 
+#include "Server.hpp"
+
 #include "common/logger/Logger.hpp"
 
 #define RECV_BUFFER_SIZE 1024
@@ -24,6 +26,11 @@
 using namespace net;
 
 namespace server {
+
+class Server;
+class Client;
+
+typedef MessageProcessor<Server*, Client*> Processor;
 
 /// Represents a connected client
 ///
@@ -111,12 +118,9 @@ public:
     Socket m_tcp_socket;
     Socket m_udp_socket;
 
-private:
-    State m_state;
-    std::deque<char> m_buffer;
+    Processor m_msg_proc;
 
-    common::Logger m_logger;
-    std::queue<json11::Json> m_send_queue;
+    State m_state;
 
     /// Assert the client is using the correct protocol version
     ///
@@ -130,35 +134,11 @@ private:
     /// this method has no effect.
     ///
     /// The magic number is consumed from the buffer.
-    void checkProtocolVersion();
+    void checkProtocolVersion(Server* server, std::string buffer);
 
-    /// Process JSON-encoded messages from the buffer
-    ///
-    /// This parses all whitespace-delimited JSON objects from the buffer and
-    /// calls the appropriate handlers for the the message types.
-    ///
-    /// Each JSON message should be an object at the top level with a string
-    /// 'type' field. There should also be a 'entity' field which can be of any
-    /// type. It is this entity field object that's passed to the message
-    /// handler so it's up to the handler to determine validity.
-    ///
-    /// If a JSON message is not an object, missing the 'type' field or the
-    /// type field is the wrong type then the message is ignored. The buffer
-    /// will still be consumed as with well formed messages.
-    ///
-    /// If the buffer contains incomplete or malformed JSON then no messages
-    /// are processed. No handlers called. The buffer is not consumed.
-    ///
-    /// All the parsed messages are returned in a vector. The vector may be
-    /// be empty.
-    std::vector<json11::Json> processMessages();
+private:
 
-    /// Encode and dend all enqueued messages to the client
-    ///
-    /// Each JSON message that has been enqueued by send() is encoded into JSON
-    /// and is sent to the client with a whitespace terminator.
-    ///
-    /// This consumes the send queue entirely.
-    void flushSendQueue();
+    common::Logger m_logger;
+
 };
 } // namespace server

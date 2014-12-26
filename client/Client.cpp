@@ -32,18 +32,17 @@ namespace {
 Client * game_instance;
 std::string const title = "Zordzman v0.0.3";
 Mix_Music * music = nullptr;
+bool can_send = false;
 } // Anonymous namespace
 
 /* Handler functions */
-void handler_mapoffer(MessageProcessor<> *processor,
+void handleMapOffer(MessageProcessor<> *processor,
                               MessageEntity entity) {
-    fmt::print("Object dump: {}\n", entity.dump());
-    fmt::print("Name: {}, Hash: {}\n", entity["entity"]["name"].string_value(),
-               entity["entity"]["hash"].string_value());
-    game_instance->checkForMap(entity["entity"]["name"].string_value(),
-                               entity["entity"]["hash"].string_value());
+    fmt::print("Name: {}, Hash: {}\n", entity["name"].string_value(),
+               entity["hash"].string_value());
+    game_instance->checkForMap(entity["name"].string_value(),
+                               entity["hash"].string_value());
 }
-
 
 Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_player(new Player(cfg.name, 0, 0, 1)),
@@ -136,8 +135,7 @@ bool Client::joinServer() {
     }
 
     m_msg_proc.setSocket(m_socket);
-    m_msg_proc.addHandler("map.offer", handler_mapoffer);
-
+    m_msg_proc.addHandler("map.offer", handleMapOffer);
     return true;
 }
 

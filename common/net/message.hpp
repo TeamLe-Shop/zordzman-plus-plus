@@ -7,6 +7,7 @@
 #include <tuple>
 #include <vector>
 #include <cstring>
+#include <cerrno>
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -185,6 +186,14 @@ public:
             // Error, need to check errno, may be EAGAIN/EWOULDBLOCK
             return;
         }
+
+        char *end;
+
+        end = (char*)m_buffer.data() + data_or_error - 1;
+        while(end > m_buffer.data() && isspace(*end)) end--;
+
+        // Write new null terminator
+        *(end+1) = 0;
         parseBuffer();
     }
 
@@ -220,11 +229,12 @@ public:
             std::string encoded_message = message.dump() + " ";
             int sent = 0;
             while (sent < encoded_message.size()) {
-                ssize_t data_or_error = ::send(m_socket,
+                int data_or_error = ::send(m_socket,
                                              encoded_message.data() + sent,
                                              encoded_message.size() - sent, 0);
                 if (data_or_error == -1) {
-                    // TODO: Handle/propagate error
+                    printf("(MessageProcessor) Error sending: %s\n",
+                           strerror(errno));
                 } else {
                     sent = sent + data_or_error;
                 }
@@ -264,7 +274,7 @@ private:
         std::string json_error;
 
         std::vector<json11::Json> messages =
-            json11::Json::parse_multi(m_buffer.c_str(), json_error);
+            json11::Json::parse_multi(m_buffer.data(), json_error);
         // Parsing will fail if the buffer contains a partial message, so the
         // JSON may be well formed but incomplete. This is not ideal. Ideally
         // we should be able to read all the complete messages and only leave

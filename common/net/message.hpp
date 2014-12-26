@@ -169,7 +169,7 @@ public:
     /// immediately. Instead they are enqueued for deferred dispatching via
     /// `dispatch`.
     ///
-    /// The order the messages are recevied is the same order they'll be
+    /// The order the messages are received is the same order they'll be
     /// dispatched.
     void process() {
         // TODO: Propagation of errors
@@ -296,4 +296,4 @@ private:
     }
 };
 
-}  // namesapce net
+}  // namespace net

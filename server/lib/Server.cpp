@@ -135,6 +135,7 @@ int Server::exec() {
                 bzero(buffer, 512);
                 int bytes_recv = recv(client.m_tcp_socket, buffer, 512, 0);
                 client.checkProtocolVersion(this, std::string(buffer));
+                continue;
             }
             client.m_msg_proc.flushSendQueue();
             client.m_msg_proc.process();

@@ -178,8 +178,9 @@ public:
             // What do?
             return;
         }
-        ssize_t data_or_error = recv(m_socket,
-             (void*) (m_buffer.data() + m_buffer.size()), free_buffer, 0);
+
+        m_buffer.resize(free_buffer);
+        ssize_t data_or_error = recv(m_socket, &m_buffer[0], free_buffer, 0);
         if (data_or_error == 0) {
             return;
         } else if (data_or_error == -1) {
@@ -187,13 +188,6 @@ public:
             return;
         }
 
-        char *end;
-
-        end = (char*)m_buffer.data() + data_or_error - 1;
-        while(end > m_buffer.data() && isspace(*end)) end--;
-
-        // Write new null terminator
-        *(end+1) = 0;
         parseBuffer();
     }
 
@@ -268,13 +262,13 @@ private:
     /// are processed. No messages are added to `m_ingress`. The buffer is not
     /// consumed.
     void parseBuffer() {
-        if (!*m_buffer.data()) {
+        if (m_buffer.empty()) {
             return;
         }
         std::string json_error;
 
         std::vector<json11::Json> messages =
-            json11::Json::parse_multi(m_buffer.data(), json_error);
+            json11::Json::parse_multi(m_buffer.c_str(), json_error);
         // Parsing will fail if the buffer contains a partial message, so the
         // JSON may be well formed but incomplete. This is not ideal. Ideally
         // we should be able to read all the complete messages and only leave
@@ -282,6 +276,7 @@ private:
         // of not using `parse_multi`.
         if (json_error.size()) {
             // TODO: Log JSON decode error?
+            printf("JSON decode error: %s\n", json_error.c_str());
         } else {
             m_buffer.clear();
             for (json11::Json message : messages) {

@@ -13,6 +13,7 @@ namespace map {
 using namespace common::util;
 
 void Level::loadLevel(std::string map_name) {
+    name = map_name;
     std::ifstream file(map_name, std::ios::in | std::ios::binary);
     std::vector<char> data = stream::readToEnd(file);
     md5.add(data.data(), data.size());

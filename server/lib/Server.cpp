@@ -27,6 +27,11 @@ namespace server {
 using namespace std::placeholders;
 using namespace json11;
 
+void handleMapRequest(Processor *, MessageEntity entity, Server* server,
+                      Client* client) {
+    client->m_msg_proc.send("map.contents", server->m_map.asBase64());
+}
+
 Server::Server(int port, unsigned int max_clients,
                std::string map_name)
     : m_logger(stderr, [] { return "SERVER: "; }) {
@@ -68,34 +73,16 @@ Server::Server(int port, unsigned int max_clients,
 //  }
     m_logger.log("[INFO] Bound to interface {}",
                  common::util::net::ipaddr(m_tcp_address));
-    addHandler("map.request",
-               std::bind(&server::Server::handleMapRequest, this, _1, _2, _3));
-    //addHandler("net.udp",
-    //          std::bind(&server::Server::handleNetUDP, this, _1, _2, _3));
 }
 
 Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }
 
 void Server::sendAll(std::string type, Json entity) {
     for (auto &client : m_clients) {
-        client.send(type, entity);
+        client.m_msg_proc.send(type, entity);
     }
 }
 
-void Server::addHandler(std::string type,
-                        std::function<void(Server *server, Client *client,
-                                           json11::Json entity)> handler) {
-    m_handlers[type].push_back(handler);
-}
-
-void Server::handleMapRequest(Server */*server*/, Client *client,
-                              json11::Json /*entity*/) {
-    client->send("map.contents", m_map.asBase64());
-}
-
-void Server::handleNetUDP(Server */*server*/,
-                          Client */*client*/, json11::Json /*entity*/) {
-}
 
 void Server::acceptConnections() {
     socklen_t b = sizeof(m_tcp_socket);
@@ -132,8 +119,14 @@ void Server::acceptConnections() {
             close(client_socket);
         } else {
             m_clients.emplace_back(*addr_in, client_socket);
-            m_clients.back().send("map.offer", m_map.md5.getHash());
-            m_clients.back().send("net.udp", UDP_PORT);
+            m_clients.back().m_msg_proc.setSocket(client_socket);
+            m_clients.back().m_msg_proc.addHandler("map.request",
+                                                   handleMapRequest);
+            m_clients.back().m_msg_proc.send("map.offer",
+                    Json::object {
+                        {"name", m_map.name},
+                        {"hash", m_map.md5.getHash()}
+                    });
         }
     }
 }
@@ -142,20 +135,15 @@ int Server::exec() {
     while (true) {
         acceptConnections();
         for (auto &client : m_clients) {
-            for (auto &message : client.exec()) {
-                // We can't use message.has_shape() here because we don't want
-                // to make assumptions about the type of the message entity
-                if (message.is_object()) {
-                    Json type = message["type"];
-                    // If the 'type' field doesn't exist then is_string()
-                    // is falsey
-                    if (type.is_string()) {
-                        for (auto &handler : m_handlers[type.string_value()]) {
-                            handler(this, &client, message["entity"]);
-                        }
-                    }
-                }
+            if (client.getState() == Client::Pending) {
+                client.checkProtocolVersion();
             }
+            if (!client.m_msg_proc.flushSendQueue()) {
+                client.disconnect("Failed to send to client", false);
+                continue;
+            }
+            client.m_msg_proc.process();
+            client.m_msg_proc.dispatch(this, &client);
         }
         // Remove disconnected clients
         for (size_t i = 0; i < m_clients.size(); ++i) {

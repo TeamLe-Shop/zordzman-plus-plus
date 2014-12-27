@@ -3,15 +3,22 @@
 #include "sys/RenderWindow.hpp"
 #include "sys/SysContext.hpp"
 #include "level/Level.hpp"
-#include "sys/TCPSocket.hpp"
 #include "entity/Player.hpp"
 #include "Config.hpp"
 #include "ResourceManager.hpp"
 #include "HUD.hpp"
 
 #include "json11.hpp"
+#include "common/net/message.hpp"
+
+#include <sys/socket.h>
+#include <sys/types.h>
+
+#include <netinet/in.h>
+#include <unistd.h>
 
 using namespace json11;
+using namespace net;
 
 /// The Zordzman client.
 namespace client {
@@ -30,17 +37,17 @@ public:
     bool joinServer();
     /// Draw the HUD.
     void drawHUD();
-    /// Read data from m_socket
-    void readData();
     /// Check if the client has the map the server has
-    void checkForMap(Json json);
+    void checkForMap(std::string map, std::string hash);
 
 private:
     Client(const Client &) = delete;
     Client & operator=(const Client &) = delete;
     sys::SysContext m_system;
     sys::RenderWindow m_window;
-    sys::TCPSocket m_socket;
+    Socket m_socket;
+    struct sockaddr_in m_socket_addr;
+    MessageProcessor<> m_msg_proc;
 
 public:
     ResourceManager resources;

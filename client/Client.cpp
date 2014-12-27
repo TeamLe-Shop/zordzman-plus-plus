@@ -4,18 +4,21 @@
 #include "net/net.hpp"
 #include "json11.hpp"
 #include "weapons/weaponList.hpp"
-#include "entity/Eyenado.hpp"
 
 #include <stdexcept>
 #include <format.h>
 #include <thread>
 #include <dirent.h>
+#include <netdb.h>
+#include <fcntl.h>
+#include <iostream>
 
 #include <SDL_mixer.h>
 
 #include "json11.hpp"
 #include "common/util/stream.hpp"
 #include "common/util/fileutil.hpp"
+#include "common/util/net.hpp"
 #include "common/extlib/hash-library/md5.h"
 
 namespace client {
@@ -26,12 +29,31 @@ namespace {
 Client * game_instance;
 std::string const title = "Zordzman v0.0.3";
 Mix_Music * music = nullptr;
+bool can_send = false;
 } // Anonymous namespace
+
+typedef MessageProcessor<> Processor;
+
+/* Handler functions */
+void handleMapOffer(Processor *processor,
+                              MessageEntity entity) {
+    fmt::print("Name: {}, Hash: {}\n", entity["name"].string_value(),
+               entity["hash"].string_value());
+    game_instance->checkForMap(entity["name"].string_value(),
+                               entity["hash"].string_value());
+}
 
 Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_player(new Player(cfg.name, 0, 0, 1)),
       m_cfg(cfg), m_hud(hud) {
     game_instance = this;
+
+    if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
+        throw std::runtime_error(
+            fmt::format("Couldn't create socket: {}", strerror(errno)));
+    }
+
+    m_socket_addr.sin_family = AF_INET;
 
     if (!joinServer()) {
         throw std::runtime_error("Couldn't connect to server.");
@@ -55,11 +77,65 @@ Client::Client(Config const & cfg, HUD hud)
     Mix_PlayMusic(music, -1);
 }
 
-Client::~Client() { game_instance = nullptr; }
+Client::~Client() { close(m_socket); game_instance = nullptr; }
 
 bool Client::joinServer() {
-    return m_socket.connectToHost(m_cfg.host, m_cfg.port) &&
-    m_socket.send(net::MAGIC_NUMBER); // Hand shake
+    memset(&m_socket_addr, 0, sizeof(m_socket_addr));
+
+    // Convert human-readable domain name/ip string (m_cfg.host)
+    // to `struct sockaddr_in`.
+    struct addrinfo *result;
+    int error;
+
+    struct addrinfo criteria;
+    memset(&criteria, 0, sizeof(criteria));
+    criteria.ai_family = AF_INET;
+    criteria.ai_protocol = SOCK_STREAM;
+    criteria.ai_flags = AI_PASSIVE;
+
+    if ((error = getaddrinfo(m_cfg.host.c_str(), NULL, &criteria, &result))) {
+        fmt::print("Error resolving host name: {}\n", gai_strerror(error));
+        return false;
+    }
+
+    memcpy(&m_socket_addr, result->ai_addr, sizeof(struct sockaddr_in));
+
+    m_socket_addr.sin_port = htons(m_cfg.port);
+
+    fmt::print("Server IP: {}\n", common::util::net::ipaddr(m_socket_addr));
+
+    freeaddrinfo(result);
+
+    if (connect(m_socket, (struct sockaddr*)&m_socket_addr, sizeof
+        m_socket_addr) < 0) {
+        fmt::print(stderr,
+                   "[ERROR] ({}) Could not connect to host: {}\n",
+                   errno, strerror(errno));
+        close(m_socket);
+        return false;
+    }
+
+    fcntl(m_socket, F_SETFL, O_NONBLOCK);
+
+    size_t total_sent = 0;
+    size_t additive = 0;
+    size_t length = 4;
+
+    while (total_sent < length) {
+        additive = send(m_socket, net::MAGIC_NUMBER.c_str(), length, 0);
+
+        if (additive == -1) {
+            fmt::print(stderr, "[ERROR] Error sending magic num: {}\n",
+                       strerror(errno));
+            break;
+        }
+
+        total_sent += additive;
+    }
+
+    m_msg_proc.setSocket(m_socket);
+    m_msg_proc.addHandler("map.offer", handleMapOffer);
+    return true;
 }
 
 void Client::exec() {
@@ -85,45 +161,18 @@ void Client::exec() {
 
         m_window.present();
 
-        readData();
+        m_msg_proc.process();
+        m_msg_proc.dispatch();
 
         SDL_Delay(1000 / 60);
     }
 }
 
-void Client::readData() {
-    // Read shit from socket
-    std::string data = m_socket.read();
-    data += "\0";
-    if (data.size() < 1) { // The connection may have ended or
-                           // an error may have occured.
-        return;
-    }
-
-    std::string err;
-
-    Json json = Json::parse(data, err); // Turn it into a Json object
-                                        // so we can access members
-
-    if (!err.empty()) {
-        printf("Server sent bad JSON string\n");
-        printf("Error: %s\n", err.c_str());
-        return;
-    }
-
-    if (json["type"].string_value() == "disconnect") {
-        printf("Disconnected: %s\n",
-               json["entity"]["reason"].string_value().c_str());
-    } else if (json["type"].string_value() == "map-hash") {
-        checkForMap(json);
-    }
-}
-
-void Client::checkForMap(Json json) {
+void Client::checkForMap(std::string map, std::string hash) {
     using namespace common::util::file;
     bool found_match = false;
 
-    m_map_name = fileFromPath(json["entity"]["name"].string_value());
+    m_map_name = fileFromPath(map);
 
     // The client is going to now look for that map file.
     DIR * dir;
@@ -137,7 +186,7 @@ void Client::checkForMap(Json json) {
     while ((ent = readdir(dir)) != NULL) {
         // Does the map hash match the file name?
         if (!strcmp(ent->d_name,
-                    json["entity"]["hash"].string_value().c_str())) {
+                    hash.c_str())) {
             // Open a stream to the file.
             std::ifstream mapfile(
                 fmt::format("resources/levels/{}", ent->d_name),
@@ -152,7 +201,7 @@ void Client::checkForMap(Json json) {
             md5.add(mapdata.data(), mapdata.size());
             if (!strcmp(md5.getHash().c_str(), ent->d_name)) {
                 found_match = true;
-                m_level = Level(json["entity"]["hash"].string_value());
+                m_level = Level(hash);
             }
 
             mapfile.close();
@@ -160,10 +209,6 @@ void Client::checkForMap(Json json) {
     }
 
     // Send to the server whether or not we have the map.
-    Json hasmap =
-        Json::object{{"type", "has-map"},
-                     {"entity", Json::object{{"has-map", found_match}}}};
-    m_socket.send(hasmap.dump());
 }
 
 void Client::drawHUD() {
@@ -218,7 +263,7 @@ void Client::drawHUD() {
 
     glColor3f(1, 1, 1);
     std::string serverstr =
-        fmt::format("Server: {}", m_socket.getFormattedServerAddr());
+        fmt::format("Server: {}", common::util::net::ipaddr(m_socket_addr));
     std::string mapstr = fmt::format("Map: {}", m_map_name);
     drawText(serverstr, 800 - (8 * serverstr.size()), m_hud.border.y - 8, 8, 8);
     drawText(mapstr, 800 - (8 * mapstr.size()), m_hud.border.y - 16, 8, 8);
@@ -232,4 +277,6 @@ Client & Client::get() {
 }
 
 sys::RenderWindow & Client::getWindow() { return m_window; }
+
+
 } // namespace client

@@ -6,10 +6,13 @@
 #include <string>
 #include <tuple>
 #include <vector>
+#include <cstring>
+#include <cerrno>
 
 #include <sys/socket.h>
 #include <sys/types.h>
 
+#include "format.h"
 #include "common/extlib/json11/json11.hpp"
 
 #include "common/entity/entity.hpp"
@@ -104,10 +107,16 @@ using MutedHandler = std::function<void(
 )>;
 
 public:
+    MessageProcessor() { m_buffer.reserve(8192); }
     /// @param socket A connected socket descriptor
     MessageProcessor(Socket socket) {
         m_socket = socket;
         m_buffer.reserve(8192);
+    }
+
+    /// Set socket descriptor for this processor
+    void setSocket(Socket socket) {
+        m_socket = socket;
     }
 
     /// Register a callback for a given message type
@@ -158,28 +167,32 @@ public:
 
     /// Receive and parse messages
     ///
-    /// This will attempt to receive JSON-endoded messages from the associated
+    /// This will attempt to receive JSON-encoded messages from the associated
     /// socket. Note that this method doesn't call the message handlers
     /// immediately. Instead they are enqueued for deferred dispatching via
     /// `dispatch`.
     ///
-    /// The order the messages are recevied is the same order they'll be
+    /// The order the messages are received is the same order they'll be
     /// dispatched.
-    void proccess() {
+    void process() {
         // TODO: Propagation of errors
         auto free_buffer = m_buffer.capacity() - m_buffer.size();
         if (free_buffer == 0) {
             // What do?
             return;
         }
-        ssize_t data_or_error = recv(m_socket,
-             m_buffer().data() + m_buffer.size(), free_buffer);
+
+        m_buffer.resize(free_buffer);
+        int len = strlen(&m_buffer[0]);
+        ssize_t data_or_error = recv(m_socket, &m_buffer[len],
+                                     free_buffer, 0);
         if (data_or_error == 0) {
             return;
         } else if (data_or_error == -1) {
             // Error, need to check errno, may be EAGAIN/EWOULDBLOCK
             return;
         }
+
         parseBuffer();
     }
 
@@ -236,7 +249,7 @@ public:
     /// and is sent over the associated socket with a null terminator.
     ///
     /// This consumes the send queue entirely.
-    void flushSendQueue() {
+    bool flushSendQueue() {
         while (!m_egress.empty()) {
             json11::Json message = json11::Json::object{
                 { "type", std::get<0>(m_egress.front()) },
@@ -244,18 +257,21 @@ public:
             };
             m_egress.pop();
             std::string encoded_message = message.dump() + " ";
-            int sent = 0;
+            ssize_t sent = 0;
             while (sent < encoded_message.size()) {
                 ssize_t data_or_error = ::send(m_socket,
                                              encoded_message.data() + sent,
                                              encoded_message.size() - sent, 0);
                 if (data_or_error == -1) {
-                    // TODO: Handle/propagate error
+                    fmt::print("(MessageProcessor) Error sending: {}\n",
+                       strerror(errno));
+                    return false;
                 } else {
                     sent = sent + data_or_error;
                 }
             }
         }
+        return true;
     }
 
 private:
@@ -268,7 +284,7 @@ private:
     /// Attempt to parse all JSON-encoded messages from the buffer
     ///
     /// This parses all whitespace-delimited JSON objects from the buffer and
-    /// calls and adds them to the m_ingress message queue to be dispatched
+    /// and adds them to the m_ingress message queue to be dispatched
     /// later.
     ///
     /// Each JSON message should be an object at the top level with a string
@@ -288,18 +304,20 @@ private:
             return;
         }
         std::string json_error;
+
         std::vector<json11::Json> messages =
-            json11::Json::parse_multi(m_buffer, json_error);
+            json11::Json::parse_multi(m_buffer.c_str(), json_error);
         // Parsing will fail if the buffer contains a partial message, so the
         // JSON may be well formed but incomplete. This is not ideal. Ideally
         // we should be able to read all the complete messages and only leave
         // the incomplete one in the buffer. This may be an argument in favour
         // of not using `parse_multi`.
         if (json_error.size()) {
-            // TODO: Log JSON decode error?
+            printf("(MessageProcessor) JSON decode error: %s\n",
+                   json_error.c_str());
         } else {
             m_buffer.clear();
-            for (auto &message : messages) {
+            for (json11::Json message : messages) {
                 json11::Json type = message["type"];
                 // If the 'type' field doesn't exist then is_string()
                 // is falsey
@@ -311,4 +329,4 @@ private:
     }
 };
 
-}  // namesapce net
+}  // namespace net

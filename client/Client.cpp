@@ -13,9 +13,6 @@
 #include <fcntl.h>
 #include <iostream>
 
-#include <sys/socket.h>
-#include <sys/types.h>
-
 #include <SDL_mixer.h>
 
 #include "json11.hpp"

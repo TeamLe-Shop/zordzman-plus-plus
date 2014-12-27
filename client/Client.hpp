@@ -3,7 +3,6 @@
 #include "sys/RenderWindow.hpp"
 #include "sys/SysContext.hpp"
 #include "level/Level.hpp"
-#include "sys/TCPSocket.hpp"
 #include "entity/Player.hpp"
 #include "Config.hpp"
 #include "ResourceManager.hpp"
@@ -11,6 +10,12 @@
 
 #include "json11.hpp"
 #include "common/net/message.hpp"
+
+#include <sys/socket.h>
+#include <sys/types.h>
+
+#include <netinet/in.h>
+#include <unistd.h>
 
 using namespace json11;
 using namespace net;

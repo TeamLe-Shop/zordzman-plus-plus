@@ -135,10 +135,13 @@ int Server::exec() {
     while (true) {
         acceptConnections();
         for (auto &client : m_clients) {
-            if (client.m_state == Client::Pending) {
+            if (client.getState() == Client::Pending) {
                 client.checkProtocolVersion();
             }
-            client.m_msg_proc.flushSendQueue();
+            if (!client.m_msg_proc.flushSendQueue()) {
+                client.disconnect("Failed to send to client", false);
+                continue;
+            }
             client.m_msg_proc.process();
             client.m_msg_proc.dispatch(this, &client);
         }
@@ -146,7 +149,7 @@ int Server::exec() {
         for (size_t i = 0; i < m_clients.size(); ++i) {
             Client &client = m_clients[i];
 
-            if (client.m_state == Client::Disconnected) {
+            if (client.getState() == Client::Disconnected) {
                 close(client.m_tcp_socket);
                 m_clients.erase(m_clients.begin() + i);
             }

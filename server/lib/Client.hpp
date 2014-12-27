@@ -120,8 +120,6 @@ public:
 
     Processor m_msg_proc;
 
-    State m_state;
-
     /// Assert the client is using the correct protocol version
     ///
     /// If the client state is Pending this checks if the buffer contains the
@@ -139,6 +137,7 @@ public:
 private:
     std::string m_magic_buffer;
     common::Logger m_logger;
+    State m_state;
 
 };
 } // namespace server

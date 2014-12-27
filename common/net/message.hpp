@@ -230,9 +230,8 @@ public:
                                              encoded_message.data() + sent,
                                              encoded_message.size() - sent, 0);
                 if (data_or_error == -1) {
-                    throw std::runtime_error(
-                        fmt::format("(MessageProcessor) Error sending: {}\n",
-                           strerror(errno)));
+                    fmt::print("(MessageProcessor) Error sending: {}\n",
+                       strerror(errno));
                     return false;
                 } else {
                     sent = sent + data_or_error;

@@ -134,10 +134,10 @@ public:
     /// this method has no effect.
     ///
     /// The magic number is consumed from the buffer.
-    void checkProtocolVersion(Server* server, std::string buffer);
+    void checkProtocolVersion(std::string buffer);
 
 private:
-
+    std::string magic_buffer;
     common::Logger m_logger;
 
 };

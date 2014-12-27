@@ -21,7 +21,7 @@ Client::Client(struct sockaddr_in addr, int socket)
     m_logger.log("Client connected (state = Pending)");
 }
 
-void Client::checkProtocolVersion(Server* server, std::string buffer) {
+void Client::checkProtocolVersion(std::string buffer) {
     // TODO: This needs timeout logic so that if the magic number is not
     // found after some time then client is also disconnected. Otherwise this
     // would enable rouge clients to perform DoS by holding their sockets open
@@ -29,12 +29,15 @@ void Client::checkProtocolVersion(Server* server, std::string buffer) {
     if (m_state != Pending) {
         return;
     }
-    if (buffer.size() < strlen(MAGIC_NUMBER)) {
+
+    magic_buffer += buffer;
+
+    if (magic_buffer.size() < strlen(MAGIC_NUMBER)) {
         return;
     } else {
         char magic[] = MAGIC_NUMBER;
         for (std::size_t i = 0; i < strlen(MAGIC_NUMBER); i++) {
-            char front = buffer[i];
+            char front = magic_buffer[i];
             if (front != magic[i]) {
                 disconnect(fmt::format("Bad magic number at pos {}", i), false);
                 return;
@@ -42,11 +45,6 @@ void Client::checkProtocolVersion(Server* server, std::string buffer) {
         }
         m_state = Connected;
         m_logger.log("Correct magic number (state = Connected)");
-        m_msg_proc.send("map.offer",
-            Json::object {
-                {"name", server->m_map.name},
-                {"hash", server->m_map.md5.getHash()}
-            });
     }
 }
 

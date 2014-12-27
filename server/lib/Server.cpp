@@ -122,6 +122,11 @@ void Server::acceptConnections() {
             m_clients.back().m_msg_proc.setSocket(client_socket);
             m_clients.back().m_msg_proc.addHandler("map.request",
                                                    handleMapRequest);
+            m_clients.back().m_msg_proc.send("map.offer",
+                    Json::object {
+                        {"name", m_map.name},
+                        {"hash", m_map.md5.getHash()}
+                    });
         }
     }
 }
@@ -131,10 +136,10 @@ int Server::exec() {
         acceptConnections();
         for (auto &client : m_clients) {
             if (client.m_state == Client::Pending) {
-                char buffer[512];
-                bzero(buffer, 512);
-                int bytes_recv = recv(client.m_tcp_socket, buffer, 512, 0);
-                client.checkProtocolVersion(this, std::string(buffer));
+                char buffer[5]; // 4 + null term?
+                memset(buffer, 0, 5);
+                int bytes_recv = recv(client.m_tcp_socket, buffer, 4, 0);
+                client.checkProtocolVersion(std::string(buffer));
                 continue;
             }
             client.m_msg_proc.flushSendQueue();

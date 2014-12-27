@@ -35,8 +35,10 @@ Mix_Music * music = nullptr;
 bool can_send = false;
 } // Anonymous namespace
 
+typedef MessageProcessor<> Processor;
+
 /* Handler functions */
-void handleMapOffer(MessageProcessor<> *processor,
+void handleMapOffer(Processor *processor,
                               MessageEntity entity) {
     fmt::print("Name: {}, Hash: {}\n", entity["name"].string_value(),
                entity["hash"].string_value());

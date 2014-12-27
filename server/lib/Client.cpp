@@ -12,8 +12,7 @@ using namespace json11;
 
 Client::Client(struct sockaddr_in addr, int socket)
     : m_logger(stderr, [=] {
-            return fmt::format("{}: ",
-                   common::util::net::ipaddr(addr));
+          return fmt::format("{}: ", common::util::net::ipaddr(addr));
       }) {
     m_tcp_socket = socket;
     m_state = Pending;
@@ -33,8 +32,7 @@ void Client::checkProtocolVersion() {
     char buffer[4];
     memset(buffer, 0, 4);
     int bytes_recv = recv(m_tcp_socket, buffer, 4 - m_magic_buffer.size(), 0);
-    if ((bytes_recv == 0) ||
-        (bytes_recv == -1 && errno != EAGAIN)) {
+    if ((bytes_recv == 0) || (bytes_recv == -1 && errno != EAGAIN)) {
         m_state = Disconnected;
     }
 
@@ -59,9 +57,8 @@ void Client::checkProtocolVersion() {
 Client::State Client::getState() const { return m_state; }
 
 Client::Client(Client &&other)
-    : m_tcp_socket(other.m_tcp_socket),
-      m_state(other.m_state), m_msg_proc(other.m_msg_proc)
-       {
+    : m_tcp_socket(other.m_tcp_socket), m_state(other.m_state),
+      m_msg_proc(other.m_msg_proc) {
     other.m_tcp_socket = -1;
 }
 

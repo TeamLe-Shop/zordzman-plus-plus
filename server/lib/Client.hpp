@@ -16,7 +16,6 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
-
 #include "Server.hpp"
 
 #include "common/logger/Logger.hpp"
@@ -30,7 +29,7 @@ namespace server {
 class Server;
 class Client;
 
-typedef MessageProcessor<Server*, Client*> Processor;
+typedef MessageProcessor<Server *, Client *> Processor;
 
 /// Represents a connected client
 ///
@@ -138,6 +137,5 @@ private:
     std::string m_magic_buffer;
     common::Logger m_logger;
     State m_state;
-
 };
 } // namespace server

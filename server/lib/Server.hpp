@@ -31,9 +31,9 @@ namespace server {
 class Server;
 class Client;
 
-typedef MessageProcessor<Server*, Client*> Processor;
+typedef MessageProcessor<Server *, Client *> Processor;
 
-void handleMapRequest(Processor *, MessageEntity, Server*, Client*);
+void handleMapRequest(Processor *, MessageEntity, Server *, Client *);
 
 class Server {
 
@@ -48,6 +48,7 @@ public:
     void sendAll(std::string type, json11::Json entity);
 
     map::Level m_map;
+
 private:
     void initSDL();
     /// Accept all pending connections

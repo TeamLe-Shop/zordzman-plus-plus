@@ -27,13 +27,12 @@ namespace server {
 using namespace std::placeholders;
 using namespace json11;
 
-void handleMapRequest(Processor *, MessageEntity entity, Server* server,
-                      Client* client) {
+void handleMapRequest(Processor *, MessageEntity entity, Server *server,
+                      Client *client) {
     client->m_msg_proc.send("map.contents", server->m_map.asBase64());
 }
 
-Server::Server(int port, unsigned int max_clients,
-               std::string map_name)
+Server::Server(int port, unsigned int max_clients, std::string map_name)
     : m_logger(stderr, [] { return "SERVER: "; }) {
     m_max_clients = max_clients;
 
@@ -51,14 +50,14 @@ Server::Server(int port, unsigned int max_clients,
     memset(&m_tcp_address, 0, sizeof m_tcp_address);
 
     m_tcp_address.sin_family = AF_INET;
-    m_tcp_address.sin_port   = htons(port);
+    m_tcp_address.sin_port = htons(port);
 
     if (INADDR_ANY) {
         m_tcp_address.sin_addr.s_addr = htonl(INADDR_ANY);
     }
 
     if (bind(m_tcp_socket, (const struct sockaddr *)&m_tcp_address,
-        sizeof m_tcp_address) < 0) {
+             sizeof m_tcp_address) < 0) {
         m_logger.log("[ERR]  Failed to bind TCP interface: {}",
                      strerror(errno));
         exit(1);
@@ -66,11 +65,11 @@ Server::Server(int port, unsigned int max_clients,
 
     listen(m_tcp_socket, SOMAXCONN);
 
-//  if (!(m_udp_socket = socket(AF_INET, SOCK_DGRAM, 0) )) {
-//      m_logger.log("[ERR]  Failed to bind UDP interface: {}",
-//                   strerror(errno));
-//      exit(1);
-//  }
+    //  if (!(m_udp_socket = socket(AF_INET, SOCK_DGRAM, 0) )) {
+    //      m_logger.log("[ERR]  Failed to bind UDP interface: {}",
+    //                   strerror(errno));
+    //      exit(1);
+    //  }
     m_logger.log("[INFO] Bound to interface {}",
                  common::util::net::ipaddr(m_tcp_address));
 }
@@ -83,18 +82,17 @@ void Server::sendAll(std::string type, Json entity) {
     }
 }
 
-
 void Server::acceptConnections() {
     socklen_t b = sizeof(m_tcp_socket);
     while (true) {
         // Returns immediately with NULL if no pending connections
-        Socket client_socket = accept(m_tcp_socket,
-                                   (struct sockaddr *)&m_tcp_address, &b);
+        Socket client_socket =
+            accept(m_tcp_socket, (struct sockaddr *)&m_tcp_address, &b);
 
         if (client_socket < 0) {
             if (errno != EAGAIN && errno != EWOULDBLOCK) {
                 m_logger.log("Failed to accept client connection: {}",
-                         strerror(errno));
+                             strerror(errno));
                 break;
             } else {
                 break;
@@ -103,8 +101,7 @@ void Server::acceptConnections() {
 
         struct sockaddr peer_address;
         socklen_t addrlen = sizeof(peer_address);
-        int error = getpeername(client_socket, &peer_address,
-                                &addrlen);
+        int error = getpeername(client_socket, &peer_address, &addrlen);
         if (error == -1) {
             throw std::runtime_error("Error getting peer name.");
         }
@@ -122,11 +119,9 @@ void Server::acceptConnections() {
             m_clients.back().m_msg_proc.setSocket(client_socket);
             m_clients.back().m_msg_proc.addHandler("map.request",
                                                    handleMapRequest);
-            m_clients.back().m_msg_proc.send("map.offer",
-                    Json::object {
-                        {"name", m_map.name},
-                        {"hash", m_map.md5.getHash()}
-                    });
+            m_clients.back().m_msg_proc.send(
+                "map.offer", Json::object{ { "name", m_map.name },
+                                           { "hash", m_map.md5.getHash() } });
         }
     }
 }

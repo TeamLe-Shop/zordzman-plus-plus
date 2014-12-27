@@ -35,8 +35,7 @@ bool can_send = false;
 typedef MessageProcessor<> Processor;
 
 /* Handler functions */
-void handleMapOffer(Processor *processor,
-                              MessageEntity entity) {
+void handleMapOffer(Processor * processor, MessageEntity entity) {
     fmt::print("Name: {}, Hash: {}\n", entity["name"].string_value(),
                entity["hash"].string_value());
     game_instance->checkForMap(entity["name"].string_value(),
@@ -77,14 +76,17 @@ Client::Client(Config const & cfg, HUD hud)
     Mix_PlayMusic(music, -1);
 }
 
-Client::~Client() { close(m_socket); game_instance = nullptr; }
+Client::~Client() {
+    close(m_socket);
+    game_instance = nullptr;
+}
 
 bool Client::joinServer() {
     memset(&m_socket_addr, 0, sizeof(m_socket_addr));
 
     // Convert human-readable domain name/ip string (m_cfg.host)
     // to `struct sockaddr_in`.
-    struct addrinfo *result;
+    struct addrinfo * result;
     int error;
 
     struct addrinfo criteria;
@@ -106,10 +108,9 @@ bool Client::joinServer() {
 
     freeaddrinfo(result);
 
-    if (connect(m_socket, (struct sockaddr*)&m_socket_addr, sizeof
-        m_socket_addr) < 0) {
-        fmt::print(stderr,
-                   "[ERROR] ({}) Could not connect to host: {}\n",
+    if (connect(m_socket, (struct sockaddr *)&m_socket_addr,
+                sizeof m_socket_addr) < 0) {
+        fmt::print(stderr, "[ERROR] ({}) Could not connect to host: {}\n",
                    errno, strerror(errno));
         close(m_socket);
         return false;
@@ -185,8 +186,7 @@ void Client::checkForMap(std::string map, std::string hash) {
 
     while ((ent = readdir(dir)) != NULL) {
         // Does the map hash match the file name?
-        if (!strcmp(ent->d_name,
-                    hash.c_str())) {
+        if (!strcmp(ent->d_name, hash.c_str())) {
             // Open a stream to the file.
             std::ifstream mapfile(
                 fmt::format("resources/levels/{}", ent->d_name),
@@ -277,6 +277,5 @@ Client & Client::get() {
 }
 
 sys::RenderWindow & Client::getWindow() { return m_window; }
-
 
 } // namespace client

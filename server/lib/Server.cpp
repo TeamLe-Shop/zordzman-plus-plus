@@ -136,11 +136,7 @@ int Server::exec() {
         acceptConnections();
         for (auto &client : m_clients) {
             if (client.m_state == Client::Pending) {
-                char buffer[5]; // 4 + null term?
-                memset(buffer, 0, 5);
-                int bytes_recv = recv(client.m_tcp_socket, buffer, 4, 0);
-                client.checkProtocolVersion(std::string(buffer));
-                continue;
+                client.checkProtocolVersion();
             }
             client.m_msg_proc.flushSendQueue();
             client.m_msg_proc.process();
@@ -150,7 +146,7 @@ int Server::exec() {
         for (size_t i = 0; i < m_clients.size(); ++i) {
             Client &client = m_clients[i];
 
-            if (client.getState() == Client::Disconnected) {
+            if (client.m_state == Client::Disconnected) {
                 close(client.m_tcp_socket);
                 m_clients.erase(m_clients.begin() + i);
             }

@@ -12,6 +12,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
+#include "format.h"
 #include "common/extlib/json11/json11.hpp"
 
 /// Networking utilities common to both the server and client
@@ -215,7 +216,7 @@ public:
     /// and is sent over the associated socket with a null terminator.
     ///
     /// This consumes the send queue entirely.
-    void flushSendQueue() {
+    bool flushSendQueue() {
         while (!m_egress.empty()) {
             json11::Json message = json11::Json::object{
                 { "type", std::get<0>(m_egress.front()) },
@@ -223,19 +224,22 @@ public:
             };
             m_egress.pop();
             std::string encoded_message = message.dump() + " ";
-            int sent = 0;
+            ssize_t sent = 0;
             while (sent < encoded_message.size()) {
-                int data_or_error = ::send(m_socket,
+                ssize_t data_or_error = ::send(m_socket,
                                              encoded_message.data() + sent,
                                              encoded_message.size() - sent, 0);
                 if (data_or_error == -1) {
-                    printf("(MessageProcessor) Error sending: %s\n",
-                           strerror(errno));
+                    throw std::runtime_error(
+                        fmt::format("(MessageProcessor) Error sending: {}\n",
+                           strerror(errno)));
+                    return false;
                 } else {
                     sent = sent + data_or_error;
                 }
             }
         }
+        return true;
     }
 
 private:
@@ -277,7 +281,6 @@ private:
         // the incomplete one in the buffer. This may be an argument in favour
         // of not using `parse_multi`.
         if (json_error.size()) {
-            // TODO: Log JSON decode error?
             printf("(MessageProcessor) JSON decode error: %s\n",
                    json_error.c_str());
         } else {

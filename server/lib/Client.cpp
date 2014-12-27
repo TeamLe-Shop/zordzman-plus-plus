@@ -21,7 +21,7 @@ Client::Client(struct sockaddr_in addr, int socket)
     m_logger.log("Client connected (state = Pending)");
 }
 
-void Client::checkProtocolVersion(std::string buffer) {
+void Client::checkProtocolVersion() {
     // TODO: This needs timeout logic so that if the magic number is not
     // found after some time then client is also disconnected. Otherwise this
     // would enable rouge clients to perform DoS by holding their sockets open
@@ -30,14 +30,22 @@ void Client::checkProtocolVersion(std::string buffer) {
         return;
     }
 
-    magic_buffer += buffer;
+    char buffer[4];
+    memset(buffer, 0, 4);
+    int bytes_recv = recv(m_tcp_socket, buffer, 4 - m_magic_buffer.size(), 0);
+    if ((bytes_recv == 0) ||
+        (bytes_recv == -1 && errno != EAGAIN)) {
+        m_state = Disconnected;
+    }
 
-    if (magic_buffer.size() < strlen(MAGIC_NUMBER)) {
+    m_magic_buffer += buffer;
+
+    if (m_magic_buffer.size() < strlen(MAGIC_NUMBER)) {
         return;
     } else {
         char magic[] = MAGIC_NUMBER;
         for (std::size_t i = 0; i < strlen(MAGIC_NUMBER); i++) {
-            char front = magic_buffer[i];
+            char front = m_magic_buffer[i];
             if (front != magic[i]) {
                 disconnect(fmt::format("Bad magic number at pos {}", i), false);
                 return;

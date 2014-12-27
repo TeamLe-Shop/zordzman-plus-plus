@@ -180,7 +180,9 @@ public:
         }
 
         m_buffer.resize(free_buffer);
-        ssize_t data_or_error = recv(m_socket, &m_buffer[0], free_buffer, 0);
+        int len = strlen(&m_buffer[0]);
+        ssize_t data_or_error = recv(m_socket, &m_buffer[len],
+                                     free_buffer, 0);
         if (data_or_error == 0) {
             return;
         } else if (data_or_error == -1) {
@@ -276,7 +278,8 @@ private:
         // of not using `parse_multi`.
         if (json_error.size()) {
             // TODO: Log JSON decode error?
-            printf("JSON decode error: %s\n", json_error.c_str());
+            printf("(MessageProcessor) JSON decode error: %s\n",
+                   json_error.c_str());
         } else {
             m_buffer.clear();
             for (json11::Json message : messages) {

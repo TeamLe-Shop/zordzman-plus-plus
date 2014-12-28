@@ -29,7 +29,6 @@ using namespace json11;
 
 void handleMapRequest(Processor *, MessageEntity entity, Server *server,
                       Client *client) {
-    fmt::print("Client requested map contents\n");
     client->m_msg_proc.send("map.contents", server->m_map.asBase64());
 }
 
@@ -39,7 +38,7 @@ Server::Server(int port, unsigned int max_clients, std::string map_name)
 
     m_map.loadLevel(map_name);
     // Log this in the map loader maybe?
-    m_logger.log("Map hash: {}", m_map.md5.getHash());
+    m_logger.log("[INFO] Map hash: {}", m_map.md5.getHash());
 
     if ((m_tcp_socket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
         m_logger.log("[ERR]  Failed to create socket: {}", strerror(errno));
@@ -95,7 +94,7 @@ void Server::acceptConnections() {
 
         if (client_socket < 0) {
             if (errno != EAGAIN && errno != EWOULDBLOCK) {
-                m_logger.log("Failed to accept client connection: {}",
+                m_logger.log("[ERR]  Failed to accept client connection: {}",
                              strerror(errno));
                 break;
             } else {

@@ -34,7 +34,7 @@ void Client::checkProtocolVersion() {
     int bytes_recv = recv(m_tcp_socket, buffer, 4 - m_magic_buffer.size(), 0);
     if ((bytes_recv == 0) || (bytes_recv == -1 && errno != EAGAIN)) {
         m_state = Disconnected;
-        fmt::print("Client disconnected?\n");
+        disconnect("Left server", false);
     }
 
     m_magic_buffer += buffer;

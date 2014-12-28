@@ -46,6 +46,9 @@ Server::Server(int port, unsigned int max_clients, std::string map_name)
         exit(1);
     }
 
+    int optval = 1;
+    setsockopt(m_tcp_socket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+
     fcntl(m_tcp_socket, F_SETFL, O_NONBLOCK);
 
     memset(&m_tcp_address, 0, sizeof m_tcp_address);

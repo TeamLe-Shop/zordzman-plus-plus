@@ -22,8 +22,9 @@ Note: SDLNet is no longer being used, and our project will be using system socke
 
 It uses [json11](https://github.com/dropbox/json11) for parsing JSON,
 [cppformat](http://cppformat.github.io/) for formatting, and
-[hash-library](http://create.stephan-brumme.com/hash-library/) for, guess what,
-hashing. (HOLY SIT)
+[hash-library](http://create.stephan-brumme.com/hash-library/) for hashing and
+[base64](http://www.adp-gmbh.ch/cpp/common/base64.html) for base64 encoding &
+decoding.
 
 All three libraries are located in `common/extlib/libname/`.
 

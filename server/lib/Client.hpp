@@ -71,18 +71,6 @@ public:
     /// they arrive at the client in.
     void send(std::string type, json11::Json entity);
 
-    // TODO: Rewrite this completely fucking wrong doc string or whatever
-    // you call it
-    /// Read bytes from the socket into the buffer
-    ///
-    /// Reads up to RECV_BUFFER_SIZE bytes into the buffer.
-    /// Therefore the caller is responsible for calling both
-    /// SDLNet_CheckSockets and SDLNet_SocketReady
-    /// on the socket set containing the client's socket.
-    ///
-    /// Returns all the messages that were received by the client.
-    std::vector<json11::Json> exec();
-
     /// Disconnect for `reason`
     ///
     /// This will set client's state to Disconnected and optionally send the

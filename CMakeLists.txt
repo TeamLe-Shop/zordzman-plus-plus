@@ -16,7 +16,7 @@ include_directories(common/extlib/base64)
 add_library(cppformat common/extlib/cppformat/format.cc)
 
 # For GCC and Clang, enable C++11 support and add some other flags
-if(USING_GCC OR USING_CLANG OR GATSAN)
+if(USING_GCC OR USING_CLANG OR OSX)
   add_compile_options(-std=c++11 -pedantic -Wall -Wextra
                       -Wmissing-declarations -Wnon-virtual-dtor)
   if(SANITIZE)
@@ -28,6 +28,8 @@ endif()
 
 add_library(json11 common/extlib/json11/json11.cpp)
 add_library(hash-library common/extlib/hash-library/md5.cpp)
+add_library(base64
+            common/extlib/base64/base64.hpp common/extlib/base64/base64.cpp)
 
 add_library(server server/lib/Server.cpp)
 add_library(logger common/logger/Logger.hpp common/logger/Logger.cpp)
@@ -39,8 +41,7 @@ add_library(common_entity ${COMMON_ENTITY_SOURCES})
 file(GLOB_RECURSE COMMON_UTIL_SOURCES common/util/*.*pp)
 add_library(common_util ${COMMON_UTIL_SOURCES})
 add_library(zjson common/zjson/zjson.hpp common/zjson/zjson.cpp)
-add_library(base64
-            common/extlib/base64/base64.hpp common/extlib/base64/base64.cpp)
+
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 
@@ -80,6 +81,7 @@ target_link_libraries(zordzman
     cppformat
     server
     zjson
+    base64
     hash-library
     common_util
     common_net

@@ -8,6 +8,7 @@
 #include "ResourceManager.hpp"
 #include "HUD.hpp"
 
+#include "base64.hpp"
 #include "json11.hpp"
 #include "common/net/message.hpp"
 
@@ -39,6 +40,7 @@ public:
     void drawHUD();
     /// Check if the client has the map the server has
     void checkForMap(std::string map, std::string hash);
+    void writeMapContents(std::string contents);
 
 private:
     Client(const Client &) = delete;
@@ -49,8 +51,11 @@ private:
     struct sockaddr_in m_socket_addr;
     MessageProcessor<> m_msg_proc;
 
+    std::vector<std::string> chat;
+
 public:
     ResourceManager resources;
+    std::string m_map_hash;
 
 private:
     Level m_level;

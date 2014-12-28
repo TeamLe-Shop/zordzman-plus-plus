@@ -179,20 +179,28 @@ public:
         auto free_buffer = m_buffer.capacity() - m_buffer.size();
         if (free_buffer == 0) {
             // What do?
-            return;
+            fmt::print("No free buffer.\n");
         }
 
-        m_buffer.resize(free_buffer);
         int len = strlen(&m_buffer[0]);
+        m_buffer.resize(free_buffer);
         ssize_t data_or_error = recv(m_socket, &m_buffer[len],
                                      free_buffer, 0);
+        len = strlen(&m_buffer[0]);
         if (data_or_error == 0) {
+            m_buffer.resize(0);
             return;
         } else if (data_or_error == -1) {
             // Error, need to check errno, may be EAGAIN/EWOULDBLOCK
+
+            if (errno != EAGAIN) {
+                fmt::print("(MessageProcessor) Error receiving: {}\n",
+                            strerror(errno));
+            }
+            m_buffer.resize(len);
             return;
         }
-
+        m_buffer.resize(len);
         parseBuffer();
     }
 
@@ -251,6 +259,7 @@ public:
     /// This consumes the send queue entirely.
     bool flushSendQueue() {
         while (!m_egress.empty()) {
+
             json11::Json message = json11::Json::object{
                 { "type", std::get<0>(m_egress.front()) },
                 { "entity", std::get<1>(m_egress.front()) },

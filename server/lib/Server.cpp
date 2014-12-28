@@ -29,6 +29,7 @@ using namespace json11;
 
 void handleMapRequest(Processor *, MessageEntity entity, Server *server,
                       Client *client) {
+    fmt::print("Client requested map contents\n");
     client->m_msg_proc.send("map.contents", server->m_map.asBase64());
 }
 
@@ -132,6 +133,7 @@ int Server::exec() {
         for (auto &client : m_clients) {
             if (client.getState() == Client::Pending) {
                 client.checkProtocolVersion();
+                continue;
             }
             if (!client.m_msg_proc.flushSendQueue()) {
                 client.disconnect("Failed to send to client", false);

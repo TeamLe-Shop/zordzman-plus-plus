@@ -42,6 +42,10 @@ void handleMapOffer(Processor * processor, MessageEntity entity) {
                                entity["hash"].string_value());
 }
 
+void handleMapContents(Processor * processor, MessageEntity entity) {
+    game_instance->writeMapContents(entity.string_value());
+}
+
 Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_player(new Player(cfg.name, 0, 0, 1)),
       m_cfg(cfg), m_hud(hud) {
@@ -118,6 +122,8 @@ bool Client::joinServer() {
 
     fcntl(m_socket, F_SETFL, O_NONBLOCK);
 
+    m_msg_proc.setSocket(m_socket);
+
     size_t total_sent = 0;
     size_t additive = 0;
     size_t length = 4;
@@ -134,8 +140,8 @@ bool Client::joinServer() {
         total_sent += additive;
     }
 
-    m_msg_proc.setSocket(m_socket);
     m_msg_proc.addHandler("map.offer", handleMapOffer);
+    m_msg_proc.addHandler("map.contents", handleMapContents);
     return true;
 }
 
@@ -164,6 +170,7 @@ void Client::exec() {
 
         m_msg_proc.process();
         m_msg_proc.dispatch();
+        m_msg_proc.flushSendQueue();
 
         SDL_Delay(1000 / 60);
     }
@@ -174,6 +181,7 @@ void Client::checkForMap(std::string map, std::string hash) {
     bool found_match = false;
 
     m_map_name = fileFromPath(map);
+    m_map_hash = hash;
 
     // The client is going to now look for that map file.
     DIR * dir;
@@ -197,18 +205,32 @@ void Client::checkForMap(std::string map, std::string hash) {
                 common::util::stream::readToEnd(mapfile);
 
             MD5 md5;
-            /// Generate a hash from the map data
+            // Generate a hash from the map data
             md5.add(mapdata.data(), mapdata.size());
             if (!strcmp(md5.getHash().c_str(), ent->d_name)) {
                 found_match = true;
                 m_level = Level(hash);
+            } else {
+                found_match = false;
             }
 
             mapfile.close();
         }
     }
 
-    // Send to the server whether or not we have the map.
+    if (!found_match) {
+        fmt::print("Requesting map...\n");
+        m_msg_proc.send("map.request", nullptr);
+    }
+}
+
+void Client::writeMapContents(std::string const map_base64) {
+    std::string map_contents = base64_decode(map_base64);
+    std::ofstream map_file(fmt::format("resources/levels/{}", m_map_hash),
+                            std::ios::out | std::ios::binary);
+    map_file.write(map_contents.data(), map_contents.size());
+    map_file.close();
+    m_level = Level(m_map_hash);
 }
 
 void Client::drawHUD() {

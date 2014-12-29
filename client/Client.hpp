@@ -16,7 +16,11 @@
 #include <sys/types.h>
 
 #include <netinet/in.h>
+
 #include <unistd.h>
+
+#include <vector>
+#include <algorithm>
 
 using namespace json11;
 using namespace net;
@@ -41,6 +45,7 @@ public:
     /// Check if the client has the map the server has
     void checkForMap(std::string map, std::string hash);
     void writeMapContents(std::string contents);
+    void addMessage(std::string message);
 
 private:
     Client(const Client &) = delete;
@@ -51,7 +56,9 @@ private:
     struct sockaddr_in m_socket_addr;
     MessageProcessor<> m_msg_proc;
 
-    std::vector<std::string> chat;
+    std::vector<std::string> m_chat;
+    uint32_t lastMessage, currentTime;
+
 
 public:
     ResourceManager resources;

@@ -46,9 +46,14 @@ void handleMapContents(Processor * processor, MessageEntity entity) {
     game_instance->writeMapContents(entity.string_value());
 }
 
+void handleServerMessage(Processor * processor, MessageEntity entity) {
+    game_instance->addMessage(fmt::format("SERVER: {}",
+                              entity["message"].string_value()));
+}
+
 Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_player(new Player(cfg.name, 0, 0, 1)),
-      m_cfg(cfg), m_hud(hud) {
+      m_cfg(cfg), m_hud(hud), m_chat(3) {
     game_instance = this;
 
     if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
@@ -142,6 +147,7 @@ bool Client::joinServer() {
 
     m_msg_proc.addHandler("map.offer", handleMapOffer);
     m_msg_proc.addHandler("map.contents", handleMapContents);
+    m_msg_proc.addHandler("server.message", handleServerMessage);
     return true;
 }
 
@@ -171,6 +177,13 @@ void Client::exec() {
         m_msg_proc.process();
         m_msg_proc.dispatch();
         m_msg_proc.flushSendQueue();
+
+        // NOTE: Don't depend on SDL_GetTicks too much.
+        currentTime = SDL_GetTicks();
+        if (currentTime > lastMessage + 4000) {
+            std::move(m_chat.begin() + 1, m_chat.end(), m_chat.begin());
+            m_chat[m_chat.size() - 1] = "";
+        }
 
         SDL_Delay(1000 / 60);
     }
@@ -233,6 +246,16 @@ void Client::writeMapContents(std::string const map_base64) {
     m_level = Level(m_map_hash);
 }
 
+void Client::addMessage(std::string msg) {
+    lastMessage = SDL_GetTicks();
+    if (m_chat.size() == m_chat.capacity()) {
+        std::move(m_chat.begin() + 1, m_chat.end(), m_chat.begin());
+        m_chat[m_chat.size() - 1] = msg;
+    } else {
+        m_chat.push_back(msg);
+    }
+}
+
 void Client::drawHUD() {
     using namespace drawingOperations;
     sys::Texture & texture = Client::get().resources.getTexture("main");
@@ -289,6 +312,10 @@ void Client::drawHUD() {
     std::string mapstr = fmt::format("Map: {}", m_map_name);
     drawText(serverstr, 800 - (8 * serverstr.size()), m_hud.border.y - 8, 8, 8);
     drawText(mapstr, 800 - (8 * mapstr.size()), m_hud.border.y - 16, 8, 8);
+
+    for (int i = 0; i < m_chat.size(); i++) {
+        drawText(m_chat[i], 0, i * 8, 8, 8);
+    }
 }
 
 Client & Client::get() {

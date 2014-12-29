@@ -125,6 +125,9 @@ void Server::acceptConnections() {
             m_clients.back().m_msg_proc.send(
                 "map.offer", Json::object{ { "name", m_map.name },
                                            { "hash", m_map.md5.getHash() } });
+            sendAll("server.message", Json::object {
+                {"message", fmt::format("{} has joined the game.", "A player")}
+            });
         }
     }
 }

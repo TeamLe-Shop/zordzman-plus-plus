@@ -52,6 +52,7 @@ void Client::checkProtocolVersion() {
         }
         m_state = Connected;
         m_logger.log("Correct magic number (state = Connected)");
+
     }
 }
 

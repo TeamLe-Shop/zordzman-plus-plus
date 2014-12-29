@@ -126,7 +126,8 @@ void Server::acceptConnections() {
                 "map.offer", Json::object{ { "name", m_map.name },
                                            { "hash", m_map.md5.getHash() } });
             sendAll("server.message", Json::object {
-                {"message", fmt::format("{} has joined the game.", "A player")}
+                {"message", fmt::format("{} has connected.",
+                            common::util::net::ipaddr(*addr_in, false))}
             });
         }
     }

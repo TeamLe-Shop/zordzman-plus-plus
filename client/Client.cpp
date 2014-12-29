@@ -56,6 +56,8 @@ Client::Client(Config const & cfg, HUD hud)
       m_cfg(cfg), m_hud(hud), m_chat(3) {
     game_instance = this;
 
+    m_chat.resize(0);
+
     if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
         throw std::runtime_error(
             fmt::format("Couldn't create socket: {}", strerror(errno)));
@@ -182,7 +184,8 @@ void Client::exec() {
         currentTime = SDL_GetTicks();
         if (currentTime > lastMessage + 4000) {
             std::move(m_chat.begin() + 1, m_chat.end(), m_chat.begin());
-            m_chat[m_chat.size() - 1] = "";
+            m_chat[m_chat.size() - 1] = {"", currentTime};
+            lastMessage = currentTime;
         }
 
         SDL_Delay(1000 / 60);
@@ -250,9 +253,9 @@ void Client::addMessage(std::string msg) {
     lastMessage = SDL_GetTicks();
     if (m_chat.size() == m_chat.capacity()) {
         std::move(m_chat.begin() + 1, m_chat.end(), m_chat.begin());
-        m_chat[m_chat.size() - 1] = msg;
+        m_chat[m_chat.size() - 1] = {msg, lastMessage};
     } else {
-        m_chat.push_back(msg);
+        m_chat.push_back({msg, lastMessage});
     }
 }
 
@@ -314,7 +317,7 @@ void Client::drawHUD() {
     drawText(mapstr, 800 - (8 * mapstr.size()), m_hud.border.y - 16, 8, 8);
 
     for (int i = 0; i < m_chat.size(); i++) {
-        drawText(m_chat[i], 0, i * 8, 8, 8);
+        drawText(m_chat[i].message, 0, i * 8, 8, 8);
     }
 }
 

@@ -56,7 +56,12 @@ private:
     struct sockaddr_in m_socket_addr;
     MessageProcessor<> m_msg_proc;
 
-    std::vector<std::string> m_chat;
+    // Is this breaking the rules?
+    typedef struct {
+        std::string message;
+        uint32_t timestamp;
+    } Message;
+    std::vector<Message> m_chat;
     uint32_t lastMessage, currentTime;
 
 

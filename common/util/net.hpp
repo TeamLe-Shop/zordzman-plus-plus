@@ -6,7 +6,7 @@ namespace common {
 namespace util {
 namespace net {
 
-std::string ipaddr(struct sockaddr_in const addr);
+std::string ipaddr(struct sockaddr_in const addr, bool include_port = false);
 
 } // namespace net
 } // namespace util

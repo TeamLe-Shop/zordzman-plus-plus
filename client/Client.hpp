@@ -46,6 +46,7 @@ public:
     void checkForMap(std::string map, std::string hash);
     void writeMapContents(std::string contents);
     void addMessage(std::string message);
+    int chatSize();
 
 private:
     Client(const Client &) = delete;

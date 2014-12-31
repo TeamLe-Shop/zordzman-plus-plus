@@ -53,7 +53,7 @@ void handleServerMessage(Processor * processor, MessageEntity entity) {
 
 Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_player(new Player(cfg.name, 0, 0, 1)),
-      m_cfg(cfg), m_hud(hud), m_chat(3) {
+      m_cfg(cfg), m_hud(hud), m_chat(5) {
     game_instance = this;
 
     m_chat.resize(0);
@@ -182,12 +182,11 @@ void Client::exec() {
 
         // NOTE: Don't depend on SDL_GetTicks too much.
         currentTime = SDL_GetTicks();
-        if (currentTime > lastMessage + 4000) {
+        if (currentTime > lastMessage + 4000 && m_chat.size() > 0) {
             std::move(m_chat.begin() + 1, m_chat.end(), m_chat.begin());
-            m_chat[m_chat.size() - 1] = {"", currentTime};
+            m_chat.resize(m_chat.size() - 1);
             lastMessage = currentTime;
         }
-
         SDL_Delay(1000 / 60);
     }
 }

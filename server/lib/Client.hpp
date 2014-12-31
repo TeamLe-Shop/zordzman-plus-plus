@@ -89,6 +89,8 @@ public:
     void disconnect(std::string reason);
     void disconnect();
 
+    void exec(Server* server);
+
     State getState() const;
 
     // Forbid copying
@@ -125,5 +127,6 @@ private:
     std::string m_magic_buffer;
     common::Logger m_logger;
     State m_state;
+    struct sockaddr_in m_addr;
 };
 } // namespace server

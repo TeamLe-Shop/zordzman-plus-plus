@@ -15,6 +15,7 @@ Client::Client(struct sockaddr_in addr, int socket)
           return fmt::format("{}: ", common::util::net::ipaddr(addr));
       }) {
     m_tcp_socket = socket;
+    m_addr = addr;
     m_state = Pending;
     m_channel = -1;
     m_logger.log("Client connected (state = Pending)");
@@ -54,6 +55,17 @@ void Client::checkProtocolVersion() {
         m_logger.log("Correct magic number (state = Connected)");
 
     }
+}
+
+void Client::exec(Server* server) {
+    if (!m_msg_proc.process()) {
+        disconnect("User disconnected", false);
+        server->sendAll("server.message", Json::object {
+            {"message", fmt::format("{} left the game.",
+                common::util::net::ipaddr(m_addr))}
+        });
+    }
+    m_msg_proc.dispatch(server, this);
 }
 
 Client::State Client::getState() const { return m_state; }

@@ -174,7 +174,7 @@ public:
     ///
     /// The order the messages are received is the same order they'll be
     /// dispatched.
-    void process() {
+    bool process() {
         // TODO: Propagation of errors
         auto free_buffer = m_buffer.capacity() - m_buffer.size();
         if (free_buffer == 0) {
@@ -189,19 +189,21 @@ public:
         len = strlen(&m_buffer[0]);
         if (data_or_error == 0) {
             m_buffer.resize(0);
-            return;
+            return false;
         } else if (data_or_error == -1) {
             // Error, need to check errno, may be EAGAIN/EWOULDBLOCK
 
             if (errno != EAGAIN) {
                 fmt::print("(MessageProcessor) Error receiving: {}\n",
                             strerror(errno));
+                return false;
             }
             m_buffer.resize(len);
-            return;
+            return true;
         }
         m_buffer.resize(len);
         parseBuffer();
+        return true;
     }
 
     /// Enqueue a message to be sent

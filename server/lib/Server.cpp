@@ -145,8 +145,7 @@ int Server::exec() {
                 client.disconnect("Failed to send to client", false);
                 continue;
             }
-            client.m_msg_proc.process();
-            client.m_msg_proc.dispatch(this, &client);
+            client.exec(this);
         }
         // Remove disconnected clients
         for (size_t i = 0; i < m_clients.size(); ++i) {

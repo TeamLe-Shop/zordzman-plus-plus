@@ -152,6 +152,10 @@ int Server::exec() {
             Client &client = m_clients[i];
 
             if (client.getState() == Client::Disconnected) {
+                sendAll("server.message", Json::object {
+                    {"message", fmt::format("{} left the game.",
+                        common::util::net::ipaddr(client.m_addr))}
+                });
                 close(client.m_tcp_socket);
                 m_clients.erase(m_clients.begin() + i);
             }

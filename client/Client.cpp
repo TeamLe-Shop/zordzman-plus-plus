@@ -36,8 +36,6 @@ typedef MessageProcessor<> Processor;
 
 /* Handler functions */
 void handleMapOffer(Processor * processor, MessageEntity entity) {
-    fmt::print("Name: {}, Hash: {}\n", entity["name"].string_value(),
-               entity["hash"].string_value());
     game_instance->checkForMap(entity["name"].string_value(),
                                entity["hash"].string_value());
 }
@@ -49,6 +47,15 @@ void handleMapContents(Processor * processor, MessageEntity entity) {
 void handleServerMessage(Processor * processor, MessageEntity entity) {
     game_instance->addMessage(fmt::format("SERVER: {}",
                               entity["message"].string_value()));
+}
+
+void handleDisconnect(Processor * processor, MessageEntity entity) {
+    fmt::print("Disconnected from server ({})\n", entity.string_value());
+    // What do I do here? I want to exit, what's the appropriate function to
+    // call?
+    // TODO: When we implement game states, we should perhaps change this
+    // to go back to previous state?
+    exit(0);
 }
 
 Client::Client(Config const & cfg, HUD hud)
@@ -150,6 +157,7 @@ bool Client::joinServer() {
     m_msg_proc.addHandler("map.offer", handleMapOffer);
     m_msg_proc.addHandler("map.contents", handleMapContents);
     m_msg_proc.addHandler("server.message", handleServerMessage);
+    m_msg_proc.addHandler("disconnect", handleDisconnect);
     return true;
 }
 

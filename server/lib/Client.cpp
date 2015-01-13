@@ -14,6 +14,7 @@ Client::Client(struct sockaddr_in addr, int socket)
     : m_logger(stderr, [=] {
           return fmt::format("{}: ", common::util::net::ipaddr(addr));
       }) {
+    m_time_created = time(NULL);
     m_tcp_socket = socket;
     m_addr = addr;
     m_state = Pending;
@@ -30,11 +31,14 @@ void Client::checkProtocolVersion() {
         return;
     }
 
+    if (difftime(time(NULL), m_time_created) > 5) {
+        disconnect("Magic number timeout", true);
+    }
+
     char buffer[4];
     memset(buffer, 0, 4);
     int bytes_recv = recv(m_tcp_socket, buffer, 4 - m_magic_buffer.size(), 0);
     if ((bytes_recv == 0) || (bytes_recv == -1 && errno != EAGAIN)) {
-        m_state = Disconnected;
         disconnect("Left server", false);
     }
 
@@ -60,10 +64,6 @@ void Client::checkProtocolVersion() {
 void Client::exec(Server* server) {
     if (!m_msg_proc.process()) {
         disconnect("User disconnected", false);
-        server->sendAll("server.message", Json::object {
-            {"message", fmt::format("{} left the game.",
-                common::util::net::ipaddr(m_addr))}
-        });
     }
     m_msg_proc.dispatch(server, this);
 }

@@ -10,15 +10,18 @@
 #include "common/net/message.hpp"
 
 #include <stdio.h>
-#include <sys/socket.h>
-#include <sys/types.h>
 #include <string.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <ctime>
+
+#include <sys/socket.h>
+#include <sys/types.h>
 
 #include "Server.hpp"
 
 #include "common/logger/Logger.hpp"
+
 
 #define RECV_BUFFER_SIZE 1024
 
@@ -109,6 +112,8 @@ public:
 
     Processor m_msg_proc;
 
+    struct sockaddr_in m_addr;
+
     /// Assert the client is using the correct protocol version
     ///
     /// If the client state is Pending this checks if the buffer contains the
@@ -127,6 +132,6 @@ private:
     std::string m_magic_buffer;
     common::Logger m_logger;
     State m_state;
-    struct sockaddr_in m_addr;
+    time_t m_time_created;
 };
 } // namespace server

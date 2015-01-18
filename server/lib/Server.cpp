@@ -20,6 +20,8 @@
 
 #include <netinet/in.h>
 
+#define TICK_RATE 30
+
 namespace cont = common::util::container;
 
 namespace server {
@@ -135,6 +137,7 @@ void Server::acceptConnections() {
 
 int Server::exec() {
     while (true) {
+        usleep((1000 / TICK_RATE) * 1000);
         acceptConnections();
         for (auto &client : m_clients) {
             if (client.getState() == Client::Pending) {
@@ -160,6 +163,7 @@ int Server::exec() {
                 m_clients.erase(m_clients.begin() + i);
             }
         }
+        gameCycle();
     }
 
     return 1;

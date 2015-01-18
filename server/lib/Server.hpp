@@ -22,6 +22,7 @@
 
 #define RECV_BUFFER_SIZE 1024
 #define UDP_PORT 4545
+#define TICK_RATE 30
 
 using namespace net;
 
@@ -50,7 +51,6 @@ public:
     map::Level m_map;
 
 private:
-    void initSDL();
     /// Accept all pending connections
     ///
     /// This accept(2)s all pending connections on the listening socket. These
@@ -59,6 +59,9 @@ private:
     /// If the max number of clients has been reached the new client will be
     /// disconnected immediately.
     void acceptConnections();
+
+    /// Run the game loop once.
+    void gameCycle();
 
     unsigned int m_max_clients = 10;
 

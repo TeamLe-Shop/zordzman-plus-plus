@@ -27,6 +27,9 @@ public:
     /// Call a single game simulation cycle.
     void cycle();
 
+    /// Add a player to the map.
+    void addPlayer(std::string name);
+
     std::string name;
 
 private:

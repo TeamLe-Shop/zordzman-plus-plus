@@ -142,6 +142,9 @@ int Server::exec() {
         for (auto &client : m_clients) {
             if (client.getState() == Client::Pending) {
                 client.checkProtocolVersion();
+                if (client.getState() == Client::Connected) {
+                    m_map.addPlayer("nigger");
+                }
                 continue;
             }
             if (!client.m_msg_proc.flushSendQueue()) {

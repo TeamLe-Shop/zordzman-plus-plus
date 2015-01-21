@@ -22,7 +22,6 @@
 
 #include "common/logger/Logger.hpp"
 
-
 #define RECV_BUFFER_SIZE 1024
 
 using namespace net;

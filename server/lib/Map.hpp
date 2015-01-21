@@ -4,6 +4,7 @@
 #include <string>
 
 #include "common/extlib/hash-library/md5.h"
+#include "common/entity/entity.hpp"
 #include "base64.hpp"
 
 namespace server {
@@ -23,15 +24,22 @@ public:
     /// Load a level.
     void loadLevel(std::string map);
 
+    /// Call a single game simulation cycle.
+    void cycle();
+
     std::string name;
 
 private:
     byte m_width;
     byte m_height;
-    unsigned int m_spawn_x;
-    unsigned int m_spawn_y;
+    byte m_spawn_x;
+    byte m_spawn_y;
     std::vector<byte> m_tiles;
     std::string m_base64;
+
+    // entities
+    entity::EntityCollection entities;
+
 };
 
 } // namespace map

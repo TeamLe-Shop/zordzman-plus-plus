@@ -60,9 +60,6 @@ private:
     /// disconnected immediately.
     void acceptConnections();
 
-    /// Run the game loop once.
-    void gameCycle();
-
     unsigned int m_max_clients = 10;
 
     Socket m_tcp_socket;

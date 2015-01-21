@@ -163,9 +163,10 @@ int Server::exec() {
                 m_clients.erase(m_clients.begin() + i);
             }
         }
-        gameCycle();
+        m_map.cycle();
     }
 
     return 1;
 }
+
 } // namespace server

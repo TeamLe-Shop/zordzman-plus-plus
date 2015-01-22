@@ -95,7 +95,7 @@ public:
     void disconnect(std::string reason);
     void disconnect();
 
-    void exec(Server* server);
+    void exec(Server *server);
 
     State getState() const;
 

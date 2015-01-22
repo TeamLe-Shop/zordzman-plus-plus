@@ -39,7 +39,6 @@ private:
 
     // entities
     entity::EntityCollection entities;
-
 };
 
 } // namespace map

@@ -69,7 +69,6 @@ private:
     std::vector<Message> m_chat;
     uint32_t lastMessage, currentTime;
 
-
 public:
     ResourceManager resources;
     std::string m_map_hash;

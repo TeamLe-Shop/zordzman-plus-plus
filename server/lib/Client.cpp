@@ -57,11 +57,10 @@ void Client::checkProtocolVersion() {
         }
         m_state = Connected;
         m_logger.log("Correct magic number (state = Connected)");
-
     }
 }
 
-void Client::exec(Server* server) {
+void Client::exec(Server *server) {
     if (!m_msg_proc.process()) {
         disconnect("User disconnected", false);
     }

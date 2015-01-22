@@ -9,12 +9,11 @@ std::string ipaddr(struct sockaddr_in const addr, bool include_port) {
     uint16_t port = ntohs(addr.sin_port);
     if (include_port) {
         return fmt::format("{}.{}.{}.{}:{}", host >> 24 & 0xFF,
-                           host >> 16 & 0xFF,  host >> 8 & 0xFF,
+                           host >> 16 & 0xFF, host >> 8 & 0xFF,
                            host >> 0 & 0xFF, port);
     } else {
-        return fmt::format("{}.{}.{}.{}", host >> 24 & 0xFF,
-                           host >> 16 & 0xFF,  host >> 8 & 0xFF,
-                           host >> 0 & 0xFF);
+        return fmt::format("{}.{}.{}.{}", host >> 24 & 0xFF, host >> 16 & 0xFF,
+                           host >> 8 & 0xFF, host >> 0 & 0xFF);
     }
 }
 

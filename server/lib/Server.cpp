@@ -19,7 +19,6 @@
 #include <windows.h>
 #endif
 
-
 #define TICK_RATE 30
 
 namespace cont = common::util::container;
@@ -48,7 +47,8 @@ Server::Server(int port, unsigned int max_clients, std::string map_name)
     }
 
     int optval = 1;
-    setsockopt(m_tcp_socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&optval), sizeof(optval));
+    setsockopt(m_tcp_socket, SOL_SOCKET, SO_REUSEADDR,
+               reinterpret_cast<const char *>(&optval), sizeof(optval));
 
 #ifndef _WIN32
     fcntl(m_tcp_socket, F_SETFL, O_NONBLOCK);
@@ -129,10 +129,11 @@ void Server::acceptConnections() {
             m_clients.back().m_msg_proc.send(
                 "map.offer", Json::object{ { "name", m_map.name },
                                            { "hash", m_map.md5.getHash() } });
-            sendAll("server.message", Json::object {
-                {"message", fmt::format("{} has connected.",
-                            common::util::net::ipaddr(*addr_in, false))}
-            });
+            sendAll("server.message",
+                    Json::object{ { "message",
+                                    fmt::format("{} has connected.",
+                                                common::util::net::ipaddr(
+                                                    *addr_in, false)) } });
         }
     }
 }
@@ -161,10 +162,11 @@ int Server::exec() {
             Client &client = m_clients[i];
 
             if (client.getState() == Client::Disconnected) {
-                sendAll("server.message", Json::object {
-                    {"message", fmt::format("{} left the game.",
-                        common::util::net::ipaddr(client.m_addr))}
-                });
+                sendAll("server.message",
+                        Json::object{ { "message",
+                                        fmt::format("{} left the game.",
+                                                    common::util::net::ipaddr(
+                                                        client.m_addr)) } });
                 close(client.m_tcp_socket);
                 m_clients.erase(m_clients.begin() + i);
             }

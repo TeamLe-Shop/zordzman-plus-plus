@@ -52,8 +52,8 @@ void handleMapContents(Processor * processor, MessageEntity entity) {
 }
 
 void handleServerMessage(Processor * processor, MessageEntity entity) {
-    game_instance->addMessage(fmt::format("SERVER: {}",
-                              entity["message"].string_value()));
+    game_instance->addMessage(
+        fmt::format("SERVER: {}", entity["message"].string_value()));
 }
 
 void handleDisconnect(Processor * processor, MessageEntity entity) {
@@ -103,7 +103,7 @@ Client::Client(Config const & cfg, HUD hud)
 
 Client::~Client() {
 #ifdef _WIN32
-    // CloseHandle(m_socket) WELL FUCK THIS DOESN'T WORK
+// CloseHandle(m_socket) WELL FUCK THIS DOESN'T WORK
 #else
     close(m_socket);
 #endif
@@ -267,7 +267,7 @@ void Client::checkForMap(std::string map, std::string hash) {
 void Client::writeMapContents(std::string const map_base64) {
     std::string map_contents = base64_decode(map_base64);
     std::ofstream map_file(fmt::format("resources/levels/{}", m_map_hash),
-                            std::ios::out | std::ios::binary);
+                           std::ios::out | std::ios::binary);
     map_file.write(map_contents.data(), map_contents.size());
     map_file.close();
     m_level = Level(m_map_hash);

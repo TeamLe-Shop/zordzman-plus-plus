@@ -31,7 +31,7 @@ add_library(hash-library common/extlib/hash-library/md5.cpp)
 add_library(base64
             common/extlib/base64/base64.hpp common/extlib/base64/base64.cpp)
 
-add_library(server server/lib/Server.cpp)
+add_library(server server/lib/Server.cpp server/lib/Client.cpp server/lib/Map.cpp server/lib/physicsSystem.cpp)
 add_library(logger common/logger/Logger.hpp common/logger/Logger.cpp)
 file(GLOB_RECURSE COMMON_NET_SOURCES common/net/*.*pp)
 add_library(common_net ${COMMON_NET_SOURCES})
@@ -71,6 +71,16 @@ add_executable(zordzman ${CLIENT_SOURCES})
 
 file(GLOB_RECURSE SERVER_SOURCES server/*.*pp)
 add_executable(zordzman-server ${SERVER_SOURCES})
+
+target_link_libraries(common_entity json11)
+target_link_libraries(common_util cppformat)
+target_link_libraries(server common_entity hash-library common_util logger base64)
+target_link_libraries(zjson cppformat json11)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    target_link_libraries(common_util ws2_32)
+    target_link_libraries(zordzman ws2_32)
+    target_link_libraries(server ws2_32)
+endif()
 
 target_link_libraries(zordzman
     ${SDL2_LIBRARY}

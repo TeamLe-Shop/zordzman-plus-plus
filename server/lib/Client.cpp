@@ -84,7 +84,11 @@ Client &Client::operator=(Client &&other) {
     return *this;
 }
 
-Client::~Client() { close(m_tcp_socket); }
+Client::~Client() {
+#ifndef _WIN32
+    close(m_tcp_socket);
+#endif
+}
 
 void Client::disconnect(std::string reason, bool flush) {
     m_msg_proc.send("disconnect", reason);

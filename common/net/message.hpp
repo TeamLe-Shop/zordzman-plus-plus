@@ -9,8 +9,12 @@
 #include <cstring>
 #include <cerrno>
 
+#ifdef _WIN32
+#include <winsock2.h>
+#else
 #include <sys/socket.h>
 #include <sys/types.h>
+#endif
 
 #include "format.h"
 #include "common/extlib/json11/json11.hpp"

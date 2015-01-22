@@ -12,13 +12,13 @@
 #include <cstdio>
 #include <cerrno>
 #include <string.h>
-#include <unistd.h>
 #include <fcntl.h>
 
-#include <sys/socket.h>
-#include <sys/types.h>
+#ifdef _WIN32
+#include <ws2tcpip.h>
+#include <windows.h>
+#endif
 
-#include <netinet/in.h>
 
 #define TICK_RATE 30
 
@@ -48,9 +48,11 @@ Server::Server(int port, unsigned int max_clients, std::string map_name)
     }
 
     int optval = 1;
-    setsockopt(m_tcp_socket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+    setsockopt(m_tcp_socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&optval), sizeof(optval));
 
+#ifndef _WIN32
     fcntl(m_tcp_socket, F_SETFL, O_NONBLOCK);
+#endif
 
     memset(&m_tcp_address, 0, sizeof m_tcp_address);
 
@@ -111,9 +113,9 @@ void Server::acceptConnections() {
             throw std::runtime_error("Error getting peer name.");
         }
         struct sockaddr_in *addr_in = (struct sockaddr_in *)&peer_address;
-
+#ifndef _WIN32
         fcntl(client_socket, F_SETFL, O_NONBLOCK);
-
+#endif
         if (m_clients.size() >= m_max_clients) {
             // Perhaps issue some kind of "server full" warning. But how would
             // this be done as the client would be in the PENDING state
@@ -137,7 +139,11 @@ void Server::acceptConnections() {
 
 int Server::exec() {
     while (true) {
+#ifdef _WIN32
+        Sleep((1000 / TICK_RATE));
+#else
         usleep((1000 / TICK_RATE) * 1000);
+#endif
         acceptConnections();
         for (auto &client : m_clients) {
             if (client.getState() == Client::Pending) {

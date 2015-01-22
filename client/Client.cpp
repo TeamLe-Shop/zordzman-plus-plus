@@ -8,9 +8,16 @@
 #include <stdexcept>
 #include <format.h>
 #include <thread>
+
+#ifdef _WIN32
+#include <winsock2.h>
+#include <windows.h>
+#else
 #include <dirent.h>
 #include <netdb.h>
 #include <fcntl.h>
+#endif
+
 #include <iostream>
 
 #include <SDL_mixer.h>
@@ -95,11 +102,18 @@ Client::Client(Config const & cfg, HUD hud)
 }
 
 Client::~Client() {
+#ifdef _WIN32
+    // CloseHandle(m_socket) WELL FUCK THIS DOESN'T WORK
+#else
     close(m_socket);
+#endif
     game_instance = nullptr;
 }
 
 bool Client::joinServer() {
+#ifdef _WIN32 // I'M SICK OF THIS
+    return false;
+#else
     memset(&m_socket_addr, 0, sizeof(m_socket_addr));
 
     // Convert human-readable domain name/ip string (m_cfg.host)
@@ -159,6 +173,7 @@ bool Client::joinServer() {
     m_msg_proc.addHandler("server.message", handleServerMessage);
     m_msg_proc.addHandler("disconnect", handleDisconnect);
     return true;
+#endif
 }
 
 void Client::exec() {
@@ -200,6 +215,7 @@ void Client::exec() {
 }
 
 void Client::checkForMap(std::string map, std::string hash) {
+#ifndef _WIN32 // YEAH FUCK THIS ON  WINDOWS
     using namespace common::util::file;
     bool found_match = false;
 
@@ -245,6 +261,7 @@ void Client::checkForMap(std::string map, std::string hash) {
         fmt::print("Requesting map...\n");
         m_msg_proc.send("map.request", nullptr);
     }
+#endif
 }
 
 void Client::writeMapContents(std::string const map_base64) {

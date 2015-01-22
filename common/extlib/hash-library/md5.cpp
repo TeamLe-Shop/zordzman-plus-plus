@@ -6,7 +6,7 @@
 
 #include "md5.h"
 
-#ifndef _MSC_VER
+#ifndef _WIN32
 #ifdef __APPLE__
 #include <machine/endian.h>
 #else

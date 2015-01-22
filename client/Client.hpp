@@ -12,12 +12,16 @@
 #include "json11.hpp"
 #include "common/net/message.hpp"
 
+#ifdef _WIN32
+#include <winsock2.h>
+#else
 #include <sys/socket.h>
 #include <sys/types.h>
 
 #include <netinet/in.h>
 
 #include <unistd.h>
+#endif
 
 #include <vector>
 #include <algorithm>
@@ -64,7 +68,6 @@ private:
     } Message;
     std::vector<Message> m_chat;
     uint32_t lastMessage, currentTime;
-
 
 public:
     ResourceManager resources;

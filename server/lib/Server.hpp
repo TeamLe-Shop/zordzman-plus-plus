@@ -14,11 +14,16 @@
 #include <fstream>
 
 #include <stdio.h>
+#include <string.h>
+
+#ifdef _WIN32
+#include <winsock2.h>
+#else
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <string.h>
 #include <unistd.h>
 #include <netinet/in.h>
+#endif
 
 #define RECV_BUFFER_SIZE 1024
 #define UDP_PORT 4545

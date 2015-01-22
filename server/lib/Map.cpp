@@ -37,13 +37,16 @@ void Level::loadLevel(std::string map_name) {
               m_tiles.begin());
 
     entities.addSystem(physicsSystem);
+
+    // test entities
+    entity::Entity &ent = entities.createEntity();
+    ent.addComponent(new entity::CharacterComponent("lidl", 100));
+    ent.addComponent(new entity::PositionComponent(100, 100));
 }
 
 std::string Level::asBase64() { return m_base64; }
 
-void Level::cycle() {
-    entities.cycle();
-}
+void Level::cycle() { entities.cycle(); }
 
 void Level::addPlayer(std::string name) {
     entity::Entity & ent = entities.createEntity();

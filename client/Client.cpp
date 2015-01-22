@@ -127,7 +127,8 @@ bool Client::joinServer() {
     criteria.ai_protocol = SOCK_STREAM;
     criteria.ai_flags = AI_PASSIVE;
 
-    if ((error = getaddrinfo(m_cfg.host.c_str(), NULL, &criteria, &result))) {
+    if ((error =
+             getaddrinfo(m_cfg.host.c_str(), nullptr, &criteria, &result))) {
         fmt::print("Error resolving host name: {}\n", gai_strerror(error));
         return false;
     }
@@ -226,12 +227,12 @@ void Client::checkForMap(std::string map, std::string hash) {
     DIR * dir;
     struct dirent * ent;
 
-    if ((dir = opendir("resources/levels/")) == NULL) {
+    if ((dir = opendir("resources/levels/")) == nullptr) {
         throw std::runtime_error(
             fmt::format("Couldn't open directory \"{}\"", "resources/levels"));
     }
 
-    while ((ent = readdir(dir)) != NULL) {
+    while ((ent = readdir(dir)) != nullptr) {
         // Does the map hash match the file name?
         if (!strcmp(ent->d_name, hash.c_str())) {
             // Open a stream to the file.

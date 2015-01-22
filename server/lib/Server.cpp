@@ -92,7 +92,7 @@ void Server::sendAll(std::string type, Json entity) {
 void Server::acceptConnections() {
     socklen_t b = sizeof(m_tcp_socket);
     while (true) {
-        // Returns immediately with NULL if no pending connections
+        // Returns immediately with nullptr if no pending connections
         Socket client_socket =
             accept(m_tcp_socket, (struct sockaddr *)&m_tcp_address, &b);
 

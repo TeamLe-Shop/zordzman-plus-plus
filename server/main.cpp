@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
                        " `--port`.\n");
                 exit(1);
             }
-            int temp_port = strtol(argv[i + 1], NULL, 10);
+            int temp_port = strtol(argv[i + 1], nullptr, 10);
             if (temp_port < 1 || temp_port > 65535) {
                 printf("SERVER: [ERR]  Invalid port! Must be between 1 and "
                        "65535.\n");

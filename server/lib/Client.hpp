@@ -11,12 +11,16 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <netinet/in.h>
-#include <unistd.h>
 #include <ctime>
 
+#ifdef _WIN32
+#include <winsock2.h>
+#else
+#include <netinet/in.h>
+#include <unistd.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#endif
 
 #include "Server.hpp"
 
@@ -91,7 +95,7 @@ public:
     void disconnect(std::string reason);
     void disconnect();
 
-    void exec(Server* server);
+    void exec(Server *server);
 
     State getState() const;
 

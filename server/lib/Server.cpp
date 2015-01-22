@@ -12,13 +12,12 @@
 #include <cstdio>
 #include <cerrno>
 #include <string.h>
-#include <unistd.h>
 #include <fcntl.h>
 
-#include <sys/socket.h>
-#include <sys/types.h>
-
-#include <netinet/in.h>
+#ifdef _WIN32
+#include <ws2tcpip.h>
+#include <windows.h>
+#endif
 
 #define TICK_RATE 30
 
@@ -58,9 +57,12 @@ Server::Server(int port, unsigned int max_clients, std::string map_name,
     }
 
     int optval = 1;
-    setsockopt(m_tcp_socket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+    setsockopt(m_tcp_socket, SOL_SOCKET, SO_REUSEADDR,
+               reinterpret_cast<const char *>(&optval), sizeof(optval));
 
+#ifndef _WIN32
     fcntl(m_tcp_socket, F_SETFL, O_NONBLOCK);
+#endif
 
     memset(&m_tcp_address, 0, sizeof m_tcp_address);
 
@@ -100,7 +102,7 @@ void Server::sendAll(std::string type, Json entity) {
 void Server::acceptConnections() {
     socklen_t b = sizeof(m_tcp_socket);
     while (true) {
-        // Returns immediately with NULL if no pending connections
+        // Returns immediately with nullptr if no pending connections
         Socket client_socket =
             accept(m_tcp_socket, (struct sockaddr *)&m_tcp_address, &b);
 
@@ -121,9 +123,9 @@ void Server::acceptConnections() {
             throw std::runtime_error("Error getting peer name.");
         }
         struct sockaddr_in *addr_in = (struct sockaddr_in *)&peer_address;
-
+#ifndef _WIN32
         fcntl(client_socket, F_SETFL, O_NONBLOCK);
-
+#endif
         if (m_clients.size() >= m_max_clients) {
             // Perhaps issue some kind of "server full" warning. But how would
             // this be done as the client would be in the PENDING state
@@ -137,17 +139,22 @@ void Server::acceptConnections() {
             m_clients.back().m_msg_proc.send(
                 "map.offer", Json::object{ { "name", m_map.name },
                                            { "hash", m_map.md5.getHash() } });
-            sendAll("server.message", Json::object {
-                {"message", fmt::format("{} has connected.",
-                            common::util::net::ipaddr(*addr_in, false))}
-            });
+            sendAll("server.message",
+                    Json::object{ { "message",
+                                    fmt::format("{} has connected.",
+                                                common::util::net::ipaddr(
+                                                    *addr_in, false)) } });
         }
     }
 }
 
 int Server::exec() {
     while (true) {
+#ifdef _WIN32
+        Sleep((1000 / TICK_RATE));
+#else
         usleep((1000 / TICK_RATE) * 1000);
+#endif
         acceptConnections();
         for (auto &client : m_clients) {
             if (client.getState() == Client::Pending) {
@@ -168,10 +175,11 @@ int Server::exec() {
             Client &client = m_clients[i];
 
             if (client.getState() == Client::Disconnected) {
-                sendAll("server.message", Json::object {
-                    {"message", fmt::format("{} left the game.",
-                        common::util::net::ipaddr(client.m_addr))}
-                });
+                sendAll("server.message",
+                        Json::object{ { "message",
+                                        fmt::format("{} left the game.",
+                                                    common::util::net::ipaddr(
+                                                        client.m_addr)) } });
                 close(client.m_tcp_socket);
                 m_clients.erase(m_clients.begin() + i);
             }

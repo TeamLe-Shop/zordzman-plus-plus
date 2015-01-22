@@ -14,7 +14,7 @@ Client::Client(struct sockaddr_in addr, int socket)
     : m_logger(stderr, [=] {
           return fmt::format("{}: ", common::util::net::ipaddr(addr));
       }) {
-    m_time_created = time(NULL);
+    m_time_created = time(nullptr);
     m_tcp_socket = socket;
     m_addr = addr;
     m_state = Pending;
@@ -31,7 +31,7 @@ void Client::checkProtocolVersion() {
         return;
     }
 
-    if (difftime(time(NULL), m_time_created) > 5) {
+    if (difftime(time(nullptr), m_time_created) > 5) {
         disconnect("Magic number timeout", true);
     }
 
@@ -57,11 +57,10 @@ void Client::checkProtocolVersion() {
         }
         m_state = Connected;
         m_logger.log("Correct magic number (state = Connected)");
-
     }
 }
 
-void Client::exec(Server* server) {
+void Client::exec(Server *server) {
     if (!m_msg_proc.process()) {
         disconnect("User disconnected", false);
     }
@@ -84,7 +83,11 @@ Client &Client::operator=(Client &&other) {
     return *this;
 }
 
-Client::~Client() { close(m_tcp_socket); }
+Client::~Client() {
+#ifndef _WIN32
+    close(m_tcp_socket);
+#endif
+}
 
 void Client::disconnect(std::string reason, bool flush) {
     m_msg_proc.send("disconnect", reason);

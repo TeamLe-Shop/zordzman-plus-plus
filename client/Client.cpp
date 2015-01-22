@@ -8,9 +8,16 @@
 #include <stdexcept>
 #include <format.h>
 #include <thread>
+
+#ifdef _WIN32
+#include <winsock2.h>
+#include <windows.h>
+#else
 #include <dirent.h>
 #include <netdb.h>
 #include <fcntl.h>
+#endif
+
 #include <iostream>
 
 #include <SDL_mixer.h>
@@ -45,8 +52,8 @@ void handleMapContents(Processor * processor, MessageEntity entity) {
 }
 
 void handleServerMessage(Processor * processor, MessageEntity entity) {
-    game_instance->addMessage(fmt::format("SERVER: {}",
-                              entity["message"].string_value()));
+    game_instance->addMessage(
+        fmt::format("SERVER: {}", entity["message"].string_value()));
 }
 
 void handleDisconnect(Processor * processor, MessageEntity entity) {
@@ -95,11 +102,18 @@ Client::Client(Config const & cfg, HUD hud)
 }
 
 Client::~Client() {
+#ifdef _WIN32
+// CloseHandle(m_socket) WELL FUCK THIS DOESN'T WORK
+#else
     close(m_socket);
+#endif
     game_instance = nullptr;
 }
 
 bool Client::joinServer() {
+#ifdef _WIN32 // I'M SICK OF THIS
+    return false;
+#else
     memset(&m_socket_addr, 0, sizeof(m_socket_addr));
 
     // Convert human-readable domain name/ip string (m_cfg.host)
@@ -113,7 +127,8 @@ bool Client::joinServer() {
     criteria.ai_protocol = SOCK_STREAM;
     criteria.ai_flags = AI_PASSIVE;
 
-    if ((error = getaddrinfo(m_cfg.host.c_str(), NULL, &criteria, &result))) {
+    if ((error =
+             getaddrinfo(m_cfg.host.c_str(), nullptr, &criteria, &result))) {
         fmt::print("Error resolving host name: {}\n", gai_strerror(error));
         return false;
     }
@@ -159,6 +174,7 @@ bool Client::joinServer() {
     m_msg_proc.addHandler("server.message", handleServerMessage);
     m_msg_proc.addHandler("disconnect", handleDisconnect);
     return true;
+#endif
 }
 
 void Client::exec() {
@@ -200,6 +216,7 @@ void Client::exec() {
 }
 
 void Client::checkForMap(std::string map, std::string hash) {
+#ifndef _WIN32 // YEAH FUCK THIS ON  WINDOWS
     using namespace common::util::file;
     bool found_match = false;
 
@@ -210,12 +227,12 @@ void Client::checkForMap(std::string map, std::string hash) {
     DIR * dir;
     struct dirent * ent;
 
-    if ((dir = opendir("resources/levels/")) == NULL) {
+    if ((dir = opendir("resources/levels/")) == nullptr) {
         throw std::runtime_error(
             fmt::format("Couldn't open directory \"{}\"", "resources/levels"));
     }
 
-    while ((ent = readdir(dir)) != NULL) {
+    while ((ent = readdir(dir)) != nullptr) {
         // Does the map hash match the file name?
         if (!strcmp(ent->d_name, hash.c_str())) {
             // Open a stream to the file.
@@ -245,12 +262,13 @@ void Client::checkForMap(std::string map, std::string hash) {
         fmt::print("Requesting map...\n");
         m_msg_proc.send("map.request", nullptr);
     }
+#endif
 }
 
 void Client::writeMapContents(std::string const map_base64) {
     std::string map_contents = base64_decode(map_base64);
     std::ofstream map_file(fmt::format("resources/levels/{}", m_map_hash),
-                            std::ios::out | std::ios::binary);
+                           std::ios::out | std::ios::binary);
     map_file.write(map_contents.data(), map_contents.size());
     map_file.close();
     m_level = Level(m_map_hash);

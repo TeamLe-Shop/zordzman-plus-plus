@@ -39,7 +39,8 @@ void handleMapRequest(Processor *, MessageEntity, Server *, Client *);
 class Server {
 
 public:
-    Server(int port, unsigned int max_clients, std::string map_name);
+    Server(int port, unsigned int max_clients, std::string map_name,
+           bool allow_downloads);
     ~Server();
     int exec();
 
@@ -49,6 +50,8 @@ public:
     void sendAll(std::string type, json11::Json entity);
 
     map::Level m_map;
+
+    bool m_allow_downloads;
 
 private:
     /// Accept all pending connections

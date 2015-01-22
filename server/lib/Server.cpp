@@ -31,16 +31,26 @@ using namespace json11;
 
 void handleMapRequest(Processor *, MessageEntity entity, Server *server,
                       Client *client) {
+    if (!server->m_allow_downloads) {
+        client->disconnect("Downloads not enabled.", true);
+        return;
+    }
     client->m_msg_proc.send("map.contents", server->m_map.asBase64());
 }
 
-Server::Server(int port, unsigned int max_clients, std::string map_name)
+Server::Server(int port, unsigned int max_clients, std::string map_name,
+               bool allow_downloads)
     : m_logger(stderr, [] { return "SERVER: "; }) {
     m_max_clients = max_clients;
+    m_allow_downloads = allow_downloads;
 
     m_map.loadLevel(map_name);
     // Log this in the map loader maybe?
     m_logger.log("[INFO] Map hash: {}", m_map.md5.getHash());
+
+    if (!m_allow_downloads) {
+        m_logger.log("[INFO] Downloads not enabled.");
+    }
 
     if ((m_tcp_socket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
         m_logger.log("[ERR]  Failed to create socket: {}", strerror(errno));

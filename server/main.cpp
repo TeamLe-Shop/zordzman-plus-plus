@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
     int port = PORT_NUMBER;
 
     bool map_given = false;
+    bool allow_downloads = true;
     std::string map_name;
 
     for (int i = 1; i < argc; i++) {
@@ -52,6 +53,8 @@ int main(int argc, char **argv) {
             map_name = argv[i + 1];
             i++;
             map_given = true;
+        } else if (!strcmp(argv[i], "--no-downloads")) {
+            allow_downloads = false;
         }
     }
 
@@ -88,6 +91,6 @@ int main(int argc, char **argv) {
     }
     map_file.close();
 
-    server::Server server(port, 5, map_name);
+    server::Server server(port, 5, map_name, allow_downloads);
     server.exec();
 }

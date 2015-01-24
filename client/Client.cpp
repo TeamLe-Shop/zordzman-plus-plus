@@ -288,7 +288,6 @@ std::vector<std::string> getDirectoryContents(std::string const & path) {
 }
 
 void Client::checkForMap(std::string map, std::string hash) {
-#ifndef _WIN32 // YEAH FUCK THIS ON  WINDOWS
     using namespace common::util::file;
     bool found_match = false;
 
@@ -327,7 +326,6 @@ void Client::checkForMap(std::string map, std::string hash) {
         fmt::print("Requesting map...\n");
         m_msg_proc.send("map.request", nullptr);
     }
-#endif
 }
 
 void Client::writeMapContents(std::string const map_base64) {

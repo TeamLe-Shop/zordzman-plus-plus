@@ -120,7 +120,15 @@ void Server::acceptConnections() {
         // Returns immediately with nullptr if no pending connections
         Socket client_socket =
             accept(m_tcp_socket, (struct sockaddr *)&m_tcp_address, &b);
-
+#ifdef _WIN32
+        if (client_socket == INVALID_SOCKET) {
+            int err = WSAGetLastError();
+            m_logger.log("[ERR]  Failed to accept client connection: (wsagetlasterror: {})", err);
+            break;
+        } else {
+            break;
+        }
+#else
         if (client_socket < 0) {
             if (errno != EAGAIN && errno != EWOULDBLOCK) {
                 m_logger.log("[ERR]  Failed to accept client connection: {}",
@@ -130,6 +138,7 @@ void Server::acceptConnections() {
                 break;
             }
         }
+#endif
 
         struct sockaddr peer_address;
         socklen_t addrlen = sizeof(peer_address);

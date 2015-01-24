@@ -84,7 +84,9 @@ Client &Client::operator=(Client &&other) {
 }
 
 Client::~Client() {
-#ifndef _WIN32
+#ifdef _WIN32
+    closesocket(m_tcp_socket);
+#else
     close(m_tcp_socket);
 #endif
 }

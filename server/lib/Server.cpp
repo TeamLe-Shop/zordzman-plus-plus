@@ -54,7 +54,8 @@ Server::Server(int port, unsigned int max_clients, std::string map_name,
     WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
     if ((m_tcp_socket = socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
         int err = WSAGetLastError();
-        m_logger.log("[ERR]  Failed to create socket: (wsagetlasterror: {})", err);
+        m_logger.log("[ERR]  Failed to create socket: (wsagetlasterror: {})",
+                     err);
         exit(1);
     }
 #else
@@ -123,7 +124,9 @@ void Server::acceptConnections() {
 #ifdef _WIN32
         if (client_socket == INVALID_SOCKET) {
             int err = WSAGetLastError();
-            m_logger.log("[ERR]  Failed to accept client connection: (wsagetlasterror: {})", err);
+            m_logger.log("[ERR]  Failed to accept client connection: "
+                         "(wsagetlasterror: {})",
+                         err);
             break;
         } else {
             break;

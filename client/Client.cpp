@@ -12,6 +12,7 @@
 #ifdef _WIN32
 #include <winsock2.h>
 #include <windows.h>
+#include <ws2tcpip.h>
 #else
 #include <dirent.h>
 #include <netdb.h>
@@ -111,17 +112,14 @@ Client::~Client() {
 }
 
 bool Client::joinServer() {
-#ifdef _WIN32 // I'M SICK OF THIS
-    return false;
-#else
     memset(&m_socket_addr, 0, sizeof(m_socket_addr));
 
     // Convert human-readable domain name/ip string (m_cfg.host)
     // to `struct sockaddr_in`.
-    struct addrinfo * result;
+    addrinfo * result;
     int error;
 
-    struct addrinfo criteria;
+    addrinfo criteria;
     memset(&criteria, 0, sizeof(criteria));
     criteria.ai_family = AF_INET;
     criteria.ai_protocol = SOCK_STREAM;
@@ -145,11 +143,18 @@ bool Client::joinServer() {
                 sizeof m_socket_addr) < 0) {
         fmt::print(stderr, "[ERROR] ({}) Could not connect to host: {}\n",
                    errno, strerror(errno));
+#ifdef _WIN32
+        closesocket(m_socket);
+#else
         close(m_socket);
+#endif
         return false;
     }
-
+#ifdef _WIN32
+    ioctlsocket(m_socket, FIONBIO, nullptr);
+#else
     fcntl(m_socket, F_SETFL, O_NONBLOCK);
+#endif
 
     m_msg_proc.setSocket(m_socket);
 
@@ -174,7 +179,6 @@ bool Client::joinServer() {
     m_msg_proc.addHandler("server.message", handleServerMessage);
     m_msg_proc.addHandler("disconnect", handleDisconnect);
     return true;
-#endif
 }
 
 void Client::exec() {

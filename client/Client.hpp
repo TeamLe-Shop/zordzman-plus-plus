@@ -79,5 +79,8 @@ private:
     Player * m_player;
     Config const & m_cfg;
     HUD m_hud;
+#ifdef _WIN32
+    WSADATA m_wsa_data;
+#endif
 };
 } // namespace client

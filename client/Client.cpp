@@ -74,11 +74,19 @@ Client::Client(Config const & cfg, HUD hud)
     game_instance = this;
 
     m_chat.resize(0);
-
+#ifdef _WIN32
+    WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
+    if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
+        int err = WSAGetLastError();
+        throw std::runtime_error(
+            fmt::format("Couldn't create socket: (wsagetlasterror: {})", err));
+    }
+#else
     if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
         throw std::runtime_error(
             fmt::format("Couldn't create socket: {}", strerror(errno)));
     }
+#endif
 
     m_socket_addr.sin_family = AF_INET;
 
@@ -107,6 +115,7 @@ Client::Client(Config const & cfg, HUD hud)
 Client::~Client() {
 #ifdef _WIN32
     closesocket(m_socket);
+    WSACleanup();
 #else
     close(m_socket);
 #endif

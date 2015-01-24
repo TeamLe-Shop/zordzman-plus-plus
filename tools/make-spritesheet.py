@@ -6,6 +6,7 @@
 import argparse
 import json
 import logging
+import os.path
 import pathlib
 import sys
 
@@ -39,7 +40,7 @@ def load_sprite(path):
     if not isinstance(sprite.get("name"), str):
         raise ValueError(
             "Sprite missing 'name' field or the name is not a string")
-    sprite["path"] = pathlib.Path(sprite["path"]).relative_to(path.parent)
+    sprite["path"] = path.parent / pathlib.Path(sprite["path"])
     log.info("Loading sprite image from {}".format(sprite["path"]))
     sprite["image"] = image.open(str(sprite["path"]))
     sprite["width"] = sprite["image"].size[0]
@@ -136,7 +137,7 @@ def write_manifest_fragment(manifest, sheet, sprites):
         fragment.append({
             "type": "sprite",
             "name": sprite["name"],
-            "path": str(sheet.relative_to(manifest.parent)),
+            "path": os.path.relpath(str(sheet), str(manifest.parent)),
             "x": sprite["x"],
             "y": sprite["y"],
             "width": sprite["width"],

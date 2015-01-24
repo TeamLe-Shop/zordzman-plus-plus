@@ -103,7 +103,7 @@ Client::Client(Config const & cfg, HUD hud)
 
 Client::~Client() {
 #ifdef _WIN32
-// CloseHandle(m_socket) WELL FUCK THIS DOESN'T WORK
+    closesocket(m_socket);
 #else
     close(m_socket);
 #endif

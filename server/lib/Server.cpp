@@ -60,7 +60,9 @@ Server::Server(int port, unsigned int max_clients, std::string map_name,
     setsockopt(m_tcp_socket, SOL_SOCKET, SO_REUSEADDR,
                reinterpret_cast<const char *>(&optval), sizeof(optval));
 
-#ifndef _WIN32
+#ifdef _WIN32
+    ioctlsocket(m_tcp_socket, FIONBIO, nullptr);
+#else
     fcntl(m_tcp_socket, F_SETFL, O_NONBLOCK);
 #endif
 

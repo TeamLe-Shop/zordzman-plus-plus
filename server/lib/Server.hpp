@@ -75,5 +75,8 @@ private:
 
     std::vector<Client> m_clients;
     common::Logger m_logger;
+#ifdef _WIN32
+    WSADATA m_wsa_data;
+#endif
 };
 } // namespace server

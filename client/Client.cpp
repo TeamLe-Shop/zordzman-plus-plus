@@ -12,6 +12,9 @@
 #ifdef _WIN32
 #include <winsock2.h>
 #include <windows.h>
+#include <ws2tcpip.h>
+#include <tchar.h>
+#include <strsafe.h>
 #else
 #include <dirent.h>
 #include <netdb.h>
@@ -71,11 +74,19 @@ Client::Client(Config const & cfg, HUD hud)
     game_instance = this;
 
     m_chat.resize(0);
-
+#ifdef _WIN32
+    WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
+    if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
+        int err = WSAGetLastError();
+        throw std::runtime_error(
+            fmt::format("Couldn't create socket: (wsagetlasterror: {})", err));
+    }
+#else
     if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
         throw std::runtime_error(
             fmt::format("Couldn't create socket: {}", strerror(errno)));
     }
+#endif
 
     m_socket_addr.sin_family = AF_INET;
 
@@ -103,7 +114,8 @@ Client::Client(Config const & cfg, HUD hud)
 
 Client::~Client() {
 #ifdef _WIN32
-// CloseHandle(m_socket) WELL FUCK THIS DOESN'T WORK
+    closesocket(m_socket);
+    WSACleanup();
 #else
     close(m_socket);
 #endif
@@ -111,17 +123,14 @@ Client::~Client() {
 }
 
 bool Client::joinServer() {
-#ifdef _WIN32 // I'M SICK OF THIS
-    return false;
-#else
     memset(&m_socket_addr, 0, sizeof(m_socket_addr));
 
     // Convert human-readable domain name/ip string (m_cfg.host)
     // to `struct sockaddr_in`.
-    struct addrinfo * result;
+    addrinfo * result;
     int error;
 
-    struct addrinfo criteria;
+    addrinfo criteria;
     memset(&criteria, 0, sizeof(criteria));
     criteria.ai_family = AF_INET;
     criteria.ai_protocol = SOCK_STREAM;
@@ -145,11 +154,18 @@ bool Client::joinServer() {
                 sizeof m_socket_addr) < 0) {
         fmt::print(stderr, "[ERROR] ({}) Could not connect to host: {}\n",
                    errno, strerror(errno));
+#ifdef _WIN32
+        closesocket(m_socket);
+#else
         close(m_socket);
+#endif
         return false;
     }
-
+#ifdef _WIN32
+    ioctlsocket(m_socket, FIONBIO, nullptr);
+#else
     fcntl(m_socket, F_SETFL, O_NONBLOCK);
+#endif
 
     m_msg_proc.setSocket(m_socket);
 
@@ -174,7 +190,6 @@ bool Client::joinServer() {
     m_msg_proc.addHandler("server.message", handleServerMessage);
     m_msg_proc.addHandler("disconnect", handleDisconnect);
     return true;
-#endif
 }
 
 void Client::exec() {
@@ -215,8 +230,73 @@ void Client::exec() {
     }
 }
 
+namespace {
+std::vector<std::string> getDirectoryContents(std::string const & path) {
+    std::vector<std::string> entries;
+#ifdef _WIN32
+    WIN32_FIND_DATA ffd;
+    TCHAR szDir[MAX_PATH];
+    size_t length_of_arg;
+    HANDLE hFind = INVALID_HANDLE_VALUE;
+    DWORD dwError = 0;
+
+    // Check that the input path plus 3 is not longer than MAX_PATH.
+    // Three characters are for the "\*" plus NULL appended below.
+
+    StringCchLength(path.c_str(), MAX_PATH, &length_of_arg);
+
+    if (length_of_arg > (MAX_PATH - 3)) {
+        throw std::runtime_error("Directory path is too long.");
+    }
+
+    // Prepare string for use with FindFile functions.  First, copy the
+    // string to a buffer, then append '\*' to the directory name.
+
+    StringCchCopy(szDir, MAX_PATH, path.c_str());
+    StringCchCat(szDir, MAX_PATH, TEXT("\\*"));
+
+    // Find the first file in the directory.
+
+    hFind = FindFirstFile(szDir, &ffd);
+
+    if (INVALID_HANDLE_VALUE == hFind) {
+        throw std::runtime_error("Invalid handle.");
+    }
+
+    // List all the files in the directory with some info about them.
+
+    do {
+        if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            // Do something for directories?
+        } else {
+            entries.push_back(ffd.cFileName);
+        }
+    } while (FindNextFile(hFind, &ffd) != 0);
+
+    dwError = GetLastError();
+    if (dwError != ERROR_NO_MORE_FILES) {
+        throw std::runtime_error("Some kind of error, dunno");
+    }
+
+    FindClose(hFind);
+#else
+    DIR * dir;
+    struct dirent * ent;
+
+    if ((dir = opendir(path.c_str())) == nullptr) {
+        throw std::runtime_error(
+            fmt::format("Couldn't open directory \"{}\"", "resources/levels"));
+    }
+
+    while ((ent = readdir(dir)) != nullptr) {
+        entries.push_back(ent->d_name);
+    }
+#endif
+    return entries;
+}
+}
+
 void Client::checkForMap(std::string map, std::string hash) {
-#ifndef _WIN32 // YEAH FUCK THIS ON  WINDOWS
     using namespace common::util::file;
     bool found_match = false;
 
@@ -224,21 +304,14 @@ void Client::checkForMap(std::string map, std::string hash) {
     m_map_hash = hash;
 
     // The client is going to now look for that map file.
-    DIR * dir;
-    struct dirent * ent;
+    auto entries = getDirectoryContents("resources/levels/");
 
-    if ((dir = opendir("resources/levels/")) == nullptr) {
-        throw std::runtime_error(
-            fmt::format("Couldn't open directory \"{}\"", "resources/levels"));
-    }
-
-    while ((ent = readdir(dir)) != nullptr) {
+    for (auto name : entries) {
         // Does the map hash match the file name?
-        if (!strcmp(ent->d_name, hash.c_str())) {
+        if (name == hash) {
             // Open a stream to the file.
-            std::ifstream mapfile(
-                fmt::format("resources/levels/{}", ent->d_name),
-                std::ios::binary | std::ios::in);
+            std::ifstream mapfile(fmt::format("resources/levels/{}", name),
+                                  std::ios::binary | std::ios::in);
 
             // Read all data...
             std::vector<char> mapdata =
@@ -247,7 +320,7 @@ void Client::checkForMap(std::string map, std::string hash) {
             MD5 md5;
             // Generate a hash from the map data
             md5.add(mapdata.data(), mapdata.size());
-            if (!strcmp(md5.getHash().c_str(), ent->d_name)) {
+            if (md5.getHash() == name) {
                 found_match = true;
                 m_level = Level(hash);
             } else {
@@ -262,7 +335,6 @@ void Client::checkForMap(std::string map, std::string hash) {
         fmt::print("Requesting map...\n");
         m_msg_proc.send("map.request", nullptr);
     }
-#endif
 }
 
 void Client::writeMapContents(std::string const map_base64) {

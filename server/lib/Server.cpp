@@ -125,7 +125,9 @@ void Server::acceptConnections() {
             throw std::runtime_error("Error getting peer name.");
         }
         struct sockaddr_in *addr_in = (struct sockaddr_in *)&peer_address;
-#ifndef _WIN32
+#ifdef _WIN32
+        ioctlsocket(client_socket, FIONBIO, nullptr);
+#else
         fcntl(client_socket, F_SETFL, O_NONBLOCK);
 #endif
         if (m_clients.size() >= m_max_clients) {

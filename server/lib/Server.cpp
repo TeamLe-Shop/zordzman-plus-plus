@@ -50,11 +50,19 @@ Server::Server(int port, unsigned int max_clients, std::string map_name,
     if (!m_allow_downloads) {
         m_logger.log("[INFO] Downloads not enabled.");
     }
-
+#ifdef _WIN32
+    WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
+    if ((m_tcp_socket = socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
+        int err = WSAGetLastError();
+        m_logger.log("[ERR]  Failed to create socket: (wsagetlasterror: {})", err);
+        exit(1);
+    }
+#else
     if ((m_tcp_socket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
         m_logger.log("[ERR]  Failed to create socket: {}", strerror(errno));
         exit(1);
     }
+#endif
 
     int optval = 1;
     setsockopt(m_tcp_socket, SOL_SOCKET, SO_REUSEADDR,
@@ -93,7 +101,12 @@ Server::Server(int port, unsigned int max_clients, std::string map_name,
                  common::util::net::ipaddr(m_tcp_address));
 }
 
-Server::~Server() { m_logger.log("[INFO] Server shut down.\n\n"); }
+Server::~Server() {
+#ifdef _WIN32
+    WSACleanup();
+#endif
+    m_logger.log("[INFO] Server shut down.\n\n");
+}
 
 void Server::sendAll(std::string type, Json entity) {
     for (auto &client : m_clients) {

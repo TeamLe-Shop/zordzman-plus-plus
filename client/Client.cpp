@@ -107,7 +107,6 @@ Client::Client(Config const & cfg, HUD hud)
             fmt::format("Couldn't load sound \"{}\", ({})",
                         "resources/music/soundtrack/Lively.ogg",
                         std::string(Mix_GetError())));
-        exit(1);
     }
 
     // Infinitely loop the music

@@ -114,6 +114,9 @@ public:
     /// The collection will allocate a unique ID for the newly created entity.
     Entity & createEntity();
 
+    /// Remove an entity by it's id.
+    void removeEntity(unsigned int id);
+
     /// Register a 'system' callable to the collection.
     ///
     /// Systems should be callables that expect two arguments: a pointer to the

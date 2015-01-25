@@ -189,7 +189,8 @@ int Server::exec() {
             if (client.getState() == Client::Pending) {
                 client.checkProtocolVersion();
                 if (client.getState() == Client::Connected) {
-                    m_map.addPlayer("nigger");
+
+                    m_map.addPlayer("Player");
                 }
                 continue;
             }

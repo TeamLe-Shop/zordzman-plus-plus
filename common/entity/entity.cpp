@@ -50,6 +50,16 @@ Entity & EntityCollection::createEntity() {
     return m_entities.back();
 }
 
+void EntityCollection::removeEntity(unsigned int id) {
+    int index;
+    for (auto e : m_entities) {
+        if (e.getID() == id) {
+            m_entities.remove(index);
+        }
+        index++;
+    }
+}
+
 void EntityCollection::addSystem(
         System system, std::initializer_list<std::string> components) {
     m_systems.emplace_back(system, components);

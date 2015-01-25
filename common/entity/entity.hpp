@@ -67,7 +67,7 @@ public:
     Entity(unsigned int id);
 
     /// Retrieve the unique ID for the entity.
-    unsigned int getID();
+    unsigned int getID() const;
 
     /// Add a new component to the entity.
     ///

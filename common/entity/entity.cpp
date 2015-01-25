@@ -6,7 +6,7 @@ Entity::Entity(unsigned int id) {
     m_id = id;
 }
 
-unsigned int Entity::getID() {
+unsigned int Entity::getID() const {
     return m_id;
 }
 
@@ -52,9 +52,9 @@ Entity & EntityCollection::createEntity() {
 
 void EntityCollection::removeEntity(unsigned int id) {
     int index;
-    for (auto e : m_entities) {
+    for (auto const & e : m_entities) {
         if (e.getID() == id) {
-            m_entities.remove(index);
+            m_entities.erase(m_entities.begin() + index);
         }
         index++;
     }

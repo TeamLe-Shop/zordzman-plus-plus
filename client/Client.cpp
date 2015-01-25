@@ -44,6 +44,7 @@ Mix_Music * music = nullptr;
 
 typedef MessageProcessor<> Processor;
 
+namespace {
 /* Handler functions */
 void handleMapOffer(Processor * /*processor*/, MessageEntity entity) {
     game_instance->checkForMap(entity["name"].string_value(),
@@ -66,6 +67,7 @@ void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
     // TODO: When we implement game states, we should perhaps change this
     // to go back to previous state?
     exit(0);
+}
 }
 
 Client::Client(Config const & cfg, HUD hud)

@@ -42,7 +42,7 @@ EntityCollection::EntityCollection() {
 
 unsigned int EntityCollection::getFrame() {
     return m_frame;
-};
+}
 
 Entity & EntityCollection::createEntity() {
     m_entities.emplace_back(m_entity_id);

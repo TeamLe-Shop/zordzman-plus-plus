@@ -149,7 +149,7 @@ public:
     ///
     /// This mostly exists to save keystrokes.
     void addHandler(MessageType type, MutedHandler handler) {
-        addHandler(type, [handler](MessageProcessor<Args ...> *processor,
+        addHandler(type, [handler](MessageProcessor<Args ...> */*processor*/,
                 MessageEntity entity, Args ... args){
             return handler(entity, args ...);
         });

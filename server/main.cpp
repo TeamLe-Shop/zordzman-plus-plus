@@ -1,8 +1,9 @@
 #include <climits>
 #include <cerrno>
 #include <cstdlib>
-#include <iostream>
 #include <fstream>
+
+#include "format.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -69,7 +70,8 @@ int main(int argc, char **argv) {
     std::ifstream map_file(map_name);
 
     if (!map_file.is_open()) {
-        printf("SERVER: [ERR]  Looks like that map file doesn't exist.\n");
+        fmt::print("SERVER: [ERR]  Failed opening map file \"{}\".\n",
+                   map_name);
         map_file.close();
         exit(1);
     } else {

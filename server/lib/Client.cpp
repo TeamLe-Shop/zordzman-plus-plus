@@ -70,8 +70,8 @@ void Client::exec(Server *server) {
 Client::State Client::getState() const { return m_state; }
 
 Client::Client(Client &&other)
-    : m_tcp_socket(other.m_tcp_socket), m_state(other.m_state),
-      m_msg_proc(other.m_msg_proc) {
+    : m_tcp_socket(other.m_tcp_socket), m_msg_proc(other.m_msg_proc),
+      m_state(other.m_state) {
     other.m_tcp_socket = -1;
 }
 

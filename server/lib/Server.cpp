@@ -28,7 +28,7 @@ namespace server {
 using namespace std::placeholders;
 using namespace json11;
 
-void handleMapRequest(Processor *, MessageEntity entity, Server *server,
+void handleMapRequest(Processor *, MessageEntity /*entity*/, Server *server,
                       Client *client) {
     if (!server->m_allow_downloads) {
         client->disconnect("Downloads not enabled.", true);

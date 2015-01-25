@@ -39,27 +39,27 @@ namespace {
 Client * game_instance;
 std::string const title = "Zordzman v0.0.3";
 Mix_Music * music = nullptr;
-bool can_send = false;
+// bool can_send = false;
 } // Anonymous namespace
 
 typedef MessageProcessor<> Processor;
 
 /* Handler functions */
-void handleMapOffer(Processor * processor, MessageEntity entity) {
+void handleMapOffer(Processor * /*processor*/, MessageEntity entity) {
     game_instance->checkForMap(entity["name"].string_value(),
                                entity["hash"].string_value());
 }
 
-void handleMapContents(Processor * processor, MessageEntity entity) {
+void handleMapContents(Processor * /*processor*/, MessageEntity entity) {
     game_instance->writeMapContents(entity.string_value());
 }
 
-void handleServerMessage(Processor * processor, MessageEntity entity) {
+void handleServerMessage(Processor * /*processor*/, MessageEntity entity) {
     game_instance->addMessage(
         fmt::format("SERVER: {}", entity["message"].string_value()));
 }
 
-void handleDisconnect(Processor * processor, MessageEntity entity) {
+void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
     fmt::print("Disconnected from server ({})\n", entity.string_value());
     // What do I do here? I want to exit, what's the appropriate function to
     // call?
@@ -69,8 +69,8 @@ void handleDisconnect(Processor * processor, MessageEntity entity) {
 }
 
 Client::Client(Config const & cfg, HUD hud)
-    : m_window(800, 600, title), m_player(new Player(cfg.name, 0, 0, 1)),
-      m_cfg(cfg), m_hud(hud), m_chat(5) {
+    : m_window(800, 600, title), m_chat(5),
+      m_player(new Player(cfg.name, 0, 0, 1)), m_cfg(cfg), m_hud(hud) {
     game_instance = this;
 
     m_chat.resize(0);
@@ -170,11 +170,10 @@ bool Client::joinServer() {
     m_msg_proc.setSocket(m_socket);
 
     size_t total_sent = 0;
-    size_t additive = 0;
     size_t length = 4;
 
     while (total_sent < length) {
-        additive = send(m_socket, net::MAGIC_NUMBER.c_str(), length, 0);
+        auto additive = send(m_socket, net::MAGIC_NUMBER.c_str(), length, 0);
 
         if (additive == -1) {
             fmt::print(stderr, "[ERROR] Error sending magic num: {}\n",
@@ -413,7 +412,7 @@ void Client::drawHUD() {
     drawText(serverstr, 800 - (8 * serverstr.size()), m_hud.border.y - 8, 8, 8);
     drawText(mapstr, 800 - (8 * mapstr.size()), m_hud.border.y - 16, 8, 8);
 
-    for (int i = 0; i < m_chat.size(); i++) {
+    for (size_t i = 0; i < m_chat.size(); i++) {
         drawText(m_chat[i].message, 0, i * 8, 8, 8);
     }
 }

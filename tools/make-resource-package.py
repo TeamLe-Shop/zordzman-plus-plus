@@ -21,6 +21,9 @@ RESOURCE_TYPE_SCHEMAS = {
         "width": int,
         "height": int,
     },
+    "music": {
+        "path": pathlib.Path,
+    },
 }
 
 

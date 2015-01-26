@@ -99,6 +99,8 @@ public:
 
     State getState() const;
 
+    void decideClientName(std::vector<Client> clients);
+
     // Forbid copying
     Client(const Client &) = delete;
     Client &operator=(const Client &) = delete;
@@ -116,6 +118,8 @@ public:
     Processor m_msg_proc;
 
     struct sockaddr_in m_addr;
+
+    std::string name;
 
     /// Assert the client is using the correct protocol version
     ///

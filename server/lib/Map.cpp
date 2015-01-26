@@ -43,10 +43,16 @@ std::string Level::asBase64() { return m_base64; }
 
 void Level::cycle() { entities.cycle(); }
 
-void Level::addPlayer(std::string name) {
+unsigned int Level::addPlayer(std::string name) {
     entity::Entity &ent = entities.createEntity();
     ent.addComponent(new entity::CharacterComponent(name, 100));
     ent.addComponent(new entity::PositionComponent(m_spawn_x, m_spawn_y));
+
+   return ent.getID();
+}
+
+void Level::removePlayer(std::string name) {
+
 }
 
 } // namespace map

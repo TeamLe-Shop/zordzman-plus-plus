@@ -60,6 +60,26 @@ void Client::checkProtocolVersion() {
     }
 }
 
+void Client::decideClientName(std::vector<Client> clients) {
+    std::string default_name = "Player";
+    std::string new_name = "Player";
+
+    int counter = 0;
+
+    for (int i = 0; i < clients.size(); i++) {
+        if (&clients[i] == this) {
+            continue;
+        }
+        if (clients[i].name == new_name) {
+            counter++;
+            new_name = fmt::format("Player #{}", counter);
+            i = 0;
+        }
+    }
+
+    name = new_name;
+}
+
 void Client::exec(Server *server) {
     if (!m_msg_proc.process()) {
         disconnect("User disconnected", false);

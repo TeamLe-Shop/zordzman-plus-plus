@@ -189,7 +189,7 @@ int Server::exec() {
             if (client.getState() == Client::Pending) {
                 client.checkProtocolVersion();
                 if (client.getState() == Client::Connected) {
-
+                    client.decideClientName(m_clients);
                     m_map.addPlayer("Player");
                 }
                 continue;

@@ -54,6 +54,10 @@ public:
     /// See Client::send().
     void sendAll(std::string type, json11::Json entity);
 
+    // Should this really be in Server?
+    // It seems like something that should belong in the
+    std::string decideClientName();
+
     map::Level m_map;
 
     bool m_allow_downloads;

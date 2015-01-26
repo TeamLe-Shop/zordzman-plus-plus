@@ -60,7 +60,7 @@ void Client::checkProtocolVersion() {
     }
 }
 
-void Client::decideClientName(std::vector<Client> clients) {
+void Client::decideClientName(std::vector<Client> const & clients) {
     std::string default_name = "Player";
     std::string new_name = "Player";
 

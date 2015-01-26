@@ -99,7 +99,7 @@ public:
 
     State getState() const;
 
-    void decideClientName(std::vector<Client> clients);
+    void decideClientName(const std::vector<Client> &clients);
 
     // Forbid copying
     Client(const Client &) = delete;

@@ -50,7 +50,7 @@ unsigned int Level::addPlayer(std::string name) {
     ent.addComponent(new entity::CharacterComponent(name, 100));
     ent.addComponent(new entity::PositionComponent(m_spawn_x, m_spawn_y));
 
-   return ent.getID();
+    return ent.getID();
 }
 
 void Level::removePlayer(Client &client) {

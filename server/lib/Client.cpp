@@ -40,7 +40,8 @@ void Client::checkProtocolVersion() {
 
     char buffer[4];
     memset(buffer, 0, 4);
-    int bytes_recv = recv(m_tcp_socket.getHandle(), buffer, 4 - m_magic_buffer.size(), 0);
+    int bytes_recv =
+        recv(m_tcp_socket.getHandle(), buffer, 4 - m_magic_buffer.size(), 0);
     if ((bytes_recv == 0) || (bytes_recv == -1 && errno != EAGAIN)) {
         disconnect("Left server", false);
     }

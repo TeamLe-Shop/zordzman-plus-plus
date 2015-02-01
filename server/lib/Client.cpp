@@ -102,6 +102,7 @@ unsigned int Client::getPlayerID() const { return m_playerID; }
 
 Client::Client(Client &&other)
     : m_tcp_socket(other.m_tcp_socket), m_msg_proc(other.m_msg_proc),
+      name(std::move(other.name)),
       m_state(other.m_state) {
     other.m_tcp_socket = -1;
 }
@@ -110,6 +111,7 @@ Client &Client::operator=(Client &&other) {
     m_state = other.m_state;
     m_tcp_socket = other.m_tcp_socket;
     m_msg_proc = other.m_msg_proc;
+    name = std::move(other.name);
     other.m_tcp_socket = -1;
     return *this;
 }

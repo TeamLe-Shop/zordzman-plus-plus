@@ -206,7 +206,6 @@ int Server::exec() {
                 sendAll("server.message",
                     fmt::format("{} has left the game.", client.name));
                 m_map.removePlayer(client);
-                close(client.m_tcp_socket);
                 m_clients.erase(m_clients.begin() + i);
             }
         }

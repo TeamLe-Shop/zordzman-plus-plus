@@ -97,18 +97,11 @@ typedef int Socket;
 /// processor.addHandler("example", muted_handler);
 /// processor.dispatch(5, "foo");
 /// @endcode
-template <class ... Args> class MessageProcessor {
+template <class... Args> class MessageProcessor {
+    using Handler = std::function<
+        void(MessageProcessor<Args...> *, MessageEntity, Args...)>;
 
-using Handler = std::function<void(
-    MessageProcessor<Args ...> *,
-    MessageEntity,
-    Args ...
-)>;
-
-using MutedHandler = std::function<void(
-    MessageEntity,
-    Args ...
-)>;
+    using MutedHandler = std::function<void(MessageEntity, Args...)>;
 
 public:
     MessageProcessor() { m_buffer.reserve(8192); }
@@ -119,9 +112,7 @@ public:
     }
 
     /// Set socket descriptor for this processor
-    void setSocket(Socket socket) {
-        m_socket = socket;
-    }
+    void setSocket(Socket socket) { m_socket = socket; }
 
     /// Register a callback for a given message type
     ///
@@ -149,9 +140,9 @@ public:
     ///
     /// This mostly exists to save keystrokes.
     void addHandler(MessageType type, MutedHandler handler) {
-        addHandler(type, [handler](MessageProcessor<Args ...> */*processor*/,
-                MessageEntity entity, Args ... args){
-            return handler(entity, args ...);
+        addHandler(type, [handler](MessageProcessor<Args...> * /*processor*/,
+                                   MessageEntity entity, Args... args) {
+            return handler(entity, args...);
         });
     }
 
@@ -160,10 +151,10 @@ public:
     /// This will call all the handlers for each message that has been received
     /// by calls to `process`. The given `args` are passed through to the
     /// handler calls.
-    void dispatch(Args ... args) {
+    void dispatch(Args... args) {
         while (!m_ingress.empty()) {
-            for (auto &handler : m_handlers[std::get<0>(m_ingress.front())]) {
-                handler(this, std::get<1>(m_ingress.front()), args ...);
+            for (auto & handler : m_handlers[std::get<0>(m_ingress.front())]) {
+                handler(this, std::get<1>(m_ingress.front()), args...);
             }
             m_ingress.pop();
         }
@@ -188,8 +179,7 @@ public:
 
         int len = strlen(&m_buffer[0]);
         m_buffer.resize(free_buffer);
-        ssize_t data_or_error = recv(m_socket, &m_buffer[len],
-                                     free_buffer, 0);
+        ssize_t data_or_error = recv(m_socket, &m_buffer[len], free_buffer, 0);
         len = strlen(&m_buffer[0]);
         if (data_or_error == 0) {
             m_buffer.resize(0);
@@ -199,7 +189,7 @@ public:
 
             if (errno != EAGAIN) {
                 fmt::print("(MessageProcessor) Error receiving: {}\n",
-                            strerror(errno));
+                           strerror(errno));
                 return false;
             }
             m_buffer.resize(len);
@@ -249,10 +239,10 @@ public:
     ///               std::string and the field value as a json11::Json.
     void sendStateChange(entity::StateChange change) {
         json11::Json entity = json11::Json::object{
-            { "id", (int) std::get<0>(change) },
-            { "component", std::get<1>(change) },
-            { "field", std::get<2>(change) },
-            { "value", std::get<3>(change) },
+            {"id", (int)std::get<0>(change)},
+            {"component", std::get<1>(change)},
+            {"field", std::get<2>(change)},
+            {"value", std::get<3>(change)},
         };
         send("entity.state", entity);
     }
@@ -265,21 +255,20 @@ public:
     /// This consumes the send queue entirely.
     bool flushSendQueue() {
         while (!m_egress.empty()) {
-
             json11::Json message = json11::Json::object{
-                { "type", std::get<0>(m_egress.front()) },
-                { "entity", std::get<1>(m_egress.front()) },
+                {"type", std::get<0>(m_egress.front())},
+                {"entity", std::get<1>(m_egress.front())},
             };
             m_egress.pop();
             std::string encoded_message = message.dump() + " ";
             size_t sent = 0;
             while (sent < encoded_message.size()) {
-                ssize_t data_or_error = ::send(m_socket,
-                                             encoded_message.data() + sent,
-                                             encoded_message.size() - sent, 0);
+                ssize_t data_or_error =
+                    ::send(m_socket, encoded_message.data() + sent,
+                           encoded_message.size() - sent, 0);
                 if (data_or_error == -1) {
                     fmt::print("(MessageProcessor) Error sending: {}\n",
-                       strerror(errno));
+                               strerror(errno));
                     return false;
                 } else {
                     sent = sent + data_or_error;
@@ -344,4 +333,4 @@ private:
     }
 };
 
-}  // namespace net
+} // namespace net

@@ -10,8 +10,9 @@ public:
     ~Socket();
     Socket(Socket const &) = delete;
     void operator=(Socket const &) = delete;
-    Socket(Socket &&other);
-    Socket& operator=(Socket &&other);
+    Socket(Socket && other);
+    Socket & operator=(Socket && other);
+
 private:
     int m_handle;
 };

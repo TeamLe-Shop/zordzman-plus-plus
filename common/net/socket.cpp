@@ -11,42 +11,28 @@
 namespace common {
 namespace net {
 
-int Socket::getHandle() const
-{
-    return m_handle;
-}
+int Socket::getHandle() const { return m_handle; }
 
-Socket::Socket() :
-    m_handle(-1)
-{
+Socket::Socket() : m_handle(-1) {}
 
-}
+Socket::Socket(int handle) : m_handle(handle) {}
 
-Socket::Socket(int handle) :
-    m_handle(handle)
-{
-
-}
-
-Socket::~Socket()
-{
+Socket::~Socket() {
     if (m_handle != -1) {
 #ifdef _WIN32
-    closesocket(m_handle);
+        closesocket(m_handle);
 #else
-    close(m_handle);
+        close(m_handle);
 #endif
     }
 }
 
-Socket::Socket(Socket &&other)
-{
+Socket::Socket(Socket && other) {
     m_handle = other.m_handle;
     other.m_handle = -1;
 }
 
-Socket& Socket::operator=(Socket &&other)
-{
+Socket & Socket::operator=(Socket && other) {
     m_handle = other.m_handle;
     other.m_handle = -1;
     return *this;

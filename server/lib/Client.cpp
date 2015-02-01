@@ -2,6 +2,9 @@
 #include "format.h"
 
 #include "common/util/net.hpp"
+#include "common/util/debug.hpp"
+
+using common::util::debug;
 
 // Last octet can be the protocol version if we ever decide to care
 #define MAGIC_NUMBER "\xCA\xC3\x55\x01"
@@ -67,18 +70,18 @@ void Client::decideClientName(std::vector<Client> &clients) {
     int counter = 0;
 
     for (size_t i = 0; i < clients.size(); i++) {
-        fmt::print("Client #{}!\n", i);
+        debug("Client #{}!\n", i);
         if (&clients[i] == this) {
-            fmt::print("Client is the same. Continue!\n");
+            debug("Client is the same. Continue!\n");
             continue;
         }
-        fmt::print("Our name: {}, Client #{}'s name: {}\n", new_name, i,
+        debug("Our name: {}, Client #{}'s name: {}\n", new_name, i,
                    clients[i].name);
         if (clients[i].name == new_name) {
-            fmt::print("Someone has the same name as us.\n");
+            debug("Someone has the same name as us.\n");
             counter++;
             new_name = fmt::format("Player #{}", counter);
-            fmt::print("New name: {}\n", new_name);
+            debug("New name: {}\n", new_name);
             i = 0;
         }
     }

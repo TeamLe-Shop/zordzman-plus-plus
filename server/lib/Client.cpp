@@ -70,18 +70,12 @@ void Client::decideClientName(std::vector<Client> &clients) {
     int counter = 0;
 
     for (size_t i = 0; i < clients.size(); i++) {
-        debug("Client #{}!\n", i);
         if (&clients[i] == this) {
-            debug("Client is the same. Continue!\n");
             continue;
         }
-        debug("Our name: {}, Client #{}'s name: {}\n", new_name, i,
-                   clients[i].name);
         if (clients[i].name == new_name) {
-            debug("Someone has the same name as us.\n");
             counter++;
-            new_name = fmt::format("Player #{}", counter);
-            debug("New name: {}\n", new_name);
+            new_name = fmt::format("Player {}", counter);
             i = 0;
         }
     }
@@ -101,17 +95,23 @@ Client::State Client::getState() const { return m_state; }
 unsigned int Client::getPlayerID() const { return m_playerID; }
 
 Client::Client(Client &&other)
-    : m_tcp_socket(other.m_tcp_socket), m_msg_proc(other.m_msg_proc),
+    : m_tcp_socket(other.m_tcp_socket),
+      m_msg_proc(other.m_msg_proc), m_addr(other.m_addr),
+      m_logger(other.m_logger),
+      m_state(other.m_state),
       name(std::move(other.name)),
-      m_state(other.m_state) {
+      m_playerID(other.m_playerID) {
     other.m_tcp_socket = -1;
 }
 
 Client &Client::operator=(Client &&other) {
+    m_logger = other.m_logger;
     m_state = other.m_state;
     m_tcp_socket = other.m_tcp_socket;
     m_msg_proc = other.m_msg_proc;
+    m_addr = other.m_addr;
     name = std::move(other.name);
+    m_playerID = other.m_playerID;
     other.m_tcp_socket = -1;
     return *this;
 }

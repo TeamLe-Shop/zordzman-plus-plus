@@ -6,11 +6,13 @@
 #include <algorithm>
 #include "common/util/stream.hpp"
 
-#include "physicsSystem.hpp"
+#include "systems/physicsSystem.hpp"
 
 #include "common/entity/components/character.hpp"
 #include "common/entity/components/position.hpp"
 #include "common/entity/component.hpp"
+
+#include "Client.hpp"
 
 namespace server {
 
@@ -51,8 +53,8 @@ unsigned int Level::addPlayer(std::string name) {
    return ent.getID();
 }
 
-void Level::removePlayer(std::string name) {
-
+void Level::removePlayer(Client &client) {
+    entities.removeEntity(client.getPlayerID());
 }
 
 } // namespace map

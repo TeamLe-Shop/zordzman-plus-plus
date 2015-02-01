@@ -159,7 +159,7 @@ private:
         m_value = static_cast<T>(JSONFieldValue(value));
     }
 
-    void onStateChange(T old, T new_) {
+    void onStateChange(T /*old*/, T new_) {
         m_component->markStateChange(m_name, new_);
 
     }
@@ -176,7 +176,7 @@ public :
         : Field<T>::Field(component, initial) {}
 
 private:
-    void onStateChange(T old, T new_) {
+    void onStateChange(T /*old*/, T /*new_*/) {
         m_component->markDirty();
     }
 };

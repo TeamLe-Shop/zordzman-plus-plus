@@ -60,19 +60,25 @@ void Client::checkProtocolVersion() {
     }
 }
 
-void Client::decideClientName(std::vector<Client> clients) {
+void Client::decideClientName(std::vector<Client> &clients) {
     std::string default_name = "Player";
     std::string new_name = "Player";
 
     int counter = 0;
 
-    for (int i = 0; i < clients.size(); i++) {
+    for (size_t i = 0; i < clients.size(); i++) {
+        fmt::print("Client #{}!\n", i);
         if (&clients[i] == this) {
+            fmt::print("Client is the same. Continue!\n");
             continue;
         }
+        fmt::print("Our name: {}, Client #{}'s name: {}\n", new_name, i,
+                   clients[i].name);
         if (clients[i].name == new_name) {
+            fmt::print("Someone has the same name as us.\n");
             counter++;
             new_name = fmt::format("Player #{}", counter);
+            fmt::print("New name: {}\n", new_name);
             i = 0;
         }
     }
@@ -89,9 +95,11 @@ void Client::exec(Server *server) {
 
 Client::State Client::getState() const { return m_state; }
 
+unsigned int Client::getPlayerID() const { return m_playerID; }
+
 Client::Client(Client &&other)
-    : m_tcp_socket(other.m_tcp_socket), m_state(other.m_state),
-      m_msg_proc(other.m_msg_proc) {
+    : m_tcp_socket(other.m_tcp_socket), m_msg_proc(other.m_msg_proc),
+      m_state(other.m_state) {
     other.m_tcp_socket = -1;
 }
 

@@ -99,7 +99,9 @@ public:
 
     State getState() const;
 
-    void decideClientName(std::vector<Client> clients);
+    void decideClientName(std::vector<Client> &clients);
+
+    unsigned int getPlayerID() const;
 
     // Forbid copying
     Client(const Client &) = delete;
@@ -140,5 +142,6 @@ private:
     common::Logger m_logger;
     State m_state;
     time_t m_time_created;
+    unsigned int m_playerID;
 };
 } // namespace server

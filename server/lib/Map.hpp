@@ -9,6 +9,8 @@
 
 namespace server {
 
+class Client;
+
 namespace map {
 
 typedef unsigned char byte;
@@ -28,7 +30,10 @@ public:
     void cycle();
 
     /// Add a player to the map.
-    void addPlayer(std::string name);
+    unsigned int addPlayer(std::string name);
+
+    /// Remove a player from the map.
+    void removePlayer(Client &client);
 
     std::string name;
 

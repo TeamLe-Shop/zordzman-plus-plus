@@ -149,7 +149,7 @@ public:
     ///
     /// This mostly exists to save keystrokes.
     void addHandler(MessageType type, MutedHandler handler) {
-        addHandler(type, [handler](MessageProcessor<Args ...> *processor,
+        addHandler(type, [handler](MessageProcessor<Args ...> */*processor*/,
                 MessageEntity entity, Args ... args){
             return handler(entity, args ...);
         });
@@ -272,7 +272,7 @@ public:
             };
             m_egress.pop();
             std::string encoded_message = message.dump() + " ";
-            ssize_t sent = 0;
+            size_t sent = 0;
             while (sent < encoded_message.size()) {
                 ssize_t data_or_error = ::send(m_socket,
                                              encoded_message.data() + sent,

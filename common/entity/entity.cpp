@@ -42,7 +42,7 @@ EntityCollection::EntityCollection() {
 
 unsigned int EntityCollection::getFrame() {
     return m_frame;
-};
+}
 
 Entity & EntityCollection::createEntity() {
     m_entities.emplace_back(m_entity_id);
@@ -51,7 +51,7 @@ Entity & EntityCollection::createEntity() {
 }
 
 void EntityCollection::removeEntity(unsigned int id) {
-    int index;
+    int index = 0;
     for (auto const & e : m_entities) {
         if (e.getID() == id) {
             m_entities.erase(m_entities.begin() + index);
@@ -71,7 +71,7 @@ void EntityCollection::addSystem(System system) {
 
 void EntityCollection::addSystem(
         SimpleSystem system, std::initializer_list<std::string> components) {
-    addSystem([system](EntityCollection *c, Entity &e) {
+    addSystem([system](EntityCollection */*c*/, Entity &e) {
         return system(e);
     }, components);
 }
@@ -103,7 +103,7 @@ void EntityCollection::handleEntityStateChange(json11::Json entity) {
     if (!entity["component"].is_string()) { return; }
     if (!entity["field"].is_string()) { return; }
 
-    int id = entity["id"].int_value();
+    unsigned int id = entity["id"].int_value();
     std::string component = entity["component"].string_value();
     std::string field = entity["field"].string_value();
     json11::Json value = entity["value"];

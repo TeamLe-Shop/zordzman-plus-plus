@@ -11,9 +11,8 @@
 
 #include "common/entity/component.hpp"
 
-#define COMPONENT(ent, type, as) auto as = \
-    static_cast<type *>(ent[type::getComponentName()])
-
+#define COMPONENT(ent, type, as)                                               \
+    auto as = static_cast<type *>(ent[type::getComponentName()])
 
 /// This namespace provides the means for representing game state using the
 /// entity-component-system (ECS) model.
@@ -50,10 +49,9 @@
 namespace entity {
 
 // Entity ID, component name, field name, new value as JSON
-typedef std::tuple<unsigned int,
-                   std::string, std::string, json11::Json> StateChange;
+typedef std::tuple<unsigned int, std::string, std::string, json11::Json>
+    StateChange;
 typedef std::tuple<std::string, std::string, json11::Json> EntityStateChange;
-
 
 /// A game entity.
 ///
@@ -62,7 +60,6 @@ typedef std::tuple<std::string, std::string, json11::Json> EntityStateChange;
 /// entity, therefore `Entity` instances should never be created manually.
 /// Instead they should be created via `EntityCollection`s.
 class Entity {
-
 public:
     Entity(unsigned int id);
 
@@ -76,7 +73,7 @@ public:
     ///
     /// If a component of the same type already exists for the entity it will
     /// be replaced with the new one. The old component will be freed.
-    void addComponent(Component *component);
+    void addComponent(Component * component);
 
     /// Check if a component exists on the entity by component ID.
     bool hasComponent(std::string name);
@@ -93,15 +90,13 @@ private:
     std::map<std::string, std::unique_ptr<Component>> m_components;
 };
 
-
 /// Game entity manager.
 ///
 /// Instances of this class are responsible for managing all entities,
 /// running the simulation and sharing state between the server and clients.
 class EntityCollection {
-
-using System = std::function<void(EntityCollection *, Entity &)>;
-using SimpleSystem = std::function<void(Entity &)>;
+    using System = std::function<void(EntityCollection *, Entity &)>;
+    using SimpleSystem = std::function<void(Entity &)>;
 
 public:
     EntityCollection();
@@ -212,5 +207,4 @@ private:
     Entity & createEntity(unsigned int id);
 };
 
-
-}  // namespace entity
+} // namespace entity

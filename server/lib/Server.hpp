@@ -1,7 +1,5 @@
 #pragma once
 
-#include <functional>
-
 #include "common/net/message.hpp"
 
 #include "common/logger/Logger.hpp"
@@ -53,10 +51,6 @@ public:
     ///
     /// See Client::send().
     void sendAll(std::string type, json11::Json entity);
-
-    // Should this really be in Server?
-    // It seems like something that should belong in the
-    std::string decideClientName();
 
     map::Level m_map;
 

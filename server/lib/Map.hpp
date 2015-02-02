@@ -3,11 +3,15 @@
 #include <vector>
 #include <string>
 
+#include "Client.hpp"
+
 #include "common/extlib/hash-library/md5.h"
 #include "common/entity/entity.hpp"
 #include "base64.hpp"
 
 namespace server {
+
+class Client;
 
 namespace map {
 
@@ -31,7 +35,7 @@ public:
     unsigned int addPlayer(std::string name);
 
     /// Remove a player from the map.
-    void removePlayer(std::string name);
+    void removePlayer(Client &client);
 
     std::string name;
 

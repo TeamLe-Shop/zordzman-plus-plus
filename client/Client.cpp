@@ -56,8 +56,7 @@ void handleMapContents(Processor * /*processor*/, MessageEntity entity) {
 }
 
 void handleServerMessage(Processor * /*processor*/, MessageEntity entity) {
-    game_instance->addMessage(
-        fmt::format("SERVER: {}", entity["message"].string_value()));
+    game_instance->addMessage(fmt::format("{}", entity.string_value()));
 }
 
 void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dirs='client server common/util common/logger common/zjson'
+dirs='client server common/util common/logger common/zjson common/net common/entity'
 
 for dir in $dirs; do
 	find $dir -name '*.*pp' -exec clang-format -style=file -i '{}' \;;

@@ -2,17 +2,10 @@
 
 namespace entity {
 
-std::string PositionComponent::getComponentName() {
-    return "position";
-}
+std::string PositionComponent::getComponentName() { return "position"; }
 
-std::string PositionComponent::getName() {
-    return "position";
-}
+std::string PositionComponent::getName() { return "position"; }
 
-Component * PositionComponent::new_() {
-    return new PositionComponent();
-}
+Component * PositionComponent::new_() { return new PositionComponent(); }
 
-}  // namespace entity
-
+} // namespace entity

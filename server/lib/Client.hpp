@@ -8,6 +8,7 @@
 
 #include "json11.hpp"
 #include "common/net/message.hpp"
+#include "common/net/socket.hpp"
 
 #include <stdio.h>
 #include <string.h>
@@ -21,8 +22,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #endif
-
-#include "Server.hpp"
 
 #include "common/logger/Logger.hpp"
 
@@ -99,27 +98,18 @@ public:
 
     State getState() const;
 
-    void decideClientName(const std::vector<Client> &clients);
+    void decideClientName(std::vector<Client> &clients);
 
-    // Forbid copying
-    Client(const Client &) = delete;
-    Client &operator=(const Client &) = delete;
-
-    // Move operations
-    Client(Client &&);
-    Client &operator=(Client &&);
-
-    // Destructor
-    ~Client();
-
-    Socket m_tcp_socket;
-    Socket m_udp_socket;
+    common::net::Socket m_tcp_socket;
+    common::net::Socket m_udp_socket;
 
     Processor m_msg_proc;
 
     struct sockaddr_in m_addr;
 
     std::string name;
+
+    unsigned int m_playerID;
 
     /// Assert the client is using the correct protocol version
     ///

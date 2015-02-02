@@ -6,7 +6,7 @@
 #include <algorithm>
 #include "common/util/stream.hpp"
 
-#include "physicsSystem.hpp"
+#include "systems/physicsSystem.hpp"
 
 #include "common/entity/components/character.hpp"
 #include "common/entity/components/position.hpp"
@@ -51,7 +51,9 @@ unsigned int Level::addPlayer(std::string name) {
     return ent.getID();
 }
 
-void Level::removePlayer(std::string name) {}
+void Level::removePlayer(Client &client) {
+    entities.removeEntity(client.m_playerID);
+}
 
 } // namespace map
 

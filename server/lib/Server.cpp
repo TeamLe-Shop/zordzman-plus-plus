@@ -1,4 +1,5 @@
 #include "Server.hpp"
+
 #include "Client.hpp"
 #include "common/util/container.hpp"
 #include "common/extlib/hash-library/md5.h"
@@ -168,11 +169,7 @@ void Server::acceptConnections() {
             m_clients.back().m_msg_proc.send(
                 "map.offer", Json::object{ { "name", m_map.name },
                                            { "hash", m_map.md5.getHash() } });
-            sendAll("server.message",
-                    Json::object{ { "message",
-                                    fmt::format("{} has connected.",
-                                                common::util::net::ipaddr(
-                                                    *addr_in, false)) } });
+            m_clients.back().decideClientName(m_clients);
         }
     }
 }
@@ -189,8 +186,10 @@ int Server::exec() {
             if (client.getState() == Client::Pending) {
                 client.checkProtocolVersion();
                 if (client.getState() == Client::Connected) {
-                    client.decideClientName(m_clients);
-                    m_map.addPlayer("Player");
+                    sendAll("server.message",
+                            fmt::format("{} has connected.",
+                                        m_clients.back().name));
+                    client.m_playerID = m_map.addPlayer(client.name);
                 }
                 continue;
             }
@@ -206,11 +205,8 @@ int Server::exec() {
 
             if (client.getState() == Client::Disconnected) {
                 sendAll("server.message",
-                        Json::object{ { "message",
-                                        fmt::format("{} left the game.",
-                                                    common::util::net::ipaddr(
-                                                        client.m_addr)) } });
-                close(client.m_tcp_socket);
+                        fmt::format("{} has left the game.", client.name));
+                m_map.removePlayer(client);
                 m_clients.erase(m_clients.begin() + i);
             }
         }

@@ -1,7 +1,11 @@
 #include "Client.hpp"
+
 #include "format.h"
 
 #include "common/util/net.hpp"
+#include "common/util/debug.hpp"
+
+using common::util::debug;
 
 // Last octet can be the protocol version if we ever decide to care
 #define MAGIC_NUMBER "\xCA\xC3\x55\x01"
@@ -37,7 +41,8 @@ void Client::checkProtocolVersion() {
 
     char buffer[4];
     memset(buffer, 0, 4);
-    int bytes_recv = recv(m_tcp_socket, buffer, 4 - m_magic_buffer.size(), 0);
+    int bytes_recv =
+        recv(m_tcp_socket.getHandle(), buffer, 4 - m_magic_buffer.size(), 0);
     if ((bytes_recv == 0) || (bytes_recv == -1 && errno != EAGAIN)) {
         disconnect("Left server", false);
     }
@@ -60,19 +65,19 @@ void Client::checkProtocolVersion() {
     }
 }
 
-void Client::decideClientName(std::vector<Client> const &clients) {
+void Client::decideClientName(std::vector<Client> &clients) {
     std::string default_name = "Player";
     std::string new_name = "Player";
 
     int counter = 0;
 
-    for (int i = 0; i < clients.size(); i++) {
+    for (size_t i = 0; i < clients.size(); i++) {
         if (&clients[i] == this) {
             continue;
         }
         if (clients[i].name == new_name) {
             counter++;
-            new_name = fmt::format("Player #{}", counter);
+            new_name = fmt::format("Player {}", counter);
             i = 0;
         }
     }
@@ -88,28 +93,6 @@ void Client::exec(Server *server) {
 }
 
 Client::State Client::getState() const { return m_state; }
-
-Client::Client(Client &&other)
-    : m_tcp_socket(other.m_tcp_socket), m_msg_proc(other.m_msg_proc),
-      m_state(other.m_state) {
-    other.m_tcp_socket = -1;
-}
-
-Client &Client::operator=(Client &&other) {
-    m_state = other.m_state;
-    m_tcp_socket = other.m_tcp_socket;
-    m_msg_proc = other.m_msg_proc;
-    other.m_tcp_socket = -1;
-    return *this;
-}
-
-Client::~Client() {
-#ifdef _WIN32
-    closesocket(m_tcp_socket);
-#else
-    close(m_tcp_socket);
-#endif
-}
 
 void Client::disconnect(std::string reason, bool flush) {
     m_msg_proc.send("disconnect", reason);

@@ -22,8 +22,6 @@
 #include <sys/types.h>
 #endif
 
-#include "Server.hpp"
-
 #include "common/logger/Logger.hpp"
 
 #define RECV_BUFFER_SIZE 1024
@@ -101,8 +99,6 @@ public:
 
     void decideClientName(std::vector<Client> &clients);
 
-    unsigned int getPlayerID() const;
-
     // Forbid copying
     Client(const Client &) = delete;
     Client &operator=(const Client &) = delete;
@@ -123,6 +119,8 @@ public:
 
     std::string name;
 
+    unsigned int m_playerID;
+
     /// Assert the client is using the correct protocol version
     ///
     /// If the client state is Pending this checks if the buffer contains the
@@ -142,6 +140,5 @@ private:
     common::Logger m_logger;
     State m_state;
     time_t m_time_created;
-    unsigned int m_playerID;
 };
 } // namespace server

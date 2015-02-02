@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 
+#include "Client.hpp"
+
 #include "common/extlib/hash-library/md5.h"
 #include "common/entity/entity.hpp"
 #include "base64.hpp"

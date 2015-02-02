@@ -1,4 +1,5 @@
 #include "Server.hpp"
+
 #include "Client.hpp"
 #include "common/util/container.hpp"
 #include "common/extlib/hash-library/md5.h"
@@ -188,7 +189,7 @@ int Server::exec() {
                     sendAll("server.message",
                         fmt::format("{} has connected.",
                             m_clients.back().name));
-                    m_map.addPlayer(client.name);
+                    client.m_playerID = m_map.addPlayer(client.name);
                 }
                 continue;
             }

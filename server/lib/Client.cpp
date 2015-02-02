@@ -1,4 +1,5 @@
 #include "Client.hpp"
+
 #include "format.h"
 
 #include "common/util/net.hpp"
@@ -91,8 +92,6 @@ void Client::exec(Server *server) {
 }
 
 Client::State Client::getState() const { return m_state; }
-
-unsigned int Client::getPlayerID() const { return m_playerID; }
 
 Client::Client(Client &&other)
     : m_tcp_socket(other.m_tcp_socket),

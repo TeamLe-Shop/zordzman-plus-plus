@@ -12,8 +12,6 @@
 #include "common/entity/components/position.hpp"
 #include "common/entity/component.hpp"
 
-#include "Client.hpp"
-
 namespace server {
 
 namespace map {
@@ -54,7 +52,7 @@ unsigned int Level::addPlayer(std::string name) {
 }
 
 void Level::removePlayer(Client &client) {
-    entities.removeEntity(client.getPlayerID());
+    entities.removeEntity(client.m_playerID);
 }
 
 } // namespace map

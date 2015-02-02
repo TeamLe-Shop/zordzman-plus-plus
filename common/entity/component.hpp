@@ -34,8 +34,7 @@ typedef std::tuple<std::string, json11::Json> ComponentStateChange;
 /// by the @ref getName method but its also advisable to have a static method
 /// which returns the same value.
 class Component {
-
-using Setter = std::function<void(json11::Json value)>;
+    using Setter = std::function<void(json11::Json value)>;
 
 public:
     virtual ~Component() {}
@@ -90,12 +89,9 @@ private:
     std::map<std::string, Setter> m_setters;
 };
 
-
-template <class T>
-class Field {
-
+template <class T> class Field {
 public:
-    Field(Component *component, T initial) {
+    Field(Component * component, T initial) {
         m_component = component;
         m_value = initial;
     }
@@ -108,25 +104,21 @@ public:
         onStateChange(old_value, value);
     }
 
-    T get() {
-        return m_value;
-    }
+    T get() { return m_value; }
 
 private:
     virtual void onStateChange(T old, T new_) = 0;
 
 protected:
     T m_value;
-    Component *m_component;
+    Component * m_component;
 };
-
 
 /// Utility class for converting JSON objects to their native equivalents.
 ///
 /// This implements a number of conversion operators which converts to
 /// json11::Json objects to C++-native objects.
 class JSONFieldValue {
-
 public:
     JSONFieldValue(json11::Json value) : m_value(value) {}
 
@@ -137,17 +129,15 @@ private:
     json11::Json m_value;
 };
 
-
-template <class T>
-class Stateful : public Field<T> {
-
-using Field<T>::m_component;
-using Field<T>::m_value;
+template <class T> class Stateful : public Field<T> {
+    using Field<T>::m_component;
+    using Field<T>::m_value;
 
 public:
-    Stateful(Component *component, std::string name, T initial)
+    Stateful(Component * component, std::string name, T initial)
         : Field<T>::Field(component, initial) {
-        m_component->addStateSetter(name,
+        m_component->addStateSetter(
+            name,
             std::bind(&Stateful<T>::setFromJSON, this, std::placeholders::_1));
         m_name = name;
     }
@@ -161,43 +151,35 @@ private:
 
     void onStateChange(T /*old*/, T new_) {
         m_component->markStateChange(m_name, new_);
-
     }
-
 };
 
-template <class T>
-class Stateless : public Field<T> {
+template <class T> class Stateless : public Field<T> {
+    using Field<T>::m_component;
 
-using Field<T>::m_component;
-
-public :
-    Stateless(Component *component, T initial)
+public:
+    Stateless(Component * component, T initial)
         : Field<T>::Field(component, initial) {}
 
 private:
-    void onStateChange(T /*old*/, T /*new_*/) {
-        m_component->markDirty();
-    }
+    void onStateChange(T /*old*/, T /*new_*/) { m_component->markDirty(); }
 };
-
 
 // Component
 // * May have zero or more stateful fields
 // * May have zero or more stateless fields
 // * Should be uniquely identifiable among other components
 
-
 // Stateful Transition Field
 // * Must be named for identification in messages
 // * The data must be serialisable as json11::Json
-// * Must communicate their change of state to the entity collection (e.g. via component)
-
+// * Must communicate their change of state to the entity collection (e.g. via
+// component)
 
 // Stateless Transition Field
 // * The parent component must know how to serialise all its statelss fields
 // * The parent component must know how to deserialise all its stateless fields
-// * The fields must be able to communicate its state change to the entity collection (e.g. via component)
+// * The fields must be able to communicate its state change to the entity
+// collection (e.g. via component)
 
-
-}  // namespace entity
+} // namespace entity

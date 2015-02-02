@@ -8,6 +8,7 @@
 
 #include "json11.hpp"
 #include "common/net/message.hpp"
+#include "common/net/socket.hpp"
 
 #include <stdio.h>
 #include <string.h>
@@ -99,19 +100,8 @@ public:
 
     void decideClientName(std::vector<Client> &clients);
 
-    // Forbid copying
-    Client(const Client &) = delete;
-    Client &operator=(const Client &) = delete;
-
-    // Move operations
-    Client(Client &&);
-    Client &operator=(Client &&);
-
-    // Destructor
-    ~Client();
-
-    Socket m_tcp_socket;
-    Socket m_udp_socket;
+    common::net::Socket m_tcp_socket;
+    common::net::Socket m_udp_socket;
 
     Processor m_msg_proc;
 

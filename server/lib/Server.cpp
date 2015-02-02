@@ -187,8 +187,8 @@ int Server::exec() {
                 client.checkProtocolVersion();
                 if (client.getState() == Client::Connected) {
                     sendAll("server.message",
-                        fmt::format("{} has connected.",
-                            m_clients.back().name));
+                            fmt::format("{} has connected.",
+                                        m_clients.back().name));
                     client.m_playerID = m_map.addPlayer(client.name);
                 }
                 continue;
@@ -205,9 +205,8 @@ int Server::exec() {
 
             if (client.getState() == Client::Disconnected) {
                 sendAll("server.message",
-                    fmt::format("{} has left the game.", client.name));
+                        fmt::format("{} has left the game.", client.name));
                 m_map.removePlayer(client);
-                close(client.m_tcp_socket);
                 m_clients.erase(m_clients.begin() + i);
             }
         }

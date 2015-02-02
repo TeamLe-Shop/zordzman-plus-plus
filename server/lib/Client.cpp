@@ -41,7 +41,8 @@ void Client::checkProtocolVersion() {
 
     char buffer[4];
     memset(buffer, 0, 4);
-    int bytes_recv = recv(m_tcp_socket, buffer, 4 - m_magic_buffer.size(), 0);
+    int bytes_recv =
+        recv(m_tcp_socket.getHandle(), buffer, 4 - m_magic_buffer.size(), 0);
     if ((bytes_recv == 0) || (bytes_recv == -1 && errno != EAGAIN)) {
         disconnect("Left server", false);
     }
@@ -92,36 +93,6 @@ void Client::exec(Server *server) {
 }
 
 Client::State Client::getState() const { return m_state; }
-
-Client::Client(Client &&other)
-    : m_tcp_socket(other.m_tcp_socket),
-      m_msg_proc(other.m_msg_proc), m_addr(other.m_addr),
-      m_logger(other.m_logger),
-      m_state(other.m_state),
-      name(std::move(other.name)),
-      m_playerID(other.m_playerID) {
-    other.m_tcp_socket = -1;
-}
-
-Client &Client::operator=(Client &&other) {
-    m_logger = other.m_logger;
-    m_state = other.m_state;
-    m_tcp_socket = other.m_tcp_socket;
-    m_msg_proc = other.m_msg_proc;
-    m_addr = other.m_addr;
-    name = std::move(other.name);
-    m_playerID = other.m_playerID;
-    other.m_tcp_socket = -1;
-    return *this;
-}
-
-Client::~Client() {
-#ifdef _WIN32
-    closesocket(m_tcp_socket);
-#else
-    close(m_tcp_socket);
-#endif
-}
 
 void Client::disconnect(std::string reason, bool flush) {
     m_msg_proc.send("disconnect", reason);

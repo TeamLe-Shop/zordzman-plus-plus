@@ -7,15 +7,10 @@
 namespace entity {
 
 class PositionComponent : public Component {
-
 public:
-    PositionComponent()
-        : m_x(this, 0.0),
-          m_y(this, 0.0) {};
+    PositionComponent() : m_x(this, 0.0), m_y(this, 0.0){};
 
-    PositionComponent(double x, double y)
-        : m_x(this, x),
-          m_y(this, y) {};
+    PositionComponent(double x, double y) : m_x(this, x), m_y(this, y){};
 
     virtual ~PositionComponent() {}
 
@@ -28,5 +23,4 @@ public:
     Stateless<double> m_y;
 };
 
-
-}  // namespace entity
+} // namespace entity

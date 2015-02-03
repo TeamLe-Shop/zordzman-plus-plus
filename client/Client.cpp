@@ -413,6 +413,9 @@ void Client::drawHUD() {
     drawText(mapstr, 800 - (8 * mapstr.size()), m_hud.border.y - 16, 8, 8);
 
     for (size_t i = 0; i < m_chat.size(); i++) {
+        glColor4f(0.3, 0.3, 0.3, 0.3);
+        drawRectangle(0, i * 8, m_chat[i].message.size() * 8, 8);
+        glColor3f(1, 1, 1);
         drawText(m_chat[i].message, 0, i * 8, 8, 8);
     }
 }

@@ -51,6 +51,8 @@ Server::Server(int port, unsigned int max_clients, std::string map_name,
     if (!m_allow_downloads) {
         m_logger.log("[INFO] Downloads not enabled.");
     }
+    m_logger.log("[INFO] Max clients: {}", max_clients);
+
 #ifdef _WIN32
     WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
     if ((m_tcp_socket = socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {

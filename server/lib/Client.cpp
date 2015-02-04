@@ -27,10 +27,6 @@ Client::Client(struct sockaddr_in addr, int socket)
 }
 
 void Client::checkProtocolVersion() {
-    // TODO: This needs timeout logic so that if the magic number is not
-    // found after some time then client is also disconnected. Otherwise this
-    // would enable rouge clients to perform DoS by holding their sockets open
-    // but not actually sending anything.
     if (m_state != Pending) {
         return;
     }

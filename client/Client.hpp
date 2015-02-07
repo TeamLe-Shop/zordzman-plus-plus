@@ -10,7 +10,9 @@
 
 #include "base64.hpp"
 #include "json11.hpp"
+
 #include "common/net/message.hpp"
+#include "common/entity/entity.hpp"
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -71,6 +73,7 @@ private:
 
 public:
     ResourceManager resources;
+    entity::EntityCollection entities;
     std::string m_map_hash;
 
 private:

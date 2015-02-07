@@ -39,7 +39,6 @@ namespace {
 Client * game_instance;
 std::string const title = "Zordzman v0.0.3";
 Mix_Music * music = nullptr;
-// bool can_send = false;
 } // Anonymous namespace
 
 typedef MessageProcessor<> Processor;
@@ -69,7 +68,7 @@ void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
 }
 
 void handleEntityState(Processor * /*processor*/, MessageEntity entity) {
-    fmt::print("Dump of entity.state message: {}\n", entity.dump());
+    game_instance->entities.handleEntityStateChange(entity);
 }
 
 }

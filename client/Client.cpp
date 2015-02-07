@@ -67,10 +67,15 @@ void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
     // to go back to previous state?
     exit(0);
 }
+
+void handleEntityState(Processor * /*processor*/, MessageEntity entity) {
+    fmt::print("Dump of entity.state message: {}\n", entity.dump());
+}
+
 }
 
 Client::Client(Config const & cfg, HUD hud)
-    : m_window(800, 600, title), m_chat(5),
+    : m_window(800, 600, title), m_chat(10),
       m_player(new Player(cfg.name, 0, 0, 1)), m_cfg(cfg), m_hud(hud) {
     game_instance = this;
 
@@ -188,6 +193,7 @@ bool Client::joinServer() {
     m_msg_proc.addHandler("map.contents", handleMapContents);
     m_msg_proc.addHandler("server.message", handleServerMessage);
     m_msg_proc.addHandler("disconnect", handleDisconnect);
+    m_msg_proc.addHandler("entity.state", handleEntityState);
     return true;
 }
 
@@ -220,7 +226,7 @@ void Client::exec() {
 
         // NOTE: Don't depend on SDL_GetTicks too much.
         currentTime = SDL_GetTicks();
-        if (currentTime > lastMessage + 4000 && m_chat.size() > 0) {
+        if (currentTime > lastMessage + 5000 && m_chat.size() > 0) {
             std::move(m_chat.begin() + 1, m_chat.end(), m_chat.begin());
             m_chat.resize(m_chat.size() - 1);
             lastMessage = currentTime;
@@ -284,7 +290,7 @@ std::vector<std::string> getDirectoryContents(std::string const & path) {
 
     if ((dir = opendir(path.c_str())) == nullptr) {
         throw std::runtime_error(
-            fmt::format("Couldn't open directory \"{}\"", "resources/levels"));
+            fmt::format("Couldn't open directory \"{}\"", path));
     }
 
     while ((ent = readdir(dir)) != nullptr) {

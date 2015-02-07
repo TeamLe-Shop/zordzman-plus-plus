@@ -41,7 +41,10 @@ void Level::loadLevel(std::string map_name) {
 
 std::string Level::asBase64() { return m_base64; }
 
-void Level::cycle() { entities.cycle(); }
+std::vector<entity::StateChange> Level::cycle() {
+    entities.cycle();
+    return entities.collectStateChanges();
+}
 
 unsigned int Level::addPlayer(std::string name) {
     entity::Entity &ent = entities.createEntity();

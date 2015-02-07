@@ -28,8 +28,8 @@ public:
     /// Load a level.
     void loadLevel(std::string map);
 
-    /// Call a single game simulation cycle.
-    void cycle();
+    /// Run a single game simulation cycle and return entity state changes
+    std::vector<entity::StateChange> cycle();
 
     /// Add a player to the map.
     unsigned int addPlayer(std::string name);
@@ -47,7 +47,6 @@ private:
     std::vector<byte> m_tiles;
     std::string m_base64;
 
-    // entities
     entity::EntityCollection entities;
 };
 

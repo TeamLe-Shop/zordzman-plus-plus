@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <functional>
 #include <map>
 #include <string>
@@ -80,7 +81,9 @@ public:
     }
 
     std::vector<ComponentStateChange> collectStateChanges() {
-        return m_state_changes;
+        std::vector<ComponentStateChange> copy = m_state_changes;
+        m_state_changes.clear();
+        return copy;
     }
 
 private:

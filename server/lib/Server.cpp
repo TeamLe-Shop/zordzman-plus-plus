@@ -15,6 +15,11 @@
 #include <string.h>
 #include <fcntl.h>
 
+#include <initializer_list>
+#include <memory>
+#include <tuple>
+#include <functional>
+
 #ifdef _WIN32
 #include <ws2tcpip.h>
 #include <windows.h>
@@ -178,11 +183,8 @@ void Server::acceptConnections() {
 
 int Server::exec() {
     while (true) {
-#ifdef _WIN32
-        Sleep((1000 / TICK_RATE));
-#else
-        usleep((1000 / TICK_RATE) * 1000);
-#endif
+        std::vector<entity::StateChange> changes = m_map.cycle();
+
         acceptConnections();
         for (auto &client : m_clients) {
             if (client.getState() == Client::Pending) {
@@ -195,6 +197,11 @@ int Server::exec() {
                 }
                 continue;
             }
+
+            for (auto change : changes) {
+                client.m_msg_proc.sendStateChange(change);
+            }
+
             if (!client.m_msg_proc.flushSendQueue()) {
                 client.disconnect("Failed to send to client", false);
                 continue;
@@ -212,7 +219,12 @@ int Server::exec() {
                 m_clients.erase(m_clients.begin() + i);
             }
         }
-        m_map.cycle();
+
+        #ifdef _WIN32
+        Sleep((1000 / TICK_RATE));
+#else
+        usleep((1000 / TICK_RATE) * 1000);
+#endif
     }
 
     return 1;

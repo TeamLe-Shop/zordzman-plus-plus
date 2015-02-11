@@ -147,4 +147,15 @@ Entity & EntityCollection::createEntity(unsigned int id) {
     return m_entities.back();
 }
 
+Entity & EntityCollection::get(unsigned int id) {
+    for (auto & e : m_entities) {
+        if (e.getID() == id) {
+            return e;
+        }
+    }
+    // What do I do here?
+    throw std::runtime_error(fmt::format("Entity with ID <{}> does not exist",
+                                         id));
+}
+
 } // namespace entity

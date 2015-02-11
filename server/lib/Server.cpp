@@ -194,6 +194,7 @@ int Server::exec() {
                             fmt::format("{} has connected.",
                                         m_clients.back().name));
                     client.m_playerID = m_map.addPlayer(client.name);
+                    client.m_msg_proc.send("player.id", (int)client.m_playerID);
                 }
                 continue;
             }
@@ -220,7 +221,7 @@ int Server::exec() {
             }
         }
 
-        #ifdef _WIN32
+#ifdef _WIN32
         Sleep((1000 / TICK_RATE));
 #else
         usleep((1000 / TICK_RATE) * 1000);

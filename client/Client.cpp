@@ -39,6 +39,8 @@ namespace {
 Client * game_instance;
 std::string const title = "Zordzman v0.0.3";
 Mix_Music * music = nullptr;
+entity::Entity m_player;
+unsigned int playerID;
 } // Anonymous namespace
 
 typedef MessageProcessor<> Processor;
@@ -68,7 +70,14 @@ void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
 }
 
 void handleEntityState(Processor * /*processor*/, MessageEntity entity) {
-    game_instance->entities.handleEntityStateChange(entity);
+    game_instance->m_level->entities.handleEntityStateChange(entity);
+    if (m_player == nullptr) {
+        m_player = game_instance->m_entities.get(playerID);
+    }
+}
+
+void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
+    playerID = ((unsigned int)std::stoul(entity.dump(), nullptr, 10));
 }
 
 }

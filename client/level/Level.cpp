@@ -96,25 +96,8 @@ void Level::render() const {
                                   y * 32, 32, 32, 8);
         }
     }
-
-    // Render and update the entities.
-    for (auto const & e : entities) {
-        e->render();
-        e->tick();
-    }
+    // TODO: Render entities
     ticks++;
-}
-
-void Level::add(Entity * e) {
-    e->setLevel(this);
-    entities.push_back(std::move(std::unique_ptr<Entity>(e)));
-}
-
-void Level::remove(Entity * e) {
-    e->setLevel(nullptr);
-    entities.erase(std::remove(entities.begin(), entities.end(),
-                               std::move(std::unique_ptr<Entity>(e))),
-                   entities.end());
 }
 
 Level & Level::operator=(const Level & other) {

@@ -197,6 +197,9 @@ public:
     /// This increments the frame ID counter by one.
     void cycle();
 
+    /// Get an entity by it's unique ID.
+    Entity & get(unsigned int id);
+
 private:
     unsigned int m_entity_id;
     unsigned int m_frame;

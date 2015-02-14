@@ -1,6 +1,6 @@
 #pragma once
 
-#include "entity/Entity.hpp"
+#include "common/entity/entity.hpp"
 
 #include <string>
 #include <vector>
@@ -40,7 +40,7 @@ public:
     Level() = default;
 
 public:
-    entity::EntityCollection entities;
+    entity::EntityCollection m_entities;
 
 private:
     byte m_width = 0, m_height = 0;

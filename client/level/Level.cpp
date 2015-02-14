@@ -27,7 +27,6 @@ Level::Level(std::string const levelname) {
         throw std::runtime_error(str);
     }
 
-    // Right now, we're just taking in some basic information about the map.
     auto data = stream::readToEnd(file);
     file.close();
 
@@ -104,10 +103,6 @@ Level & Level::operator=(const Level & other) {
     m_width = other.m_width;
     m_height = other.m_height;
     m_tiles = other.m_tiles;
-
-    for (auto const & e : other.entities) {
-        entities.push_back(std::move(std::unique_ptr<Entity>(e->clone())));
-    }
 
     return *this;
 }

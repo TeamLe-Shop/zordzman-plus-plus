@@ -73,9 +73,9 @@ private:
 public:
     ResourceManager resources;
     std::string m_map_hash;
+    Level m_level;
 
 private:
-    Level m_level;
     std::string m_map_name;
     Config const & m_cfg;
     HUD m_hud;

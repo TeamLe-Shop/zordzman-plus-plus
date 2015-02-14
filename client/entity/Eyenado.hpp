@@ -1,5 +1,3 @@
-#ifdef __ENTITIES__
-
 #pragma once
 
 #include "Mob.hpp"
@@ -23,5 +21,3 @@ private:
 
 } // namespace mob
 } // namespace client
-
-#endif

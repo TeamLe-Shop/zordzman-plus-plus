@@ -1,5 +1,3 @@
-#ifdef __ENTITIES__
-
 #pragma once
 
 namespace client {
@@ -28,5 +26,3 @@ protected:
     Level * m_level = nullptr;
 };
 } // namespace client
-
-#endif

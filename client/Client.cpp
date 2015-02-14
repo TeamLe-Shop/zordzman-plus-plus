@@ -39,7 +39,6 @@ namespace {
 Client * game_instance;
 std::string const title = "Zordzman v0.0.3";
 Mix_Music * music = nullptr;
-entity::Entity m_player;
 unsigned int playerID;
 } // Anonymous namespace
 
@@ -70,10 +69,7 @@ void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
 }
 
 void handleEntityState(Processor * /*processor*/, MessageEntity entity) {
-    game_instance->m_level->entities.handleEntityStateChange(entity);
-    if (m_player == nullptr) {
-        m_player = game_instance->m_entities.get(playerID);
-    }
+    game_instance->m_level.m_entities.handleEntityStateChange(entity);
 }
 
 void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
@@ -83,8 +79,7 @@ void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
 }
 
 Client::Client(Config const & cfg, HUD hud)
-    : m_window(800, 600, title), m_chat(10),
-      m_player(new Player(cfg.name, 0, 0, 1)), m_cfg(cfg), m_hud(hud) {
+    : m_window(800, 600, title), m_chat(10), m_cfg(cfg), m_hud(hud) {
     game_instance = this;
 
     m_chat.resize(0);
@@ -107,10 +102,6 @@ Client::Client(Config const & cfg, HUD hud)
     if (!joinServer()) {
         throw std::runtime_error("Couldn't connect to server.");
     }
-
-    m_player->setCombatWeapon(weaponList::zord);
-    // Add the player to level.
-    m_level.add(m_player);
 
     music = Mix_LoadMUS("resources/music/soundtrack/Lively.ogg");
 
@@ -345,7 +336,6 @@ void Client::checkForMap(std::string map, std::string hash) {
     }
 
     if (!found_match) {
-        fmt::print("Requesting map...\n");
         m_msg_proc.send("map.request", nullptr);
     }
 }
@@ -381,38 +371,11 @@ void Client::drawHUD() {
     setColor(m_hud.font_color);
 
     // Format the health string & weapon strings
-    auto hptext = fmt::format("HP: {}", m_player->getHealth());
 
-    auto combatwep = m_player->getCombatWeapon()->getName();
-    bool holdingcombat = m_player->holdingCombatWeapon();
-    auto specialwep = m_player->getSpecialWeapon()->getName();
-    bool holdingspecial = m_player->holdingSpecialWeapon();
-
-    drawText(hptext, 0, 0 + height - 32, 16, 16);
+    drawText("HP:", 0, 0 + height - 32, 16, 16);
     drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
 
     // Draw the names of the weapons as smaller components
-
-    setColor(m_hud.font_color);
-    if (holdingcombat) {
-        setColor(m_hud.font_color_active);
-    }
-
-    drawText(combatwep, 0 + 64, 0 + height - 32 + 16, 8, 8);
-
-    setColor(m_hud.font_color);
-
-    if (holdingspecial) {
-        setColor(m_hud.font_color_active);
-    }
-
-    drawText(specialwep, 0 + 64, 0 + height - 32 + 24, 8, 8);
-
-    setColor(1, 1, 1, 1);
-
-    drawSpriteFromTexture(texture, m_player->getCurrentWeapon()->x_tile,
-                          m_player->getCurrentWeapon()->y_tile, 0 + 140,
-                          0 + height - 32, 32, 32, 8);
 
     // Line border to seperate the actual game from the HUD
     setColor(m_hud.border.color);

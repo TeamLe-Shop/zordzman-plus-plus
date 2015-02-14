@@ -1,5 +1,3 @@
-#ifdef __ENTITIES__
-
 #pragma once
 
 #include "Entity.hpp"
@@ -83,5 +81,3 @@ private:
     char m_current_weapon = 0;
 };
 } // namespace client
-
-#endif

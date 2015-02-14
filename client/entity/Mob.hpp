@@ -1,5 +1,3 @@
-#ifdef __ENTITIES__
-
 #pragma once
 #include "entity/Entity.hpp"
 
@@ -48,5 +46,3 @@ protected:
 };
 } // namespace mob
 } // namespace client
-
-#endif

@@ -193,7 +193,6 @@ bool Client::joinServer() {
     m_msg_proc.addHandler("server.message", handleServerMessage);
     m_msg_proc.addHandler("disconnect", handleDisconnect);
     m_msg_proc.addHandler("entity.state", handleEntityState);
-    m_msg_proc.addHandler("player.id", handlePlayerID);
     return true;
 }
 
@@ -362,6 +361,7 @@ void Client::addMessage(std::string msg) {
 
 void Client::drawHUD() {
     using namespace drawingOperations;
+    sys::Texture & texture = Client::get().resources.getTexture("main");
     auto const height = m_window.getHeight();
 
     // Draw the rectangle/box which contains information about the player.

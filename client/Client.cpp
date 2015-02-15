@@ -193,6 +193,7 @@ bool Client::joinServer() {
     m_msg_proc.addHandler("server.message", handleServerMessage);
     m_msg_proc.addHandler("disconnect", handleDisconnect);
     m_msg_proc.addHandler("entity.state", handleEntityState);
+    m_msg_proc.addHandler("player.id", handlePlayerID);
     return true;
 }
 

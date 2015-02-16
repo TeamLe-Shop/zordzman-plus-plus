@@ -73,7 +73,11 @@ void handleEntityState(Processor * /*processor*/, MessageEntity entity) {
 }
 
 void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
-    playerID = ((unsigned int)std::stoul(entity.dump(), nullptr, 10));
+    if (!entity.is_number()) {
+        fmt::print("Server sent invalid player ID! Abandon ship!\n");
+        exit(0);
+    }
+    playerID = entity.int_value();
 }
 
 }

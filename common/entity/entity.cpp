@@ -120,6 +120,7 @@ void EntityCollection::handleEntityStateChange(json11::Json entity) {
         ent->addComponent(m_component_types[component]());
     }
     (*ent)[component]->setField(field, entity["value"]);
+
 }
 
 void EntityCollection::cycle() {

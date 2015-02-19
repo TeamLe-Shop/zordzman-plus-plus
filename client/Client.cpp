@@ -1,5 +1,10 @@
 #include "Client.hpp"
 
+#include "common/entity/entity.hpp"
+#include "common/entity/component.hpp"
+#include "common/entity/components/character.hpp"
+#include "common/entity/components/position.hpp"
+
 #include "gfx/drawingOperations.hpp"
 #include "net/net.hpp"
 #include "json11.hpp"
@@ -80,6 +85,17 @@ void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
     playerID = entity.int_value();
 }
 
+/* Systems */
+void debugSystem(entity::EntityCollection *coll, entity::Entity &ent) {
+    COMPONENT(ent, entity::CharacterComponent, character);
+    COMPONENT(ent, entity::PositionComponent, position);
+    fmt::print("Frame: #{}, Entity ID: #{}:\n"
+               "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n",
+               coll->getFrame(), ent.getID(),
+               character->m_name.get(), character->m_health.get(),
+               character->m_max_health.get());
+}
+
 }
 
 Client::Client(Config const & cfg, HUD hud)
@@ -118,6 +134,11 @@ Client::Client(Config const & cfg, HUD hud)
 
     // Infinitely loop the music
     Mix_PlayMusic(music, -1);
+
+    m_level.m_entities.registerComponent(
+        entity::CharacterComponent::getComponentName(),
+        entity::CharacterComponent::new_);
+    m_level.m_entities.addSystem(debugSystem);
 }
 
 Client::~Client() {
@@ -236,6 +257,8 @@ void Client::exec() {
             lastMessage = currentTime;
         }
         SDL_Delay(1000 / 60);
+
+        m_level.m_entities.cycle();
     }
 }
 

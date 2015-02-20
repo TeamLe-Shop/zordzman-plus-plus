@@ -45,6 +45,8 @@ Client * game_instance;
 std::string const title = "Zordzman v0.0.3";
 Mix_Music * music = nullptr;
 unsigned int playerID;
+bool receivedID = false;
+int health;
 } // Anonymous namespace
 
 typedef MessageProcessor<> Processor;
@@ -83,6 +85,7 @@ void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
         exit(0);
     }
     playerID = entity.int_value();
+    receivedID = true;
 }
 
 /* Systems */
@@ -388,6 +391,7 @@ void Client::addMessage(std::string msg) {
 }
 
 void Client::drawHUD() {
+    if (!receivedID) return;
     using namespace drawingOperations;
     sys::Texture & texture = Client::get().resources.getTexture("main");
     auto const height = m_window.getHeight();
@@ -400,7 +404,10 @@ void Client::drawHUD() {
 
     // Format the health string & weapon strings
 
-    drawText("HP:", 0, 0 + height - 32, 16, 16);
+    entity::Entity & player = m_level.m_entities.get(playerID);
+    COMPONENT(player, entity::CharacterComponent, character);
+    drawText(fmt::format("HP: {}", character->m_health.get()),
+             0, 0 + height - 32, 16, 16);
     drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
 
     // Draw the names of the weapons as smaller components

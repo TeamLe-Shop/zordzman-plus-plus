@@ -391,7 +391,9 @@ void Client::addMessage(std::string msg) {
 }
 
 void Client::drawHUD() {
-    if (!receivedID) return;
+    if (!receivedID) {
+        return;
+    }
     using namespace drawingOperations;
     sys::Texture & texture = Client::get().resources.getTexture("main");
     auto const height = m_window.getHeight();

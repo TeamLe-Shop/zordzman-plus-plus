@@ -46,7 +46,6 @@ std::string const title = "Zordzman v0.0.3";
 Mix_Music * music = nullptr;
 unsigned int playerID;
 bool receivedID = false;
-int health;
 } // Anonymous namespace
 
 typedef MessageProcessor<> Processor;
@@ -91,7 +90,6 @@ void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
 /* Systems */
 void debugSystem(entity::EntityCollection *coll, entity::Entity &ent) {
     COMPONENT(ent, entity::CharacterComponent, character);
-    COMPONENT(ent, entity::PositionComponent, position);
     fmt::print("Frame: #{}, Entity ID: #{}:\n"
                "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n",
                coll->getFrame(), ent.getID(),
@@ -395,7 +393,6 @@ void Client::drawHUD() {
         return;
     }
     using namespace drawingOperations;
-    sys::Texture & texture = Client::get().resources.getTexture("main");
     auto const height = m_window.getHeight();
 
     // Draw the rectangle/box which contains information about the player.

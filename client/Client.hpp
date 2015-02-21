@@ -27,6 +27,8 @@
 #include <vector>
 #include <algorithm>
 
+#include <SDL_mixer.h>
+
 using namespace json11;
 using namespace net;
 
@@ -69,6 +71,7 @@ private:
     void handleMapContents(Processor * /*processor*/, MessageEntity entity);
     void handleServerMessage(Processor * /*processor*/, MessageEntity entity);
     void handleEntityState(Processor * /*processor*/, MessageEntity entity);
+    void handlePlayerID(Processor * /*processor*/, MessageEntity entity);
 
     // Is this breaking the rules?
     typedef struct {
@@ -80,16 +83,19 @@ private:
 
 public:
     ResourceManager resources;
-    std::string m_map_hash;
-    Level m_level;
 
 private:
+    std::string m_map_hash;
+    Level m_level;
     std::string m_map_name;
     Config const & m_cfg;
     HUD m_hud;
 #ifdef _WIN32
     WSADATA m_wsa_data;
 #endif
+    Mix_Music * m_music = nullptr;
+    unsigned int m_playerID;
+    bool m_receivedID = false;
     static Client * m_instance;
 };
 } // namespace client

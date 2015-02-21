@@ -28,8 +28,6 @@
 
 #include <iostream>
 
-#include <SDL_mixer.h>
-
 #include "json11.hpp"
 #include "common/util/stream.hpp"
 #include "common/util/fileutil.hpp"
@@ -42,9 +40,6 @@ using namespace json11;
 
 namespace {
 std::string const title = "Zordzman v0.0.3";
-Mix_Music * music = nullptr;
-unsigned int playerID;
-bool receivedID = false;
 } // Anonymous namespace
 
 Client * Client::m_instance;
@@ -59,15 +54,6 @@ void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
     // TODO: When we implement game states, we should perhaps change this
     // to go back to previous state?
     exit(0);
-}
-
-void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
-    if (!entity.is_number()) {
-        fmt::print("Server sent invalid player ID! Abandon ship!\n");
-        exit(0);
-    }
-    playerID = entity.int_value();
-    receivedID = true;
 }
 
 // Systems
@@ -104,9 +90,9 @@ Client::Client(Config const & cfg, HUD hud)
         throw std::runtime_error("Couldn't connect to server.");
     }
 
-    music = Mix_LoadMUS("resources/music/soundtrack/Lively.ogg");
+    m_music = Mix_LoadMUS("resources/music/soundtrack/Lively.ogg");
 
-    if (music == nullptr) {
+    if (m_music == nullptr) {
         throw std::runtime_error(
             fmt::format("Couldn't load sound \"{}\", ({})",
                         "resources/music/soundtrack/Lively.ogg",
@@ -114,7 +100,7 @@ Client::Client(Config const & cfg, HUD hud)
     }
 
     // Infinitely loop the music
-    Mix_PlayMusic(music, -1);
+    Mix_PlayMusic(m_music, -1);
 
     m_level.m_entities.registerComponent(
         entity::CharacterComponent::getComponentName(),
@@ -207,7 +193,8 @@ bool Client::joinServer() {
     m_msg_proc.addHandler("disconnect", handleDisconnect);
     m_msg_proc.addHandler("entity.state",
                           std::bind(&Client::handleEntityState, this, _1, _2));
-    m_msg_proc.addHandler("player.id", handlePlayerID);
+    m_msg_proc.addHandler("player.id",
+                          std::bind(&Client::handlePlayerID, this, _1, _2));
     return true;
 }
 
@@ -326,8 +313,17 @@ void Client::handleEntityState(Processor *, MessageEntity entity) {
     m_level.m_entities.handleEntityStateChange(entity);
 }
 
+void Client::handlePlayerID(Processor *, MessageEntity entity) {
+    if (!entity.is_number()) {
+        fmt::print("Server sent invalid player ID! Abandon ship!\n");
+        exit(0);
+    }
+    m_playerID = entity.int_value();
+    m_receivedID = true;
+}
+
 void Client::drawHUD() {
-    if (!receivedID) {
+    if (!m_receivedID) {
         return;
     }
     using namespace drawingOperations;
@@ -341,7 +337,7 @@ void Client::drawHUD() {
 
     // Format the health string & weapon strings
 
-    entity::Entity & player = m_level.m_entities.get(playerID);
+    entity::Entity & player = m_level.m_entities.get(m_playerID);
     auto character = COMPONENT(player, entity::CharacterComponent);
     drawText(fmt::format("HP: {}", character->m_health.get()), 0,
              0 + height - 32, 16, 16);

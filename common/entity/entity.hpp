@@ -75,7 +75,7 @@ public:
     void addComponent(Component * component);
 
     /// Check if a component exists on the entity by component ID.
-    bool hasComponent(std::string name);
+    bool hasComponent(std::string name) const;
 
     /// This will collect stateful field changes from all components attached
     /// to the entity.

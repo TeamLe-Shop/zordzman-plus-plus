@@ -10,7 +10,7 @@ void Entity::addComponent(Component * component) {
     m_components[component->getName()].reset(component);
 }
 
-bool Entity::hasComponent(std::string name) {
+bool Entity::hasComponent(std::string name) const {
     return m_components.count(name) == 1;
 }
 

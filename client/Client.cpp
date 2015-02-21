@@ -41,28 +41,29 @@ namespace client {
 using namespace json11;
 
 namespace {
-Client * game_instance;
 std::string const title = "Zordzman v0.0.3";
 Mix_Music * music = nullptr;
 unsigned int playerID;
 bool receivedID = false;
 } // Anonymous namespace
 
+Client * Client::m_instance;
+
 typedef MessageProcessor<> Processor;
 
 namespace {
 /* Handler functions */
 void handleMapOffer(Processor * /*processor*/, MessageEntity entity) {
-    game_instance->checkForMap(entity["name"].string_value(),
-                               entity["hash"].string_value());
+    Client::get().checkForMap(entity["name"].string_value(),
+                              entity["hash"].string_value());
 }
 
 void handleMapContents(Processor * /*processor*/, MessageEntity entity) {
-    game_instance->writeMapContents(entity.string_value());
+    Client::get().writeMapContents(entity.string_value());
 }
 
 void handleServerMessage(Processor * /*processor*/, MessageEntity entity) {
-    game_instance->addMessage(fmt::format("{}", entity.string_value()));
+    Client::get().addMessage(fmt::format("{}", entity.string_value()));
 }
 
 void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
@@ -75,7 +76,7 @@ void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
 }
 
 void handleEntityState(Processor * /*processor*/, MessageEntity entity) {
-    game_instance->m_level.m_entities.handleEntityStateChange(entity);
+    Client::get().m_level.m_entities.handleEntityStateChange(entity);
 }
 
 void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
@@ -100,8 +101,6 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
 
 Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_chat(10), m_cfg(cfg), m_hud(hud) {
-    game_instance = this;
-
     m_chat.resize(0);
 #ifdef _WIN32
     WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
@@ -139,16 +138,17 @@ Client::Client(Config const & cfg, HUD hud)
         entity::CharacterComponent::getComponentName(),
         entity::CharacterComponent::new_);
     m_level.m_entities.addSystem(debugSystem);
+    m_instance = this;
 }
 
 Client::~Client() {
+    m_instance = nullptr;
 #ifdef _WIN32
     closesocket(m_socket);
     WSACleanup();
 #else
     close(m_socket);
 #endif
-    game_instance = nullptr;
 }
 
 bool Client::joinServer() {
@@ -367,10 +367,10 @@ void Client::drawHUD() {
 }
 
 Client & Client::get() {
-    if (!game_instance) {
-        throw std::runtime_error("Game::get(): Game instance is null.");
+    if (!m_instance) {
+        throw std::runtime_error("Client::get(): Instance is null.");
     }
-    return *game_instance;
+    return *m_instance;
 }
 
 sys::RenderWindow & Client::getWindow() { return m_window; }

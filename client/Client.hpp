@@ -82,5 +82,6 @@ private:
 #ifdef _WIN32
     WSADATA m_wsa_data;
 #endif
+    static Client * m_instance;
 };
 } // namespace client

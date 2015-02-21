@@ -45,7 +45,7 @@ public:
     /// This should return the same value for all instances of the component.
     virtual std::string getName() = 0;
 
-    bool isDirty() { return m_is_dirty; }
+    bool isDirty() const { return m_is_dirty; }
     void markDirty() { m_is_dirty = true; }
 
     /// Set a stateful field from an arbitrary JSON value.

@@ -107,7 +107,7 @@ public:
         onStateChange(old_value, value);
     }
 
-    T get() { return m_value; }
+    T get() const { return m_value; }
 
 private:
     virtual void onStateChange(T old, T new_) = 0;

@@ -262,8 +262,6 @@ void Client::exec() {
     }
 }
 
-namespace {}
-
 void Client::checkForMap(std::string map, std::string hash) {
     using namespace common::util::file;
     bool found_match = false;

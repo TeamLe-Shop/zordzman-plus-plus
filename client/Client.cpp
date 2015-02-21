@@ -89,7 +89,7 @@ void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
 
 /* Systems */
 void debugSystem(entity::EntityCollection *coll, entity::Entity &ent) {
-    COMPONENT(ent, entity::CharacterComponent, character);
+    auto character = COMPONENT(ent, entity::CharacterComponent);
 
     fmt::print("Frame: #{}, Entity ID: #{}:\n"
                "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n",
@@ -405,7 +405,7 @@ void Client::drawHUD() {
     // Format the health string & weapon strings
 
     entity::Entity & player = m_level.m_entities.get(playerID);
-    COMPONENT(player, entity::CharacterComponent, character);
+    auto character = COMPONENT(player, entity::CharacterComponent);
     drawText(fmt::format("HP: {}", character->m_health.get()),
              0, 0 + height - 32, 16, 16);
     drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);

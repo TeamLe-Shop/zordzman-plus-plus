@@ -196,7 +196,7 @@ int Server::exec() {
                 }
                 continue;
             }
-            std::vector<entity::StateChange> changes = m_map.cycle();
+            auto changes = m_map.cycle();
             for (auto change : changes) {
                 client.m_msg_proc.sendStateChange(change);
             }

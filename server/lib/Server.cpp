@@ -183,8 +183,6 @@ void Server::acceptConnections() {
 
 int Server::exec() {
     while (true) {
-        std::vector<entity::StateChange> changes = m_map.cycle();
-
         acceptConnections();
         for (auto &client : m_clients) {
             if (client.getState() == Client::Pending) {
@@ -198,7 +196,7 @@ int Server::exec() {
                 }
                 continue;
             }
-
+            std::vector<entity::StateChange> changes = m_map.cycle();
             for (auto change : changes) {
                 client.m_msg_proc.sendStateChange(change);
             }

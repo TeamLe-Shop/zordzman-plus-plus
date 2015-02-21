@@ -90,6 +90,7 @@ void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
 /* Systems */
 void debugSystem(entity::EntityCollection *coll, entity::Entity &ent) {
     COMPONENT(ent, entity::CharacterComponent, character);
+
     fmt::print("Frame: #{}, Entity ID: #{}:\n"
                "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n",
                coll->getFrame(), ent.getID(),

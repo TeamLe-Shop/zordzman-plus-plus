@@ -79,7 +79,7 @@ private:
         uint32_t timestamp;
     } Message;
     std::vector<Message> m_chat;
-    uint32_t lastMessage, currentTime;
+    uint32_t m_lastMessage, m_currentTime;
 
 public:
     ResourceManager resources;

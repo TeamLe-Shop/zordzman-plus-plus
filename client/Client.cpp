@@ -226,11 +226,11 @@ void Client::exec() {
         m_msg_proc.flushSendQueue();
 
         // NOTE: Don't depend on SDL_GetTicks too much.
-        currentTime = SDL_GetTicks();
-        if (currentTime > lastMessage + 5000 && m_chat.size() > 0) {
+        m_currentTime = SDL_GetTicks();
+        if (m_currentTime > m_lastMessage + 5000 && m_chat.size() > 0) {
             std::move(m_chat.begin() + 1, m_chat.end(), m_chat.begin());
             m_chat.resize(m_chat.size() - 1);
-            lastMessage = currentTime;
+            m_lastMessage = m_currentTime;
         }
         SDL_Delay(1000 / 60);
 
@@ -288,12 +288,12 @@ void Client::writeMapContents(std::string const map_base64) {
 }
 
 void Client::addMessage(std::string msg) {
-    lastMessage = SDL_GetTicks();
+    m_lastMessage = SDL_GetTicks();
     if (m_chat.size() == m_chat.capacity()) {
         std::move(m_chat.begin() + 1, m_chat.end(), m_chat.begin());
-        m_chat[m_chat.size() - 1] = {msg, lastMessage};
+        m_chat[m_chat.size() - 1] = {msg, m_lastMessage};
     } else {
-        m_chat.push_back({msg, lastMessage});
+        m_chat.push_back({msg, m_lastMessage});
     }
 }
 

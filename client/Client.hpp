@@ -73,11 +73,10 @@ private:
     void handleEntityState(Processor * /*processor*/, MessageEntity entity);
     void handlePlayerID(Processor * /*processor*/, MessageEntity entity);
 
-    // Is this breaking the rules?
-    typedef struct {
+    struct Message {
         std::string message;
         uint32_t timestamp;
-    } Message;
+    };
     std::vector<Message> m_chat;
     uint32_t m_lastMessage, m_currentTime;
 

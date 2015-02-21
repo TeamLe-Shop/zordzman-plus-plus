@@ -27,17 +27,15 @@
 #define UDP_PORT 4545
 #define TICK_RATE 30
 
-using namespace net;
-
 /// The Zordzman server
 namespace server {
 
 class Server;
 class Client;
 
-typedef MessageProcessor<Server *, Client *> Processor;
+typedef net::MessageProcessor<Server *, Client *> Processor;
 
-void handleMapRequest(Processor *, MessageEntity, Server *, Client *);
+void handleMapRequest(Processor *, net::MessageEntity, Server *, Client *);
 
 class Server {
 public:
@@ -67,7 +65,7 @@ private:
 
     unsigned int m_max_clients = 10;
 
-    Socket m_tcp_socket;
+    net::Socket m_tcp_socket;
     struct sockaddr_in m_tcp_address;
 
     std::vector<Client> m_clients;

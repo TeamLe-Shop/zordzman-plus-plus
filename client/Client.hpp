@@ -29,10 +29,7 @@
 
 #include <SDL_mixer.h>
 
-using namespace json11;
-using namespace net;
-
-using Processor = MessageProcessor<>;
+using Processor = net::MessageProcessor<>;
 
 /// The Zordzman client.
 namespace client {
@@ -62,16 +59,19 @@ private:
     Client & operator=(const Client &) = delete;
     sys::SysContext m_system;
     sys::RenderWindow m_window;
-    Socket m_socket;
+    net::Socket m_socket;
     struct sockaddr_in m_socket_addr;
-    MessageProcessor<> m_msg_proc;
+    net::MessageProcessor<> m_msg_proc;
 
     // Handler functions
-    void handleMapOffer(Processor * /*processor*/, MessageEntity entity);
-    void handleMapContents(Processor * /*processor*/, MessageEntity entity);
-    void handleServerMessage(Processor * /*processor*/, MessageEntity entity);
-    void handleEntityState(Processor * /*processor*/, MessageEntity entity);
-    void handlePlayerID(Processor * /*processor*/, MessageEntity entity);
+    void handleMapOffer(Processor * /*processor*/, net::MessageEntity entity);
+    void handleMapContents(Processor * /*processor*/,
+                           net::MessageEntity entity);
+    void handleServerMessage(Processor * /*processor*/,
+                             net::MessageEntity entity);
+    void handleEntityState(Processor * /*processor*/,
+                           net::MessageEntity entity);
+    void handlePlayerID(Processor * /*processor*/, net::MessageEntity entity);
 
     struct ChatMessage {
         std::string message;

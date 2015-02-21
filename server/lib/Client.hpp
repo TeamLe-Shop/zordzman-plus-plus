@@ -27,14 +27,12 @@
 
 #define RECV_BUFFER_SIZE 1024
 
-using namespace net;
-
 namespace server {
 
 class Server;
 class Client;
 
-typedef MessageProcessor<Server *, Client *> Processor;
+typedef net::MessageProcessor<Server *, Client *> Processor;
 
 /// Represents a connected client
 ///

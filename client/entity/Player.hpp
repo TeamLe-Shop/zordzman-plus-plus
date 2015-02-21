@@ -6,11 +6,7 @@
 #include "weapons/weaponList.hpp"
 
 namespace client {
-using namespace mob;
-using namespace weaponList;
-using namespace weapon;
-
-class Player : public Mob {
+class Player : public mob::Mob {
 public:
     /// Initialize the player with x, y, and speed.
     ///
@@ -30,10 +26,10 @@ public:
     /// Get the combat weapon the player has equipped.
     ///
     /// It returns a pointer to a const BaseWeapon.
-    BaseWeapon * getCombatWeapon();
+    weapon::BaseWeapon * getCombatWeapon();
 
     /// Change the combat weapon the player has.
-    void setCombatWeapon(BaseWeapon * b);
+    void setCombatWeapon(weapon::BaseWeapon * b);
 
     /// Return if the player is holding their combat weapon.
     bool holdingCombatWeapon();
@@ -41,10 +37,10 @@ public:
     /// Get the special weapon the player has equipped.
     ///
     /// It returns a pointer to a const BaseWeapon.
-    BaseWeapon * getSpecialWeapon();
+    weapon::BaseWeapon * getSpecialWeapon();
 
     /// Change the special weapon the player has.
-    void setSpecialWeapon(BaseWeapon * b);
+    void setSpecialWeapon(weapon::BaseWeapon * b);
 
     /// Return whether the player is holding their special weapon.
     bool holdingSpecialWeapon();
@@ -52,10 +48,10 @@ public:
     /// Get the current weapon the player is holding.
     ///
     /// Returns pointer to a const BaseWeapon.
-    BaseWeapon * getCurrentWeapon();
+    weapon::BaseWeapon * getCurrentWeapon();
 
     /// Change whether the player is holding their combat or special.
-    void setCurrentWeapon(WeaponSlot slot);
+    void setCurrentWeapon(weapon::WeaponSlot slot);
 
     // The delay between using a weapon
     int weapon_delay = 0;
@@ -76,8 +72,8 @@ private:
     // How many "pixels" the player has walked.
     float m_distanceWalked = 0;
 
-    BaseWeapon * m_combat_weapon = BlankWeapon;
-    BaseWeapon * m_special_weapon = BlankWeapon;
+    weapon::BaseWeapon * m_combat_weapon = weaponList::BlankWeapon;
+    weapon::BaseWeapon * m_special_weapon = weaponList::BlankWeapon;
     char m_current_weapon = 0;
 };
 } // namespace client

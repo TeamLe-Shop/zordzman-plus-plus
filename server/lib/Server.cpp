@@ -33,6 +33,7 @@ namespace server {
 
 using namespace std::placeholders;
 using namespace json11;
+using namespace net;
 
 void handleMapRequest(Processor *, MessageEntity /*entity*/, Server * server,
                       Client * client) {

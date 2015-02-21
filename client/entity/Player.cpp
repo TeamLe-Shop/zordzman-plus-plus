@@ -3,6 +3,8 @@
 #include "Client.hpp"
 
 namespace client {
+using namespace weapon;
+using namespace mob;
 Player::Player(std::string username, float x, float y, float speed)
     : Mob(x, y, speed), m_username(username) {
     m_health = 100;

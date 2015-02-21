@@ -38,6 +38,7 @@ class Component {
     using Setter = std::function<void(json11::Json value)>;
 
 public:
+
     virtual ~Component() {}
 
     /// Get the unique component ID.
@@ -142,6 +143,7 @@ public:
         m_component->addStateSetter(
             name,
             std::bind(&Stateful<T>::setFromJSON, this, std::placeholders::_1));
+        m_component->markStateChange(name, initial);
         m_name = name;
     }
 

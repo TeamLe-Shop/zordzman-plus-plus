@@ -3,7 +3,6 @@
 #include "sys/RenderWindow.hpp"
 #include "sys/SysContext.hpp"
 #include "level/Level.hpp"
-#include "entity/Player.hpp"
 #include "Config.hpp"
 #include "ResourceManager.hpp"
 #include "HUD.hpp"
@@ -73,13 +72,11 @@ private:
 
 public:
     ResourceManager resources;
-    entity::EntityCollection entities;
     std::string m_map_hash;
+    Level m_level;
 
 private:
-    Level m_level;
     std::string m_map_name;
-    Player * m_player;
     Config const & m_cfg;
     HUD m_hud;
 #ifdef _WIN32

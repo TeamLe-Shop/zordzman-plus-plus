@@ -120,6 +120,7 @@ void EntityCollection::handleEntityStateChange(json11::Json entity) {
         ent->addComponent(m_component_types[component]());
     }
     (*ent)[component]->setField(field, entity["value"]);
+
 }
 
 void EntityCollection::cycle() {
@@ -145,6 +146,17 @@ void EntityCollection::cycle() {
 Entity & EntityCollection::createEntity(unsigned int id) {
     m_entities.emplace_back(id);
     return m_entities.back();
+}
+
+Entity & EntityCollection::get(unsigned int id) {
+    for (auto & e : m_entities) {
+        if (e.getID() == id) {
+            return e;
+        }
+    }
+    // What do I do here?
+    throw std::runtime_error(fmt::format("Entity with ID <{}> does not exist",
+                                         id));
 }
 
 } // namespace entity

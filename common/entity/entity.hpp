@@ -11,8 +11,8 @@
 
 #include "common/entity/component.hpp"
 
-#define COMPONENT(ent, type, as)                                               \
-    auto as = static_cast<type *>(ent[type::getComponentName()])
+#define COMPONENT(ent, type)                                               \
+    static_cast<type *>(ent[type::getComponentName()])
 
 /// This namespace provides the means for representing game state using the
 /// entity-component-system (ECS) model.
@@ -196,6 +196,9 @@ public:
     ///
     /// This increments the frame ID counter by one.
     void cycle();
+
+    /// Get an entity by it's unique ID.
+    Entity & get(unsigned int id);
 
 private:
     unsigned int m_entity_id;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "entity/Entity.hpp"
+#include "common/entity/entity.hpp"
 
 #include <string>
 #include <vector>
@@ -35,17 +35,16 @@ public:
     /// hurrdurr render tiles and entities
     void render() const;
     /// Add an entity to the level
-    void add(Entity * e);
-    /// Remove an entity
-    void remove(Entity * e);
     /// Copy level data
     Level & operator=(const Level & other);
     Level() = default;
+
+public:
+    entity::EntityCollection m_entities;
 
 private:
     byte m_width = 0, m_height = 0;
     int m_spawnx = 0, m_spawny = 0;
     std::vector<byte> m_tiles;
-    std::vector<std::unique_ptr<Entity>> entities;
 };
 } // namespace client

@@ -8,8 +8,8 @@
 using common::util::debug;
 
 void physicsSystem(entity::EntityCollection *coll, entity::Entity &ent) {
-    COMPONENT(ent, entity::PositionComponent, position);
-    COMPONENT(ent, entity::CharacterComponent, character);
+    auto position = COMPONENT(ent, entity::PositionComponent);
+    auto character = COMPONENT(ent, entity::CharacterComponent);
     character->m_health.set(character->m_health.get() - 1);
     debug("Frame #{}, Entity: \"{}\" (#{}), Position: ({}, {})\n",
         coll->getFrame(), character->m_name.get(), ent.getID(),

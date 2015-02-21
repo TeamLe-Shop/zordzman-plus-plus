@@ -27,7 +27,6 @@ Level::Level(std::string const levelname) {
         throw std::runtime_error(str);
     }
 
-    // Right now, we're just taking in some basic information about the map.
     auto data = stream::readToEnd(file);
     file.close();
 
@@ -96,35 +95,14 @@ void Level::render() const {
                                   y * 32, 32, 32, 8);
         }
     }
-
-    // Render and update the entities.
-    for (auto const & e : entities) {
-        e->render();
-        e->tick();
-    }
+    // TODO: Render entities
     ticks++;
-}
-
-void Level::add(Entity * e) {
-    e->setLevel(this);
-    entities.push_back(std::move(std::unique_ptr<Entity>(e)));
-}
-
-void Level::remove(Entity * e) {
-    e->setLevel(nullptr);
-    entities.erase(std::remove(entities.begin(), entities.end(),
-                               std::move(std::unique_ptr<Entity>(e))),
-                   entities.end());
 }
 
 Level & Level::operator=(const Level & other) {
     m_width = other.m_width;
     m_height = other.m_height;
     m_tiles = other.m_tiles;
-
-    for (auto const & e : other.entities) {
-        entities.push_back(std::move(std::unique_ptr<Entity>(e->clone())));
-    }
 
     return *this;
 }

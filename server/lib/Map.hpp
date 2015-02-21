@@ -35,7 +35,7 @@ public:
     unsigned int addPlayer(std::string name);
 
     /// Remove a player from the map.
-    void removePlayer(Client &client);
+    void removePlayer(Client & client);
 
     std::string name;
 

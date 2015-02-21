@@ -34,8 +34,8 @@ namespace server {
 using namespace std::placeholders;
 using namespace json11;
 
-void handleMapRequest(Processor *, MessageEntity /*entity*/, Server *server,
-                      Client *client) {
+void handleMapRequest(Processor *, MessageEntity /*entity*/, Server * server,
+                      Client * client) {
     if (!server->m_allow_downloads) {
         client->disconnect("Downloads not enabled.", true);
         return;
@@ -118,7 +118,7 @@ Server::~Server() {
 }
 
 void Server::sendAll(std::string type, Json entity) {
-    for (auto &client : m_clients) {
+    for (auto & client : m_clients) {
         client.m_msg_proc.send(type, entity);
     }
 }
@@ -157,7 +157,7 @@ void Server::acceptConnections() {
         if (error == -1) {
             throw std::runtime_error("Error getting peer name.");
         }
-        struct sockaddr_in *addr_in = (struct sockaddr_in *)&peer_address;
+        struct sockaddr_in * addr_in = (struct sockaddr_in *)&peer_address;
 #ifdef _WIN32
         ioctlsocket(client_socket, FIONBIO, nullptr);
 #else
@@ -174,8 +174,8 @@ void Server::acceptConnections() {
             m_clients.back().m_msg_proc.addHandler("map.request",
                                                    handleMapRequest);
             m_clients.back().m_msg_proc.send(
-                "map.offer", Json::object{ { "name", m_map.name },
-                                           { "hash", m_map.md5.getHash() } });
+                "map.offer", Json::object{{"name", m_map.name},
+                                          {"hash", m_map.md5.getHash()}});
             m_clients.back().decideClientName(m_clients);
         }
     }
@@ -184,7 +184,7 @@ void Server::acceptConnections() {
 int Server::exec() {
     while (true) {
         acceptConnections();
-        for (auto &client : m_clients) {
+        for (auto & client : m_clients) {
             if (client.getState() == Client::Pending) {
                 client.checkProtocolVersion();
                 if (client.getState() == Client::Connected) {
@@ -209,7 +209,7 @@ int Server::exec() {
         }
         // Remove disconnected clients
         for (size_t i = 0; i < m_clients.size(); ++i) {
-            Client &client = m_clients[i];
+            Client & client = m_clients[i];
 
             if (client.getState() == Client::Disconnected) {
                 sendAll("server.message",

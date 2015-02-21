@@ -40,7 +40,6 @@ typedef MessageProcessor<Server *, Client *> Processor;
 void handleMapRequest(Processor *, MessageEntity, Server *, Client *);
 
 class Server {
-
 public:
     Server(int port, unsigned int max_clients, std::string map_name,
            bool allow_downloads);

@@ -38,7 +38,6 @@ class Component {
     using Setter = std::function<void(json11::Json value)>;
 
 public:
-
     virtual ~Component() {}
 
     /// Get the unique component ID.

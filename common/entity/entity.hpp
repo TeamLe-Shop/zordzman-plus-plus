@@ -11,8 +11,7 @@
 
 #include "common/entity/component.hpp"
 
-#define COMPONENT(ent, type)                                               \
-    static_cast<type *>(ent[type::getComponentName()])
+#define COMPONENT(ent, type) static_cast<type *>(ent[type::getComponentName()])
 
 /// This namespace provides the means for representing game state using the
 /// entity-component-system (ECS) model.

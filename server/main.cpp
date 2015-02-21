@@ -10,10 +10,7 @@
 
 #define PORT_NUMBER 4544 // The default port number.
 
-
-
-int main(int argc, char **argv) {
-
+int main(int argc, char ** argv) {
     // We could also load from a configuration file
     // here. This would be done after this variable
     // is assigned to PORT_NUMBER.
@@ -40,13 +37,13 @@ int main(int argc, char **argv) {
         if (!strcmp(argv[i], "--port")) {
             if (i == argc - 1) {
                 fmt::print("SERVER: [ERR]  Argument must be supplied after"
-                       " `--port`.\n");
+                           " `--port`.\n");
                 exit(1);
             }
             int temp_port = strtol(argv[i + 1], nullptr, 10);
             if (temp_port < 1 || temp_port > 65535) {
                 fmt::print("SERVER: [ERR]  Invalid port! Must be between 1 and "
-                       "65535.\n");
+                           "65535.\n");
                 exit(1);
             } else {
                 port = temp_port;
@@ -79,7 +76,7 @@ int main(int argc, char **argv) {
     // How could we run the server if we had no map?
     if (!map_given) {
         fmt::print("SERVER: [ERR]  No map given. I'm going to close my self "
-               "now.\n");
+                   "now.\n");
         exit(1);
     }
 
@@ -91,7 +88,6 @@ int main(int argc, char **argv) {
         map_file.close();
         exit(1);
     } else {
-
 #ifdef _WIN32
         struct _stat st;
         _stat(map_name.c_str(), &st);
@@ -102,7 +98,7 @@ int main(int argc, char **argv) {
         if (st.st_mode & S_IFDIR) {
 #endif
             fmt::print("SERVER: [ERR]  I need a map FILE, silly, not a "
-                   "folder.\n");
+                       "folder.\n");
             map_file.close();
             exit(1);
         }

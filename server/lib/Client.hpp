@@ -42,7 +42,6 @@ typedef MessageProcessor<Server *, Client *> Processor;
 /// the message originated. Therefore this used be used for persisting anything
 /// about the client that needs to be passed between subsystems.
 class Client {
-
 public:
     enum State {
         /// Connection established but protocol version not asserted
@@ -94,11 +93,11 @@ public:
     void disconnect(std::string reason);
     void disconnect();
 
-    void exec(Server *server);
+    void exec(Server * server);
 
     State getState() const;
 
-    void decideClientName(std::vector<Client> &clients);
+    void decideClientName(std::vector<Client> & clients);
 
     common::net::Socket m_tcp_socket;
     common::net::Socket m_udp_socket;

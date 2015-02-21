@@ -88,16 +88,14 @@ void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
 }
 
 /* Systems */
-void debugSystem(entity::EntityCollection *coll, entity::Entity &ent) {
+void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
     auto character = COMPONENT(ent, entity::CharacterComponent);
 
     fmt::print("Frame: #{}, Entity ID: #{}:\n"
                "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n",
-               coll->getFrame(), ent.getID(),
-               character->m_name.get(), character->m_health.get(),
-               character->m_max_health.get());
+               coll->getFrame(), ent.getID(), character->m_name.get(),
+               character->m_health.get(), character->m_max_health.get());
 }
-
 }
 
 Client::Client(Config const & cfg, HUD hud)
@@ -264,9 +262,7 @@ void Client::exec() {
     }
 }
 
-namespace {
-
-}
+namespace {}
 
 void Client::checkForMap(std::string map, std::string hash) {
     using namespace common::util::file;
@@ -344,8 +340,8 @@ void Client::drawHUD() {
 
     entity::Entity & player = m_level.m_entities.get(playerID);
     auto character = COMPONENT(player, entity::CharacterComponent);
-    drawText(fmt::format("HP: {}", character->m_health.get()),
-             0, 0 + height - 32, 16, 16);
+    drawText(fmt::format("HP: {}", character->m_health.get()), 0,
+             0 + height - 32, 16, 16);
     drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
 
     // Draw the names of the weapons as smaller components

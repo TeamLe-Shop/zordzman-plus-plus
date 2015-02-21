@@ -61,7 +61,7 @@ void Client::checkProtocolVersion() {
     }
 }
 
-void Client::decideClientName(std::vector<Client> &clients) {
+void Client::decideClientName(std::vector<Client> & clients) {
     std::string default_name = "Player";
     std::string new_name = "Player";
 
@@ -81,7 +81,7 @@ void Client::decideClientName(std::vector<Client> &clients) {
     name = new_name;
 }
 
-void Client::exec(Server *server) {
+void Client::exec(Server * server) {
     if (!m_msg_proc.process()) {
         disconnect("User disconnected", false);
     }

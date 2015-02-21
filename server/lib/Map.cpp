@@ -47,14 +47,14 @@ std::vector<entity::StateChange> Level::cycle() {
 }
 
 unsigned int Level::addPlayer(std::string name) {
-    entity::Entity &ent = entities.createEntity();
+    entity::Entity & ent = entities.createEntity();
     ent.addComponent(new entity::CharacterComponent(name, 100));
     ent.addComponent(new entity::PositionComponent(m_spawn_x, m_spawn_y));
 
     return ent.getID();
 }
 
-void Level::removePlayer(Client &client) {
+void Level::removePlayer(Client & client) {
     entities.removeEntity(client.m_playerID);
 }
 

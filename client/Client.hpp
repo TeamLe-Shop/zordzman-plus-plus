@@ -73,11 +73,11 @@ private:
     void handleEntityState(Processor * /*processor*/, MessageEntity entity);
     void handlePlayerID(Processor * /*processor*/, MessageEntity entity);
 
-    struct Message {
+    struct ChatMessage {
         std::string message;
         uint32_t timestamp;
     };
-    std::vector<Message> m_chat;
+    std::vector<ChatMessage> m_chatMessages;
     uint32_t m_lastMessage, m_currentTime;
 
 public:

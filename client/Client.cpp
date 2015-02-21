@@ -68,8 +68,8 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
 }
 
 Client::Client(Config const & cfg, HUD hud)
-    : m_window(800, 600, title), m_chat(10), m_cfg(cfg), m_hud(hud) {
-    m_chat.resize(0);
+    : m_window(800, 600, title), m_chatMessages(10), m_cfg(cfg), m_hud(hud) {
+    m_chatMessages.resize(0);
 #ifdef _WIN32
     WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
     if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
@@ -227,9 +227,10 @@ void Client::exec() {
 
         // NOTE: Don't depend on SDL_GetTicks too much.
         m_currentTime = SDL_GetTicks();
-        if (m_currentTime > m_lastMessage + 5000 && m_chat.size() > 0) {
-            std::move(m_chat.begin() + 1, m_chat.end(), m_chat.begin());
-            m_chat.resize(m_chat.size() - 1);
+        if (m_currentTime > m_lastMessage + 5000 && m_chatMessages.size() > 0) {
+            std::move(m_chatMessages.begin() + 1, m_chatMessages.end(),
+                      m_chatMessages.begin());
+            m_chatMessages.resize(m_chatMessages.size() - 1);
             m_lastMessage = m_currentTime;
         }
         SDL_Delay(1000 / 60);
@@ -289,11 +290,12 @@ void Client::writeMapContents(std::string const map_base64) {
 
 void Client::addMessage(std::string msg) {
     m_lastMessage = SDL_GetTicks();
-    if (m_chat.size() == m_chat.capacity()) {
-        std::move(m_chat.begin() + 1, m_chat.end(), m_chat.begin());
-        m_chat[m_chat.size() - 1] = {msg, m_lastMessage};
+    if (m_chatMessages.size() == m_chatMessages.capacity()) {
+        std::move(m_chatMessages.begin() + 1, m_chatMessages.end(),
+                  m_chatMessages.begin());
+        m_chatMessages[m_chatMessages.size() - 1] = {msg, m_lastMessage};
     } else {
-        m_chat.push_back({msg, m_lastMessage});
+        m_chatMessages.push_back({msg, m_lastMessage});
     }
 }
 
@@ -357,11 +359,11 @@ void Client::drawHUD() {
     drawText(serverstr, 800 - (8 * serverstr.size()), m_hud.border.y - 8, 8, 8);
     drawText(mapstr, 800 - (8 * mapstr.size()), m_hud.border.y - 16, 8, 8);
 
-    for (size_t i = 0; i < m_chat.size(); i++) {
+    for (size_t i = 0; i < m_chatMessages.size(); i++) {
         glColor4f(0.3, 0.3, 0.3, 0.3);
-        drawRectangle(0, i * 8, m_chat[i].message.size() * 8, 8);
+        drawRectangle(0, i * 8, m_chatMessages[i].message.size() * 8, 8);
         glColor3f(1, 1, 1);
-        drawText(m_chat[i].message, 0, i * 8, 8, 8);
+        drawText(m_chatMessages[i].message, 0, i * 8, 8, 8);
     }
 }
 

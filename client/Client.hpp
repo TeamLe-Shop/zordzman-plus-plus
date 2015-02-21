@@ -30,6 +30,8 @@
 using namespace json11;
 using namespace net;
 
+using Processor = MessageProcessor<>;
+
 /// The Zordzman client.
 namespace client {
 class Client {
@@ -61,6 +63,12 @@ private:
     Socket m_socket;
     struct sockaddr_in m_socket_addr;
     MessageProcessor<> m_msg_proc;
+
+    // Handler functions
+    void handleMapOffer(Processor * /*processor*/, MessageEntity entity);
+    void handleMapContents(Processor * /*processor*/, MessageEntity entity);
+    void handleServerMessage(Processor * /*processor*/, MessageEntity entity);
+    void handleEntityState(Processor * /*processor*/, MessageEntity entity);
 
     // Is this breaking the rules?
     typedef struct {

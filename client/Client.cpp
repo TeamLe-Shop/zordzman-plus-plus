@@ -49,22 +49,8 @@ bool receivedID = false;
 
 Client * Client::m_instance;
 
-typedef MessageProcessor<> Processor;
-
 namespace {
-/* Handler functions */
-void handleMapOffer(Processor * /*processor*/, MessageEntity entity) {
-    Client::get().checkForMap(entity["name"].string_value(),
-                              entity["hash"].string_value());
-}
-
-void handleMapContents(Processor * /*processor*/, MessageEntity entity) {
-    Client::get().writeMapContents(entity.string_value());
-}
-
-void handleServerMessage(Processor * /*processor*/, MessageEntity entity) {
-    Client::get().addMessage(fmt::format("{}", entity.string_value()));
-}
+// Handler functions
 
 void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
     fmt::print("Disconnected from server ({})\n", entity.string_value());
@@ -73,10 +59,6 @@ void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
     // TODO: When we implement game states, we should perhaps change this
     // to go back to previous state?
     exit(0);
-}
-
-void handleEntityState(Processor * /*processor*/, MessageEntity entity) {
-    Client::get().m_level.m_entities.handleEntityStateChange(entity);
 }
 
 void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
@@ -88,7 +70,7 @@ void handlePlayerID(Processor * /*processor*/, MessageEntity entity) {
     receivedID = true;
 }
 
-/* Systems */
+// Systems
 void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
     auto character = COMPONENT(ent, entity::CharacterComponent);
 
@@ -213,11 +195,18 @@ bool Client::joinServer() {
         total_sent += additive;
     }
 
-    m_msg_proc.addHandler("map.offer", handleMapOffer);
-    m_msg_proc.addHandler("map.contents", handleMapContents);
-    m_msg_proc.addHandler("server.message", handleServerMessage);
+    using namespace std::placeholders;
+
+    m_msg_proc.addHandler("map.offer",
+                          std::bind(&Client::handleMapOffer, this, _1, _2));
+    m_msg_proc.addHandler("map.contents",
+                          std::bind(&Client::handleMapContents, this, _1, _2));
+    m_msg_proc.addHandler(
+        "server.message",
+        std::bind(&Client::handleServerMessage, this, _1, _2));
     m_msg_proc.addHandler("disconnect", handleDisconnect);
-    m_msg_proc.addHandler("entity.state", handleEntityState);
+    m_msg_proc.addHandler("entity.state",
+                          std::bind(&Client::handleEntityState, this, _1, _2));
     m_msg_proc.addHandler("player.id", handlePlayerID);
     return true;
 }
@@ -319,6 +308,22 @@ void Client::addMessage(std::string msg) {
     } else {
         m_chat.push_back({msg, lastMessage});
     }
+}
+
+void Client::handleMapOffer(Processor *, MessageEntity entity) {
+    checkForMap(entity["name"].string_value(), entity["hash"].string_value());
+}
+
+void Client::handleMapContents(Processor *, MessageEntity entity) {
+    writeMapContents(entity.string_value());
+}
+
+void Client::handleServerMessage(Processor *, MessageEntity entity) {
+    addMessage(fmt::format("{}", entity.string_value()));
+}
+
+void Client::handleEntityState(Processor *, MessageEntity entity) {
+    m_level.m_entities.handleEntityStateChange(entity);
 }
 
 void Client::drawHUD() {

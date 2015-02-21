@@ -125,8 +125,8 @@ class JSONFieldValue {
 public:
     JSONFieldValue(json11::Json value) : m_value(value) {}
 
-    operator int() { return m_value.int_value(); };
-    operator std::string() { return m_value.string_value(); };
+    operator int() const { return m_value.int_value(); }
+    operator std::string() const { return m_value.string_value(); }
 
 private:
     json11::Json m_value;

@@ -52,17 +52,18 @@ void EntityCollection::removeEntity(unsigned int id) {
     }
 }
 
-void
-EntityCollection::addSystem(System system,
-                            std::initializer_list<std::string> components) {
+void EntityCollection::addSystemWithComponents(
+    System system, std::initializer_list<std::string> components) {
     m_systems.emplace_back(system, components);
 }
 
-void EntityCollection::addSystem(System system) { addSystem(system, {}); }
+void EntityCollection::addSystem(System system) {
+    addSystemWithComponents(system, {});
+}
 
 void EntityCollection::addSimpleSystemWithComponents(
     SimpleSystem system, std::initializer_list<std::string> components) {
-    addSystem(
+    addSystemWithComponents(
         [system](EntityCollection * /*c*/, Entity & e) { return system(e); },
         components);
 }

@@ -126,8 +126,8 @@ public:
     /// system applied to them. However, if no component IDs are given when
     /// registering a system then the system will be applied to all entities,
     /// regardless of the components they possess.
-    void addSystem(System system,
-                   std::initializer_list<std::string> components);
+    void addSystemWithComponents(System system,
+                                 std::initializer_list<std::string> components);
 
     /// Register a system for all components.
     ///

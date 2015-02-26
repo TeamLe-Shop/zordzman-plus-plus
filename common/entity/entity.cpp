@@ -67,7 +67,7 @@ void EntityCollection::addSimpleSystemWithComponents(
         components);
 }
 
-void EntityCollection::addSystem(SimpleSystem system) {
+void EntityCollection::addSimpleSystem(SimpleSystem system) {
     addSimpleSystemWithComponents(system, {});
 }
 

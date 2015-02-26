@@ -145,7 +145,7 @@ public:
         SimpleSystem system, std::initializer_list<std::string> components);
 
     /// Register a simple system for all components.
-    void addSystem(SimpleSystem system);
+    void addSimpleSystem(SimpleSystem system);
     void registerComponent(std::string name,
                            std::function<Component *()> allocator);
     std::vector<StateChange> collectStateChanges();

@@ -141,8 +141,8 @@ public:
     /// callable slightly different. Simple systems do not take a pointer to
     /// the collection as their first argument. They should still accept the
     /// Entity reference as their sole argument and return void.
-    void addSystem(SimpleSystem system,
-                   std::initializer_list<std::string> components);
+    void addSystemWithComponents(SimpleSystem system,
+                                 std::initializer_list<std::string> components);
 
     /// Register a simple system for all components.
     void addSystem(SimpleSystem system);

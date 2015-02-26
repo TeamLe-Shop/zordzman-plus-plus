@@ -60,15 +60,16 @@ EntityCollection::addSystem(System system,
 
 void EntityCollection::addSystem(System system) { addSystem(system, {}); }
 
-void
-EntityCollection::addSystem(SimpleSystem system,
-                            std::initializer_list<std::string> components) {
+void EntityCollection::addSystemWithComponents(
+    SimpleSystem system, std::initializer_list<std::string> components) {
     addSystem(
         [system](EntityCollection * /*c*/, Entity & e) { return system(e); },
         components);
 }
 
-void EntityCollection::addSystem(SimpleSystem system) { addSystem(system, {}); }
+void EntityCollection::addSystem(SimpleSystem system) {
+    addSystemWithComponents(system, {});
+}
 
 void
 EntityCollection::registerComponent(std::string name,

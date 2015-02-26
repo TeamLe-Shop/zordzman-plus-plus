@@ -185,18 +185,18 @@ bool Client::joinServer() {
 
     using namespace std::placeholders;
 
-    m_msg_proc.addHandler("map.offer",
-                          std::bind(&Client::handleMapOffer, this, _1, _2));
-    m_msg_proc.addHandler("map.contents",
-                          std::bind(&Client::handleMapContents, this, _1, _2));
-    m_msg_proc.addHandler(
+    m_msg_proc.addMutedHandler(
+        "map.offer", std::bind(&Client::handleMapOffer, this, _1, _2));
+    m_msg_proc.addMutedHandler(
+        "map.contents", std::bind(&Client::handleMapContents, this, _1, _2));
+    m_msg_proc.addMutedHandler(
         "server.message",
         std::bind(&Client::handleServerMessage, this, _1, _2));
-    m_msg_proc.addHandler("disconnect", handleDisconnect);
-    m_msg_proc.addHandler("entity.state",
-                          std::bind(&Client::handleEntityState, this, _1, _2));
-    m_msg_proc.addHandler("player.id",
-                          std::bind(&Client::handlePlayerID, this, _1, _2));
+    m_msg_proc.addMutedHandler("disconnect", handleDisconnect);
+    m_msg_proc.addMutedHandler(
+        "entity.state", std::bind(&Client::handleEntityState, this, _1, _2));
+    m_msg_proc.addMutedHandler(
+        "player.id", std::bind(&Client::handlePlayerID, this, _1, _2));
     return true;
 }
 

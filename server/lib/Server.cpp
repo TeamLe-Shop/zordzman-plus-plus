@@ -172,8 +172,8 @@ void Server::acceptConnections() {
         } else {
             m_clients.emplace_back(*addr_in, client_socket);
             m_clients.back().m_msg_proc.setSocket(client_socket);
-            m_clients.back().m_msg_proc.addHandler("map.request",
-                                                   handleMapRequest);
+            m_clients.back().m_msg_proc.addMutedHandler("map.request",
+                                                        handleMapRequest);
             m_clients.back().m_msg_proc.send(
                 "map.offer", Json::object{{"name", m_map.name},
                                           {"hash", m_map.md5.getHash()}});

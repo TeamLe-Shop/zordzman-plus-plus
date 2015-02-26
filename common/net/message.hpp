@@ -127,7 +127,7 @@ public:
     ///
     /// Multiple handlers can be registered for a single type. Each handler is
     /// called once for each message received.
-    void addHandler(MessageType type, Handler handler) {
+    void addMutedHandler(MessageType type, Handler handler) {
         m_handlers[type].push_back(handler);
     }
 
@@ -140,10 +140,10 @@ public:
     ///
     /// This mostly exists to save keystrokes.
     void addHandler(MessageType type, MutedHandler handler) {
-        addHandler(type, [handler](MessageProcessor<Args...> * /*processor*/,
-                                   MessageEntity entity, Args... args) {
-            return handler(entity, args...);
-        });
+        addMutedHandler(
+            type, [handler](MessageProcessor<Args...> * /*processor*/,
+                            MessageEntity entity,
+                            Args... args) { return handler(entity, args...); });
     }
 
     /// Call all handlers for recieved messages

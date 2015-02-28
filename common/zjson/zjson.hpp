@@ -10,5 +10,6 @@ namespace zjson {
 /// When reading the file, lines starting with `#` are ignored.
 ///
 /// @param hud The filename of the HUD file.
-json11::Json load(std::string hud);
+/// @param quit Whether to quit if failed to open file
+json11::Json load(std::string hud, bool & failed);
 }

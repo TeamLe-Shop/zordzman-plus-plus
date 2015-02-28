@@ -9,13 +9,12 @@ namespace zjson {
 
 using namespace json11;
 
-Json load(std::string hud) {
+Json load(std::string hud, bool & failed) {
     std::ifstream hudfile(hud);
 
     // Throw a runtime error if file not found.
     if (!hudfile.is_open()) {
-        std::string error = fmt::format("Error loading file {}", hud);
-        throw std::runtime_error(error);
+        failed = true;
     }
 
     std::string line;

@@ -9,7 +9,7 @@ using namespace client;
 
 int main(int argc, char * argv[]) {
     try {
-        Config cfg;
+        Config cfg("config/config.json");
 
         // Load in the default HUD.
         // The contents of default_hud.json could just be '{}',

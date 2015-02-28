@@ -8,7 +8,12 @@ namespace client {
 using namespace json11;
 
 HUD::HUD(std::string hud) {
-    Json json = zjson::load(hud);
+    bool failed;
+    Json json = zjson::load(hud, failed);
+
+    if (failed) {
+        return;
+    }
 
     // Find and set all the variables...
     setint(border.x, json["border"]["x"]);

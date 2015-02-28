@@ -24,10 +24,12 @@ Json load(std::string hud) {
     // Ignore lines starting with '#'.
     while (getline(hudfile, line)) {
         int start = 0;
-        while (isspace(line[start]))
+        while (isspace(line[start])) {
             start++;
-        if (line[start] == '#')
+        }
+        if (line[start] == '#') {
             continue;
+        }
         jsonStr += line;
     }
 

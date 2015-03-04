@@ -1,7 +1,12 @@
 #include "Texture.hpp"
 
 #include <SDL_image.h>
+
 #include <stdexcept>
+
+#include "common/util/debug.hpp"
+
+using namespace common::util;
 
 namespace client {
 namespace sys {
@@ -19,6 +24,7 @@ TexResult load_texture(char const * const filename) {
     SDL_Surface * surface = IMG_Load(filename);
 
     if (!surface) {
+        debug("Failed to load image: {}\n", std::string(IMG_GetError()));
         return TexFail;
     }
 
@@ -41,6 +47,7 @@ TexResult load_texture(char const * const filename) {
             texture_format = GL_BGR_EXT;
         }
     } else {
+        debug("Failed to get number of channels in SDL surface\n");
         SDL_FreeSurface(surface);
         return TexFail;
     }

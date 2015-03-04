@@ -35,9 +35,9 @@ Tar::Tar(std::string path) {
         // TODO: Implement reading of file size if base-256 encoding.
         entry->file_size = octal_string_to_int(entry->size, 11);
 
-        char data[entry->file_size];
+        char data[entry->file_size + 1];
         std::memcpy(data, m_data.data() + (long) position + ENTRYSIZE,
-                    entry->file_size);
+                    entry->file_size + 1);
         entry->contents = std::string(data);
         if (entry->file_size % 512 == 0) {
             position += ENTRYSIZE + entry->file_size;

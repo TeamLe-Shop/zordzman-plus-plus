@@ -25,12 +25,18 @@ ResourceManager::ResourceManager() {
         }
     }
 
+    if (manifest == std::string()) {
+        throw std::runtime_error("Manifest file was not found (or empty)!\n");
+    }
+
     json11::Json json;
     json = json11::Json::parse(manifest, error);
 
     if (!error.empty()) {
-        debug("Error while parsing resource package manifest {}!\n",
-              resource_package);
+        throw std::runtime_error(
+            fmt::format("Error while parsing resource package manifest {}!\n",
+                        resource_package)
+        );
     }
 
     // Should we assume the entire JSON object is an array?
@@ -42,7 +48,7 @@ ResourceManager::ResourceManager() {
                   j["type"].string_value());
         }
     } else {
-        debug("The manifest is not an array!");
+        throw std::runtime_error("The manifest is not an array!");
     }
 
     m_textures.emplace(std::piecewise_construct, std::forward_as_tuple("main"),

@@ -34,8 +34,9 @@ ResourceManager::ResourceManager() {
 
     if (!error.empty()) {
         throw std::runtime_error(
-            fmt::format("Error while parsing resource package manifest {}!\n",
-                        resource_package)
+            fmt::format("Error while parsing resource package manifest {}!\n"
+                        "JSON error: {}\n",
+                        resource_package, error)
         );
     }
 

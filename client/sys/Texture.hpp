@@ -6,6 +6,10 @@
 namespace client {
 namespace sys {
 
+enum LoadMethod {
+    FILE, MEMORY
+};
+
 /// Texture
 class Texture {
 public:
@@ -13,6 +17,10 @@ public:
     ///
     /// @param filename The name of the file to load from
     bool loadFromFile(std::string const & filename);
+    /// Load texture from memory
+    ///
+    /// @param memory Memory location
+    bool loadFromMemory(std::string const & str);
     /// Get the width of the texture
     int getWidth() const;
     /// Get the height of the texture
@@ -27,6 +35,7 @@ public:
     ~Texture();
     /// Construct the texture from a file
     Texture(std::string const & filename);
+    Texture(std::string const & str, LoadMethod lm);
 
     // Forbid copying
     Texture(const Texture &) = delete;

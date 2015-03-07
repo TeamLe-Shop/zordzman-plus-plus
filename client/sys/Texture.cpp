@@ -1,5 +1,6 @@
 #include "Texture.hpp"
 
+#include <SDL.h>
 #include <SDL_image.h>
 
 #include <stdexcept>
@@ -17,12 +18,11 @@ struct TexResult {
     GLuint handle;
     int width, height;
 };
+
 TexResult const TexFail = TexResult{false, 0, 0, 0};
 
 // Kindly provided by Krootushas / 8BitBuff.
-TexResult load_texture(char const * const filename) {
-    SDL_Surface * surface = IMG_Load(filename);
-
+TexResult load_texture(SDL_Surface * surface) {
     if (!surface) {
         debug("Failed to load image: {}\n", std::string(IMG_GetError()));
         return TexFail;
@@ -74,7 +74,22 @@ TexResult load_texture(char const * const filename) {
 } // Anonymous namespace
 
 bool Texture::loadFromFile(std::string const & filename) {
-    TexResult result = load_texture(filename.c_str());
+    SDL_Surface * surface = IMG_Load(filename.c_str());
+    TexResult result = load_texture(surface);
+    if (!result.ok) {
+        return false;
+    }
+    m_handle = result.handle;
+    m_width = result.width;
+    m_height = result.height;
+    return true;
+}
+
+bool Texture::loadFromMemory(std::string const & memory) {
+    SDL_RWops *rwops = SDL_RWFromMem(const_cast<char *>(memory.data()),
+                                     memory.size());
+    SDL_Surface * surface = IMG_Load_RW(rwops, 1);
+    TexResult result = load_texture(surface);
     if (!result.ok) {
         return false;
     }
@@ -100,5 +115,18 @@ Texture::Texture(std::string const & filename) {
         throw std::runtime_error("Failed to construct texture.");
     }
 }
+
+Texture::Texture(std::string const & str, LoadMethod lm) {
+    if (lm == FILE) {
+        if (!loadFromFile(str)) {
+            throw std::runtime_error("Failed to construct texture.");
+        }
+    } else if (lm == MEMORY) {
+        if (!loadFromMemory(str)) {
+            throw std::runtime_error("Failed to construct texture.");
+        }
+    }
+}
+
 } // namespace sys
 } // namespace client

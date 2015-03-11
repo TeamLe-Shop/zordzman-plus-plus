@@ -2,11 +2,16 @@
 
 #include "sys/Texture.hpp"
 
+#include "ResourceCollection.hpp"
+
+#include "resources/SpriteResource.hpp"
+
 #include <unordered_map>
 
 #include "common/star/tarlib.hpp"
 
 #include <json11.hpp>
+#include <format.h>
 
 namespace client {
 
@@ -21,16 +26,16 @@ struct SpriteData {
 class ResourceManager {
 public:
     /// Initialize the resources.
-    ResourceManager();
+    ResourceManager(std::string resource_package);
     /// Get a spritesheet by its name.
     sys::Texture & getTexture(char const * const key);
-    /// Load in a sprite by Json object.
-    void loadSprite(json11::Json json, Tar tar);
+
+public:
+    ResourceCollection<SpriteResource> m_sprites;
 
 private:
     ResourceManager(ResourceManager const &) = delete;
     ResourceManager operator=(ResourceManager const &) = delete;
     std::unordered_map<std::string, sys::Texture> m_textures;
-    std::unordered_map<std::string, SpriteData> m_spritedata;
 };
 } // namespace client

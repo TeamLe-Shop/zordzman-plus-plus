@@ -8,11 +8,12 @@
 
 #include "common/util/debug.hpp"
 
+#include "resources/SpriteResource.hpp"
+
 using namespace common::util;
 
 namespace client {
-ResourceManager::ResourceManager() {
-    std::string resource_package = "resources.tar";
+ResourceManager::ResourceManager(std::string resource_package) {
     Tar tar(resource_package);
     std::string manifest, error;
     for (TarEntry * e : tar.getEntries()) {
@@ -42,20 +43,20 @@ ResourceManager::ResourceManager() {
         std::vector<json11::Json> items = json.array_items();
 
         for (json11::Json j : items) {
-            debug("==> Loading {} (type {})\n", j["name"].string_value(),
-                  j["type"].string_value());
-            loadSprite(j, tar);
+            if (j["type"] == "sprite") {
+                m_sprites.addFromJson(j);
+            }
         }
     } else {
         throw std::runtime_error("The manifest is not an array!");
     }
 
     debug("Loaded sprites:\n");
-    for (const auto & sprite : m_spritedata) {
-        auto data = sprite.second;
+    for (auto & sprite : m_sprites.map()) {
+        SpriteResource data = sprite.second;
         debug("  ({}) {}x{}, {}, {} on spritesheet {}\n", sprite.first,
-              data.width, data.height,
-              data.x, data.y, data.path);
+              data.m_width, data.m_height,
+              data.m_x, data.m_y, data.m_path);
     }
 
     debug("Loaded textures:\n");
@@ -75,32 +76,4 @@ sys::Texture & ResourceManager::getTexture(char const * const key) {
     return iter->second;
 }
 
-void ResourceManager::loadSprite(json11::Json json, Tar tar) {
-    if (json["type"].string_value() == "sprite") {
-        // Ugly.
-        std::string sprite_name = json["name"].string_value();
-        std::string sprite_path = json["path"].string_value();
-
-        SpriteData data = { static_cast<uint32_t>(json["x"].int_value()),
-                            static_cast<uint32_t>(json["y"].int_value()),
-                            static_cast<uint32_t>(json["width"].int_value()),
-                            static_cast<uint32_t>(json["height"].int_value()),
-                            sprite_path };
-        m_spritedata.emplace(std::piecewise_construct,
-                             std::forward_as_tuple(sprite_name),
-                             std::forward_as_tuple(data));
-
-        auto iter = m_textures.find(sprite_path);
-
-        if (iter == m_textures.end()) {
-            for (TarEntry * e : tar.getEntries()) {
-                if (std::string(e->name) == sprite_path) {
-                    m_textures.emplace(std::piecewise_construct,
-                               std::forward_as_tuple(sprite_path),
-                               std::forward_as_tuple(e->contents, sys::MEMORY));
-                }
-            }
-        }
-    }
-}
 } // namespace client

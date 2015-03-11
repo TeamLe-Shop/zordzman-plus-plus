@@ -1,6 +1,8 @@
 #include "drawingOperations.hpp"
 #include "Client.hpp"
 
+#include "resources/SpriteResource.hpp"
+
 #include <SDL_opengl.h>
 #include <string.h>
 #include <stdexcept>
@@ -9,6 +11,37 @@ namespace client {
 namespace drawingOperations {
 
 sys::Texture const * currentTexture = nullptr;
+ResourceManager * basemanager = nullptr;
+ResourceManager * extendedmanager = nullptr;
+
+void setBaseManager(ResourceManager * rmanager) {
+    basemanager = rmanager;
+}
+
+void setExtendedManager(ResourceManager * rmanager) {
+    extendedmanager = rmanager;
+}
+
+void drawSprite(std::string name, float x, float y, float w, float h) {
+    if (!basemanager) {
+        throw std::runtime_error("Base resource manager was not initalized!");
+        return;
+    }
+    SpriteResource sprite;
+    if (extendedmanager) {
+        sprite = extendedmanager->m_sprites[name];
+    }
+
+    if (!sprite.m_valid) {
+        sprite = basemanager->m_sprites[name];
+    }
+
+    if (!sprite.m_valid) {
+        throw std::runtime_error("Sprite \"{}\" was not found in base "
+                                 "resource package!");
+        return;
+    }
+}
 
 void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
                            float x, float y, float w, float h, float sprSize,

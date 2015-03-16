@@ -16,7 +16,7 @@ public:
 
         for (json11::Json j : package.getJsonManifest()) {
             if (j["type"].string_value() == T::getTypeName()) {
-                addFromJson(package, j);
+                addFromJson(j);
             }
         }
     }
@@ -43,8 +43,15 @@ public:
 
     std::unordered_map<std::string, T> getResources() { return m_resources; }
 
+    std::string getName() { return m_name; }
+
+    PackageType getType() { return m_type; }
+
 private:
     std::string m_name;
     std::unordered_map<std::string, T> m_resources;
     PackageType m_type;
 };
+
+}
+

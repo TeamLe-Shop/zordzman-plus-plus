@@ -15,20 +15,14 @@
 
 namespace client {
 
-struct SpriteData {
-    uint32_t x;
-    uint32_t y;
-    uint32_t width;
-    uint32_t height;
-    std::string path;
-};
-
 class ResourceManager {
 public:
-    /// Initialize the resources.
+    /// Initialize the resources
     ResourceManager(std::string resource_package);
     /// Get a spritesheet by its name.
     sys::Texture & getTexture(char const * const key);
+    // Load a package from disk.
+    void loadPackage(std::string resource_package, PackageType type);
 
 public:
     ResourceCollection<SpriteResource> m_sprites;

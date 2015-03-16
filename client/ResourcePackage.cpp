@@ -1,8 +1,13 @@
 #include "ResourcePackage.hpp"
 
+#include "common/star/tarlib.hpp"
+
+#include <format.h>
+
 namespace client {
 
-ResourcePackage::ResourcePackage(std::string path) : m_name(path) {
+ResourcePackage::ResourcePackage(std::string path, PackageType type)
+                                 : m_name(path), m_type(type) {
     Tar tar(path);
     std::string manifest, error;
     for (TarEntry * e : tar.getEntries()) {
@@ -32,6 +37,8 @@ ResourcePackage::ResourcePackage(std::string path) : m_name(path) {
 std::string ResourcePackage::getName() { return m_name; }
 PackageType ResourcePackage::getType() { return m_type; }
 
-std::vector<json11::Json> getJsonManifest() { return m_manifest.array_items(); }
+std::vector<json11::Json> ResourcePackage::getJsonManifest() {
+    return m_manifest.array_items();
+}
 
 }

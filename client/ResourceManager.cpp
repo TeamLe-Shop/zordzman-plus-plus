@@ -10,18 +10,24 @@
 
 #include "resources/SpriteResource.hpp"
 
+#include "ResourcePackage.hpp"
+
 using namespace common::util;
 
 namespace client {
 ResourceManager::ResourceManager(std::string base_resource) {
-    loadPackage(base_resource);
+    loadPackage(base_resource, Base);
+    loadPackage(base_resource, ServerProvided);
 
     debug("Loaded sprites:\n");
-    for (auto & sprite : m_sprites.all()) {
-        SpriteResource data = sprite.second;
-        debug("  ({}) {}x{}, {}, {} on spritesheet {}\n", sprite.first,
-              data.m_width, data.m_height,
-              data.m_x, data.m_y, data.m_path);
+    for (auto package : m_sprites.getPackages()) {
+        debug("Package {} ({})\n", package.getName(), package.getType());
+        for (auto data : package.getResources()) {
+            auto sprite = data.second;
+            debug("  ({}) {}x{}, {}, {} on spritesheet {}\n", data.first,
+                  sprite.m_width, sprite.m_height,
+                  sprite.m_x, sprite.m_y, sprite.m_path);
+        }
     }
 
     debug("Loaded textures:\n");
@@ -30,9 +36,10 @@ ResourceManager::ResourceManager(std::string base_resource) {
     }
 }
 
-ResourceManager::loadPackage(std::string resource_package, PackageType type) {
-    Package package(resource_package);
-    m_sprites.loadPackage(package, type);
+void ResourceManager::loadPackage(std::string resource_package,
+                                  PackageType type) {
+    ResourcePackage package(resource_package, type);
+    m_sprites.loadPackage(package);
 }
 
 sys::Texture & ResourceManager::getTexture(char const * const key) {

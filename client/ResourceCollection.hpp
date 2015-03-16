@@ -18,7 +18,7 @@ using Map = std::unordered_map<std::string, T>;
 
 public:
     void loadPackage(ResourcePackage package) {
-       m_packages.add(ResourceMap<T>(package));
+       m_packages.emplace(m_packages.begin(), ResourceMap<T>(package));
     }
 
     void unloadPackages(PackageType type) {
@@ -31,9 +31,9 @@ public:
     }
 
     T lookup(std::string name) {
-        for (int i = m_packages.size() - 1; i >= 0; i--) {
-            T temp = m_packages.get(m_packages.begin() + i).lookup(name);
-            if (temp.valid()) {
+        for (ResourceMap<T> map : m_packages) {
+            T temp = map.lookup(name);
+            if (temp.m_valid) {
                 return temp;
             }
         }
@@ -44,14 +44,8 @@ public:
         return lookup(name);
     }
 
-    std::vector<T> all() {
-        std::vector<T> all;
-        for (ResourceMap<T> map : m_packages) {
-            for (T r : map.getResources()) {
-                all.add(r);
-            }
-        }
-        return all;
+    std::vector<ResourceMap<T>> getPackages() {
+        return m_packages;
     }
 
 private:

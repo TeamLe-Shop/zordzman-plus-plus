@@ -13,7 +13,7 @@ enum PackageType {
 class ResourcePackage {
 public:
     /// Load a resource package from disk.
-    ResourcePackage(std::string path);
+    ResourcePackage(std::string path, PackageType type);
 
     std::vector<json11::Json> getJsonManifest();
     std::string getName();

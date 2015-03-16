@@ -16,4 +16,8 @@ SpriteResource SpriteResource::constructFromJson(json11::Json json) {
                           json["path"].string_value());
 }
 
+std::string getTypeName() {
+    return "sprite";
+}
+
 }

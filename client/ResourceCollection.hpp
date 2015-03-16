@@ -5,24 +5,36 @@
 
 #include <json11.hpp>
 
+#include "ResourceMap.hpp"
+#include "ResourcePackage.hpp"
+
 namespace client {
 
 template <class T>
+/// Generic collection of a specific type of resources.
 class ResourceCollection {
+
+using Map = std::unordered_map<std::string, T>;
+
 public:
-    void add(std::string name, T resource) {
-        m_map.emplace(std::piecewise_construct, std::forward_as_tuple(name),
-                    std::forward_as_tuple(resource));
+    void loadPackage(ResourcePackage package) {
+       m_packages.add(ResourceMap<T>(package));
     }
 
-    void addFromJson(json11::Json json) {
-        add(json["name"].string_value(), T::constructFromJson(json));
+    void unloadPackages(PackageType type) {
+        for (int i = 0; i < m_packages.size(); i++) {
+            ResourceMap<T> map = map.get(i);
+            if (map.getType() == type) {
+                m_packages.erase(m_packages.begin() + i);
+            }
+        }
     }
 
     T lookup(std::string name) {
-        for (auto entry : m_map) {
-            if (entry.first == name) {
-                return entry.second;
+        for (int i = m_packages.size() - 1; i >= 0; i--) {
+            T temp = m_packages.get(m_packages.begin() + i).lookup(name);
+            if (temp.valid()) {
+                return temp;
             }
         }
         return T();
@@ -32,10 +44,18 @@ public:
         return lookup(name);
     }
 
-    std::unordered_map<std::string, T> map() { return m_map; }
+    std::vector<T> all() {
+        std::vector<T> all;
+        for (ResourceMap<T> map : m_packages) {
+            for (T r : map.getResources()) {
+                all.add(r);
+            }
+        }
+        return all;
+    }
 
 private:
-    std::unordered_map<std::string, T> m_map;
+    std::vector<ResourceMap<T>> m_packages;
 };
 
 }

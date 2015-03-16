@@ -11,36 +11,18 @@ namespace client {
 namespace drawingOperations {
 
 sys::Texture const * currentTexture = nullptr;
-ResourceManager * basemanager = nullptr;
-ResourceManager * extendedmanager = nullptr;
+ResourceManager * manager = nullptr;
 
-void setBaseManager(ResourceManager * rmanager) {
-    basemanager = rmanager;
-}
-
-void setExtendedManager(ResourceManager * rmanager) {
-    extendedmanager = rmanager;
+void setManager(ResourceManager * rmanager) {
+    manager = rmanager;
 }
 
 void drawSprite(std::string name, float x, float y, float w, float h) {
-    if (!basemanager) {
-        throw std::runtime_error("Base resource manager was not initalized!");
+    if (!manager) {
+        throw std::runtime_error("Resource manager was not initalized!");
         return;
     }
-    SpriteResource sprite;
-    if (extendedmanager) {
-        sprite = extendedmanager->m_sprites[name];
-    }
-
-    if (!sprite.m_valid) {
-        sprite = basemanager->m_sprites[name];
-    }
-
-    if (!sprite.m_valid) {
-        throw std::runtime_error("Sprite \"{}\" was not found in base "
-                                 "resource package!");
-        return;
-    }
+    SpriteResource sprite = manager->m_sprites[name];
 }
 
 void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,

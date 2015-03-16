@@ -13,46 +13,11 @@
 using namespace common::util;
 
 namespace client {
-ResourceManager::ResourceManager(std::string resource_package) {
-    Tar tar(resource_package);
-    std::string manifest, error;
-    for (TarEntry * e : tar.getEntries()) {
-        // Look for the manifest.
-        if (std::string(e->name) == "manifest") {
-            manifest = e->contents;
-        }
-    }
-
-    if (manifest == std::string()) {
-        throw std::runtime_error("Manifest file was not found (or empty)!\n");
-    }
-
-    json11::Json json;
-    json = json11::Json::parse(manifest, error);
-
-    if (!error.empty()) {
-        throw std::runtime_error(
-            fmt::format("Error while parsing resource package manifest {}!\n"
-                        "JSON error: {}\n",
-                        resource_package, error)
-        );
-    }
-
-    // Should we assume the entire JSON object is an array?
-    if (json.is_array()) {
-        std::vector<json11::Json> items = json.array_items();
-
-        for (json11::Json j : items) {
-            if (j["type"] == "sprite") {
-                m_sprites.addFromJson(j);
-            }
-        }
-    } else {
-        throw std::runtime_error("The manifest is not an array!");
-    }
+ResourceManager::ResourceManager(std::string base_resource) {
+    loadPackage(base_resource);
 
     debug("Loaded sprites:\n");
-    for (auto & sprite : m_sprites.map()) {
+    for (auto & sprite : m_sprites.all()) {
         SpriteResource data = sprite.second;
         debug("  ({}) {}x{}, {}, {} on spritesheet {}\n", sprite.first,
               data.m_width, data.m_height,
@@ -63,6 +28,11 @@ ResourceManager::ResourceManager(std::string resource_package) {
     for (const auto & texture : m_textures) {
         debug("  Path: {}\n", texture.first);
     }
+}
+
+ResourceManager::loadPackage(std::string resource_package, PackageType type) {
+    Package package(resource_package);
+    m_sprites.loadPackage(package, type);
 }
 
 sys::Texture & ResourceManager::getTexture(char const * const key) {

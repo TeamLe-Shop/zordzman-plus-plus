@@ -43,16 +43,7 @@ public:
     std::vector<TarEntry*> getEntries() const;
 
 private:
+
     std::vector<TarEntry*> m_entries;
     std::vector<char> m_data;
 };
-
-static int octal_string_to_int(char* current_char, unsigned int size){
-    unsigned int output = 0;
-    while(size > 0){
-        output = output * 8 + *current_char - '0';
-        current_char++;
-        size--;
-    }
-    return output;
-}

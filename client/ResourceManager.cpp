@@ -17,7 +17,6 @@ using namespace common::util;
 namespace client {
 ResourceManager::ResourceManager(std::string base_resource) {
     loadPackage(base_resource, Base);
-    loadPackage(base_resource, ServerProvided);
 
     debug("Loaded sprites:\n");
     for (auto package : m_sprites.getPackages()) {

@@ -1,5 +1,7 @@
 #include "tarlib.hpp"
 
+#include "common/util/fileutil.hpp"
+
 Tar::Tar(std::string path) {
     std::ifstream stream(path, std::ios::in | std::ios::binary);
 
@@ -33,7 +35,13 @@ Tar::Tar(std::string path) {
 
         // Set certain variables.
         // TODO: Implement reading of file size if base-256 encoding.
-        entry->file_size = octal_string_to_int(entry->size, 11);
+        size_t i;
+        for (i = 0; i < 11; i++) {
+            if (i != 0) {
+                break;
+            }
+        }
+        entry->file_size = std::stoi(entry->size, &i, 8);
 
         entry->contents.resize(entry->file_size);
         std::memcpy(const_cast<char*>(entry->contents.data()),

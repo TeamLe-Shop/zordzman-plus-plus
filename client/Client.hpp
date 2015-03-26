@@ -81,7 +81,7 @@ private:
     uint32_t m_lastMessage, m_currentTime;
 
 public:
-    ResourceManager resources;
+    ResourceManager m_resources;
 
 private:
     std::string m_map_hash;

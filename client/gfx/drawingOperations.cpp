@@ -108,7 +108,7 @@ void drawLine(float x1, float y1, float x2, float y2) {
 }
 
 void drawText(std::string const & text, int x, int y, int w, int h) {
-    sys::Texture const & texture = Client::get().resources.getTexture("main");
+    sys::Texture const & texture = Client::get().m_resources.getTexture("main");
     for (char c : text) {
         char const * const chars = "abcdefghijklmnopqrstuvwxyz      "
                                    "                                "

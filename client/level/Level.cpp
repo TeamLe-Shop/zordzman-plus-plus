@@ -90,7 +90,7 @@ void Level::render() const {
 
     for (int x = minX; x <= maxX; x++) {
         for (int y = minY; y <= maxY; y++) {
-            drawSpriteFromTexture(Client::get().resources.getTexture("main"),
+            drawSpriteFromTexture(Client::get().m_resources.getTexture("main"),
                                   tile::render(tileAt(x, y), ticks), 0, x * 32,
                                   y * 32, 32, 32, 8);
         }

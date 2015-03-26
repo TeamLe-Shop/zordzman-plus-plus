@@ -70,8 +70,8 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
 }
 
 Client::Client(Config const & cfg, HUD hud)
-    : m_window(800, 600, title), m_chatMessages(10), m_cfg(cfg), m_hud(hud),
-      resources("resources.tar") {
+    : m_window(800, 600, title), m_chatMessages(10),
+      m_resources("resources.tar"), m_cfg(cfg), m_hud(hud) {
 
     m_chatMessages.resize(0);
 #ifdef _WIN32

@@ -26,7 +26,7 @@ void Eyenado::render() const {
     }
 
     // Draw it
-    sys::Texture & texture = Client::get().resources.getTexture("main");
+    sys::Texture & texture = Client::get().m_resources.getTexture("main");
     using drawingOperations::drawSpriteFromTexture;
     drawSpriteFromTexture(texture, idx, 4, m_x, m_y, 32, 32, 16);
 }

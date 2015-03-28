@@ -87,6 +87,6 @@ std::vector<std::string> getDirectoryContents(std::string const & path) {
     return entries;
 }
 
-} // namespace stream
+} // namespace file
 } // namespace util
 } // namespace common

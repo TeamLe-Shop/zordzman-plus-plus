@@ -70,7 +70,9 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
 }
 
 Client::Client(Config const & cfg, HUD hud)
-    : m_window(800, 600, title), m_chatMessages(10), m_cfg(cfg), m_hud(hud) {
+    : m_window(800, 600, title), m_chatMessages(10),
+      m_resources("resources.tar"), m_cfg(cfg), m_hud(hud) {
+
     m_chatMessages.resize(0);
 #ifdef _WIN32
     WSAStartup(MAKEWORD(2, 2), &m_wsa_data);

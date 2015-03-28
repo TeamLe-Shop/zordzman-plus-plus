@@ -1,6 +1,8 @@
 #include "drawingOperations.hpp"
 #include "Client.hpp"
 
+#include "resources/SpriteResource.hpp"
+
 #include <SDL_opengl.h>
 #include <string.h>
 #include <stdexcept>
@@ -9,6 +11,19 @@ namespace client {
 namespace drawingOperations {
 
 sys::Texture const * currentTexture = nullptr;
+ResourceManager * manager = nullptr;
+
+void setManager(ResourceManager * rmanager) {
+    manager = rmanager;
+}
+
+void drawSprite(std::string name, float x, float y, float w, float h) {
+    if (!manager) {
+        throw std::runtime_error("Resource manager was not initalized!");
+        return;
+    }
+    SpriteResource sprite = manager->m_sprites[name];
+}
 
 void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
                            float x, float y, float w, float h, float sprSize,
@@ -93,7 +108,7 @@ void drawLine(float x1, float y1, float x2, float y2) {
 }
 
 void drawText(std::string const & text, int x, int y, int w, int h) {
-    sys::Texture const & texture = Client::get().resources.getTexture("main");
+    sys::Texture const & texture = Client::get().m_resources.getTexture("main");
     for (char c : text) {
         char const * const chars = "abcdefghijklmnopqrstuvwxyz      "
                                    "                                "

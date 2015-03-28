@@ -49,7 +49,7 @@ add_library(common_entity ${COMMON_ENTITY_SOURCES})
 file(GLOB_RECURSE COMMON_UTIL_SOURCES common/util/*.*pp)
 add_library(common_util ${COMMON_UTIL_SOURCES})
 add_library(zjson common/zjson/zjson.hpp common/zjson/zjson.cpp)
-
+add_library(star common/star/tarlib.hpp common/star/tarlib.cpp)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 
@@ -104,6 +104,7 @@ target_link_libraries(zordzman
     common_util
     common_net
     common_entity
+    star
 )
 
 target_link_libraries(zordzman-server
@@ -118,4 +119,5 @@ target_link_libraries(zordzman-server
     common_util
     common_net
     common_entity
+    star
 )

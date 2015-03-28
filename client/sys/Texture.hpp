@@ -7,7 +7,7 @@ namespace client {
 namespace sys {
 
 enum LoadMethod {
-    FILE, MEMORY
+    File, Memory
 };
 
 /// Texture

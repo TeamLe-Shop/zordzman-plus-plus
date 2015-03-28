@@ -117,11 +117,11 @@ Texture::Texture(std::string const & filename) {
 }
 
 Texture::Texture(std::string const & str, LoadMethod lm) {
-    if (lm == FILE) {
+    if (lm == File) {
         if (!loadFromFile(str)) {
             throw std::runtime_error("Failed to construct texture.");
         }
-    } else if (lm == MEMORY) {
+    } else if (lm == Memory) {
         if (!loadFromMemory(str)) {
             throw std::runtime_error("Failed to construct texture.");
         }

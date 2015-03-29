@@ -10,11 +10,13 @@
 
 #include "ResourcePackage.hpp"
 
+#include "sys/Texture.hpp"
+
 using namespace common::util;
 
 namespace client {
 ResourceManager::ResourceManager(std::string base_resource) {
-    loadPackage(base_resource, Base);
+    ResourcePackage rpackage = loadPackage(base_resource, Base);
 
     debug("Loaded sprites:\n");
     for (auto package : m_sprites.getPackages()) {
@@ -24,6 +26,7 @@ ResourceManager::ResourceManager(std::string base_resource) {
             debug("  ({}) {}x{}, {}, {} on spritesheet {}\n", data.first,
                   sprite.m_width, sprite.m_height,
                   sprite.m_x, sprite.m_y, sprite.m_path);
+            loadTexture(rpackage.getTar(), sprite.m_path);
         }
     }
 
@@ -43,11 +46,13 @@ ResourceManager::ResourceManager(std::string base_resource) {
     }
 }
 
-void ResourceManager::loadPackage(std::string resource_package,
+ResourcePackage ResourceManager::loadPackage(std::string resource_package,
                                   PackageType type) {
     ResourcePackage package(resource_package, type);
     m_sprites.loadPackage(package);
     m_music.loadPackage(package);
+
+    return package;
 }
 
 sys::Texture & ResourceManager::getTexture(char const * const key) {
@@ -59,6 +64,14 @@ sys::Texture & ResourceManager::getTexture(char const * const key) {
     }
 
     return iter->second;
+}
+
+void ResourceManager::loadTexture(Tar tar, std::string path) {
+    for (auto e : tar.getEntries()) {
+        if (std::string(e->name) == path) {
+            m_textures.emplace(path, sys::Texture(e->contents, sys::Memory));
+        }
+    }
 }
 
 } // namespace client

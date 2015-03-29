@@ -23,7 +23,8 @@ public:
     /// Get a spritesheet by its name.
     sys::Texture & getTexture(char const * const key);
     // Load a package from disk.
-    void loadPackage(std::string resource_package, PackageType type);
+    ResourcePackage loadPackage(std::string resource_package, PackageType type);
+    void loadTexture(Tar tar, std::string path);
 
 public:
     ResourceCollection<SpriteResource> m_sprites;

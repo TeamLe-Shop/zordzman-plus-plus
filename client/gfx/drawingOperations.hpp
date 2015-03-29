@@ -10,10 +10,6 @@ namespace drawingOperations {
 
 enum class SpriteFlip { None, Horizontal, Vertical };
 
-void setBaseManager(ResourceManager * rmanager);
-
-void setExtendedManager(ResourceManager * rmanager);
-
 void drawSprite(std::string sprite, float x, float y, float w, float h);
 
 /// Draw a sprite from a Texture

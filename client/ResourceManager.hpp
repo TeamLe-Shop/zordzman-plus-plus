@@ -5,6 +5,7 @@
 #include "ResourceCollection.hpp"
 
 #include "resources/SpriteResource.hpp"
+#include "resources/MusicResource.hpp"
 
 #include <unordered_map>
 
@@ -26,6 +27,7 @@ public:
 
 public:
     ResourceCollection<SpriteResource> m_sprites;
+    ResourceCollection<MusicResource>  m_music;
 
 private:
     ResourceManager(ResourceManager const &) = delete;

@@ -8,8 +8,6 @@
 
 #include "common/util/debug.hpp"
 
-#include "resources/SpriteResource.hpp"
-
 #include "ResourcePackage.hpp"
 
 using namespace common::util;
@@ -29,6 +27,16 @@ ResourceManager::ResourceManager(std::string base_resource) {
         }
     }
 
+    debug("Loaded music:\n");
+    for (auto package : m_music.getPackages()) {
+        debug("Package {} ({})\n", package.getName(), package.getType());
+        for (auto data : package.getResources()) {
+            auto music = data.second;
+            debug("  ({}) in file {}\n", data.first, music.m_path);
+        }
+    }
+
+
     debug("Loaded textures:\n");
     for (const auto & texture : m_textures) {
         debug("  Path: {}\n", texture.first);
@@ -39,6 +47,7 @@ void ResourceManager::loadPackage(std::string resource_package,
                                   PackageType type) {
     ResourcePackage package(resource_package, type);
     m_sprites.loadPackage(package);
+    m_music.loadPackage(package);
 }
 
 sys::Texture & ResourceManager::getTexture(char const * const key) {

@@ -121,3 +121,14 @@ target_link_libraries(zordzman-server
     common_entity
     star
 )
+
+# Build resource packages
+file(GLOB_RECURSE SPRITESHEET_METAS resources/tiles/*_meta.json
+                                    resources/player/*_meta.json)
+file(GLOB_RECURSE RESOURCE_METAS sprites.manifest
+                                 resources/music/music_meta.json)
+
+execute_process(COMMAND ./tools/make-spritesheet.py ${SPRITESHEET_METAS}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+execute_process(COMMAND ./tools/make-resource-package.py ${RESOURCE_METAS}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})

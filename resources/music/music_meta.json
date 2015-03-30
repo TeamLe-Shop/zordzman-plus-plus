@@ -8,5 +8,10 @@
     "type": "music",
     "name": "dunno",
     "path": "soundtrack/dunno.ogg"
+},
+{
+    "type": "music",
+    "name": "snayk",
+    "path": "soundtrack/snayk.ogg"
 }
 ]

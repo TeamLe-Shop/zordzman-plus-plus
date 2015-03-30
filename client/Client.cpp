@@ -104,7 +104,7 @@ Client::Client(Config const & cfg, HUD hud)
     m_level.m_entities.addSystem(debugSystem);
     m_instance = this;
 
-    music::playMusic("Lively");
+    music::playMusic("snayk");
 }
 
 Client::~Client() {

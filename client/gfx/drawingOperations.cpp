@@ -11,17 +11,9 @@ namespace client {
 namespace drawingOperations {
 
 sys::Texture const * currentTexture = nullptr;
-ResourceManager * manager = nullptr;
-
-void setManager(ResourceManager * rmanager) {
-    manager = rmanager;
-}
 
 void drawSprite(std::string name, float x, float y, float w, float h) {
-    if (!manager) {
-        throw std::runtime_error("ResourceManager reference is null!");
-        return;
-    }
+    ResourceManager * manager = &Client::get().m_resources;
     SpriteResource sprite = manager->m_sprites[name];
 
     drawSpriteFromTexture(manager->getTexture(sprite.m_path.c_str()),

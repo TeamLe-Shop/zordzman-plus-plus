@@ -10,6 +10,8 @@ namespace drawingOperations {
 
 enum class SpriteFlip { None, Horizontal, Vertical };
 
+void setManager(ResourceManager * manager);
+
 void drawSprite(std::string sprite, float x, float y, float w, float h);
 
 /// Draw a sprite from a Texture
@@ -25,8 +27,8 @@ void drawSprite(std::string sprite, float x, float y, float w, float h);
 /// If the projection size defined by (w, h) differs from spriteSize,
 /// the sprite will be scaled accordingly.
 void drawSpriteFromTexture(sys::Texture const & texture, int xOff, int yOff,
-                           float x, float y, float w, float h, float spriteSize,
-                           SpriteFlip flip = SpriteFlip::None);
+                           float x, float y, float w, float h, float sprW,
+                           float sprH, SpriteFlip flip = SpriteFlip::None);
 
 /// Draw a rectangle
 ///

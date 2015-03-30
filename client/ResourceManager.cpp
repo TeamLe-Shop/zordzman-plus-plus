@@ -69,7 +69,12 @@ sys::Texture & ResourceManager::getTexture(char const * const key) {
 void ResourceManager::loadTexture(Tar tar, std::string path) {
     for (auto e : tar.getEntries()) {
         if (std::string(e->name) == path) {
-            m_textures.emplace(path, sys::Texture(e->contents, sys::Memory));
+            if (m_textures.find(path) == m_textures.end()) {
+                m_textures.emplace(std::piecewise_construct,
+                                   std::forward_as_tuple(path),
+                                   std::forward_as_tuple(e->contents,
+                                                         sys::Memory));
+            }
         }
     }
 }

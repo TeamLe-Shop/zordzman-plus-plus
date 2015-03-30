@@ -19,23 +19,28 @@ void setManager(ResourceManager * rmanager) {
 
 void drawSprite(std::string name, float x, float y, float w, float h) {
     if (!manager) {
-        throw std::runtime_error("Resource manager was not initalized!");
+        throw std::runtime_error("ResourceManager reference is null!");
         return;
     }
     SpriteResource sprite = manager->m_sprites[name];
+
+    drawSpriteFromTexture(manager->getTexture(sprite.m_path.c_str()),
+                          sprite.m_x, sprite.m_y, x, y, w, h, sprite.m_width,
+                          sprite.m_height);
 }
 
 void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
-                           float x, float y, float w, float h, float sprSize,
-                           SpriteFlip flip) {
+                           float x, float y, float w, float h, float sprW,
+                           float sprH, SpriteFlip flip) {
     if (xOff < 0 || yOff < 0)
         return;
 
     // Transform the coordinates to OpenGL texture coordinates
-    float const texSpriteW = sprSize / texture.getWidth();
-    float const texSpriteH = sprSize / texture.getHeight();
-    float const texc_left = texSpriteW * xOff;
-    float const texc_top = texSpriteH * yOff;
+    float const texSpriteW = sprW / texture.getWidth();
+    float const texSpriteH = sprH / texture.getHeight();
+    float const texc_left = (float) xOff / texture.getWidth();
+    float const texc_top = (float) yOff / texture.getHeight();
+
     // Avoid binding the same texture again, if it was previously bound, as
     // texture binding is an expensive operation
     if (&texture != currentTexture) {
@@ -108,7 +113,7 @@ void drawLine(float x1, float y1, float x2, float y2) {
 }
 
 void drawText(std::string const & text, int x, int y, int w, int h) {
-    sys::Texture const & texture = Client::get().m_resources.getTexture("main");
+/*sys::Texture const & texture = Client::get().m_resources.getTexture("main");
     for (char c : text) {
         char const * const chars = "abcdefghijklmnopqrstuvwxyz      "
                                    "                                "
@@ -124,6 +129,7 @@ void drawText(std::string const & text, int x, int y, int w, int h) {
             x += w;
         }
     }
+    */
 }
 
 void setColor(int r, int g, int b, int a) {

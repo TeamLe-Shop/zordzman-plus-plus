@@ -16,6 +16,7 @@ void Player::render() const {
 
     // Depending on their direction, render a different sprite.
     // The sprite will animate based on how many "steps" it has taken.
+    /**
     switch (m_direction) {
     case SOUTH:
         drawSpriteFromTexture(tex, 0, 2, m_x, m_y, 32, 32, 16,
@@ -36,6 +37,7 @@ void Player::render() const {
                               32, 32, 16, SpriteFlip::None);
         break;
     }
+    */
 
     float username_x = (m_x + 16) - m_username.size() * 4;
     float username_y = m_y - 12;

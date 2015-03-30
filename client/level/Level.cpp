@@ -90,7 +90,8 @@ void Level::render() const {
 
     for (int x = minX; x <= maxX; x++) {
         for (int y = minY; y <= maxY; y++) {
-            drawSprite("grass", x * 32, y * 32, 32, 32);
+            drawSprite(tile::render(tileAt(x, y), ticks), x * 32, y * 32, 32,
+                       32);
         }
     }
     // TODO: Render entities

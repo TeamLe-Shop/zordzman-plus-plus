@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace client {
 typedef unsigned char byte;
 
@@ -11,6 +13,6 @@ const byte GRASS = 0, FLOWER = 1, WATER = 2;
 ///
 /// @param id The id of the tile to draw.
 /// @param tick The current animation tick.
-byte render(byte id, int tick);
+std::string render(byte id, int tick);
 } // namespace tile
 } // namespace client

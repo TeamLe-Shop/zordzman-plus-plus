@@ -3,24 +3,24 @@
 namespace client {
 namespace tile {
 
-byte render(byte id, int ticks) {
+std::string render(byte id, int ticks) {
     int animticks = ticks % 240;
     switch (id) {
     case GRASS:
-        return 0;
+        return "grass";
     case FLOWER:
-        return 1;
+        return "flower";
     case WATER:
         if (animticks >= 60 && animticks < 120) {
-            return 3;
+            return "water_1";
         } else if (animticks >= 120 && animticks < 180) {
-            return 4;
+            return "water_2";
         } else if (animticks >= 180 && animticks < 240) {
-            return 3;
+            return "water_1";
         }
-        return 2;
+        return "water";
     }
-    return 0;
+    return "grass";
 }
 
 } // namespace tile

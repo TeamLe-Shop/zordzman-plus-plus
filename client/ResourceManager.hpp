@@ -14,6 +14,8 @@
 #include <json11.hpp>
 #include <format.h>
 
+#include <SDL_mixer.h>
+
 namespace client {
 
 class ResourceManager {
@@ -23,8 +25,10 @@ public:
     /// Get a spritesheet by its name.
     sys::Texture & getTexture(char const * const key);
     // Load a package from disk.
-    ResourcePackage loadPackage(std::string resource_package, PackageType type);
+    void loadPackage(std::string resource_package, PackageType type);
     void loadTexture(Tar tar, std::string path);
+    void loadMusic(Tar tar, std::string path);
+    Mix_Music* getMusic(char const * const key);
 
 public:
     ResourceCollection<SpriteResource> m_sprites;
@@ -34,5 +38,6 @@ private:
     ResourceManager(ResourceManager const &) = delete;
     ResourceManager operator=(ResourceManager const &) = delete;
     std::unordered_map<std::string, sys::Texture> m_textures;
+    std::unordered_map<std::string, Mix_Music*>   m_musicfiles;
 };
 } // namespace client

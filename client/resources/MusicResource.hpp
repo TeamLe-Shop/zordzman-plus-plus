@@ -14,6 +14,7 @@ public:
     static std::string getTypeName();
 
     std::string m_path;
+
     bool m_valid;
 };
 

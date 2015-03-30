@@ -10,6 +10,8 @@
 #include "json11.hpp"
 #include "weapons/weaponList.hpp"
 
+#include "musicPlayer.hpp"
+
 #include <stdexcept>
 #include <format.h>
 #include <thread>
@@ -75,7 +77,6 @@ Client::Client(Config const & cfg, HUD hud)
 
     using namespace drawingOperations;
 
-    setManager(&m_resources);
     m_chatMessages.resize(0);
 #ifdef _WIN32
     WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
@@ -97,23 +98,13 @@ Client::Client(Config const & cfg, HUD hud)
         throw std::runtime_error("Couldn't connect to server.");
     }
 
-    m_music = Mix_LoadMUS("resources/music/soundtrack/Lively.ogg");
-
-    if (m_music == nullptr) {
-        throw std::runtime_error(
-            fmt::format("Couldn't load sound \"{}\", ({})",
-                        "resources/music/soundtrack/Lively.ogg",
-                        std::string(Mix_GetError())));
-    }
-
-    // Infinitely loop the music
-    Mix_PlayMusic(m_music, -1);
-
     m_level.m_entities.registerComponent(
         entity::CharacterComponent::getComponentName(),
         entity::CharacterComponent::new_);
     m_level.m_entities.addSystem(debugSystem);
     m_instance = this;
+
+    music::playMusic("Lively");
 }
 
 Client::~Client() {

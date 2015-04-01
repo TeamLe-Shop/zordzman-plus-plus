@@ -51,6 +51,9 @@ add_library(common_util ${COMMON_UTIL_SOURCES})
 add_library(zjson common/zjson/zjson.hpp common/zjson/zjson.cpp)
 add_library(star common/star/tarlib.hpp common/star/tarlib.cpp)
 
+file(GLOB_RECURSE COMMON_RESOURCES_SOURCES common/resources/*.*pp)
+add_library(resources ${COMMON_RESOURCES_SOURCES})
+
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 
 find_package(OpenGL REQUIRED)
@@ -105,6 +108,7 @@ target_link_libraries(zordzman
     common_net
     common_entity
     star
+    resources
 )
 
 target_link_libraries(zordzman-server

@@ -17,6 +17,7 @@ Config::Config(std::string config) {
     host = json["host"].string_value();
     port = json["port"].int_value();
     name = json["name"].string_value();
+    level_dir = json["level_dir"].string_value();
 }
 
 }

@@ -16,6 +16,7 @@ public:
     std::string host = "localhost";
     int port = 4544;
     std::string name = "gatsan";
+    std::string level_dir = "levels";
 };
 
 } // namespace client

@@ -1,5 +1,6 @@
 {
     "host": "localhost",
     "port": 4544,
-    "name": "snayk"
+    "name": "snayk",
+    "level_dir": "levels"
 }

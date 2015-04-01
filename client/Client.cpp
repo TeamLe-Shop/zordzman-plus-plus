@@ -243,13 +243,13 @@ void Client::checkForMap(std::string map, std::string hash) {
     m_map_hash = hash;
 
     // The client is going to now look for that map file.
-    auto entries = getDirectoryContents("resources/levels/");
+    auto entries = getDirectoryContents(m_cfg.level_dir);
 
     for (auto name : entries) {
         // Does the map hash match the file name?
         if (name == hash) {
             // Open a stream to the file.
-            std::ifstream mapfile(fmt::format("resources/levels/{}", name),
+            std::ifstream mapfile(fmt::format("{}/{}", m_cfg.level_dir, name),
                                   std::ios::binary | std::ios::in);
 
             // Read all data...
@@ -261,7 +261,7 @@ void Client::checkForMap(std::string map, std::string hash) {
             md5.add(mapdata.data(), mapdata.size());
             if (md5.getHash() == name) {
                 found_match = true;
-                m_level = Level(hash);
+                m_level = Level(fmt::format("{}/{}", m_cfg.level_dir, hash));
             } else {
                 found_match = false;
             }
@@ -277,11 +277,11 @@ void Client::checkForMap(std::string map, std::string hash) {
 
 void Client::writeMapContents(std::string const map_base64) {
     std::string map_contents = base64_decode(map_base64);
-    std::ofstream map_file(fmt::format("resources/levels/{}", m_map_hash),
+    std::ofstream map_file(fmt::format("{}/{}", m_cfg.level_dir, m_map_hash),
                            std::ios::out | std::ios::binary);
     map_file.write(map_contents.data(), map_contents.size());
     map_file.close();
-    m_level = Level(m_map_hash);
+    m_level = Level(fmt::format("{}/{}", m_cfg.level_dir, m_map_hash));
 }
 
 void Client::addMessage(std::string msg) {

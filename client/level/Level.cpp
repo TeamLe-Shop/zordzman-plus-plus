@@ -17,13 +17,13 @@ int ticks = 0;
 using namespace common::util;
 
 Level::Level(std::string const levelname) {
-    std::ifstream file(("resources/levels/" + levelname),
+    std::ifstream file((levelname),
                        std::ios::in | std::ios::binary);
 
     // Complain if that Level couldn't be found / opened.
     if (!file.is_open()) {
         auto str = fmt::format(
-            "[ERROR] Couldn't open level file resources/levels/{}", levelname);
+            "[ERROR] Couldn't open level file {}", levelname);
         throw std::runtime_error(str);
     }
 

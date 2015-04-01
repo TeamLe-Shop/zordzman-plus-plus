@@ -26,7 +26,7 @@ It uses [json11](https://github.com/dropbox/json11) for parsing JSON,
 [base64](http://www.adp-gmbh.ch/cpp/common/base64.html) for base64 encoding &
 decoding.
 
-All three libraries are located in `common/extlib/libname/`.
+All of the above libraries are located in `common/extlib/libname/`.
 
 Our own written libs are in `common/libname`.
 
@@ -34,7 +34,9 @@ SDL: https://libsdl.org/download-2.0.php (Required: 2.0.0 or greater)
 
 SDL\_Image: https://libsdl.org/projects/SDL_image/ (Required: 2.0.0 or greater)
 
-SDL\_Mixer: http://www.libsdl.org/projects/SDL_mixer/ (Required: 2.0.0 or greater)
+SDL\_Mixer: http://libsdl.org/projects/SDL_mixer/ (Required: 2.0.0 or greater)
+
+SDL\_TTF: http://libsdl.org/projects/SDL_ttf/ (Required: 2.0.0 or greater)
 
 Building
 ========
@@ -46,11 +48,11 @@ and [Linux](https://github.com/TeamLe-Shop/zordzman-plus-plus#linux) below.
 
 REQUIRES XCODE (atleast 4.2, free), download from the App store
 
-Download SDL2, SDL2_image and SDL2\_mixer.
+Download SDL2 and the additional SDL2 libraries (image, mixer etc.).
 
 Then, after you've opened your `SDL2.dmg`, copy the `SDL2.framework` and
 move it into `/Library/Frameworks` directory. You can find this by navigating to Macintosh HD (usually by double clicking the icon on the desktop) and going to `/Library/Frameworks`.
-Then, do the same with `SDL2_image.dmg` and `SDL2_mixer.dmg`.
+Then, do the same with `SDL2_image.dmg`, `SDL2_mixer.dmg` and `SDL2_ttf.dmg`.
 
 The next part requires [XCode](https://developer.apple.com/xcode/downloads/), and what you need to do is find your XCode.app, right click, select "Show Package Contents" and
 you'll be brought to the folder "Contents".

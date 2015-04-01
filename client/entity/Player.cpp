@@ -12,7 +12,7 @@ Player::Player(std::string username, float x, float y, float speed)
 
 void Player::render() const {
     using namespace drawingOperations;
-    sys::Texture & tex = Client::get().m_resources.getTexture("main");
+    //sys::Texture & tex = Client::get().m_resources.getTexture("main");
 
     // Depending on their direction, render a different sprite.
     // The sprite will animate based on how many "steps" it has taken.

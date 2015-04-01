@@ -1,7 +1,7 @@
 #include "musicPlayer.hpp"
 
 #include "ResourceManager.hpp"
-#include "resources/MusicResource.hpp"
+#include "common/resources/MusicResource.hpp"
 #include "format.h"
 #include "Client.hpp"
 

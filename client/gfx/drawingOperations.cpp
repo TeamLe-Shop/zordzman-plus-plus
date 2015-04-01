@@ -1,7 +1,9 @@
-#include "drawingOperations.hpp"
-#include "Client.hpp"
+#include "gfx/drawingOperations.hpp"
 
-#include "resources/SpriteResource.hpp"
+#include "Client.hpp"
+#include "ResourceManager.hpp"
+
+#include "common/resources/SpriteResource.hpp"
 
 #include <SDL_opengl.h>
 #include <string.h>

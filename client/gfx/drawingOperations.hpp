@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ResourceManager.hpp"
-
 #include "sys/Texture.hpp"
 
 namespace client {

@@ -8,7 +8,7 @@
 
 #include "common/util/debug.hpp"
 
-#include "ResourcePackage.hpp"
+#include "common/resources/ResourcePackage.hpp"
 
 #include "sys/Texture.hpp"
 
@@ -61,7 +61,7 @@ void ResourceManager::loadPackage(std::string resource_package,
     }
 }
 
-sys::Texture & ResourceManager::getTexture(char const * const key) {
+sys::Texture & ResourceManager::getTexture(std::string key) {
     auto iter = m_textures.find(key);
 
     if (iter == m_textures.end()) {
@@ -72,7 +72,7 @@ sys::Texture & ResourceManager::getTexture(char const * const key) {
     return iter->second;
 }
 
-Mix_Music* ResourceManager::getMusic(char const * const key) {
+Mix_Music* ResourceManager::getMusic(std::string key) {
     auto iter = m_musicfiles.find(key);
 
     if (iter == m_musicfiles.end()) {

@@ -2,10 +2,9 @@
 
 #include "sys/Texture.hpp"
 
-#include "ResourceCollection.hpp"
-
-#include "resources/SpriteResource.hpp"
-#include "resources/MusicResource.hpp"
+#include "common/resources/ResourceCollection.hpp"
+#include "common/resources/SpriteResource.hpp"
+#include "common/resources/MusicResource.hpp"
 
 #include <unordered_map>
 
@@ -18,17 +17,20 @@
 
 namespace client {
 
+using namespace resources;
+
 class ResourceManager {
 public:
     /// Initialize the resources
     ResourceManager(std::string resource_package);
-    /// Get a spritesheet by its name.
-    sys::Texture & getTexture(char const * const key);
     // Load a package from disk.
-    void loadPackage(std::string resource_package, PackageType type);
+    void loadPackage(std::string resource_package, resources::PackageType type);
+
     void loadTexture(Tar tar, std::string path);
+    sys::Texture & getTexture(std::string key);
+
     void loadMusic(Tar tar, std::string path);
-    Mix_Music* getMusic(char const * const key);
+    Mix_Music* getMusic(std::string key);
 
 public:
     ResourceCollection<SpriteResource> m_sprites;

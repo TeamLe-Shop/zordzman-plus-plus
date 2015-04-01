@@ -87,6 +87,18 @@ std::vector<std::string> getDirectoryContents(std::string const & path) {
     return entries;
 }
 
+bool isDirectory(std::string path) {
+#ifdef _WIN32
+        struct _stat st;
+        _stat(path.c_str(), &st);
+        return st.st_mode & _S_IFDIR;
+#else
+        struct stat st;
+        stat(path.c_str(), &st);
+        return st.st_mode & S_IFDIR;
+#endif
+}
+
 } // namespace file
 } // namespace util
 } // namespace common

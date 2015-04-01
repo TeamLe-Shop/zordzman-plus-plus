@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include <sys/stat.h>
+
 namespace common {
 namespace util {
 namespace file {
@@ -14,6 +16,11 @@ std::string fileFromPath(std::string path);
 ///
 /// @param path The directory path
 std::vector<std::string> getDirectoryContents(std::string const & path);
+
+/// Check if a file is a directory
+///
+/// @param path File path
+bool isDirectory(std::string path);
 
 } // namespace stream
 } // namespace util

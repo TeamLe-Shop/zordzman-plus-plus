@@ -7,8 +7,9 @@
 #include <sys/stat.h>
 
 #include "lib/Server.hpp"
-
 #include "lib/Config.hpp"
+
+#include "common/util/fileutil.hpp"
 
 #define PORT_NUMBER 4544 // The default port number.
 
@@ -102,15 +103,7 @@ int main(int argc, char ** argv) {
         map_file.close();
         exit(1);
     } else {
-#ifdef _WIN32
-        struct _stat st;
-        _stat(config.map.c_str(), &st);
-        if (st.st_mode & _S_IFDIR) {
-#else
-        struct stat st;
-        stat(config.map.c_str(), &st);
-        if (st.st_mode & S_IFDIR) {
-#endif
+        if (common::util::file::isDirectory(config.map)) {
             fmt::print("SERVER: [ERR]  I need a map FILE, silly, not a "
                        "folder.\n");
             map_file.close();
@@ -124,17 +117,9 @@ int main(int argc, char ** argv) {
         fmt::print("SERVER: [ERR]  Failed to open resource package \"{}\"\n",
                    config.resource_package);
         resource_package.close();
-        sexit(1);
+        exit(1);
     } else {
-#ifdef _WIN32
-        struct _stat st;
-        _stat(config.resource_package.c_str(), &st);
-        if (st.st_mode & _S_IFDIR) {
-#else
-        struct stat st;
-        stat(config.resource_package.c_str(), &st);
-        if (st.st_mode & S_IFDIR) {
-#endif
+        if (common::util::file::isDirectory(config.resource_package)) {
             fmt::print("SERVER: [ERR]  Resource package must be a tar file, "
                        "not a folder.\n");
 

@@ -54,7 +54,9 @@ Server::Server(Config config) : m_config(config),
     if (!config.allow_downloads) {
         m_logger.log("[INFO] Downloads not enabled.");
     }
-    m_logger.log("[INFO] Max clients: {}", m_config.max_clients);
+    m_logger.log("[INFO] Max clients: {}", config.max_clients);
+    m_logger.log("[INFO] Resource package path: {}", config.resource_package);
+
 
 #ifdef _WIN32
     WSAStartup(MAKEWORD(2, 2), &m_wsa_data);

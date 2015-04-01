@@ -21,6 +21,7 @@ int main(int argc, char ** argv) {
     config.allow_downloads = true;
     config.max_clients = 5;
     config.port = PORT_NUMBER;
+    config.resource_package = "resources.tar";
 
     bool map_given = false;
 
@@ -74,6 +75,14 @@ int main(int argc, char ** argv) {
                     config.max_clients = temp_max;
                 }
             }
+        } else if (!strcmp(argv[i], "--resources")) {
+            if (i == argc - 1) {
+                fmt::print("SERVER: [ERR]  Nothing given for resource "
+                           "package.\n");
+                exit(1);
+            }
+            config.resource_package = argv[i + 1];
+            i++;
         }
     }
 
@@ -85,6 +94,7 @@ int main(int argc, char ** argv) {
     }
 
     std::ifstream map_file(config.map);
+    std::ifstream resource_package(config.resource_package);
 
     if (!map_file.is_open()) {
         fmt::print("SERVER: [ERR]  Failed opening map file \"{}\".\n",
@@ -109,6 +119,30 @@ int main(int argc, char ** argv) {
         fmt::print("SERVER: [INFO] Map set to '{}'\n", config.map.c_str());
     }
     map_file.close();
+
+    if (!resource_package.is_open()) {
+        fmt::print("SERVER: [ERR]  Failed to open resource package \"{}\"\n",
+                   config.resource_package);
+        resource_package.close();
+        sexit(1);
+    } else {
+#ifdef _WIN32
+        struct _stat st;
+        _stat(config.resource_package.c_str(), &st);
+        if (st.st_mode & _S_IFDIR) {
+#else
+        struct stat st;
+        stat(config.resource_package.c_str(), &st);
+        if (st.st_mode & S_IFDIR) {
+#endif
+            fmt::print("SERVER: [ERR]  Resource package must be a tar file, "
+                       "not a folder.\n");
+
+            resource_package.close();
+            exit(1);
+        }
+    }
+    resource_package.close();
 
     server::Server server(config);
     server.exec();

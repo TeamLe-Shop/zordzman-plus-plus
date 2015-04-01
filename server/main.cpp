@@ -8,28 +8,32 @@
 
 #include "lib/Server.hpp"
 
+#include "lib/Config.hpp"
+
 #define PORT_NUMBER 4544 // The default port number.
 
 int main(int argc, char ** argv) {
     // We could also load from a configuration file
     // here. This would be done after this variable
     // is assigned to PORT_NUMBER.
-    int port = PORT_NUMBER;
-    int max_clients = 5;
+    server::Config config;
+
+    config.allow_downloads = true;
+    config.max_clients = 5;
+    config.port = PORT_NUMBER;
 
     bool map_given = false;
-    bool allow_downloads = true;
-    std::string map_name;
 
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--help")) {
             fmt::print("HELP:\n");
-            fmt::print("  --map <mapfile>     : Specify map to load\n");
-            fmt::print("  --port <port>       : Listen on port <port>\n");
-            fmt::print("  --no-downloads      : Disable clients downloading"
+            fmt::print("  --map <mapfile>       : Specify map to load\n");
+            fmt::print("  --port <port>         : Listen on port <port>\n");
+            fmt::print("  --no-downloads        : Disable clients downloading"
                        " map.\n");
-            fmt::print("  --max-clients <max> : Set maximum clients allowed"
-                       " on server to <max>.\n\n");
+            fmt::print("  --max-clients <max>   : Set maximum clients allowed"
+                       " on server to <max>.\n");
+            fmt::print("\n");
             fmt::print("Default port: 4544\n");
             fmt::print("Default max clients: 5\n");
             exit(0);
@@ -46,7 +50,7 @@ int main(int argc, char ** argv) {
                            "65535.\n");
                 exit(1);
             } else {
-                port = temp_port;
+                config.port = temp_port;
             }
             i++;
         } else if (!strcmp(argv[i], "--map")) {
@@ -54,11 +58,11 @@ int main(int argc, char ** argv) {
                 fmt::print("SERVER: [ERR]  Nothing given for map.\n");
                 exit(1);
             }
-            map_name = argv[i + 1];
+            config.map = argv[i + 1];
             i++;
             map_given = true;
         } else if (!strcmp(argv[i], "--no-downloads")) {
-            allow_downloads = false;
+            config.allow_downloads = false;
         } else if (!strcmp(argv[i], "--max-clients")) {
             if (i != argc - 1) {
                 int temp_max = strtol(argv[i + 1], nullptr, 10);
@@ -67,7 +71,7 @@ int main(int argc, char ** argv) {
                     fmt::print("SERVER: [ERR]  Max clients must be > 0\n");
                     exit(1);
                 } else {
-                    max_clients = temp_max;
+                    config.max_clients = temp_max;
                 }
             }
         }
@@ -80,21 +84,21 @@ int main(int argc, char ** argv) {
         exit(1);
     }
 
-    std::ifstream map_file(map_name);
+    std::ifstream map_file(config.map);
 
     if (!map_file.is_open()) {
         fmt::print("SERVER: [ERR]  Failed opening map file \"{}\".\n",
-                   map_name);
+                   config.map);
         map_file.close();
         exit(1);
     } else {
 #ifdef _WIN32
         struct _stat st;
-        _stat(map_name.c_str(), &st);
+        _stat(config.map.c_str(), &st);
         if (st.st_mode & _S_IFDIR) {
 #else
         struct stat st;
-        stat(map_name.c_str(), &st);
+        stat(config.map.c_str(), &st);
         if (st.st_mode & S_IFDIR) {
 #endif
             fmt::print("SERVER: [ERR]  I need a map FILE, silly, not a "
@@ -102,10 +106,10 @@ int main(int argc, char ** argv) {
             map_file.close();
             exit(1);
         }
-        fmt::print("SERVER: [INFO] Map set to '{}'\n", map_name.c_str());
+        fmt::print("SERVER: [INFO] Map set to '{}'\n", config.map.c_str());
     }
     map_file.close();
 
-    server::Server server(port, max_clients, map_name, allow_downloads);
+    server::Server server(config);
     server.exec();
 }

@@ -37,27 +37,24 @@ using namespace net;
 
 void handleMapRequest(Processor *, MessageEntity /*entity*/, Server * server,
                       Client * client) {
-    if (!server->m_allow_downloads) {
+    if (!server->m_config.allow_downloads) {
         client->disconnect("Downloads not enabled.", true);
         return;
     }
     client->m_msg_proc.send("map.contents", server->m_map.asBase64());
 }
 
-Server::Server(int port, unsigned int max_clients, std::string map_name,
-               bool allow_downloads)
-    : m_logger(stderr, [] { return "SERVER: "; }) {
-    m_max_clients = max_clients;
-    m_allow_downloads = allow_downloads;
+Server::Server(Config config) : m_config(config),
+                                m_logger(stderr, [] { return "SERVER: "; }) {
 
-    m_map.loadLevel(map_name);
+    m_map.loadLevel(config.map);
     // Log this in the map loader maybe?
     m_logger.log("[INFO] Map hash: {}", m_map.md5.getHash());
 
-    if (!m_allow_downloads) {
+    if (!config.allow_downloads) {
         m_logger.log("[INFO] Downloads not enabled.");
     }
-    m_logger.log("[INFO] Max clients: {}", max_clients);
+    m_logger.log("[INFO] Max clients: {}", m_config.max_clients);
 
 #ifdef _WIN32
     WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
@@ -87,7 +84,7 @@ Server::Server(int port, unsigned int max_clients, std::string map_name,
     memset(&m_tcp_address, 0, sizeof m_tcp_address);
 
     m_tcp_address.sin_family = AF_INET;
-    m_tcp_address.sin_port = htons(port);
+    m_tcp_address.sin_port = htons(config.port);
 
     if (INADDR_ANY) {
         m_tcp_address.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -164,7 +161,7 @@ void Server::acceptConnections() {
 #else
         fcntl(client_socket, F_SETFL, O_NONBLOCK);
 #endif
-        if (m_clients.size() >= m_max_clients) {
+        if (m_clients.size() >= m_config.max_clients) {
             // Perhaps issue some kind of "server full" warning. But how would
             // this be done as the client would be in the PENDING state
             // intially?

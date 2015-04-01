@@ -8,6 +8,8 @@
 #include "Client.hpp"
 #include "Map.hpp"
 
+#include "Config.hpp"
+
 #include <vector>
 #include <fstream>
 
@@ -39,8 +41,7 @@ void handleMapRequest(Processor *, net::MessageEntity, Server *, Client *);
 
 class Server {
 public:
-    Server(int port, unsigned int max_clients, std::string map_name,
-           bool allow_downloads);
+    Server(Config config);
     ~Server();
     int exec();
 
@@ -51,7 +52,7 @@ public:
 
     map::Level m_map;
 
-    bool m_allow_downloads;
+    Config m_config;
 
 private:
     /// Accept all pending connections
@@ -62,8 +63,6 @@ private:
     /// If the max number of clients has been reached the new client will be
     /// disconnected immediately.
     void acceptConnections();
-
-    unsigned int m_max_clients = 10;
 
     net::Socket m_tcp_socket;
     struct sockaddr_in m_tcp_address;

@@ -26,6 +26,7 @@ RESOURCE_TYPE_SCHEMAS = {
     },
     "font": {
         "path": pathlib.Path,
+        "size": int,
     },
 }
 

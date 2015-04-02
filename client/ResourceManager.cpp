@@ -25,6 +25,7 @@ void ResourceManager::loadPackage(std::string resource_package,
 
     m_sprites.loadPackage(rpackage);
     m_music.loadPackage(rpackage);
+    m_fonts.loadPackage(rpackage);
 
     debug("Loaded sprites:\n");
     for (auto package : m_sprites.getPackages()) {
@@ -46,6 +47,16 @@ void ResourceManager::loadPackage(std::string resource_package,
             debug("  ({}) in file {}\n", data.first, music.m_path);
             // Currently non-JIT loading
             loadMusic(rpackage.getTar(), music.m_path);
+        }
+    }
+
+    debug("Loaded fonts:\n");
+    for (auto package : m_fonts.getPackages()) {
+        debug("Package {} ({})\n", package.getName(), package.getType());
+        for (auto data : package.getResources()) {
+            auto font = data.second;
+            debug("  ({}) in file {}\n", data.first, font.m_path);
+            loadFont(rpackage.getTar(), font.m_path, font.m_size);
         }
     }
 
@@ -83,6 +94,17 @@ Mix_Music* ResourceManager::getMusic(std::string key) {
     return iter->second;
 }
 
+TTF_Font* ResourceManager::getFont(std::string key) {
+    auto iter = m_fontlist.find(key);
+
+    if (iter == m_fontlist.end()) {
+        throw std::runtime_error(
+            fmt::format("Couldn't find font \"{}\"", key));
+    }
+
+    return iter->second;
+}
+
 void ResourceManager::loadTexture(Tar tar, std::string path) {
     for (auto e : tar.getEntries()) {
         if (std::string(e->name) == path) {
@@ -105,6 +127,20 @@ void ResourceManager::loadMusic(Tar tar, std::string path) {
                                     e->contents.size());
                 Mix_Music* music = Mix_LoadMUS_RW(rwops, 1);
                 m_musicfiles.emplace(path, music);
+            }
+        }
+    }
+}
+
+void ResourceManager::loadFont(Tar tar, std::string path, size_t size) {
+    for (auto e : tar.getEntries()) {
+        if (std::string(e->name) == path) {
+            if (m_fontlist.find(path) == m_fontlist.end()) {
+                SDL_RWops *rwops
+                    = SDL_RWFromMem(const_cast<char *>(e->contents.data()),
+                                    e->contents.size());
+                TTF_Font* font = TTF_OpenFontRW(rwops, 1, size);
+                m_fontlist.emplace(path, font);
             }
         }
     }

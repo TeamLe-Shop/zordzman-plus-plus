@@ -26,9 +26,9 @@ It uses [json11](https://github.com/dropbox/json11) for parsing JSON,
 [base64](http://www.adp-gmbh.ch/cpp/common/base64.html) for base64 encoding &
 decoding.
 
-All of the above libraries are located in `common/extlib/libname/`.
+All of the above libraries are located in `common/extlib/<libname>/`.
 
-Our own written libs are in `common/libname`.
+Our own written libs are in `common/<libname>`.
 
 SDL: https://libsdl.org/download-2.0.php (Required: 2.0.0 or greater)
 
@@ -46,24 +46,35 @@ and [Linux](https://github.com/TeamLe-Shop/zordzman-plus-plus#linux) below.
 
 ### Mac OS X ###
 
-REQUIRES XCODE (atleast 4.2, free), download from the App store
+Requires XCode, at least 4.2. Downloadable from the App Store.
+Requires CMake, at least 3.0.0.
 
 Download SDL2 and the additional SDL2 libraries (image, mixer etc.).
 
-Then, after you've opened your `SDL2.dmg`, copy the `SDL2.framework` and
-move it into `/Library/Frameworks` directory. You can find this by navigating to Macintosh HD (usually by double clicking the icon on the desktop) and going to `/Library/Frameworks`.
-Then, do the same with `SDL2_image.dmg`, `SDL2_mixer.dmg` and `SDL2_ttf.dmg`.
+Open SDL2.dmg and additional SDL2 library images.
+Move `SDL2.framework` into `/Library/Frameworks`, along with the additional
+`.framework` files found in the other images.
+Inside the SDL_x (e.g. SDL\_image) framework directories,
+move the C header file found in `Headers/` into a new directory called "SDL2"
+(inside the "Headers" directory).
 
-The next part requires [XCode](https://developer.apple.com/xcode/downloads/), and what you need to do is find your XCode.app, right click, select "Show Package Contents" and
-you'll be brought to the folder "Contents".
-Navigate to
-`Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.x.sdk/Developer/System/Library/Frameworks`
-and copy `OpenGL.framework` into `/Library/Frameworks` (back where you put the SDL stuff).
+Navigate to where XCode.app is, and enter the Package Contents (often accessed
+by right clicking on XCode.app in Finder, and selecting "Show Package Contents".)
+Then navigate to `Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.x.sdk/Developer/System/Library/Frameworks` and copy `OpenGL.framework` into
+`/Library/Frameworks`.
 
-Then navigate back to the zordzman-plus-plus folder, and proceed to do the CMake instructions for Linux. They are almost the exact same.
+Create a new CMake variable (easily done using the CMake GUI and clicking the
+"Add Entry" button) called "OSX", type boolean and set it to true.
+When building the project, this will make sure CMake finds the SDL framework
+directories and header files. This will also build with compile options
+`-stdlib=libc++` and `-std=c++11`. If you do not want these compile options you
+can manually set them yourself.
 
+Then navigate back to the zordzman-plus-plus folder, and proceed to do the CMake instructions for Linux.
 
 ### Linux ###
+
+Requires CMake, at least 3.0.0.
 
 If you don't know how to install SDL on Linux, check out this tutorial:
 [LazyFoo](http://lazyfoo.net/tutorials/SDL/01_hello_SDL/linux/index.php)
@@ -78,6 +89,12 @@ cd ../build-zordzman-plus-plus
 cmake ../zordzman-plus-plus
 make
 ```
+
+### Windows ###
+
+We have currently not yet figured out a suitable way to build this project
+on Windows. You can try to build and show us any errors you think are to do with
+the source code.
 
 
 Contributing

@@ -56,6 +56,8 @@ add_library(resources ${COMMON_RESOURCES_SOURCES})
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 
+# OpenGL & SDL Libraries
+
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 find_package(SDL2 REQUIRED)
@@ -64,12 +66,16 @@ find_package(SDL2_image REQUIRED)
 include_directories(${SDLIMAGE_INCLUDE_DIR})
 find_package(SDL2_mixer REQUIRED)
 include_directories(${SDLMIXER_INCLUDE_DIR})
+find_package(SDL2_ttf REQUIRED)
+include_directories(${SDLTTF_INCLUDE_DIR})
 
 if(OSX)
     set(SDLIMAGE_LIBRARY /Library/Frameworks/SDL2_image.framework)
     set(SDLIMAGE_INCLUDE_DIR /Library/Frameworks/SDL2_image.framework/Headers)
     set(SDLMIXER_LIBRARY /Library/Frameworks/SDL2_mixer.framework)
     set(SDLMIXER_INCLUDE_DIR /Library/Frameworks/SDL2_mixer.framework/Headers)
+    set(SDLTTF /Library/Frameworks/SDL2_ttf.framework)
+    set(SDLTTF_INCLUDE_DIR /Library/Frameworks/SDL2_ttf.framework/Headers)
     add_compile_options(-stdlib=libc++)
     add_compile_options(-std=c++11)
 endif()
@@ -94,10 +100,11 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 endif()
 
 target_link_libraries(zordzman
+    ${OPENGL_LIBRARY}
     ${SDL2_LIBRARY}
     ${SDLIMAGE_LIBRARY}
-    ${OPENGL_LIBRARY}
     ${SDLMIXER_LIBRARY}
+    ${SDLTTF_LIBRARY}
     json11
     cppformat
     server

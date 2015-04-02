@@ -24,6 +24,9 @@ RESOURCE_TYPE_SCHEMAS = {
     "music": {
         "path": pathlib.Path,
     },
+    "font": {
+        "path": pathlib.Path,
+    },
 }
 
 

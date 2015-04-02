@@ -99,14 +99,11 @@ public:
 
     common::net::Socket m_tcp_socket;
     common::net::Socket m_udp_socket;
-
     Processor m_msg_proc;
-
     struct sockaddr_in m_addr;
-
     std::string name;
-
     unsigned int m_playerID;
+    common::Logger m_logger;
 
     /// Assert the client is using the correct protocol version
     ///
@@ -124,7 +121,6 @@ public:
 
 private:
     std::string m_magic_buffer;
-    common::Logger m_logger;
     State m_state;
     time_t m_time_created;
 };

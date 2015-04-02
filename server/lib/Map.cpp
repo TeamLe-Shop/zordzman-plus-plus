@@ -22,6 +22,7 @@ void Level::loadLevel(std::string map_name) {
     name = map_name;
     std::ifstream file(map_name, std::ios::in | std::ios::binary);
     std::vector<char> data = stream::readToEnd(file);
+    size = data.size();
     md5.add(data.data(), data.size());
     m_base64 = base64_encode((byte *)data.data(), data.size());
 

@@ -41,6 +41,8 @@ void handleMapRequest(Processor *, MessageEntity /*entity*/, Server * server,
         client->disconnect("Downloads not enabled.", true);
         return;
     }
+    client->m_logger.log("[INFO] Sending map {} ({} bytes)",
+                         server->m_map.name, server->m_map.size);
     client->m_msg_proc.send("map.contents", server->m_map.asBase64());
 }
 

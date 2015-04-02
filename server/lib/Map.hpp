@@ -38,6 +38,7 @@ public:
     void removePlayer(Client & client);
 
     std::string name;
+    size_t size;
 
 private:
     byte m_width;
@@ -46,7 +47,6 @@ private:
     byte m_spawn_y;
     std::vector<byte> m_tiles;
     std::string m_base64;
-
     entity::EntityCollection entities;
 };
 

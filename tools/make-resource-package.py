@@ -28,6 +28,9 @@ RESOURCE_TYPE_SCHEMAS = {
         "path": pathlib.Path,
         "size": int,
     },
+    "sound": {
+        "path": pathlib.Path,
+    },
 }
 
 

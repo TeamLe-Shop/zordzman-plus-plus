@@ -1,6 +1,7 @@
 #include "tarlib.hpp"
 
 #include "common/util/fileutil.hpp"
+#include "common/util/debug.hpp"
 
 Tar::Tar(std::string path) {
     std::ifstream stream(path, std::ios::in | std::ios::binary);
@@ -8,6 +9,8 @@ Tar::Tar(std::string path) {
     if (!stream.is_open()) {
         throw std::runtime_error("(Tar) Error opening file " + path);
     }
+
+    common::util::debug("TarEntry size: {}\n", sizeof(TarEntry));
 
     // Copypasted from stream.cpp
 

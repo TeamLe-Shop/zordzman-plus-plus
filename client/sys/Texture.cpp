@@ -12,17 +12,10 @@ using namespace common::util;
 namespace client {
 namespace sys {
 
-namespace {
-struct TexResult {
-    bool ok;
-    GLuint handle;
-    int width, height;
-};
-
 TexResult const TexFail = TexResult{false, 0, 0, 0};
 
 // Kindly provided by Krootushas / 8BitBuff.
-TexResult load_texture(SDL_Surface * surface) {
+TexResult Texture::load_texture(SDL_Surface * surface) {
     if (!surface) {
         debug("Failed to load image: {}\n", std::string(IMG_GetError()));
         return TexFail;
@@ -33,14 +26,13 @@ TexResult load_texture(SDL_Surface * surface) {
 
     // get the number of channels in the SDL surface
     bytesPerPixel = surface->format->BytesPerPixel;
-
     if (bytesPerPixel == 4) {
         if (surface->format->Rmask == 0x000000ff) {
             texture_format = GL_RGBA;
         } else {
             texture_format = GL_BGRA_EXT;
         }
-    } else if (bytesPerPixel == 3) {
+    } else if (bytesPerPixel == 3 || bytesPerPixel == 1) {
         if (surface->format->Rmask == 0x000000ff) {
             texture_format = GL_RGB;
         } else {
@@ -71,8 +63,6 @@ TexResult load_texture(SDL_Surface * surface) {
     glBindTexture(GL_TEXTURE_2D, 0);
     return result;
 }
-} // Anonymous namespace
-
 bool Texture::loadFromFile(std::string const & filename) {
     SDL_Surface * surface = IMG_Load(filename.c_str());
     TexResult result = load_texture(surface);
@@ -115,6 +105,10 @@ Texture::Texture(std::string const & filename) {
         throw std::runtime_error("Failed to construct texture.");
     }
 }
+
+Texture::Texture(TexResult result) : m_handle(result.handle),
+                                     m_width(result.width),
+                                     m_height(result.height) {}
 
 Texture::Texture(std::string const & str, LoadMethod lm) {
     if (lm == File) {

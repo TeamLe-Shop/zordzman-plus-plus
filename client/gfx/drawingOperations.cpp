@@ -9,6 +9,12 @@
 #include <string.h>
 #include <stdexcept>
 
+#include <SDL_ttf.h>
+
+#include "format.h"
+
+#include "common/util/debug.hpp"
+
 namespace client {
 namespace drawingOperations {
 
@@ -97,7 +103,7 @@ void drawRectangle(float x, float y, float w, float h, bool filled) {
 void drawLine(float x1, float y1, float x2, float y2) {
     if (currentTexture) {
         sys::Texture::unbind();
-        currentTexture = nullptr;
+        currentTexture = 0;
     }
 
     glBegin(GL_LINES);
@@ -106,24 +112,64 @@ void drawLine(float x1, float y1, float x2, float y2) {
     glEnd();
 }
 
-void drawText(std::string const & text, int x, int y, int w, int h) {
-/*sys::Texture const & texture = Client::get().m_resources.getTexture("main");
-    for (char c : text) {
-        char const * const chars = "abcdefghijklmnopqrstuvwxyz      "
-                                   "                                "
-                                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ      "
-                                   "0123456789.,:;'\"!?$%()-=+/*_    ";
-        char const * char_index = strchr(chars, c);
-        // If the current character is found in chars...
-        if (char_index) {
-            ptrdiff_t index = char_index - chars;
-            // Find it and draw it.
-            drawSpriteFromTexture(texture, (index % 32), 26 + (index / 32), x,
-                                  y, w, h, 8);
-            x += w;
-        }
+void drawText(std::string font, std::string const & text, int x, int y, int w,
+              int h) {
+
+    ResourceManager * manager = &Client::get().m_resources;
+    FontResource fontresource = manager->m_fonts[font];
+    TTF_Font * ttf_font = manager->getFont(fontresource.m_path);
+    SDL_Color col = {255, 255, 255, 255};
+
+    // NOTE: TTF_RenderText_Blended is said to be slower than
+    //       TTF_RenderText_Solid (fastest method), however
+    //       I can't seem to get TTF_RenderText_Solid it to work on my system,
+    //       and I believe it doesn't work well on all Linux systems.
+    SDL_Surface * temp_surface = TTF_RenderText_Blended(ttf_font, text.c_str(),
+                                                        col);
+    if (temp_surface == nullptr) {
+        throw std::runtime_error(
+            fmt::format("Failed to create text rendering surface using:\n"
+                        "  Font (Resource name): \"{}\"\n"
+                        "  Text: {}\n"
+                        "Error: {}", font, text, TTF_GetError()));
+        return;
     }
-    */
+
+    // Storing some of the information in these variables because it is freed
+    // before we render.
+    int width = temp_surface->w;
+    int height = temp_surface->h;
+
+    // temp_surface is freed in here!
+    sys::TexResult result = sys::Texture::load_texture(temp_surface);
+
+
+    if (!result.ok) {
+        throw std::runtime_error("Failed to convert surface to texture");
+        return;
+    }
+
+    // We keep binding and unbinding because it is very unlikely
+    // that we will draw the exact same text surface again.
+
+    sys::Texture texture(result);
+    sys::Texture::bind(texture);
+
+    float right_pos = x + width * (w / fontresource.m_size);
+    float bottom_pos = y + height * (h / fontresource.m_size);
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0);
+    glVertex2f(x, y);
+    glTexCoord2f(1, 0);
+    glVertex2f(right_pos, y);
+    glTexCoord2f(1, 1);
+    glVertex2f(right_pos, bottom_pos);
+    glTexCoord2f(0, 1);
+    glVertex2f(x, bottom_pos);
+    glEnd();
+
+    sys::Texture::unbind();
 }
 
 void setColor(int r, int g, int b, int a) {

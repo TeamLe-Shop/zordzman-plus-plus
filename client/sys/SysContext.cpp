@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #include <stdexcept>
 
 #include "format.h"
@@ -33,12 +34,15 @@ SysContext::SysContext() {
     try_init(Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS,
                            AUDIO_CHUNK_SIZE) > -1,
              "Failed to open audio: {}", Mix_GetError());
+    try_init(TTF_Init() == 0, "Failed to initialize SDL_ttf: {}",
+             TTF_GetError());
 }
 
 SysContext::~SysContext() {
     IMG_Quit();
     Mix_CloseAudio();
     Mix_Quit();
+    TTF_Quit();
     SDL_Quit();
 }
 } // namespace sys

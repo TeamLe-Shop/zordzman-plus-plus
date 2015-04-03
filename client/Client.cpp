@@ -337,9 +337,9 @@ void Client::drawHUD() {
 
     entity::Entity & player = m_level.m_entities.get(m_playerID);
     auto character = COMPONENT(player, entity::CharacterComponent);
-    drawText(fmt::format("HP: {}", character->m_health.get()), 0,
+    drawText("default", fmt::format("HP: {}", character->m_health.get()), 0,
              0 + height - 32, 16, 16);
-    drawText("WEP:", 0, 0 + height - 32 + 16, 16, 16);
+    drawText("default", "WEP:", 0, 0 + height - 32 + 16, 16, 16);
 
     // Draw the names of the weapons as smaller components
 
@@ -352,14 +352,16 @@ void Client::drawHUD() {
     std::string serverstr =
         fmt::format("Server: {}", common::util::net::ipaddr(m_socket_addr));
     std::string mapstr = fmt::format("Map: {}", m_map_name);
-    drawText(serverstr, 800 - (8 * serverstr.size()), m_hud.border.y - 8, 8, 8);
-    drawText(mapstr, 800 - (8 * mapstr.size()), m_hud.border.y - 16, 8, 8);
+    drawText("default", serverstr, 800 - (8 * serverstr.size()),
+             m_hud.border.y - 8, 8, 8);
+    drawText("default", mapstr, 800 - (8 * mapstr.size()),
+             m_hud.border.y - 16, 8, 8);
 
     for (size_t i = 0; i < m_chatMessages.size(); i++) {
         glColor4f(0.3, 0.3, 0.3, 0.3);
         drawRectangle(0, i * 8, m_chatMessages[i].message.size() * 8, 8);
         glColor3f(1, 1, 1);
-        drawText(m_chatMessages[i].message, 0, i * 8, 8, 8);
+        drawText("default", m_chatMessages[i].message, 0, i * 8, 8, 8);
     }
 }
 

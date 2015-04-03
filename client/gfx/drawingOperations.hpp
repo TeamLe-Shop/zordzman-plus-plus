@@ -45,7 +45,8 @@ void drawRectangle(float x, float y, float w, float h, bool filled = true);
 void drawLine(float x1, float y1, float x2, float y2);
 
 /// Draw text
-void drawText(std::string const & text, int x, int y, int w, int h);
+void drawText(std::string font, std::string const & text, int x, int y, int w,
+              int h);
 
 /// Set the current color.
 ///

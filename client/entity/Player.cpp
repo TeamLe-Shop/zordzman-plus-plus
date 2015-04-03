@@ -45,7 +45,7 @@ void Player::render() const {
     glColor4f(0.2, 0.2, 0.2, 0.2);
     drawRectangle(username_x, username_y, username_width, 8);
     glColor4f(1, 1, 1, 1);
-    drawText(m_username, username_x, username_y, 8, 8);
+    drawText("default", m_username, username_x, username_y, 8, 8);
 }
 
 void Player::tick() {

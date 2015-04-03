@@ -31,7 +31,7 @@ Tar::Tar(std::string path) {
 
         // Fill in the tar entry.
         TarEntry* entry = new TarEntry[sizeof(TarEntry)];
-        std::memmove(entry, m_data.data() + position, ENTRYSIZE);
+        std::memcpy(entry, m_data.data() + position, ENTRYSIZE);
 
         // Set certain variables.
         // TODO: Implement reading of file size if base-256 encoding.

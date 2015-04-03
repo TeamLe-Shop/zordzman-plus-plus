@@ -117,6 +117,12 @@ void drawText(std::string font, std::string const & text, int x, int y, int w,
 
     ResourceManager * manager = &Client::get().m_resources;
     FontResource fontresource = manager->m_fonts[font];
+
+    if (!fontresource.m_valid) {
+        throw std::runtime_error(fmt::format("Font \"{}\" not found!", font));
+        return;
+    }
+
     TTF_Font * ttf_font = manager->getFont(fontresource.m_path);
     SDL_Color col = {255, 255, 255, 255};
 

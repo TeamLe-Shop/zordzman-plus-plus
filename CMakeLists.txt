@@ -143,6 +143,7 @@ file(GLOB_RECURSE RESOURCE_METAS
     sprites.manifest
     resources/music/music_meta.json
     resources/fonts/fonts_meta.json
+    resources/sound/sound_meta.json
 )
 
 execute_process(COMMAND ./tools/make-spritesheet.py ${SPRITESHEET_METAS}

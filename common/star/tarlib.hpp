@@ -4,6 +4,8 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
+#include <stdexcept>
+#include <cstring>
 
 #define ENTRYSIZE 512
 #define NAMESIZE 100

@@ -60,6 +60,16 @@ void ResourceManager::loadPackage(std::string resource_package,
         }
     }
 
+    debug("Loaded sounds:\n");
+    for (auto package : m_sounds.getPackages()) {
+        debug("Package {} ({})\n", package.getName(), package.getType());
+        for (auto data : package.getResources()) {
+            auto sound = data.second;
+            debug("  ({}) in file {}\n", data.first, sound.m_path);
+            // Currently non-JIT loading
+            loadSound(rpackage.getTar(), sound.m_path);
+        }
+    }
 
     debug("Loaded textures:\n");
     for (const auto & texture : m_textures) {
@@ -69,6 +79,11 @@ void ResourceManager::loadPackage(std::string resource_package,
     debug("Loaded music:\n");
     for (const auto & music : m_musicfiles) {
         debug("  Path: {}\n", music.first);
+    }
+
+    debug("Loaded sounds:\n");
+    for (const auto & sound : m_soundlist) {
+        debug("  Path: {}\n", sound.first);
     }
 }
 
@@ -88,7 +103,7 @@ Mix_Music* ResourceManager::getMusic(std::string key) {
 
     if (iter == m_musicfiles.end()) {
         throw std::runtime_error(
-            fmt::format("Couldn't find music file \"{}\"", key));
+            fmt::format("Couldn't find music \"{}\"", key));
     }
 
     return iter->second;
@@ -100,6 +115,17 @@ TTF_Font* ResourceManager::getFont(std::string key) {
     if (iter == m_fontlist.end()) {
         throw std::runtime_error(
             fmt::format("Couldn't find font \"{}\"", key));
+    }
+
+    return iter->second;
+}
+
+Mix_Chunk* ResourceManager::getSound(std::string key) {
+    auto iter = m_soundlist.find(key);
+
+    if (iter == m_soundlist.end()) {
+        throw std::runtime_error(
+            fmt::format("Couldn't find sound \"{}\"", key));
     }
 
     return iter->second;
@@ -141,6 +167,20 @@ void ResourceManager::loadFont(Tar tar, std::string path, size_t size) {
                                     e->contents.size());
                 TTF_Font* font = TTF_OpenFontRW(rwops, 1, size);
                 m_fontlist.emplace(path, font);
+            }
+        }
+    }
+}
+
+void ResourceManager::loadSound(Tar tar, std::string path) {
+    for (auto e : tar.getEntries()) {
+        if (std::string(e->name) == path) {
+            if (m_soundlist.find(path) == m_soundlist.end()) {
+                SDL_RWops *rwops
+                    = SDL_RWFromMem(const_cast<char *>(e->contents.data()),
+                                    e->contents.size());
+                Mix_Chunk* sound = Mix_LoadWAV_RW(rwops, 1);
+                m_soundlist.emplace(path, sound);
             }
         }
     }

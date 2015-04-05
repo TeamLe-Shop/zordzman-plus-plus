@@ -10,7 +10,7 @@
 #include "json11.hpp"
 #include "weapons/weaponList.hpp"
 
-#include "musicPlayer.hpp"
+#include "audioPlayer.hpp"
 
 #include <stdexcept>
 #include <format.h>
@@ -102,7 +102,7 @@ Client::Client(Config const & cfg, HUD hud)
     m_level.m_entities.addSystem(debugSystem);
     m_instance = this;
 
-    music::playMusic("snayk");
+    audio::playMusic("snayk");
 }
 
 Client::~Client() {

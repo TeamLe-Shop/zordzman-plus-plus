@@ -3,9 +3,10 @@
 #include <string>
 
 namespace client {
-namespace music {
+namespace audio {
 
 void playMusic(std::string name);
+void playSound(std::string name);
 
-}
+} // namespace audio
 } // namespace client

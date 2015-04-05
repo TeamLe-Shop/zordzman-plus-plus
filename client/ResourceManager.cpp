@@ -26,6 +26,7 @@ void ResourceManager::loadPackage(std::string resource_package,
     m_sprites.loadPackage(rpackage);
     m_music.loadPackage(rpackage);
     m_fonts.loadPackage(rpackage);
+    m_sounds.loadPackage(rpackage);
 
     debug("Loaded sprites:\n");
     for (auto package : m_sprites.getPackages()) {

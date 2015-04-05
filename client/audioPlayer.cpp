@@ -1,4 +1,4 @@
-#include "musicPlayer.hpp"
+#include "audioPlayer.hpp"
 
 #include "ResourceManager.hpp"
 #include "common/resources/MusicResource.hpp"
@@ -10,7 +10,7 @@
 #include <SDL_mixer.h>
 
 namespace client {
-namespace music {
+namespace audio {
 
 void playMusic(std::string name) {
     ResourceManager * manager = &Client::get().m_resources;
@@ -23,8 +23,23 @@ void playMusic(std::string name) {
         return;
     }
 
-    Mix_PlayMusic(manager->getMusic(music.m_path.c_str()), -1);
+    Mix_PlayMusic(manager->getMusic(music.m_path), -1);
 }
 
-} // namespace music
+void playSound(std::string name) {
+    ResourceManager * manager = &Client::get().m_resources;
+
+    SoundResource sound = manager->m_sounds[name];
+
+    if (!sound.m_valid) {
+        throw std::runtime_error(fmt::format("Sound resource {} not found!",
+                                             name));
+        return;
+    }
+
+    Mix_PlayChannel(-1, manager->getSound(sound.m_path), 0);
+}
+
+
+} // namespace audio
 } // namespace client

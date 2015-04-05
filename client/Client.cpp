@@ -205,6 +205,8 @@ void Client::exec() {
             }
         }
 
+        input();
+
         // Clear the screen.
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -373,5 +375,13 @@ Client & Client::get() {
 }
 
 sys::RenderWindow & Client::getWindow() { return m_window; }
+
+void Client::input() {
+    Uint8 const * keys = SDL_GetKeyboardState(nullptr);
+
+    if (keys[SDL_SCANCODE_SPACE]) {
+        audio::playSound("error");
+    }
+}
 
 } // namespace client

@@ -53,6 +53,7 @@ public:
     void writeMapContents(std::string contents);
     void addMessage(std::string message);
     int chatSize();
+    void input();
 
 private:
     Client(const Client &) = delete;

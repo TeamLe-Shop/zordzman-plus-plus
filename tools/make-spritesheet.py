@@ -156,7 +156,7 @@ def build(sprites, manifest, output):
 
 
 def main(argv):
-    logging.basicConfig()
+    logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(
         description="Build a sprite sheet from multiple, smaller images.")
     parser.add_argument(

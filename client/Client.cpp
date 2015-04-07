@@ -399,6 +399,9 @@ void Client::input(SDL_Event event) {
     switch (event.type) {
     case SDL_KEYDOWN:
         if (event.key.keysym.sym == SDLK_RETURN) {
+            if (chat_open && !chat_string.empty()) {
+                m_msg_proc.send("chat.message", chat_string);
+            }
             chat_open = !chat_open;
             chat_string = "";
         }

@@ -46,6 +46,12 @@ void handleMapRequest(Processor *, MessageEntity /*entity*/, Server * server,
     client->m_msg_proc.send("map.contents", server->m_map.asBase64());
 }
 
+void handleChatMessage(Processor *, MessageEntity entity, Server * server,
+                       Client * client) {
+    server->sendAll("server.message", fmt::format("{}: {}",
+                    client->name, entity.string_value()));
+}
+
 Server::Server(Config config) : m_config(config),
                                 m_logger(stderr, [] { return "SERVER: "; }) {
 
@@ -175,6 +181,8 @@ void Server::acceptConnections() {
             m_clients.back().m_msg_proc.setSocket(client_socket);
             m_clients.back().m_msg_proc.addMutedHandler("map.request",
                                                         handleMapRequest);
+            m_clients.back().m_msg_proc.addMutedHandler("chat.message",
+                                                        handleChatMessage);
             m_clients.back().m_msg_proc.send(
                 "map.offer", Json::object{{"name", m_map.name},
                                           {"hash", m_map.md5.getHash()}});

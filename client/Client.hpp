@@ -33,6 +33,12 @@ using Processor = net::MessageProcessor<>;
 
 /// The Zordzman client.
 namespace client {
+
+struct ChatMessage {
+    std::string message;
+    uint32_t timestamp;
+};
+
 class Client {
 public:
     /// Initialize the resources, player and level
@@ -74,10 +80,6 @@ private:
                            net::MessageEntity entity);
     void handlePlayerID(Processor * /*processor*/, net::MessageEntity entity);
 
-    struct ChatMessage {
-        std::string message;
-        uint32_t timestamp;
-    };
     std::vector<ChatMessage> m_chatMessages;
     uint32_t m_lastMessage, m_currentTime;
 

@@ -231,7 +231,6 @@ void Client::exec() {
             m_chatMessages.resize(m_chatMessages.size() - 1);
             m_lastMessage = m_currentTime;
         }
-        SDL_Delay(1000 / 60);
 
         m_level.m_entities.cycle();
     }

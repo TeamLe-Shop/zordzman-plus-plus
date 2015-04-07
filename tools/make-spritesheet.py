@@ -27,7 +27,7 @@ def load_sprite(path):
     This metadata dictionary is modified to have the following additional
     fields:
 
-        * `image` -- an Pillow image as loaded from `path`.
+        * `image` -- a Pillow image as loaded from `path`.
         * `width` -- the width of the sprite image.
         * `height` -- the height of the sprite image.
 

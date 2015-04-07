@@ -31,10 +31,14 @@
 #include <iostream>
 
 #include "json11.hpp"
+
 #include "common/util/stream.hpp"
 #include "common/util/fileutil.hpp"
 #include "common/util/net.hpp"
+#include "common/util/debug.hpp"
+
 #include "common/extlib/hash-library/md5.h"
+
 
 using namespace net;
 
@@ -64,10 +68,10 @@ void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
 void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
     auto character = COMPONENT(ent, entity::CharacterComponent);
 
-    fmt::print("Frame: #{}, Entity ID: #{}:\n"
-               "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n",
-               coll->getFrame(), ent.getID(), character->m_name.get(),
-               character->m_health.get(), character->m_max_health.get());
+    // fmt::print("Frame: #{}, Entity ID: #{}:\n"
+//                "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n",
+//                coll->getFrame(), ent.getID(), character->m_name.get(),
+//                character->m_health.get(), character->m_max_health.get());
 }
 }
 
@@ -202,10 +206,10 @@ void Client::exec() {
         if (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 break;
+            } else {
+                input(event);
             }
         }
-
-        input();
 
         // Clear the screen.
         glClear(GL_COLOR_BUFFER_BIT);
@@ -358,6 +362,22 @@ void Client::drawHUD() {
     drawText("default", mapstr, 800 - (8 * mapstr.size()),
              m_hud.border.y - 16, 8, 8);
 
+    if (chat_open) {
+        if (chat_fade_timer < chat_maxfade) {
+            chat_fade_timer++;
+        }
+    } else {
+        if (chat_fade_timer > chat_minfade) {
+            chat_fade_timer--;
+        }
+    }
+
+    if (chat_fade_timer) {
+        glColor4f(1, 1, 1, (float)chat_fade_timer / (float)chat_maxfade);
+        drawText("default", fmt::format("Say: {}", chat_string),
+                 0, m_hud.border.y - 8, 8, 8);
+    }
+
     for (size_t i = 0; i < m_chatMessages.size(); i++) {
         glColor4f(0.3, 0.3, 0.3, 0.3);
         drawRectangle(0, i * 8, m_chatMessages[i].message.size() * 8, 8);
@@ -375,11 +395,25 @@ Client & Client::get() {
 
 sys::RenderWindow & Client::getWindow() { return m_window; }
 
-void Client::input() {
-    Uint8 const * keys = SDL_GetKeyboardState(nullptr);
+void Client::input(SDL_Event event) {
+    switch (event.type) {
+    case SDL_KEYDOWN:
+        if (event.key.keysym.sym == SDLK_RETURN) {
+            chat_open = !chat_open;
+            chat_string = "";
+        }
 
-    if (keys[SDL_SCANCODE_SPACE]) {
-        audio::playSound("error");
+        if (chat_open) {
+            if (event.key.keysym.sym == SDLK_BACKSPACE) {
+                chat_string.pop_back();
+            }
+        }
+        break;
+    case SDL_TEXTINPUT:
+        if (chat_open) {
+            chat_string += event.text.text;
+        }
+        break;
     }
 }
 

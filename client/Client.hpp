@@ -28,6 +28,7 @@
 #include <algorithm>
 
 #include <SDL_mixer.h>
+#include <SDL.h>
 
 using Processor = net::MessageProcessor<>;
 
@@ -59,7 +60,7 @@ public:
     void writeMapContents(std::string contents);
     void addMessage(std::string message);
     int chatSize();
-    void input();
+    void input(SDL_Event event);
 
 private:
     Client(const Client &) = delete;
@@ -82,6 +83,14 @@ private:
 
     std::vector<ChatMessage> m_chatMessages;
     uint32_t m_lastMessage, m_currentTime;
+
+    bool chat_open;
+    std::string chat_string;
+
+    // Visual effects for chat
+    uint8_t chat_fade_timer;
+    uint8_t chat_maxfade = 10;
+    uint8_t chat_minfade = 0;
 
 public:
     ResourceManager m_resources;

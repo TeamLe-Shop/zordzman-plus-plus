@@ -115,6 +115,10 @@ void drawLine(float x1, float y1, float x2, float y2) {
 void drawText(std::string font, std::string const & text, int x, int y, int w,
               int h) {
 
+    if (text.empty()) {
+        return;
+    }
+
     ResourceManager * manager = &Client::get().m_resources;
     FontResource fontresource = manager->m_fonts[font];
 

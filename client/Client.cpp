@@ -331,6 +331,7 @@ void Client::drawHUD() {
     }
     using namespace drawingOperations;
     auto const height = m_window.getHeight();
+    auto const width = m_window.getWidth();
 
     // Draw the rectangle/box which contains information about the player.
     setColor(m_hud.hud_box.color);
@@ -357,10 +358,9 @@ void Client::drawHUD() {
     std::string serverstr =
         fmt::format("Server: {}", common::util::net::ipaddr(m_socket_addr));
     std::string mapstr = fmt::format("Map: {}", m_map_name);
-    drawText("default", serverstr, 800 - (8 * serverstr.size()),
-             m_hud.border.y - 8, 8, 8);
-    drawText("default", mapstr, 800 - (8 * mapstr.size()),
-             m_hud.border.y - 16, 8, 8);
+    drawText("default", serverstr, width - (8 * serverstr.size()),
+             height - 8, 8, 8);
+    drawText("default", mapstr, width - (8 * mapstr.size()), height - 16, 8, 8);
 
     if (chat_open) {
         if (chat_fade_timer < chat_maxfade) {
@@ -373,9 +373,14 @@ void Client::drawHUD() {
     }
 
     if (chat_fade_timer) {
-        glColor4f(1, 1, 1, (float)chat_fade_timer / (float)chat_maxfade);
+        float fade = (float)chat_fade_timer / (float)chat_maxfade;
+        glColor4f(0.3, 0.3, 0.3, fade);
+        drawRectangle(0, m_hud.border.y - 9, width, 9, false);
+        glColor4f(0.2, 0.2, 0.2, fade);
+        drawRectangle(1, m_hud.border.y - 9, width - 1, 8);
+        glColor4f(1, 1, 1, fade);
         drawText("default", fmt::format("Say: {}", chat_string),
-                 0, m_hud.border.y - 8, 8, 8);
+                 0, m_hud.border.y - 9, 8, 8);
     }
 
     for (size_t i = 0; i < m_chatMessages.size(); i++) {

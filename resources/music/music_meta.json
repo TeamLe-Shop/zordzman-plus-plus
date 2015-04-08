@@ -13,5 +13,10 @@
     "type": "music",
     "name": "snayk",
     "path": "soundtrack/snayk.ogg"
+},
+{
+    "type": "music",
+    "name": "March",
+    "path": "soundtrack/March.ogg"
 }
 ]

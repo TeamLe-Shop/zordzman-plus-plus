@@ -106,7 +106,7 @@ Client::Client(Config const & cfg, HUD hud)
     m_level.m_entities.addSystem(debugSystem);
     m_instance = this;
 
-    audio::playMusic("snayk");
+    audio::playMusic("March");
 }
 
 Client::~Client() {
@@ -399,8 +399,13 @@ void Client::input(SDL_Event event) {
     switch (event.type) {
     case SDL_KEYDOWN:
         if (event.key.keysym.sym == SDLK_RETURN) {
-            if (chat_open && !chat_string.empty()) {
-                m_msg_proc.send("chat.message", chat_string);
+            if (chat_open) {
+                SDL_StopTextInput();
+                if (!chat_string.empty()) {
+                    m_msg_proc.send("chat.message", chat_string);
+                }
+            } else {
+                SDL_StartTextInput();
             }
             chat_open = !chat_open;
             chat_string = "";

@@ -10,7 +10,7 @@ namespace client {
 using namespace json11;
 
 HUD::HUD(std::string hud) {
-    bool failed;
+    bool failed = false;
     Json json = zjson::load(hud, failed);
 
      if (failed) {

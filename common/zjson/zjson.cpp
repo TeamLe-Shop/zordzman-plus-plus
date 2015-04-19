@@ -5,6 +5,8 @@
 #include "format.h"
 #include <string>
 
+#include "common/util/debug.hpp"
+
 namespace zjson {
 
 using namespace json11;
@@ -14,7 +16,9 @@ Json load(std::string hud, bool & failed) {
 
     // Throw a runtime error if file not found.
     if (!hudfile.is_open()) {
+        common::util::debug("(zjson) Failed to open file {}\n", hud);
         failed = true;
+        return Json();
     }
 
     std::string line;
@@ -35,7 +39,13 @@ Json load(std::string hud, bool & failed) {
     hudfile.close();
 
     std::string err;
-    return Json::parse(jsonStr, err);
+    Json obj = Json::parse(jsonStr, err);
+    if (!err.empty()) {
+        common::util::debug("(zjson) Failed to open file {}\n", hud);
+        failed = true;
+        return Json();
+    }
+    return obj;
 }
 
 } // namespace zjson

@@ -8,7 +8,7 @@
 namespace client {
 
 Config::Config(std::string config) {
-    bool failed;
+    bool failed = false;
     json11::Json json = zjson::load(config, failed);
 
     if (failed) {

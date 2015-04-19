@@ -48,6 +48,7 @@ using namespace json11;
 
 namespace {
 std::string const title = "Zordzman v0.0.3";
+bool net_graph = true;
 } // Anonymous namespace
 
 Client * Client::m_instance;
@@ -80,9 +81,11 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
 
 Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_chatMessages(10),
-      m_resources("resources.tar"), m_cfg(cfg), m_hud(hud) {
+      m_resources("resources.tar"), m_cfg(cfg), m_hud(hud),
+      m_graph_data(150) {
 
     m_chatMessages.resize(0);
+    m_graph_data.resize(0);
 #ifdef _WIN32
     WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
     if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
@@ -205,6 +208,7 @@ bool Client::joinServer() {
 }
 
 void Client::exec() {
+    using namespace drawingOperations;
     for (;;) {
         SDL_Event event;
 
@@ -228,8 +232,12 @@ void Client::exec() {
         glColor3f(1, 1, 1);
 
         m_window.present();
-
-        m_msg_proc.process();
+        m_msg_proc.process(&msgs_recvd);
+        m_graph_data.push_back(msgs_recvd);
+        if (m_graph_data.size() > max_graph_data) {
+            m_graph_data.erase(m_graph_data.begin());
+            m_graph_data.resize(max_graph_data);
+        }
         m_msg_proc.dispatch();
         m_msg_proc.flushSendQueue();
 
@@ -332,12 +340,30 @@ void Client::handlePlayerID(Processor *, MessageEntity entity) {
 }
 
 void Client::drawHUD() {
-    if (!m_receivedID) {
-        return;
-    }
     using namespace drawingOperations;
     auto const height = m_window.getHeight();
     auto const width = m_window.getWidth();
+
+    if (net_graph) {
+        auto const height = m_window.getHeight();
+        auto const width = m_window.getWidth();
+        glColor4f(0.2f, 0.2f, 0.2f, 0.2f);
+        drawRectangle(width - max_graph_data, height - 32 - 100, max_graph_data,
+                      100, true);
+        glColor4f(0, 0, 1, 0.9f);
+        for (size_t i = 0; i < m_graph_data.size(); i++) {
+            if (m_graph_data[i]) {
+                drawLine(width - m_graph_data.size() + i, height - 32,
+                         width - m_graph_data.size() + i,
+                         height - 32 - m_graph_data[i] * 2);
+            }
+        }
+        glColor4f(1, 1, 1, 1);
+    }
+
+    if (!m_receivedID) {
+        return;
+    }
 
     // Draw the rectangle/box which contains information about the player.
     setColor(m_hud.hud_box.color);

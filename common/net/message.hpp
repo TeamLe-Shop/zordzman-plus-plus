@@ -174,7 +174,7 @@ public:
         auto free_buffer = m_buffer.capacity() - m_buffer.size();
         if (free_buffer == 0) {
             // What do?
-            fmt::print("No free buffer.\n");
+            fmt::print("No free buffer space.\n");
         }
 
         int len = strlen(&m_buffer[0]);
@@ -196,8 +196,9 @@ public:
             return true;
         }
         m_buffer.resize(len);
+        size_t temp = parseBuffer();
         if (messages_recv != nullptr) {
-            *messages_recv = parseBuffer();
+            *messages_recv = temp;
         }
         return true;
     }
@@ -332,7 +333,6 @@ private:
                 }
             }
         }
-        fmt::print("Size: {}\n", messages.size());
         return messages.size();
     }
 };

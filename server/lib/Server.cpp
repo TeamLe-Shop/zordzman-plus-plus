@@ -48,6 +48,7 @@ void handleMapRequest(Processor *, MessageEntity /*entity*/, Server * server,
 
 void handleChatMessage(Processor *, MessageEntity entity, Server * server,
                        Client * client) {
+    client->m_logger.log("[INFO] Message: {}", entity.string_value());
     server->sendAll("server.message", fmt::format("{}: {}",
                     client->name, entity.string_value()));
 }

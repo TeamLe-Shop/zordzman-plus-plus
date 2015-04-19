@@ -92,6 +92,10 @@ private:
     uint8_t chat_maxfade = 10;
     uint8_t chat_minfade = 0;
 
+    std::vector<size_t> m_graph_data;
+    size_t msgs_recvd;
+    size_t max_graph_data = 150;
+
 public:
     ResourceManager m_resources;
 

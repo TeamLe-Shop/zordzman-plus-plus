@@ -84,7 +84,7 @@ private:
     std::vector<ChatMessage> m_chatMessages;
     uint32_t m_lastMessage, m_currentTime;
 
-    bool chat_open;
+    bool chat_open = false;
     std::string chat_string;
 
     // Visual effects for chat

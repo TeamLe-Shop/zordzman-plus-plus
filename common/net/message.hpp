@@ -317,7 +317,7 @@ private:
         // the incomplete one in the buffer. This may be an argument in favour
         // of not using `parse_multi`.
         if (json_error.size()) {
-            printf("(MessageProcessor) JSON decode error: %s\n",
+            fmt::print("(MessageProcessor) JSON decode error: %s\n",
                    json_error.c_str());
         } else {
             m_buffer.clear();

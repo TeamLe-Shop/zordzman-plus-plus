@@ -169,7 +169,7 @@ public:
     ///
     /// The order the messages are received is the same order they'll be
     /// dispatched.
-    bool process() {
+    bool process(size_t * messages_recv = nullptr) {
         // TODO: Propagation of errors
         auto free_buffer = m_buffer.capacity() - m_buffer.size();
         if (free_buffer == 0) {
@@ -196,7 +196,9 @@ public:
             return true;
         }
         m_buffer.resize(len);
-        parseBuffer();
+        if (messages_recv != nullptr) {
+            *messages_recv = parseBuffer();
+        }
         return true;
     }
 
@@ -303,9 +305,9 @@ private:
     /// If the buffer contains incomplete or malformed JSON then no messages
     /// are processed. No messages are added to `m_ingress`. The buffer is not
     /// consumed.
-    void parseBuffer() {
+    size_t parseBuffer() {
         if (m_buffer.empty()) {
-            return;
+            return 0;
         }
         std::string json_error;
 
@@ -318,7 +320,7 @@ private:
         // of not using `parse_multi`.
         if (json_error.size()) {
             fmt::print("(MessageProcessor) JSON decode error: %s\n",
-                   json_error.c_str());
+                       json_error);
         } else {
             m_buffer.clear();
             for (json11::Json message : messages) {
@@ -330,6 +332,8 @@ private:
                 }
             }
         }
+        fmt::print("Size: {}\n", messages.size());
+        return messages.size();
     }
 };
 

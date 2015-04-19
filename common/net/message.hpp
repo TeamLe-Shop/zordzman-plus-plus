@@ -320,7 +320,7 @@ private:
         // the incomplete one in the buffer. This may be an argument in favour
         // of not using `parse_multi`.
         if (json_error.size()) {
-            fmt::print("(MessageProcessor) JSON decode error: %s\n",
+            fmt::print("(MessageProcessor) JSON decode error: {}\n",
                        json_error);
         } else {
             m_buffer.clear();

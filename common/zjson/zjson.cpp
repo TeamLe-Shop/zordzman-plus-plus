@@ -41,7 +41,7 @@ Json load(std::string hud, bool & failed) {
     std::string err;
     Json obj = Json::parse(jsonStr, err);
     if (!err.empty()) {
-        common::util::debug("(zjson) Failed to open file {}\n", hud);
+        common::util::debug("(zjson) Failed to parse json {}\n", err);
         failed = true;
         return Json();
     }

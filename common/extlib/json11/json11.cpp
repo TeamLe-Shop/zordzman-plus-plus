@@ -19,6 +19,7 @@
  * THE SOFTWARE.
  */
 
+
 #include "json11.hpp"
 #include <cassert>
 #include <cstdlib>
@@ -665,7 +666,11 @@ vector<Json> Json::parse_multi(const string &in, string &err) {
 
     vector<Json> json_vec;
     while (parser.i != in.size() && !parser.failed) {
-        json_vec.push_back(parser.parse_json(0));
+        Json obj = parser.parse_json(0);
+        if (err.size()) {
+            return json_vec;
+        }
+        json_vec.push_back(obj);
         // Check for another object
         parser.consume_whitespace();
     }

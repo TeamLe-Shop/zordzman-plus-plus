@@ -3,6 +3,7 @@
 #include <json11.hpp>
 
 #include "common/zjson/zjson.hpp"
+#include "common/util/debug.hpp"
 
 namespace client {
 
@@ -11,6 +12,7 @@ Config::Config(std::string config) {
     json11::Json json = zjson::load(config, failed);
 
     if (failed) {
+        common::util::debug("Failed to open configuration file {}\n", config);
         return;
     }
 

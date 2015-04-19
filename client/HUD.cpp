@@ -2,7 +2,9 @@
 
 #include <fstream>
 #include <stdexcept>
+
 #include "common/zjson/zjson.hpp"
+#include "common/util/debug.hpp"
 
 namespace client {
 using namespace json11;
@@ -11,7 +13,8 @@ HUD::HUD(std::string hud) {
     bool failed;
     Json json = zjson::load(hud, failed);
 
-    if (failed) {
+     if (failed) {
+        common::util::debug("Failed to open HUD file {}\n", hud);
         return;
     }
 

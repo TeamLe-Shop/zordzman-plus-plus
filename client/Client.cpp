@@ -3,7 +3,7 @@
 #include "common/entity/entity.hpp"
 #include "common/entity/component.hpp"
 #include "common/entity/components/character.hpp"
-#include "common/entity/components/position.hpp"
+#include "common/entity/components/render.hpp"
 
 #include "gfx/drawingOperations.hpp"
 #include "net/net.hpp"
@@ -67,11 +67,14 @@ void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
 // Systems
 void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
     auto character = COMPONENT(ent, entity::CharacterComponent);
+    auto render    = COMPONENT(ent, entity::RenderComponent);
 
-    // fmt::print("Frame: #{}, Entity ID: #{}:\n"
-//                "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n",
-//                coll->getFrame(), ent.getID(), character->m_name.get(),
-//                character->m_health.get(), character->m_max_health.get());
+    fmt::print("Frame: #{}, Entity ID: #{}:\n"
+               "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n"
+               "\tRender Info: Sprite: \"{}\", Alpha: {:f}\n",
+                coll->getFrame(), ent.getID(), character->m_name.get(),
+                character->m_health.get(), character->m_max_health.get(),
+                render->m_sprite.get(), render->m_alpha.get());
 }
 }
 
@@ -103,6 +106,9 @@ Client::Client(Config const & cfg, HUD hud)
     m_level.m_entities.registerComponent(
         entity::CharacterComponent::getComponentName(),
         entity::CharacterComponent::new_);
+    m_level.m_entities.registerComponent(
+        entity::RenderComponent::getComponentName(),
+        entity::RenderComponent::new_);
     m_level.m_entities.addSystem(debugSystem);
     m_instance = this;
 

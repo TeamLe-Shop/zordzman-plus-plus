@@ -10,6 +10,7 @@
 
 #include "common/entity/components/character.hpp"
 #include "common/entity/components/position.hpp"
+#include "common/entity/components/render.hpp"
 #include "common/entity/component.hpp"
 
 namespace server {
@@ -51,7 +52,7 @@ unsigned int Level::addPlayer(std::string name) {
     entity::Entity & ent = entities.createEntity();
     ent.addComponent(new entity::CharacterComponent(name, 100));
     ent.addComponent(new entity::PositionComponent(m_spawn_x, m_spawn_y));
-
+    ent.addComponent(new entity::RenderComponent("player_south", 1));
     return ent.getID();
 }
 

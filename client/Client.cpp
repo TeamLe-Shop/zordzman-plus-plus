@@ -450,7 +450,9 @@ void Client::input(SDL_Event event) {
 
         if (chat_open) {
             if (event.key.keysym.sym == SDLK_BACKSPACE) {
-                chat_string.pop_back();
+                if (!chat_string.empty()) {
+                    chat_string.pop_back();
+                }
             }
         }
         break;

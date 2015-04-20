@@ -21,6 +21,8 @@
 
 #include "common/entity/entity.hpp"
 
+#define BUFFER_SIZE 65536 * 8
+
 /// Networking utilities common to both the server and client
 namespace net {
 
@@ -104,11 +106,11 @@ template <class... Args> class MessageProcessor {
     using MutedHandler = std::function<void(MessageEntity, Args...)>;
 
 public:
-    MessageProcessor() { m_buffer.reserve(8192); }
+    MessageProcessor() { m_buffer.reserve(BUFFER_SIZE); }
     /// @param socket A connected socket descriptor
     MessageProcessor(Socket socket) {
         m_socket = socket;
-        m_buffer.reserve(8192);
+        m_buffer.reserve(BUFFER_SIZE);
     }
 
     /// Set socket descriptor for this processor

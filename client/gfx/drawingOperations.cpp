@@ -134,7 +134,7 @@ void drawText(std::string font, std::string const & text, int x, int y, int w,
     //       TTF_RenderText_Solid (fastest method), however
     //       I can't seem to get TTF_RenderText_Solid it to work on my system,
     //       and I believe it doesn't work well on all Linux systems.
-    SDL_Surface * temp_surface = TTF_RenderText_Blended(ttf_font, text.c_str(),
+    SDL_Surface * temp_surface = TTF_RenderUTF8_Blended(ttf_font, text.c_str(),
                                                         col);
     if (temp_surface == nullptr) {
         throw std::runtime_error(

@@ -81,6 +81,9 @@ private:
                            net::MessageEntity entity);
     void handlePlayerID(Processor * /*processor*/, net::MessageEntity entity);
 
+    void handlePlayerJoined(Processor *, net::MessageEntity entity);
+    void handlePlayerLeft(Processor *, net::MessageEntity entity);
+
     std::vector<ChatMessage> m_chatMessages;
     uint32_t m_lastMessage, m_currentTime;
 

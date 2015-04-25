@@ -3,5 +3,15 @@
     "type": "sound",
     "name": "error",
     "path": "error.wav"
+},
+{
+    "type": "sound",
+    "name": "playerjoined",
+    "path": "playerjoined.wav"
+},
+{
+    "type": "sound",
+    "name": "playerleft",
+    "path": "playerleft.wav"
 }
 ]

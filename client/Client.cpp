@@ -118,6 +118,7 @@ Client::Client(Config const & cfg, HUD hud)
     m_level.m_entities.addSystem(debugSystem);
     m_instance = this;
 
+    Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
     audio::playMusic("March");
 }
 
@@ -207,6 +208,10 @@ bool Client::joinServer() {
         "entity.state", std::bind(&Client::handleEntityState, this, _1, _2));
     m_msg_proc.addMutedHandler(
         "player.id", std::bind(&Client::handlePlayerID, this, _1, _2));
+    m_msg_proc.addMutedHandler(
+        "player.joined", std::bind(&Client::handlePlayerJoined, this, _1, _2));
+    m_msg_proc.addMutedHandler(
+        "player.left", std::bind(&Client::handlePlayerLeft, this, _1, _2));
 
     m_msg_proc.send("client.nick", m_cfg.name);
     return true;
@@ -342,6 +347,18 @@ void Client::handlePlayerID(Processor *, MessageEntity entity) {
     }
     m_playerID = entity.int_value();
     m_receivedID = true;
+}
+
+void Client::handlePlayerJoined(Processor *, MessageEntity entity) {
+    audio::playSound("playerjoined");
+    addMessage(fmt::format("Player \"{}\" joined the game.",
+                           entity.string_value()));
+}
+
+void Client::handlePlayerLeft(Processor *, MessageEntity entity) {
+    audio::playSound("playerleft");
+    addMessage(fmt::format("Player \"{}\" left the game.",
+                           entity.string_value()));
 }
 
 void Client::drawHUD() {

@@ -17,6 +17,28 @@ std::string ipaddr(struct sockaddr_in const addr, bool include_port) {
     }
 }
 
+void resolvehost(struct sockaddr_in addr, std::string host) {
+    // Convert human-readable domain name/ip string
+    // to `struct sockaddr_in`.
+    addrinfo * result;
+    int error;
+
+    addrinfo criteria;
+    memset(&criteria, 0, sizeof(criteria));
+    criteria.ai_family = AF_INET;
+    criteria.ai_protocol = SOCK_STREAM;
+    criteria.ai_flags = AI_PASSIVE;
+
+    if ((error =
+             getaddrinfo(host.c_str(), nullptr, &criteria, &result))) {
+        fmt::print("Error resolving host name: {}\n", gai_strerror(error));
+        return;
+    }
+
+    memcpy(&addr, result->ai_addr, sizeof(struct sockaddr_in));
+    freeaddrinfo(result);
+}
+
 } // namespace net
 } // namespace util
 } // namespace common

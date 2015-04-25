@@ -135,30 +135,11 @@ Client::~Client() {
 bool Client::joinServer() {
     memset(&m_socket_addr, 0, sizeof(m_socket_addr));
 
-    // Convert human-readable domain name/ip string (m_cfg.host)
-    // to `struct sockaddr_in`.
-    addrinfo * result;
-    int error;
-
-    addrinfo criteria;
-    memset(&criteria, 0, sizeof(criteria));
-    criteria.ai_family = AF_INET;
-    criteria.ai_protocol = SOCK_STREAM;
-    criteria.ai_flags = AI_PASSIVE;
-
-    if ((error =
-             getaddrinfo(m_cfg.host.c_str(), nullptr, &criteria, &result))) {
-        fmt::print("Error resolving host name: {}\n", gai_strerror(error));
-        return false;
-    }
-
-    memcpy(&m_socket_addr, result->ai_addr, sizeof(struct sockaddr_in));
+    common::util::net::resolvehost(m_socket_addr, m_cfg.host);
 
     m_socket_addr.sin_port = htons(m_cfg.port);
 
     fmt::print("Server IP: {}\n", common::util::net::ipaddr(m_socket_addr));
-
-    freeaddrinfo(result);
 
     if (connect(m_socket, (struct sockaddr *)&m_socket_addr,
                 sizeof m_socket_addr) < 0) {

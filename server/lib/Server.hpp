@@ -51,8 +51,8 @@ public:
     void sendAll(std::string type, json11::Json entity);
 
     map::Level m_map;
-
     Config m_config;
+    std::vector<Client> m_clients;
 
 private:
     /// Accept all pending connections
@@ -67,7 +67,6 @@ private:
     net::Socket m_tcp_socket;
     struct sockaddr_in m_tcp_address;
 
-    std::vector<Client> m_clients;
     common::Logger m_logger;
 #ifdef _WIN32
     WSADATA m_wsa_data;

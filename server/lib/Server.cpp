@@ -53,6 +53,22 @@ void handleChatMessage(Processor *, MessageEntity entity, Server * server,
                     client->name, entity.string_value()));
 }
 
+void handleClientNick(Processor *, MessageEntity entity, Server * server,
+                      Client * client) {
+    for (Client & c : server->m_clients) {
+        if (c.name == entity.string_value()) {
+            client->m_msg_proc.send("server.message", "That nick is taken.");
+            return;
+        }
+    }
+    client->m_logger.log("[INFO] Changed nick ({} -> {})", client->name,
+                         entity.string_value());
+    server->sendAll("server.message", fmt::format("* {} changed nick to {}",
+                                                  client->name,
+                                                  entity.string_value()));
+    client->name = entity.string_value();
+}
+
 Server::Server(Config config) : m_config(config),
                                 m_logger(stderr, [] { return "SERVER: "; }) {
 
@@ -184,6 +200,8 @@ void Server::acceptConnections() {
                                                         handleMapRequest);
             m_clients.back().m_msg_proc.addMutedHandler("chat.message",
                                                         handleChatMessage);
+            m_clients.back().m_msg_proc.addMutedHandler("client.nick",
+                                                        handleClientNick);
             m_clients.back().m_msg_proc.send(
                 "map.offer", Json::object{{"name", m_map.name},
                                           {"hash", m_map.md5.getHash()}});

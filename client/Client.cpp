@@ -207,6 +207,8 @@ bool Client::joinServer() {
         "entity.state", std::bind(&Client::handleEntityState, this, _1, _2));
     m_msg_proc.addMutedHandler(
         "player.id", std::bind(&Client::handlePlayerID, this, _1, _2));
+
+    m_msg_proc.send("client.nick", m_cfg.name);
     return true;
 }
 

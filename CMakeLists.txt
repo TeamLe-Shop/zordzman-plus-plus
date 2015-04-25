@@ -119,7 +119,6 @@ target_link_libraries(zordzman
 )
 
 target_link_libraries(zordzman-server
-    ${SDL2_LIBRARY}
     server
     json11
     cppformat

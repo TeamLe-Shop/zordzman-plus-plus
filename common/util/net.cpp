@@ -17,7 +17,7 @@ std::string ipaddr(struct sockaddr_in const addr, bool include_port) {
     }
 }
 
-void resolvehost(struct sockaddr_in addr, std::string host) {
+void resolvehost(struct sockaddr_in & addr, std::string host) {
     // Convert human-readable domain name/ip string
     // to `struct sockaddr_in`.
     addrinfo * result;

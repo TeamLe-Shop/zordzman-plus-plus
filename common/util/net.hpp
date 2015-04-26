@@ -16,7 +16,7 @@ namespace net {
 
 std::string ipaddr(struct sockaddr_in const addr, bool include_port = false);
 
-void resolvehost(struct sockaddr_in addr, std::string host);
+void resolvehost(struct sockaddr_in & addr, std::string host);
 
 } // namespace net
 } // namespace util

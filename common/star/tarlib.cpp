@@ -10,8 +10,6 @@ Tar::Tar(std::string path) {
         throw std::runtime_error("(Tar) Error opening file " + path);
     }
 
-    common::util::debug("TarEntry size: {}\n", sizeof(TarEntry));
-
     // Copypasted from stream.cpp
 
     auto originalPos = stream.tellg();

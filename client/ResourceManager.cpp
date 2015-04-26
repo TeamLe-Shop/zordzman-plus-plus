@@ -17,60 +17,6 @@ using namespace common::util;
 namespace client {
 ResourceManager::ResourceManager(std::string base_resource) {
     loadPackage(base_resource, Base);
-}
-
-void ResourceManager::loadPackage(std::string resource_package,
-                                  PackageType type) {
-    ResourcePackage rpackage(resource_package, type);
-
-    m_sprites.loadPackage(rpackage);
-    m_music.loadPackage(rpackage);
-    m_fonts.loadPackage(rpackage);
-    m_sounds.loadPackage(rpackage);
-
-    debug("Loaded sprites:\n");
-    for (auto package : m_sprites.getPackages()) {
-        debug("Package {} ({})\n", package.getName(), package.getType());
-        for (auto data : package.getResources()) {
-            auto sprite = data.second;
-            debug("  ({}) {}x{}, {}, {} on spritesheet {}\n", data.first,
-                  sprite.m_width, sprite.m_height,
-                  sprite.m_x, sprite.m_y, sprite.m_path);
-            loadTexture(rpackage.getTar(), sprite.m_path);
-        }
-    }
-
-    debug("Loaded music:\n");
-    for (auto package : m_music.getPackages()) {
-        debug("Package {} ({})\n", package.getName(), package.getType());
-        for (auto data : package.getResources()) {
-            auto music = data.second;
-            debug("  ({}) in file {}\n", data.first, music.m_path);
-            // Currently non-JIT loading
-            loadMusic(rpackage.getTar(), music.m_path);
-        }
-    }
-
-    debug("Loaded fonts:\n");
-    for (auto package : m_fonts.getPackages()) {
-        debug("Package {} ({})\n", package.getName(), package.getType());
-        for (auto data : package.getResources()) {
-            auto font = data.second;
-            debug("  ({}) in file {}\n", data.first, font.m_path);
-            loadFont(rpackage.getTar(), font.m_path, font.m_size);
-        }
-    }
-
-    debug("Loaded sounds:\n");
-    for (auto package : m_sounds.getPackages()) {
-        debug("Package {} ({})\n", package.getName(), package.getType());
-        for (auto data : package.getResources()) {
-            auto sound = data.second;
-            debug("  ({}) in file {}\n", data.first, sound.m_path);
-            // Currently non-JIT loading
-            loadSound(rpackage.getTar(), sound.m_path);
-        }
-    }
 
     debug("Loaded textures:\n");
     for (const auto & texture : m_textures) {
@@ -85,6 +31,46 @@ void ResourceManager::loadPackage(std::string resource_package,
     debug("Loaded sounds:\n");
     for (const auto & sound : m_soundlist) {
         debug("  Path: {}\n", sound.first);
+    }
+}
+
+void ResourceManager::loadPackage(std::string resource_package,
+                                  PackageType type) {
+    ResourcePackage rpackage(resource_package, type);
+
+    m_sprites.loadPackage(rpackage);
+    m_music.loadPackage(rpackage);
+    m_fonts.loadPackage(rpackage);
+    m_sounds.loadPackage(rpackage);
+
+    for (auto package : m_sprites.getPackages()) {
+        for (auto data : package.getResources()) {
+            auto sprite = data.second;
+            loadTexture(rpackage.getTar(), sprite.m_path);
+        }
+    }
+
+    for (auto package : m_music.getPackages()) {
+        for (auto data : package.getResources()) {
+            auto music = data.second;
+            // Currently non-JIT loading
+            loadMusic(rpackage.getTar(), music.m_path);
+        }
+    }
+
+    for (auto package : m_fonts.getPackages()) {
+        for (auto data : package.getResources()) {
+            auto font = data.second;
+            loadFont(rpackage.getTar(), font.m_path, font.m_size);
+        }
+    }
+
+    for (auto package : m_sounds.getPackages()) {
+        for (auto data : package.getResources()) {
+            auto sound = data.second;
+            // Currently non-JIT loading
+            loadSound(rpackage.getTar(), sound.m_path);
+        }
     }
 }
 

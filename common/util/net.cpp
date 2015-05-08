@@ -1,5 +1,7 @@
 #include "net.hpp"
 
+#include <cstring>
+
 namespace common {
 namespace util {
 namespace net {

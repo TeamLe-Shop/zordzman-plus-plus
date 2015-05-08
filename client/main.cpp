@@ -1,6 +1,9 @@
 #include "Client.hpp"
 
 #include <stdexcept>
+#include <clocale>
+#include <iostream>
+
 #include "format.h"
 #include "Config.hpp"
 #include "HUD.hpp"
@@ -10,6 +13,9 @@ using namespace client;
 int main(int argc, char * argv[]) {
     try {
         Config cfg("config/config.json");
+
+        setlocale(LC_ALL, "");
+        std::cout << setlocale(LC_CTYPE, NULL) << std::endl;
 
         // Load in the default HUD.
         // The contents of default_hud.json could just be '{}',

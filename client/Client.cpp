@@ -423,8 +423,7 @@ void Client::drawHUD() {
 
     for (size_t i = 0; i < m_chatMessages.size(); i++) {
         glColor4f(0.2, 0.2, 0.2, 0.3);
-        int len = common::util::string::mbstrlen(m_chatMessages[i].message);
-        fmt::print("Okay...: {}\n", len);
+        size_t len = mbstowcs(NULL, m_chatMessages[i].message.c_str(), 0);
         drawRectangle(0, i * 8, len * 8, 8);
         glColor3f(1, 1, 1);
         drawText("default", m_chatMessages[i].message, 0, i * 8, 8, 8);

@@ -3,7 +3,7 @@ Contributors
 
 vividMario52/JavaCakess - Creator
 
-[Microcoding](https://github.com/Microcoding) - Drawing some of the art in Zordzman and [commiting some code](https://github.com/Microcoding/zordzman-plus-plus)
+[Rodrun](https://github.com/Rodrun) - Drawing some of the art in Zordzman and [commiting some code](https://github.com/Rodrun/zordzman-plus-plus)
 
 [8BitBuff](https://github.com/8BitBuff) - Supplying a working [texture loading function](https://github.com/TeamLe-Shop/zordzman-plus-plus/blob/master/client/sys/Texture.cpp#L18)
 

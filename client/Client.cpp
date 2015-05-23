@@ -76,13 +76,28 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
     auto spriteinfo = render ? render->m_sprite.get() : "[No render component]";
     auto alphainfo = render ? render->m_alpha.get() : 0.f;
 
-    // fmt::print("Frame: #{}, Entity ID: #{}:\n"
-//                "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n"
-//                "\tRender Info: Sprite: \"{}\", Alpha: {:f}\n",
-//                 coll->getFrame(), ent.getID(), character->m_name.get(),
-//                 character->m_health.get(), character->m_max_health.get(),
-//                 spriteinfo, alphainfo);
+    fmt::print("Frame: #{}, Entity ID: #{}:\n"
+               "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n"
+               "\tRender Info: Sprite: \"{}\", Alpha: {:f}\n",
+                coll->getFrame(), ent.getID(), character->m_name.get(),
+                character->m_health.get(), character->m_max_health.get(),
+                spriteinfo, alphainfo);
 }
+
+void renderSystem(entity::EntityCollection * coll, entity::Entity & ent) {
+    using namespace drawingOperations;
+
+    auto render    = COMPONENT(ent, entity::RenderComponent);
+    auto character = COMPONENT(ent, entity::CharacterComponent);
+
+    auto spriteinfo = render ? render->m_sprite.get() : "";
+    auto alphainfo = render ? render->m_alpha.get() : 1.f;
+
+    glColor4f(1, 1, 1, alphainfo);
+    drawSprite(spriteinfo, 40, 40, 32, 32);
+    glColor4f(1, 1, 1, 1);
+}
+
 }
 
 Client::Client(Config const & cfg, HUD hud)
@@ -119,6 +134,7 @@ Client::Client(Config const & cfg, HUD hud)
         entity::RenderComponent::getComponentName(),
         entity::RenderComponent::new_);
     m_level.m_entities.addSystem(debugSystem);
+    m_level.m_entities.addSystem(renderSystem);
     m_instance = this;
 
     Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
@@ -225,7 +241,6 @@ void Client::exec() {
 
         glColor3f(1, 1, 1);
 
-        m_window.present();
         m_msg_proc.process(&msgs_recvd);
         m_graph_data.push_back(msgs_recvd);
         if (m_graph_data.size() > max_graph_data) {
@@ -245,6 +260,8 @@ void Client::exec() {
         }
 
         m_level.m_entities.cycle();
+
+        m_window.present();
     }
 }
 

@@ -3,28 +3,30 @@
 #include <string.h>
 #include <assert.h>
 #include <stdlib.h>
+#include "common/extlib/cppformat/format.h"
 
 namespace common {
 namespace util {
 namespace string {
 
-size_t mbstrlen(std::string str) {
-    size_t len = 0;
-    int pos = 0;
-    for (;;) {
-        pos += mblen(str.data() + pos, MB_CUR_MAX);
-        if (pos < 1) {
-            break;
-        }
-        assert(pos > 0);
-        if ((size_t)pos >= MB_CUR_MAX) {
-            break;
-        }
-        ++len;
+void utf8_pop_character(std::string & string) {
+    if (string.empty()) {
+        return;
     }
-    return len + 1;
-}
+    size_t characters_to_pop = 0;
+    for (size_t i = string.size() - 1; ; i--) { // Infinitely decrease `i` until
+                                                // loop is broken
+        ssize_t size = mbstowcs(nullptr, string.c_str() + i, string.size());
+        characters_to_pop++;
+        if (size == 1) {
+            break;
+        }
+    }
 
+    for (size_t i = 0; i < characters_to_pop; i++) {
+        string.pop_back();
+    }
+}
 
 }
 }

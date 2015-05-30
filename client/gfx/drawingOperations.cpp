@@ -21,6 +21,10 @@ namespace drawingOperations {
 sys::Texture const * currentTexture = nullptr;
 
 void drawSprite(std::string name, float x, float y, float w, float h) {
+    if (name == "") {
+        return;
+    }
+
     ResourceManager * manager = &Client::get().m_resources;
     SpriteResource sprite = manager->m_sprites[name];
 

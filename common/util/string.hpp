@@ -4,7 +4,7 @@ namespace common {
 namespace util {
 namespace string {
 
-size_t mbstrlen(std::string str);
+void utf8_pop_character(std::string & string);
 
 }
 }

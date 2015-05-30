@@ -37,6 +37,9 @@ public:
     /// Remove a player from the map.
     void removePlayer(Client & client);
 
+    /// Get an entity by ID.
+    entity::Entity & getEntity(unsigned int id);
+
     std::string name;
     size_t size;
 

@@ -60,6 +60,10 @@ void Level::removePlayer(Client & client) {
     entities.removeEntity(client.m_playerID);
 }
 
+entity::Entity & Level::getEntity(unsigned int id) {
+    return entities.get(id);
+}
+
 } // namespace map
 
 } // namespace server

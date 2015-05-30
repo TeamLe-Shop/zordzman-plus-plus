@@ -20,6 +20,9 @@
 #include <tuple>
 #include <functional>
 
+#include "common/entity/component.hpp"
+#include "common/entity/components/character.hpp"
+
 #ifdef _WIN32
 #include <ws2tcpip.h>
 #include <windows.h>
@@ -34,6 +37,7 @@ namespace server {
 using namespace std::placeholders;
 using namespace json11;
 using namespace net;
+using namespace entity;
 
 void handleMapRequest(Processor *, MessageEntity /*entity*/, Server * server,
                       Client * client) {
@@ -67,6 +71,10 @@ void handleClientNick(Processor *, MessageEntity entity, Server * server,
                                                   client->name,
                                                   entity.string_value()));
     client->name = entity.string_value();
+
+    entity::Entity& ent = server->m_map.getEntity(client->m_playerID);
+    auto character = COMPONENT(ent, entity::CharacterComponent);
+    character->m_name.set(client->name);
 }
 
 Server::Server(Config config) : m_config(config),

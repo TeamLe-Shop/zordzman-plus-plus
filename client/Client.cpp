@@ -472,6 +472,12 @@ void Client::input(SDL_Event event) {
             chat_string = "";
         }
 
+        if (event.key.keysym.sym == SDLK_1) {
+            audio::playSound("explosion_1");
+        } else if (event.key.keysym.sym == SDLK_2) {
+            audio::playSound("woah");
+        }
+
         if (chat_open) {
             if (event.key.keysym.sym == SDLK_BACKSPACE) {
                 if (!chat_string.empty()) {

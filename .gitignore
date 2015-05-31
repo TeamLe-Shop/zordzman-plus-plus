@@ -1,5 +1,6 @@
 CMakeLists.txt.user
 doc/
+__pycache__/
 
 
 # Build artefacts

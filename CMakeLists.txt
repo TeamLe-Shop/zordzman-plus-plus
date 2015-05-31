@@ -80,6 +80,11 @@ if(OSX)
     add_compile_options(-std=c++11)
 endif()
 
+# Python
+
+find_package(PythonLibs REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIR})
+
 include_directories(.)
 include_directories(client)
 
@@ -105,6 +110,7 @@ target_link_libraries(zordzman
     ${SDLIMAGE_LIBRARY}
     ${SDLMIXER_LIBRARY}
     ${SDLTTF_LIBRARY}
+    ${PYTHON_LIBRARIES}
     json11
     cppformat
     server

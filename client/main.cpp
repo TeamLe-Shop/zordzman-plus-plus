@@ -1,3 +1,5 @@
+#include <Python.h>
+
 #include "Client.hpp"
 
 #include <stdexcept>
@@ -11,6 +13,9 @@
 using namespace client;
 
 int main(int argc, char * argv[]) {
+    Py_InitializeEx(0);
+    Py_Finalize();
+    return 0;
     try {
         Config cfg("config/config.json");
 
@@ -30,9 +35,9 @@ int main(int argc, char * argv[]) {
             cfg.port = std::stoi(argv[2]);
         }
         // Initialize the game.
-        Client game(cfg, hud);
+        //Client game(cfg, hud);
         // Start the game loop.
-        game.exec();
+        //game.exec();
     } catch (std::exception const & except) {
         fmt::print(stderr, "Fatal exception: {}\n", except.what());
         return 1;

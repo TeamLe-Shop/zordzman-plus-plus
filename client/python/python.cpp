@@ -5,7 +5,7 @@
 
 namespace python {
 
-Client::Client() {
+BaseClient::BaseClient() {
     Py_InitializeEx(0);
     PyList_Insert(PySys_GetObject("path"),
                   0, PyUnicode_FromString("../client/python/"));
@@ -31,7 +31,7 @@ Client::Client() {
 }
 
 
-Client::~Client() {
+BaseClient::~BaseClient() {
     Py_Finalize();
 }
 

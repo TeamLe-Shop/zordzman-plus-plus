@@ -13,7 +13,7 @@ using namespace client;
 
 
 int main(int argc, char * argv[]) {
-    python::Client client;
+    python::BaseClient client;
     return 0;
     try {
         Config cfg("config/config.json");

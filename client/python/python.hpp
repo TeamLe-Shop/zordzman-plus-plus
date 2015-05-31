@@ -4,10 +4,10 @@
 namespace python {
 
 
-class Client {
+class BaseClient {
     public:
-        Client();
-        ~Client();
+        BaseClient();
+        ~BaseClient();
 };
 
 

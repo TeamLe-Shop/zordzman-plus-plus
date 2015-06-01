@@ -1,3 +1,4 @@
+import collections
 import json
 import logging
 import socket
@@ -9,7 +10,16 @@ import formencode
 log = logging.getLogger(__name__)
 
 
-class PlayerStateSchema(formencode.Schema):
+Message = collections.namedtuple(
+    "Message",
+    (
+        "type",
+        "entity",
+    ),
+)
+
+
+class EntityStateSchema(formencode.Schema):
 
     id = formencode.validators.Int()
     component = formencode.validators.String()
@@ -24,8 +34,8 @@ class PlayerStateSchema(formencode.Schema):
 
 
 MESSAGE_TYPES = {
-    "entity.state": PlayerStateSchema,
-    "player.id": formencode.validators.Int(),
+    "entity.state": EntityStateSchema,
+    # "player.id": formencode.validators.Int(),
 }
 
 
@@ -65,6 +75,7 @@ class ZMClient(threading.Thread):
         super().__init__(name=self.__class__.__name__ + "Thread")
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._buffer = b""
+        self.messages = []
 
     def _connect(self, host, port):
         log.info("Connecting to %s:%i", host, port)
@@ -94,7 +105,7 @@ class ZMClient(threading.Thread):
             except formencode.Invalid as exc:
                 log.warning("Invalid message: %s", exc)
             else:
-                validated.append(message)
+                validated.append(Message(message["type"], message["entity"]))
         return validated
 
     def run(self):
@@ -109,5 +120,6 @@ class ZMClient(threading.Thread):
             if messages:
                 log.debug("%i new messages; %i bytes remain "
                           "in the buffer", len(messages), len(self._buffer))
-            messages = self._validate_messages(messages)
+            self.messages.extend(self._validate_messages(messages))
+            # raise Exception
         log.info("Client exiting")

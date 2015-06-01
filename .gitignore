@@ -3,6 +3,11 @@ doc/
 __pycache__/
 
 
+# Generated Files
+
+client/python/python_i.hpp
+
+
 # Build artefacts
 
 build/

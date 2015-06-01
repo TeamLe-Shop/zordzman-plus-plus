@@ -1,0 +1,85 @@
+#include <string>
+#include <vector>
+
+#include "python.hpp"
+
+
+namespace python {
+
+
+long _int_as_native(PyObject* object) {
+    return PyLong_AsLong(object);
+}
+
+
+double _float_as_native(PyObject* object) {
+    return PyFloat_AsDouble(object);
+}
+
+
+std::string _str_as_native(PyObject* object) {
+    return std::string(PyUnicode_AsUTF8(object));
+}
+
+
+PyObject * _pyobject_as_native(PyObject* object) {
+    return object;
+}
+
+
+{% for struct in structs %}
+struct {{struct.name}} {
+    {% for field in struct.fields -%}
+    {{field.type|ctype}} {{field.name}};
+    {% endfor %}
+};
+{% endfor %}
+
+
+{% for struct in structs %}
+{{struct.name}} {{struct|converter}}(PyObject* dict) {
+    {%- for field in struct.fields %}
+    {{field.type|ctype}} c_field_{{field.name}};
+    auto py_field_{{field.name}} =
+        PyDict_GetItemString(dict, "{{field.name}}");
+    if (!py_field_{{field.name}}) {
+        // Do something; anything! \o/
+    }
+    c_field_{{field.name}} = {{field|converter}}(py_field_{{field.name}});
+    {% endfor %}
+    return {
+        {% for field in struct.fields -%}
+        c_field_{{field.name}}{% if not loop.last %},{% endif %}
+        {% endfor -%}
+    };
+}
+{% endfor %}
+
+
+class Client : public BaseClient {
+    public:
+        {% for type in types -%}
+        void on{{type.type|type_name}}(std::function<void ({{type.struct.name}})> callback) {
+            {{type.type|callbacks}}.push_back(callback);
+        }
+        {% endfor %}
+
+    private:
+        {% for type in types -%}
+        std::vector<std::function<void ({{type.struct.name}})>> {{type.type|callbacks}};
+        {% endfor %}
+
+        void convert(std::string type, PyObject* entity) {
+            {% for type in types %}
+            if (type == "{{type.type}}") {
+                auto c_entity = {{type.struct|converter}}(entity);
+                for (auto callback : {{type.type|callbacks}}) {
+                    callback(c_entity);
+                }
+            }
+            {% endfor %}
+        }
+};
+
+
+}  // namespace python

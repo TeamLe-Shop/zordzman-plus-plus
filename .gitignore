@@ -5,7 +5,7 @@ __pycache__/
 
 # Generated Files
 
-client/python/python_i.hpp
+client/net/Client.hpp
 
 
 # Build artefacts

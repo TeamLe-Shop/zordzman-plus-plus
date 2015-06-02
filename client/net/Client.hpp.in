@@ -1,10 +1,10 @@
 #include <string>
 #include <vector>
 
-#include "python.hpp"
+#include "BaseClient.hpp"
 
 
-namespace python {
+namespace net {
 
 
 long _int_as_native(PyObject* object) {
@@ -82,4 +82,4 @@ class Client : public BaseClient {
 };
 
 
-}  // namespace python
+}  // namespace net

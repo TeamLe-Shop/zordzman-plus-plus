@@ -1,9 +1,9 @@
-#include "client/python/python.hpp"
+#include "client/net/BaseClient.hpp"
 
 #include <iostream>
 
 
-namespace python {
+namespace net {
 
 BaseClient::BaseClient() {
     Py_InitializeEx(0);
@@ -60,4 +60,4 @@ void BaseClient::pump() {
 }
 
 
-}  // namespace python
+}  // namespace net

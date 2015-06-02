@@ -7,12 +7,12 @@
 #include "format.h"
 #include "Config.hpp"
 #include "HUD.hpp"
-#include "python/python_i.hpp"
+#include "net/Client.hpp"
 #include <thread>
 using namespace client;
 
 
-void handler(python::EntityState state) {
+void handler(net::EntityState state) {
     fprintf(
         stderr,
         "HI I'M NOLHANDLER: %i.%s.%s = ",
@@ -26,7 +26,7 @@ void handler(python::EntityState state) {
 
 
 int main(int argc, char * argv[]) {
-    python::Client client;
+    net::Client client;
     client.onEntityState(handler);
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     client.pump();

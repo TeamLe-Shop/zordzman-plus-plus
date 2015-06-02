@@ -3,7 +3,7 @@
 #include <Python.h>
 
 
-namespace python {
+namespace net {
 
 
 class BaseClient {
@@ -22,4 +22,4 @@ class BaseClient {
 };
 
 
-}  // namespace python
+}  // namespace net

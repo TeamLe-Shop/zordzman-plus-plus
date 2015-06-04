@@ -104,8 +104,8 @@ if __name__ == "__main__":
         types.append(MessageType(mtype, struct))
         # print(struct)
 
-    src_dir = pathlib.Path(__file__).parent.parent
-    template_path = src_dir / "python_i.hpp.in"
+    src_dir = pathlib.Path(__file__).parent.parent.parent
+    template_path = src_dir / "client" / "net" / "Client.hpp.in"
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(str(src_dir)))
     env.filters["type_identifier"] = filter_type
     env.filters["type_name"] = filter_type

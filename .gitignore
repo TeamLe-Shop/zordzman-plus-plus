@@ -1,15 +1,17 @@
 CMakeLists.txt.user
 doc/
-__pycache__/
+
+
+# Python
+*.pyc
+*.egg-info/
 
 
 # Generated Files
-
 client/net/Client.hpp
 
 
 # Build artefacts
-
 build/
 *.manifest
 resources.tar

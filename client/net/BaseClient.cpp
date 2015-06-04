@@ -9,7 +9,7 @@ BaseClient::BaseClient() {
     Py_InitializeEx(0);
     PyEval_InitThreads();
     PyList_Insert(PySys_GetObject("path"),
-                  0, PyUnicode_FromString("../client/python/"));
+                  0, PyUnicode_FromString("../python/"));
     auto zm = PyImport_ImportModule("zm");
     if (!zm) {
         // TODO: Check error and die

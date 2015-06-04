@@ -46,10 +46,10 @@ if __name__ == "__main__":
     }
 
     PRIMITIVE_CONVERTERS = {
-        PYOBJECT: "_pyobject_as_native",
-        int: "_int_as_native",
-        float: "_float_as_native",
-        str: "_str_as_native",
+        PYOBJECT: "py_pyobject_as_native",
+        int: "py_int_as_native",
+        float: "py_float_as_native",
+        str: "py_str_as_native",
     }
 
     Struct = collections.namedtuple(

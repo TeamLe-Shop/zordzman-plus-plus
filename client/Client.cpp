@@ -76,12 +76,12 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
     auto spriteinfo = render ? render->m_sprite.get() : "[No render component]";
     auto alphainfo = render ? render->m_alpha.get() : 0.f;
 
-//     fmt::print("Frame: #{}, Entity ID: #{}:\n"
-//                "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n"
-//                "\tRender Info: Sprite: \"{}\", Alpha: {:f}\n",
-//                 coll->getFrame(), ent.getID(), character->m_name.get(),
-//                 character->m_health.get(), character->m_max_health.get(),
-//                 spriteinfo, alphainfo);
+     fmt::print("Frame: #{}, Entity ID: #{}:\n"
+                "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n"
+                "\tRender Info: Sprite: \"{}\", Alpha: {:f}\n",
+                 coll->getFrame(), ent.getID(), character->m_name.get(),
+                 character->m_health.get(), character->m_max_health.get(),
+                 spriteinfo, alphainfo);
 }
 
 void renderSystem(entity::EntityCollection * coll, entity::Entity & ent) {
@@ -237,6 +237,9 @@ void Client::exec() {
         // Render the level's tiles and entities
         m_level.render();
 
+        m_level.m_entities.cycle();
+
+
         drawHUD();
 
         glColor3f(1, 1, 1);
@@ -258,8 +261,6 @@ void Client::exec() {
             m_chatMessages.resize(m_chatMessages.size() - 1);
             m_lastMessage = m_currentTime;
         }
-
-        m_level.m_entities.cycle();
 
         m_window.present();
     }

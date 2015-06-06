@@ -24,6 +24,20 @@ class Client : public BaseClient {
         }
         {% endfor %}
 
+        {% for type in types %}
+        /// Send a '{{type.name}}' message the the server.
+        void send({{type.struct.name}} entity) {
+            PyEval_RestoreThread(m_py_tstate);
+            auto dict = from{{type.struct.name}}(entity);
+            if (dict) {
+                // TODO: Pass the message type and dictionary to Python client
+                PyObject_Print(dict, stderr, Py_PRINT_RAW);
+                fprintf(stderr, "\n");
+            }
+            m_py_tstate = PyEval_SaveThread();
+        }
+        {% endfor %}
+
     private:
         {% for type in types -%}
         std::vector<std::function<void ({{type.struct.name}})>> {{type.type|callbacks}};
@@ -111,7 +125,60 @@ class Client : public BaseClient {
             };
             return 1;
         }
+
+        /// Convert a {{struct.name}} to a Python dictionary.
+        ///
+        /// Returns a new reference to a dictionary. Returns NULL on failure;
+        /// the Python error indicator will be cleared though.
+        PyObject* from{{struct.name}}({{struct.name}} entity) {
+            fprintf(stderr, "hi i'm from{{struct.name}}\n");
+            auto dict = PyDict_New();
+            if (!dict) {
+                PyErr_Print();
+                PyErr_Clear();
+                return NULL;
+            }
+            PyObject* field;
+            {%- for field in struct.fields %}
+            field = {{field.type|from_c}}(entity.{{field.name}});
+            if (!field) {
+                fprintf(stderr, "Couldn't convert {{struct.name}}"
+                                ".{{field.name}} to {{field.type}}\n");
+                PyErr_Print();
+                PyErr_Clear();
+                Py_DECREF(dict);
+                return NULL;
+            } else {
+                bool added = PyDict_SetItemString(
+                    dict, "{{field.name}}", field) == 0;
+                // No longer need our local reference
+                Py_DECREF(field);
+                if (!added) {
+                    fprintf(stderr, "Couldn't add {{struct.name}}"
+                                    ".{{field.name}} to dictionary\n");
+                    PyErr_Print();
+                    PyErr_Clear();
+                    Py_DECREF(dict);
+                    return NULL;
+                };
+            }
+            {% endfor %}
+            return dict;
+        }
         {% endfor %}
+
+
+        /// Convert a std::string to a Python Unicode string.
+        ///
+        /// Returns a new Python string on success, NULL otherwise.
+        PyObject* stringToPyUnicode(std::string string) {
+            return PyUnicode_FromString(string.c_str());
+        }
+
+        /// No-op to 'convert' a PyObject* to a PyObject*.
+        PyObject* pyObjectToPyObject(PyObject* object) {
+            return object;
+        }
 };
 
 

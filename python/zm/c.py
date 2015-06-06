@@ -33,6 +33,11 @@ def filter_converter(struct_or_field):
             return "HALP"
 
 
+def filter_from_c(type_):
+    if type_ in PRIMITIVE_FROM_C:
+        return PRIMITIVE_FROM_C[type_]
+
+
 if __name__ == "__main__":
     import collections
 
@@ -43,6 +48,13 @@ if __name__ == "__main__":
         int: "long",
         float: "double",
         str: "std::string",
+    }
+
+    PRIMITIVE_FROM_C = {
+        PYOBJECT: "pyObjectToPyObject",
+        int: "PyLong_FromLong",
+        float: "PyFloat_FromDouble",
+        str: "stringToPyUnicode",
     }
 
     PRIMITIVE_CONVERTERS = {
@@ -98,7 +110,7 @@ if __name__ == "__main__":
                 type_ = PYOBJECT
             if type_:
                 fields.append(StructField(field, type_, None))
-        fields.sort(key=lambda f: len(f.name))
+        fields.sort(key=lambda f: f.name)
         struct = Struct(name, tuple(fields))
         structs.append(struct)
         types.append(MessageType(mtype, struct))
@@ -113,6 +125,7 @@ if __name__ == "__main__":
     env.filters["converter"] = filter_converter
     env.filters["entity"] = filter_entity
     env.filters["ctype"] = filter_ctype
+    env.filters["from_c"] = filter_from_c
     template = env.get_template(str(template_path.relative_to(src_dir)))
     out = template.render(types=types, structs=structs)
     print(out)

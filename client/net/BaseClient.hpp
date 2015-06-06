@@ -13,8 +13,10 @@ class BaseClient {
 
         void pump();
 
-    private:
+    protected:
         PyThreadState* m_py_tstate;
+
+    private:
         PyObject* m_py_client;
         PyObject* m_py_messages;
 

@@ -30,6 +30,7 @@ int main(int argc, char * argv[]) {
     client.onEntityState(handler);
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     client.pump();
+    client.send({"component", "field", 0, Py_None});
     return 0;
     try {
         Config cfg("config/config.json");

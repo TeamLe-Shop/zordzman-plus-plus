@@ -25,14 +25,12 @@ class Client : public BaseClient {
         {% endfor %}
 
         {% for type in types %}
-        /// Send a '{{type.name}}' message the the server.
+        /// Send a '{{type.type}}' message the the server.
         void send({{type.struct.name}} entity) {
             PyEval_RestoreThread(m_py_tstate);
             auto dict = from{{type.struct.name}}(entity);
             if (dict) {
-                // TODO: Pass the message type and dictionary to Python client
-                PyObject_Print(dict, stderr, Py_PRINT_RAW);
-                fprintf(stderr, "\n");
+                pushMessage("{{type.type}}", dict);
             }
             m_py_tstate = PyEval_SaveThread();
         }
@@ -131,7 +129,6 @@ class Client : public BaseClient {
         /// Returns a new reference to a dictionary. Returns NULL on failure;
         /// the Python error indicator will be cleared though.
         PyObject* from{{struct.name}}({{struct.name}} entity) {
-            fprintf(stderr, "hi i'm from{{struct.name}}\n");
             auto dict = PyDict_New();
             if (!dict) {
                 PyErr_Print();

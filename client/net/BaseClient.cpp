@@ -29,6 +29,7 @@ BaseClient::BaseClient() {
         PyObject_Print(zm_main_rv, stderr, Py_PRINT_RAW);
         fprintf(stderr, "\n");
         m_py_client = zm_main_rv;
+        m_py_o_messages = PyObject_GetAttrString(m_py_client, "in_messages");
         m_py_messages = PyObject_GetAttr(
             zm_main_rv, PyUnicode_FromString("messages"));
     }
@@ -57,6 +58,17 @@ void BaseClient::pump() {
     }
     PySequence_DelSlice(m_py_messages, 0, nmessages);
     m_py_tstate = PyEval_SaveThread();
+}
+
+
+void BaseClient::pushMessage(std::string type, PyObject* entity) {
+    auto message = Py_BuildValue("(sO)", type.c_str(), entity);
+    Py_DECREF(entity);
+    if (!message) {
+        PyErr_Print();
+    } else {
+        PyList_Append(m_py_o_messages, message);
+    }
 }
 
 

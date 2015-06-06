@@ -76,6 +76,7 @@ class ZMClient(threading.Thread):
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._buffer = b""
         self.messages = []
+        self.in_messages = []
 
     def _connect(self, host, port):
         log.info("Connecting to %s:%i", host, port)
@@ -111,6 +112,7 @@ class ZMClient(threading.Thread):
     def run(self):
         self._connect("127.0.0.1", 9001)
         while True:
+            log.debug(self.in_messages)
             recv = self._socket.recv(4096)
             if not recv:
                 log.info("Disconnected from server")

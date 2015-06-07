@@ -27,7 +27,7 @@ void handler(net::messages::EntityState state) {
 
 int main(int argc, char * argv[]) {
     net::Client client;
-    client.onEntityState(handler);
+    client.addHandler(handler);
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     client.pump();
     client.send({"component", "field", 0, Py_None});

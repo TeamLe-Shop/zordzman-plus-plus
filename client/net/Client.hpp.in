@@ -1,3 +1,4 @@
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -6,11 +7,15 @@
 
 namespace net {
 
+/// Structures for various message type entities.
+///
+/// These structures are generated from Python message schemas.
 namespace messages {
 
-{% for struct in structs %}
-struct {{struct.name}} {
-    {% for field in struct.fields -%}
+{% for type in types %}
+/// Message entity for `{{type.type}}` messages.
+struct {{type.struct.name}} {
+    {% for field in type.struct.fields -%}
     {{field.type|ctype}} {{field.name}};
     {% endfor %}
 };
@@ -22,13 +27,22 @@ struct {{struct.name}} {
 class Client : public BaseClient {
     public:
         {% for type in types -%}
-        void on{{type.type|type_name}}(std::function<void
-                (messages::{{type.struct.name}})> callback) {
+        /// Add a handler for `{{type.type}}` messages.
+        void addHandler(std::function<void
+                (Client*, messages::{{type.struct.name}})> callback) {
             {{type.type|callbacks}}.push_back(callback);
         }
-        {% endfor %}
 
-        {% for type in types %}
+        /// Add a handler for `{{type.type}}` messages.
+        void addHandler(std::function<void
+                (messages::{{type.struct.name}})> callback) {
+            addHandler([callback](
+                Client*, messages::{{type.struct.name}} entity) {
+                    return callback(entity);
+                }
+            );
+        }
+
         /// Send a '{{type.type}}' message the the server.
         void send(messages::{{type.struct.name}} entity) {
             restoreThread();
@@ -43,7 +57,7 @@ class Client : public BaseClient {
     private:
         {% for type in types -%}
         std::vector<std::function<void
-            (messages::{{type.struct.name}})>> {{type.type|callbacks}};
+            (Client*, messages::{{type.struct.name}})>> {{type.type|callbacks}};
         {% endfor %}
 
         void convert(std::string type, PyObject* entity) {
@@ -53,7 +67,7 @@ class Client : public BaseClient {
                 messages::{{type.struct.name}} c_entity;
                 if ({{type.struct|converter}}(entity, &c_entity)) {
                     for (auto callback : {{type.type|callbacks}}) {
-                        callback(c_entity);
+                        callback(this, c_entity);
                     }
                 } else {
                     fprintf(stderr, "Couldn't convert "

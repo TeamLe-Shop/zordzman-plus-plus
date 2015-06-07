@@ -9,7 +9,7 @@ namespace net {
 class BaseClient {
     public:
         BaseClient();
-        ~BaseClient();
+        virtual ~BaseClient();
 
         void pump();
 

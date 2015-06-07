@@ -6,6 +6,7 @@
 
 namespace net {
 
+namespace messages {
 
 {% for struct in structs %}
 struct {{struct.name}} {
@@ -15,18 +16,21 @@ struct {{struct.name}} {
 };
 {% endfor %}
 
+}  // namespace messages
+
 
 class Client : public BaseClient {
     public:
         {% for type in types -%}
-        void on{{type.type|type_name}}(std::function<void ({{type.struct.name}})> callback) {
+        void on{{type.type|type_name}}(std::function<void
+                (messages::{{type.struct.name}})> callback) {
             {{type.type|callbacks}}.push_back(callback);
         }
         {% endfor %}
 
         {% for type in types %}
         /// Send a '{{type.type}}' message the the server.
-        void send({{type.struct.name}} entity) {
+        void send(messages::{{type.struct.name}} entity) {
             restoreThread();
             auto dict = from{{type.struct.name}}(entity);
             if (dict) {
@@ -38,14 +42,15 @@ class Client : public BaseClient {
 
     private:
         {% for type in types -%}
-        std::vector<std::function<void ({{type.struct.name}})>> {{type.type|callbacks}};
+        std::vector<std::function<void
+            (messages::{{type.struct.name}})>> {{type.type|callbacks}};
         {% endfor %}
 
         void convert(std::string type, PyObject* entity) {
             restoreThread();
             {% for type in types %}
             if (type == "{{type.type}}") {
-                {{type.struct.name}} c_entity;
+                messages::{{type.struct.name}} c_entity;
                 if ({{type.struct|converter}}(entity, &c_entity)) {
                     for (auto callback : {{type.type|callbacks}}) {
                         callback(c_entity);
@@ -111,7 +116,7 @@ class Client : public BaseClient {
         ///
         /// Zero is returned if the dictionary couldn't be converted for any
         /// reason.
-        int {{struct|converter}}(PyObject* dict, {{struct.name}}* entity) {
+        int {{struct|converter}}(PyObject* dict, messages::{{struct.name}}* entity) {
             restoreThread();
             if (!PyDict_CheckExact(dict)) {
                 return 0;
@@ -144,7 +149,7 @@ class Client : public BaseClient {
         ///
         /// Returns a new reference to a dictionary. Returns NULL on failure;
         /// the Python error indicator will be cleared though.
-        PyObject* from{{struct.name}}({{struct.name}} entity) {
+        PyObject* from{{struct.name}}(messages::{{struct.name}} entity) {
             restoreThread();
             auto dict = PyDict_New();
             if (!dict) {

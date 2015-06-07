@@ -12,7 +12,7 @@
 using namespace client;
 
 
-void handler(net::EntityState state) {
+void handler(net::messages::EntityState state) {
     fprintf(
         stderr,
         "HI I'M NOLHANDLER: %li.%s.%s = ",

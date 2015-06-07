@@ -15,7 +15,7 @@ using namespace client;
 void handler(net::EntityState state) {
     fprintf(
         stderr,
-        "HI I'M NOLHANDLER: %i.%s.%s = ",
+        "HI I'M NOLHANDLER: %li.%s.%s = ",
         state.id,
         state.component.c_str(),
         state.field.c_str()

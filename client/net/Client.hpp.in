@@ -27,12 +27,12 @@ class Client : public BaseClient {
         {% for type in types %}
         /// Send a '{{type.type}}' message the the server.
         void send({{type.struct.name}} entity) {
-            PyEval_RestoreThread(m_py_tstate);
+            restoreThread();
             auto dict = from{{type.struct.name}}(entity);
             if (dict) {
                 pushMessage("{{type.type}}", dict);
             }
-            m_py_tstate = PyEval_SaveThread();
+            saveThread();
         }
         {% endfor %}
 
@@ -42,6 +42,7 @@ class Client : public BaseClient {
         {% endfor %}
 
         void convert(std::string type, PyObject* entity) {
+            restoreThread();
             {% for type in types %}
             if (type == "{{type.type}}") {
                 {{type.struct.name}} c_entity;
@@ -55,37 +56,49 @@ class Client : public BaseClient {
                 }
             }
             {% endfor %}
+            saveThread();
         }
 
 
         int py_int_as_native(PyObject* py, long* object) {
+            restoreThread();
             if (!PyLong_Check(py)) {
+                saveThread();
                 return 0;
             }
             *object = PyLong_AsLong(py);
+            saveThread();
             return 1;
         }
 
         int py_float_as_native(PyObject* py, double* object) {
+            restoreThread();
             if (!PyFloat_Check(py)) {
+                saveThread();
                 return 0;
             }
             *object = PyFloat_AsDouble(py);
+            saveThread();
             return 1;
         }
 
         int py_str_as_native(PyObject* py, std::string* object) {
+            restoreThread();
             if (!PyUnicode_Check(py)) {
+                saveThread();
                 return 0;
             }
             *object = std::string(PyUnicode_AsUTF8(py));
+            saveThread();
             return 1;
         }
 
         int py_pyobject_as_native(PyObject* py, PyObject** object) {
+            restoreThread();
             // TODO: Where does this get decremented.
             Py_INCREF(py);
             *object = py;
+            saveThread();
             return 1;
         }
 
@@ -99,6 +112,7 @@ class Client : public BaseClient {
         /// Zero is returned if the dictionary couldn't be converted for any
         /// reason.
         int {{struct|converter}}(PyObject* dict, {{struct.name}}* entity) {
+            restoreThread();
             if (!PyDict_CheckExact(dict)) {
                 return 0;
             }
@@ -108,11 +122,12 @@ class Client : public BaseClient {
                 PyDict_GetItemString(dict, "{{field.name}}");
             if (!py_field_{{field.name}}) {
                 PyErr_Print();
-                PyErr_Clear();
+                saveThread();
                 return 0;
             }
             if (!{{field|converter}}(
                     py_field_{{field.name}}, &c_field_{{field.name}})) {
+                saveThread();
                 return 0;
             }
             {% endfor %}
@@ -121,6 +136,7 @@ class Client : public BaseClient {
                 c_field_{{field.name}}{% if not loop.last %},{% endif %}
                 {% endfor -%}
             };
+            saveThread();
             return 1;
         }
 
@@ -129,10 +145,11 @@ class Client : public BaseClient {
         /// Returns a new reference to a dictionary. Returns NULL on failure;
         /// the Python error indicator will be cleared though.
         PyObject* from{{struct.name}}({{struct.name}} entity) {
+            restoreThread();
             auto dict = PyDict_New();
             if (!dict) {
                 PyErr_Print();
-                PyErr_Clear();
+                saveThread();
                 return NULL;
             }
             PyObject* field;
@@ -142,24 +159,26 @@ class Client : public BaseClient {
                 fprintf(stderr, "Couldn't convert {{struct.name}}"
                                 ".{{field.name}} to {{field.type}}\n");
                 PyErr_Print();
-                PyErr_Clear();
                 Py_DECREF(dict);
+                saveThread();
                 return NULL;
             } else {
                 bool added = PyDict_SetItemString(
                     dict, "{{field.name}}", field) == 0;
                 // No longer need our local reference
                 Py_DECREF(field);
+                field = NULL;
                 if (!added) {
                     fprintf(stderr, "Couldn't add {{struct.name}}"
                                     ".{{field.name}} to dictionary\n");
                     PyErr_Print();
-                    PyErr_Clear();
                     Py_DECREF(dict);
+                    saveThread();
                     return NULL;
                 };
             }
             {% endfor %}
+            saveThread();
             return dict;
         }
         {% endfor %}

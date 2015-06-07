@@ -33,12 +33,34 @@ BaseClient::BaseClient() {
         m_py_messages = PyObject_GetAttr(
             zm_main_rv, PyUnicode_FromString("messages"));
     }
-    m_py_tstate = PyEval_SaveThread();
+    m_tstate_count = 0;
+    m_tstate = PyEval_SaveThread();
+}
+
+
+void BaseClient::saveThread() {
+    if (m_tstate_count) {
+        // Should probably raise an exception here if count is already 0
+        // as it indicates a programming error.
+        m_tstate_count--;
+        if (m_tstate_count == 0) {
+            m_tstate = PyEval_SaveThread();
+        }
+    }
+}
+
+
+void BaseClient::restoreThread() {
+    m_tstate_count++;
+    if (m_tstate_count > 0 && m_tstate) {
+        PyEval_RestoreThread(m_tstate);
+        m_tstate = NULL;
+    }
 }
 
 
 BaseClient::~BaseClient() {
-    PyEval_RestoreThread(m_py_tstate);
+    restoreThread();
     auto tid = PyObject_GetAttr(m_py_client, PyUnicode_FromString("ident"));
     PyThreadState_SetAsyncExc(PyLong_AsLong(tid), PyExc_SystemExit);
     Py_Finalize();
@@ -46,7 +68,7 @@ BaseClient::~BaseClient() {
 
 
 void BaseClient::pump() {
-    PyEval_RestoreThread(m_py_tstate);
+    restoreThread();
     auto nmessages = PyList_Size(m_py_messages);
     for (auto i = 0; i < nmessages; i++) {
         auto message = PyList_GetItem(m_py_messages, i);
@@ -57,11 +79,12 @@ void BaseClient::pump() {
         convert(type, entity);
     }
     PySequence_DelSlice(m_py_messages, 0, nmessages);
-    m_py_tstate = PyEval_SaveThread();
+    saveThread();
 }
 
 
 void BaseClient::pushMessage(std::string type, PyObject* entity) {
+    restoreThread();
     auto message = Py_BuildValue("(sO)", type.c_str(), entity);
     Py_DECREF(entity);
     if (!message) {
@@ -69,6 +92,7 @@ void BaseClient::pushMessage(std::string type, PyObject* entity) {
     } else {
         PyList_Append(m_py_o_messages, message);
     }
+    saveThread();
 }
 
 

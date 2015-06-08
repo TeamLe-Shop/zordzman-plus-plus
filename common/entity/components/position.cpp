@@ -2,6 +2,9 @@
 
 namespace entity {
 
+const std::string PositionComponent::m_name_x = "x";
+const std::string PositionComponent::m_name_y = "y";
+
 std::string PositionComponent::getComponentName() { return "position"; }
 
 std::string PositionComponent::getName() { return "position"; }

@@ -4,6 +4,7 @@
 #include "common/entity/component.hpp"
 #include "common/entity/components/character.hpp"
 #include "common/entity/components/render.hpp"
+#include "common/entity/components/position.hpp"
 
 #include "gfx/drawingOperations.hpp"
 #include "net/net.hpp"
@@ -72,16 +73,20 @@ void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
 void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
     auto character = COMPONENT(ent, entity::CharacterComponent);
     auto render    = COMPONENT(ent, entity::RenderComponent);
+    auto position  = COMPONENT(ent, entity::PositionComponent);
 
     auto spriteinfo = render ? render->m_sprite.get() : "[No render component]";
     auto alphainfo = render ? render->m_alpha.get() : 0.f;
 
      fmt::print("Frame: #{}, Entity ID: #{}:\n"
                 "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n"
-                "\tRender Info: Sprite: \"{}\", Alpha: {:f}\n",
+                "\tRender Info: Sprite: \"{}\", Alpha: {:f}\n"
+                "\tPosition: ({}, {})\n",
                  coll->getFrame(), ent.getID(), character->m_name.get(),
                  character->m_health.get(), character->m_max_health.get(),
-                 spriteinfo, alphainfo);
+                 spriteinfo, alphainfo,
+                 position->m_x.get(),
+                 position->m_y.get());
 }
 
 void renderSystem(entity::EntityCollection * coll, entity::Entity & ent) {
@@ -133,12 +138,15 @@ Client::Client(Config const & cfg, HUD hud)
     m_level.m_entities.registerComponent(
         entity::RenderComponent::getComponentName(),
         entity::RenderComponent::new_);
+    m_level.m_entities.registerComponent(
+        entity::PositionComponent::getComponentName(),
+        entity::PositionComponent::new_);
     m_level.m_entities.addSystem(debugSystem);
     m_level.m_entities.addSystem(renderSystem);
     m_instance = this;
 
     Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
-    audio::playMusic("snayk");
+    audio::playMusic("March");
 }
 
 Client::~Client() {
@@ -302,6 +310,9 @@ void Client::checkForMap(std::string map, std::string hash) {
     }
 
     if (!found_match) {
+        std::string str = fmt::format("Requesting map: {} ({})", m_map_name,
+                                      m_map_hash);
+        addMessage(str);
         m_msg_proc.send("map.request", nullptr);
     }
 }

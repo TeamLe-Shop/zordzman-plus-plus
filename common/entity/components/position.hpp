@@ -8,9 +8,10 @@ namespace entity {
 
 class PositionComponent : public Component {
 public:
-    PositionComponent() : m_x(this, 0.0), m_y(this, 0.0){};
+    PositionComponent() : m_x(this, m_name_x, 0.0), m_y(this, m_name_y, 0.0){};
 
-    PositionComponent(double x, double y) : m_x(this, x), m_y(this, y){};
+    PositionComponent(double x, double y) : m_x(this, m_name_x, x), m_y(this,
+                                                m_name_y, y){};
 
     virtual ~PositionComponent() {}
 
@@ -19,8 +20,11 @@ public:
 
     static Component * new_();
 
-    Stateless<double> m_x;
-    Stateless<double> m_y;
+    Stateful<double> m_x;
+    Stateful<double> m_y;
+
+    static const std::string m_name_x;
+    static const std::string m_name_y;
 };
 
 } // namespace entity

@@ -89,20 +89,6 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
                  position->m_y.get());
 }
 
-void renderSystem(entity::EntityCollection * coll, entity::Entity & ent) {
-    using namespace drawingOperations;
-
-    auto render    = COMPONENT(ent, entity::RenderComponent);
-    auto character = COMPONENT(ent, entity::CharacterComponent);
-
-    auto spriteinfo = render ? render->m_sprite.get() : "";
-    auto alphainfo = render ? render->m_alpha.get() : 1.f;
-
-    glColor4f(1, 1, 1, alphainfo);
-    drawSprite(spriteinfo, 40, 40, 32, 32);
-    glColor4f(1, 1, 1, 1);
-}
-
 }
 
 Client::Client(Config const & cfg, HUD hud)
@@ -142,7 +128,6 @@ Client::Client(Config const & cfg, HUD hud)
         entity::PositionComponent::getComponentName(),
         entity::PositionComponent::new_);
     m_level.m_entities.addSystem(debugSystem);
-    m_level.m_entities.addSystem(renderSystem);
     m_instance = this;
 
     Mix_VolumeMusic(MIX_MAX_VOLUME / 3);

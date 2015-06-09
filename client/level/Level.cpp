@@ -1,6 +1,8 @@
 #include "Level.hpp"
 #include "gfx/drawingOperations.hpp"
-#include "entity/Player.hpp"
+#include "common/entity/components/character.hpp"
+#include "common/entity/components/render.hpp"
+#include "common/entity/components/position.hpp"
 #include "Client.hpp"
 #include "level/tiles/Tile.hpp"
 #include "format.h"
@@ -12,6 +14,21 @@
 namespace client {
 namespace {
 int ticks = 0;
+
+void renderSystem(entity::EntityCollection * coll, entity::Entity & ent) {
+    using namespace drawingOperations;
+    auto render    = COMPONENT(ent, entity::RenderComponent);
+    auto character = COMPONENT(ent, entity::CharacterComponent);
+    auto position  = COMPONENT(ent, entity::PositionComponent);
+
+    auto spriteinfo = render ? render->m_sprite.get() : "";
+    auto alphainfo = render ? render->m_alpha.get() : 1.f;
+
+    glColor4f(1, 1, 1, alphainfo);
+    drawSprite(spriteinfo, position->m_x.get(), position->m_y.get(), 32, 32);
+    glColor4f(1, 1, 1, 1);
+}
+
 } // Anonymous namespace
 
 using namespace common::util;
@@ -43,10 +60,13 @@ Level::Level(std::string const levelname) {
     // To avoid reading more information than the tiles
     std::copy(data.begin() + 4, data.begin() + 4 + m_width * m_height,
               m_tiles.begin());
+    m_entities.addSystem(renderSystem);
 }
 
 Level::Level(int width, int height, std::vector<byte> tiles)
-    : m_width(width), m_height(height), m_tiles(tiles) {}
+    : m_width(width), m_height(height), m_tiles(tiles) {
+    m_entities.addSystem(renderSystem);
+}
 
 void Level::setWidth(byte width) { m_width = width; }
 
@@ -102,7 +122,7 @@ Level & Level::operator=(const Level & other) {
     m_width = other.m_width;
     m_height = other.m_height;
     m_tiles = other.m_tiles;
-
+    m_entities.addSystem(renderSystem);
     return *this;
 }
 

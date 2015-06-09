@@ -5,7 +5,7 @@
 #include "common/extlib/hash-library/md5.h"
 #include "common/util/stream.hpp"
 #include "common/util/net.hpp"
-#include "Map.hpp"
+#include "Level.hpp"
 
 #include <format.h>
 #include <json11.hpp>
@@ -39,15 +39,15 @@ using namespace json11;
 using namespace net;
 using namespace entity;
 
-void handleMapRequest(Processor *, MessageEntity /*entity*/, Server * server,
+void handleLevelRequest(Processor *, MessageEntity /*entity*/, Server * server,
                       Client * client) {
     if (!server->m_config.allow_downloads) {
         client->disconnect("Downloads not enabled.", true);
         return;
     }
     client->m_logger.log("[INFO] Sending map {} ({} bytes)",
-                         server->m_map.name, server->m_map.size);
-    client->m_msg_proc.send("map.contents", server->m_map.asBase64());
+                         server->m_level.name, server->m_level.size);
+    client->m_msg_proc.send("map.contents", server->m_level.asBase64());
 }
 
 void handleChatMessage(Processor *, MessageEntity entity, Server * server,
@@ -72,7 +72,7 @@ void handleClientNick(Processor *, MessageEntity entity, Server * server,
                                                   entity.string_value()));
     client->name = entity.string_value();
 
-    entity::Entity& ent = server->m_map.getEntity(client->m_playerID);
+    entity::Entity& ent = server->m_level.getEntity(client->m_playerID);
     auto character = COMPONENT(ent, entity::CharacterComponent);
     character->m_name.set(client->name);
 }
@@ -80,9 +80,9 @@ void handleClientNick(Processor *, MessageEntity entity, Server * server,
 Server::Server(Config config) : m_config(config),
                                 m_logger(stderr, [] { return "SERVER: "; }) {
 
-    m_map.loadLevel(config.map);
+    m_level.loadLevel(config.map);
     // Log this in the map loader maybe?
-    m_logger.log("[INFO] Map hash: {}", m_map.md5.getHash());
+    m_logger.log("[INFO] Map hash: {}", m_level.md5.getHash());
 
     if (!config.allow_downloads) {
         m_logger.log("[INFO] Downloads not enabled.");
@@ -205,14 +205,14 @@ void Server::acceptConnections() {
             m_clients.emplace_back(*addr_in, client_socket);
             m_clients.back().m_msg_proc.setSocket(client_socket);
             m_clients.back().m_msg_proc.addMutedHandler("map.request",
-                                                        handleMapRequest);
+                                                        handleLevelRequest);
             m_clients.back().m_msg_proc.addMutedHandler("chat.message",
                                                         handleChatMessage);
             m_clients.back().m_msg_proc.addMutedHandler("client.nick",
                                                         handleClientNick);
             m_clients.back().m_msg_proc.send(
-                "map.offer", Json::object{{"name", m_map.name},
-                                          {"hash", m_map.md5.getHash()}});
+                "map.offer", Json::object{{"name", m_level.name},
+                                          {"hash", m_level.md5.getHash()}});
             m_clients.back().decideClientName(m_clients);
         }
     }
@@ -226,12 +226,12 @@ int Server::exec() {
                 client.checkProtocolVersion();
                 if (client.getState() == Client::Connected) {
                     sendAll("player.joined", client.name);
-                    client.m_playerID = m_map.addPlayer(client.name);
+                    client.m_playerID = m_level.addPlayer(client.name);
                     client.m_msg_proc.send("player.id", (int)client.m_playerID);
                 }
                 continue;
             }
-            auto changes = m_map.cycle();
+            auto changes = m_level.cycle();
             for (auto change : changes) {
                 client.m_msg_proc.sendStateChange(change);
             }
@@ -248,7 +248,7 @@ int Server::exec() {
 
             if (client.getState() == Client::Disconnected) {
                 sendAll("player.left", client.name);
-                m_map.removePlayer(client);
+                m_level.removePlayer(client);
                 m_clients.erase(m_clients.begin() + i);
             }
         }

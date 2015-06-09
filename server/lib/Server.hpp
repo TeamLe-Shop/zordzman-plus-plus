@@ -6,7 +6,7 @@
 #include "json11.hpp"
 
 #include "Client.hpp"
-#include "Map.hpp"
+#include "Level.hpp"
 
 #include "Config.hpp"
 
@@ -37,7 +37,7 @@ class Client;
 
 typedef net::MessageProcessor<Server *, Client *> Processor;
 
-void handleMapRequest(Processor *, net::MessageEntity, Server *, Client *);
+void handleLevelRequest(Processor *, net::MessageEntity, Server *, Client *);
 
 class Server {
 public:
@@ -50,7 +50,7 @@ public:
     /// See Client::send().
     void sendAll(std::string type, json11::Json entity);
 
-    map::Level m_map;
+    level::Level m_level;
     Config m_config;
     std::vector<Client> m_clients;
 

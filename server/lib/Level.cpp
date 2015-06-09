@@ -1,4 +1,4 @@
-#include "Map.hpp"
+#include "Level.hpp"
 
 #include <vector>
 #include <fstream>
@@ -15,7 +15,7 @@
 
 namespace server {
 
-namespace map {
+namespace level {
 
 using namespace common::util;
 
@@ -64,6 +64,6 @@ entity::Entity & Level::getEntity(unsigned int id) {
     return entities.get(id);
 }
 
-} // namespace map
+} // namespace level
 
 } // namespace server

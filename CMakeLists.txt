@@ -38,8 +38,8 @@ add_library(hash-library common/extlib/hash-library/md5.cpp)
 add_library(base64
             common/extlib/base64/base64.hpp common/extlib/base64/base64.cpp)
 
-add_library(server server/lib/Server.cpp server/lib/Client.cpp server/lib/Map.cpp
-                   server/lib/systems/physicsSystem.cpp)
+add_library(server server/lib/Server.cpp server/lib/Client.cpp
+            server/lib/Level.cpp server/lib/systems/physicsSystem.cpp)
 add_library(logger common/logger/Logger.hpp common/logger/Logger.cpp)
 file(GLOB_RECURSE COMMON_NET_SOURCES common/net/*.*pp)
 add_library(common_net ${COMMON_NET_SOURCES})

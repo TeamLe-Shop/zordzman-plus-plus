@@ -13,7 +13,7 @@ namespace server {
 
 class Client;
 
-namespace map {
+namespace level {
 
 typedef unsigned char byte;
 
@@ -53,6 +53,6 @@ private:
     entity::EntityCollection entities;
 };
 
-} // namespace map
+} // namespace level
 
 } // namespace server

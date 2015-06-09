@@ -19,7 +19,8 @@ std::string help =
 "  --port <port>       : What port to run on (default 4544)\n"
 "  --no-downloads      : Disable clients downloading content\n"
 "  --max-clients <max> : Maximum clients allowed on server (default 5)\n"
-"  --resource          : Path to server resource package\n";
+"  --resources <path>  : Path to server resource package (default"
+" 'resources.tar')\n";
 
 
 int main(int argc, char ** argv) {

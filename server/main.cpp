@@ -13,6 +13,15 @@
 
 #define PORT_NUMBER 4544 // The default port number.
 
+std::string help =
+"HELP:\n"
+"  --map  <file>       : Initial level to load\n"
+"  --port <port>       : What port to run on (default 4544)\n"
+"  --no-downloads      : Disable clients downloading content\n"
+"  --max-clients <max> : Maximum clients allowed on server (default 5)\n"
+"  --resource          : Path to server resource package\n";
+
+
 int main(int argc, char ** argv) {
     // We could also load from a configuration file
     // here. This would be done after this variable
@@ -28,16 +37,7 @@ int main(int argc, char ** argv) {
 
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--help")) {
-            fmt::print("HELP:\n");
-            fmt::print("  --map <mapfile>       : Specify map to load\n");
-            fmt::print("  --port <port>         : Listen on port <port>\n");
-            fmt::print("  --no-downloads        : Disable clients downloading"
-                       " map.\n");
-            fmt::print("  --max-clients <max>   : Set maximum clients allowed"
-                       " on server to <max>.\n");
-            fmt::print("\n");
-            fmt::print("Default port: 4544\n");
-            fmt::print("Default max clients: 5\n");
+            fmt::print(help);
             exit(0);
         }
         if (!strcmp(argv[i], "--port")) {
@@ -104,8 +104,8 @@ int main(int argc, char ** argv) {
         exit(1);
     } else {
         if (common::util::file::isDirectory(config.map)) {
-            fmt::print("SERVER: [ERR]  I need a map FILE, silly, not a "
-                       "folder.\n");
+            fmt::print("SERVER: [ERR]  Directory given for level path, "
+                       "expected file.");
             map_file.close();
             exit(1);
         }
@@ -121,7 +121,7 @@ int main(int argc, char ** argv) {
     } else {
         if (common::util::file::isDirectory(config.resource_package)) {
             fmt::print("SERVER: [ERR]  Resource package must be a tar file, "
-                       "not a folder.\n");
+                       "not a directory.\n");
 
             resource_package.close();
             exit(1);

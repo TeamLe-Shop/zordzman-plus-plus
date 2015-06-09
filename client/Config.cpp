@@ -16,10 +16,10 @@ Config::Config(std::string config) {
         return;
     }
 
-    host = json["host"].string_value();
-    port = json["port"].int_value();
-    name = json["name"].string_value();
-    level_dir = json["level_dir"].string_value();
+    host = value(json["host"], "localhost").string_value();
+    port = value(json["port"], 4544).int_value();
+    name = value(json["name"], "Player").string_value();
+    level_dir = value(json["level_dir"], "levels").string_value();
 }
 
 }

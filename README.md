@@ -28,7 +28,7 @@ decoding.
 
 All of the above libraries are located in `common/extlib/<libname>/`.
 
-Our own written libs are in `common/<libname>`.
+Our own written libraries are in `common/<libname>`.
 
 SDL: https://libsdl.org/download-2.0.php (Required: 2.0.0 or greater)
 
@@ -89,6 +89,12 @@ cd ../build-zordzman-plus-plus
 cmake ../zordzman-plus-plus
 make
 ```
+
+The produced binary will be in `build-zordzman-plus-plus`.
+It is recommended that the binary is inside the `zordzman-plus-plus` directory
+as the resources and configuration files will be in that directory.
+
+You can also optionally perform `cmake .` inside `zordzman-plus-plus`, but this will clutter the directory with build files.
 
 ### Windows ###
 

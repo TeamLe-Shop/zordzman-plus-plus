@@ -7,6 +7,7 @@
 #include "format.h"
 #include "Config.hpp"
 #include "HUD.hpp"
+#include "language.hpp"
 
 using namespace client;
 
@@ -22,6 +23,8 @@ int main(int argc, char * argv[]) {
         // but all the default values are filled in there for
         // a customizer's reference.
         HUD hud("config/default_hud.json");
+
+        language::setLanguage("english");
 
         if (argc > 1) {
             cfg.host = argv[1];

@@ -12,6 +12,7 @@
 #include "weapons/weaponList.hpp"
 
 #include "audioPlayer.hpp"
+#include "language.hpp"
 
 #include <stdexcept>
 #include <format.h>
@@ -395,9 +396,11 @@ void Client::drawHUD() {
 
     entity::Entity & player = m_level.m_entities.get(m_playerID);
     auto character = COMPONENT(player, entity::CharacterComponent);
-    drawText("default", fmt::format("HP: {}", character->m_health.get()), 0,
+    drawText("default", fmt::format("{}: {}", language::translate("Health"),
+             character->m_health.get()), 0,
              0 + height - 32, 16, 16);
-    drawText("default", "WEP:", 0, 0 + height - 32 + 16, 16, 16);
+    drawText("default", fmt::format("{}:", language::translate("Weapon")),
+             0, 0 + height - 32 + 16, 16, 16);
 
     // Draw the names of the weapons as smaller components
 

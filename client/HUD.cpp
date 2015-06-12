@@ -33,6 +33,8 @@ HUD::HUD(std::string hud) {
 
     setcol(font_color, json["font-color"], 16);
     setcol(font_color_active, json["font-color-active"], 16);
+
+    setbool(netgraph, json["net-graph"]);
 }
 
 void HUD::setcol(uint32_t & i, Json json, int base) {
@@ -48,4 +50,12 @@ void HUD::setint(int & i, Json json, int base) {
         i = std::stoul(x.dump(), nullptr, base);
     }
 }
+
+void HUD::setbool(bool & i, Json json) {
+    auto x = json;
+    if (x.dump() != "null") {
+        i = json.bool_value();
+    }
+}
+
 } // namespace client

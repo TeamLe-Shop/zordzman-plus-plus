@@ -53,7 +53,6 @@ using namespace json11;
 
 namespace {
 std::string const title = "Zordzman v0.0.3";
-bool net_graph = true;
 } // Anonymous namespace
 
 Client * Client::m_instance;
@@ -365,7 +364,7 @@ void Client::drawHUD() {
     auto const height = m_window.getHeight();
     auto const width = m_window.getWidth();
 
-    if (net_graph) {
+    if (m_hud.netgraph) {
         auto const height = m_window.getHeight();
         auto const width = m_window.getWidth();
         glColor4f(0.2f, 0.2f, 0.2f, 0.2f);

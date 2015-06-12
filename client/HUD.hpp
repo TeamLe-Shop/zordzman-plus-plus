@@ -26,6 +26,8 @@ public:
     /// @param base The base number, by default 10.
     void setint(int & i, json11::Json json, int base = 10);
 
+    void setbool(bool & i, json11::Json json);
+
 public:
     /// The font color used when an item is currently selected.
     ///        By default, this is green, or (0x00FF00FF).
@@ -63,5 +65,7 @@ public:
         int height = 2;
         uint32_t color = 0x00007FFF;
     } border;
+
+    bool netgraph = true;
 };
 } // namespace client

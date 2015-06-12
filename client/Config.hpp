@@ -26,6 +26,7 @@ public:
     int port = 4544;
     std::string name = "Player";
     std::string level_dir = "levels";
+    std::string hud = "default_hud.json";
 };
 
 } // namespace client

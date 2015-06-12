@@ -47,6 +47,7 @@ void EntityCollection::removeEntity(unsigned int id) {
     for (auto const & e : m_entities) {
         if (e.getID() == id) {
             m_entities.erase(m_entities.begin() + index);
+            return;
         }
         index++;
     }

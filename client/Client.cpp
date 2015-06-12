@@ -205,6 +205,9 @@ bool Client::joinServer() {
         "player.joined", std::bind(&Client::handlePlayerJoined, this, _1, _2));
     m_msg_proc.addMutedHandler(
         "player.left", std::bind(&Client::handlePlayerLeft, this, _1, _2));
+    m_msg_proc.addMutedHandler(
+        "entity.delete",
+        std::bind(&Client::handleEntityDeletion, this, _1, _2));
 
     m_msg_proc.send("client.nick", m_cfg.name);
     return true;
@@ -231,7 +234,6 @@ void Client::exec() {
         m_level.render();
 
         m_level.m_entities.cycle();
-
 
         drawHUD();
 
@@ -357,6 +359,10 @@ void Client::handlePlayerLeft(Processor *, MessageEntity entity) {
     audio::playSound("playerleft");
     addMessage(fmt::format("Player \"{}\" left the game.",
                            entity.string_value()));
+}
+
+void Client::handleEntityDeletion(Processor *, MessageEntity entity) {
+    m_level.m_entities.removeEntity((unsigned int)entity["id"].int_value());
 }
 
 void Client::drawHUD() {

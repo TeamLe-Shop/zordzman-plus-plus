@@ -248,6 +248,7 @@ int Server::exec() {
 
             if (client.getState() == Client::Disconnected) {
                 sendAll("player.left", client.name);
+                sendAll("entity.delete", (int)client.m_playerID);
                 m_level.removePlayer(client);
                 m_clients.erase(m_clients.begin() + i);
             }

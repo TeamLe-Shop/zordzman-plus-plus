@@ -81,7 +81,6 @@ Server::Server(Config config) : m_config(config),
                                 m_logger(stderr, [] { return "SERVER: "; }) {
 
     m_level.loadLevel(config.map);
-    // Log this in the map loader maybe?
     m_logger.log("[INFO] Map hash: {}", m_level.md5.getHash());
 
     if (!config.allow_downloads) {
@@ -134,11 +133,6 @@ Server::Server(Config config) : m_config(config),
 
     listen(m_tcp_socket, SOMAXCONN);
 
-    //  if (!(m_udp_socket = socket(AF_INET, SOCK_DGRAM, 0) )) {
-    //      m_logger.log("[ERR]  Failed to bind UDP interface: {}",
-    //                   strerror(errno));
-    //      exit(1);
-    //  }
     m_logger.log("[INFO] Bound to interface {}",
                  common::util::net::ipaddr(m_tcp_address));
 }
@@ -159,7 +153,6 @@ void Server::sendAll(std::string type, Json entity) {
 void Server::acceptConnections() {
     socklen_t b = sizeof(m_tcp_socket);
     while (true) {
-        // Returns immediately with nullptr if no pending connections
         Socket client_socket =
             accept(m_tcp_socket, (struct sockaddr *)&m_tcp_address, &b);
 #ifdef _WIN32
@@ -247,7 +240,7 @@ int Server::exec() {
             }
             client.exec(this);
         }
-        // Remove disconnected clients
+
         for (size_t i = 0; i < m_clients.size(); ++i) {
             Client & client = m_clients[i];
 

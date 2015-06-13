@@ -231,7 +231,7 @@ int Server::exec() {
 
                     auto state = m_level.poll();
                     for (auto s : state) {
-                        m_clients.back().m_msg_proc.sendStateChange(s);
+                        client.m_msg_proc.sendStateChange(s);
                     }
                 }
                 continue;

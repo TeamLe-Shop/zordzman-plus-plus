@@ -15,10 +15,8 @@ rather than one person.
 Dependencies
 ============
 
-It mainly uses SDL and other SDL libraries.
-
-Note: SDLNet is no longer being used, and our project will be using system sockets instead.
-(For Windows, WinSock may be used.)
+The client uses SDL and other SDL libraries. The server requires none of those
+dependencies to be present.
 
 It uses [json11](https://github.com/dropbox/json11) for parsing JSON,
 [cppformat](http://cppformat.github.io/) for formatting, and
@@ -98,9 +96,9 @@ You can also optionally perform `cmake .` inside `zordzman-plus-plus`, but this 
 
 ### Windows ###
 
-We have currently not yet figured out a suitable way to build this project
-on Windows. You can try to build and show us any errors you think are to do with
-the source code.
+We are currently working towards windows support. See
+[PR #24](https://github.com/TeamLe-Shop/zordzman-plus-plus/issues/24)
+and https://github.com/Holiverh/zordzman-plus-plus
 
 
 Contributing

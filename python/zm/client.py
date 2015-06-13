@@ -265,6 +265,9 @@ class Client(threading.Thread):
         self._peer_name = self._socket.getpeername()
         self._socket.sendall(self.MAGIC_NUMBER)
 
+    def retrieve(self):
+        raise NotImplementedError
+
     def send(self, type_name, entity):
         """Send a message to the server.
 

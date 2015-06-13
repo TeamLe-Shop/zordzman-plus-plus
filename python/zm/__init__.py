@@ -20,6 +20,9 @@ def setup_logging(level):
 def main():
     log = setup_logging(logging.INFO)
     log.info("Python layer running, log level = %i", logging.DEBUG)
-    client = zm.client.ZMClient()
+    client = zm.client.Client()
     client.start()
     return client
+
+
+spawn_client = main

@@ -1,6 +1,8 @@
-#include "client/net/BaseClient.hpp"
-
 #include <iostream>
+#include <stdexcept>
+
+#include "client/net/BaseClient.hpp"
+#include "common/extlib/cppformat/format.h"
 
 
 namespace net {
@@ -12,30 +14,78 @@ BaseClient::BaseClient() {
                   0, PyUnicode_FromString("../python/"));
     auto zm = PyImport_ImportModule("zm");
     if (!zm) {
-        // TODO: Check error and die
+        PyErr_Print();
+        throw std::runtime_error("Could not find the 'zm' package");
     }
-    auto zm_main = PyObject_GetAttr(zm, PyUnicode_FromString("main"));
-    if (!zm_main || !PyCallable_Check(zm_main)) {
-        std::cout << "Python entry point (zm.main) does not exist or is not callable";
+    auto zm_client = PyObject_GetAttrString(zm, "spawn_client");
+    if (!zm_client) {
+        PyErr_Print();
+        Py_DECREF(zm);
+        throw std::runtime_error(
+            "Python entry point (zm.client) does not exist");
     }
-    auto zm_main_rv = PyObject_CallFunction(zm_main, "");
-    if (!zm_main_rv) {
-        auto exc = PyErr_Occurred();
-        if (exc) {
-            PyErr_Print();
-        }
-    } else {
-        fprintf(stderr, "zm.main() -> ");
-        PyObject_Print(zm_main_rv, stderr, Py_PRINT_RAW);
-        fprintf(stderr, "\n");
-        m_py_client = zm_main_rv;
-        m_py_o_messages = PyObject_GetAttrString(m_py_client, "in_messages");
-        m_py_messages = PyObject_GetAttr(
-            zm_main_rv, PyUnicode_FromString("messages"));
+    char * ep_error = NULL;
+    auto success = invokeEntryPoint(zm_client, &ep_error);
+    Py_DECREF(zm);
+    Py_DECREF(zm_client);
+    if (!success) {
+        throw std::runtime_error(ep_error);
     }
     m_tstate_count = 0;
     m_tstate = PyEval_SaveThread();
 }
+
+
+#define EP_FAIL(message) *error = message; PyErr_Print(); return false
+#define EP_SUCCESS return true
+
+bool BaseClient::invokeEntryPoint(PyObject * ep, char ** error) {
+    *error = NULL;
+    if (!PyCallable_Check(ep)) {
+        EP_FAIL("Entry point is not callable");
+    }
+    m_py_client = PyObject_CallFunction(ep, "");
+    if (!m_py_client) {
+        EP_FAIL("Error calling entry point");
+    }
+    auto ident = PyObject_GetAttrString(m_py_client, "ident");
+    if (ident) {
+        // Can't overflow; PyThreadState_SetAsyncExc takes a long ;)
+        m_tid = PyLong_AsLong(ident);
+        Py_DECREF(ident);
+    } else {
+        Py_DECREF(m_py_client);
+        EP_FAIL("Entry point didn't return a thread object");
+    }
+    m_py_client_send = PyObject_GetAttrString(m_py_client, "send");
+    if (m_py_client_send) {
+        if (!PyCallable_Check(m_py_client_send)) {
+            Py_DECREF(m_py_client);
+            Py_DECREF(m_py_client_send);
+            EP_FAIL("Client.send is not callable");
+        }
+    } else {
+        Py_DECREF(m_py_client);
+        EP_FAIL("Client has no attribute 'send'");
+    }
+    m_py_client_retrieve = PyObject_GetAttrString(m_py_client, "retrieve");
+    if (m_py_client_retrieve) {
+        if (!PyCallable_Check(m_py_client_retrieve)) {
+            Py_DECREF(m_py_client);
+            Py_DECREF(m_py_client_send);
+            Py_DECREF(m_py_client_retrieve);
+            EP_FAIL("Client.retrieve is not callable");
+        }
+    } else {
+        Py_DECREF(m_py_client);
+        Py_DECREF(m_py_client_send);
+        EP_FAIL("Client has no attribute 'retrieve'");
+    }
+    EP_SUCCESS;
+}
+
+#undef EP_FAIL
+#undef EP_SUCCESS
 
 
 void BaseClient::saveThread() {
@@ -61,8 +111,10 @@ void BaseClient::restoreThread() {
 
 BaseClient::~BaseClient() {
     restoreThread();
-    auto tid = PyObject_GetAttr(m_py_client, PyUnicode_FromString("ident"));
-    PyThreadState_SetAsyncExc(PyLong_AsLong(tid), PyExc_SystemExit);
+    PyThreadState_SetAsyncExc(m_tid, PyExc_SystemExit);
+    Py_DECREF(m_py_client);
+    Py_DECREF(m_py_client_send);
+    Py_DECREF(m_py_client_retrieve);
     Py_Finalize();
 }
 

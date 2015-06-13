@@ -40,11 +40,28 @@ class BaseClient {
         void pushMessage(std::string type, PyObject* entity);
 
     private:
-        PyThreadState* m_tstate;
+        long m_tid;
+        PyThreadState * m_tstate;
         unsigned short m_tstate_count;
-        PyObject* m_py_client;
+        PyObject * m_py_client;
+        PyObject * m_py_client_send;
+        PyObject * m_py_client_retrieve;
+
         PyObject* m_py_messages;
         PyObject* m_py_o_messages;
+
+        /// Call the Python entry point function.
+        ///
+        /// This calls a Python function which is expected to return a client
+        /// thread which has a 'send' and 'retrieve' method. The m_py_client,
+        /// m_py_client_send and m_py_client_retrieve members will be set to
+        /// the respctive Python objects.
+        ///
+        /// If the object returned by calling the entry point meets the
+        /// expectations then true is retured. However, if any one of the
+        /// expectations is not met then false is returned and ``error`` is
+        /// set to an error message.
+        bool invokeEntryPoint(PyObject * ep, char ** error);
 
         virtual void convert(std::string type, PyObject* entity) = 0;
 };

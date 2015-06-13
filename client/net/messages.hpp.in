@@ -1,0 +1,38 @@
+#include "Python.h"
+
+
+/*% macro ctype(type) -%*/
+/*{{
+    str: "std::string",
+    int: "long",
+    object: "PyObject *",
+}[type]|default("KABOOM")}*/
+/*%- endmacro %*/
+
+/*% macro ns(namespace) %*/
+/*{namespace.doc|wordwrap(76)|doxygen}*/
+namespace /*{namespace.name}*/ {
+
+/*% for struct in namespace.structs %*/
+/*{struct.doc|wordwrap(75)|doxygen}*/
+struct /*{struct.name}*/ {
+    /*% for field in struct.fields -%*/
+    /*{ctype(field.type)}*/ /*{field.name}*/;
+    /*% endfor -%*/
+};
+/*% endfor %*/
+
+/*% for sub_ns in namespace.namespaces %*/
+/*{ns(sub_ns)}*/
+/*% endfor %*/
+}  // namespace /*{namespace.name}*/
+/*% endmacro %*/
+
+
+namespace net {
+namespace messages {
+/*% for namespace in namespaces %*/
+/*{ns(namespace)}*/
+/*% endfor %*/
+}  // namespace messages
+}  // namespace net

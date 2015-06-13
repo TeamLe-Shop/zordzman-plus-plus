@@ -144,6 +144,7 @@ class MessageType:
     def __init__(self, name, schema):
         self.name = name
         self._schema = schema
+        self.__doc__ = self._schema.__doc__ or ""
 
     def __repr__(self):
         return "<{0.__class__.__name__} {0.name!r}>".format(self)

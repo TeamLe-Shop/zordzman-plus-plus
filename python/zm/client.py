@@ -137,7 +137,7 @@ class InvalidMessageError(ClientError):
     """Raised when the client recieved a malformed message."""
 
 
-@zm.pipeline.Egress.register("zm:connect")
+@zm.pipeline.Egress.register("zm:client:connect")
 class ConnectMessage(formencode.Schema):
     """Client connection message."""
 
@@ -145,7 +145,7 @@ class ConnectMessage(formencode.Schema):
     port = formencode.validators.Int(min=0, max=65535)
 
 
-@zm.pipeline.Egress.register("zm:disconnect")
+@zm.pipeline.Egress.register("zm:client:disconnect")
 class DisconnectMessage(formencode.Schema):
     """Client disconnection message."""
 
@@ -156,14 +156,16 @@ class EntityStateMessage(formencode.Schema):
     id = formencode.validators.Int()
     component = formencode.validators.String()
     field = formencode.validators.String()
-    value = formencode.Any(validators=[
-        formencode.validators.ConfirmType(type=list),
-        formencode.validators.ConfirmType(type=dict),
-        formencode.validators.ConfirmType(type=int),
-        formencode.validators.ConfirmType(type=float),
-        formencode.validators.ConfirmType(type=str),
+    value = formencode.Pipe(validators=[
+        formencode.Any(validators=[
+            formencode.validators.ConfirmType(type=list),
+            formencode.validators.ConfirmType(type=dict),
+            formencode.validators.ConfirmType(type=int),
+            formencode.validators.ConfirmType(type=float),
+            formencode.validators.ConfirmType(type=str),
+        ]),
+        formencode.validators.ConfirmType(type=object),
     ])
-
 
 @zm.pipeline.Egress.register("chat.message")
 @zm.pipeline.Ingress.register("chat.message")
@@ -230,7 +232,7 @@ class Client(threading.Thread):
         self._ingress_buffer = b""
         self._egress_buffer = b""
 
-    @zm.pipeline.Egress.subscribe("zm:disconnect", silence=True)
+    @zm.pipeline.Egress.subscribe("zm:client:disconnect", silence=True)
     def disconnect(self, entity=None):
         """Disconnect from a server.
 
@@ -247,7 +249,8 @@ class Client(threading.Thread):
             self._egress.clear()
             log.info("Disconnected from %s:%i" % self._peer_name)
 
-    @zm.pipeline.Egress.subscribe("zm:connect", unpack=True, silence=True)
+    @zm.pipeline.Egress.subscribe("zm:client:connect",
+                                  unpack=True, silence=True)
     def connect(self, host, port):
         """Establish a connection with a server.
 

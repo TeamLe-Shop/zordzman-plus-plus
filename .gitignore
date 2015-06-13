@@ -9,6 +9,8 @@ doc/
 
 # Generated Files
 client/net/Client.hpp
+client/net/ingress.hpp
+client/net/egress.hpp
 
 
 # Build artefacts

@@ -86,6 +86,17 @@ public:
         return copy;
     }
 
+    std::vector<ComponentStateChange> collectState() {
+        std::vector<ComponentStateChange> state;
+        for (auto x : m_values) {
+            state.emplace_back(x.first, *x.second);
+        }
+
+        return state;
+    }
+
+    std::map<std::string, json11::Json *> m_values;
+
 private:
     std::vector<ComponentStateChange> m_state_changes;
     bool m_is_dirty;
@@ -139,21 +150,26 @@ template <class T> class Stateful : public Field<T> {
 public:
     Stateful(Component * component, std::string name, T initial)
         : Field<T>::Field(component, initial) {
+        m_json_value = json11::Json { initial };
         m_component->addStateSetter(
             name,
             std::bind(&Stateful<T>::setFromJSON, this, std::placeholders::_1));
         m_component->markStateChange(name, initial);
+        m_component->m_values[name] = &m_json_value;
         m_name = name;
     }
 
 private:
     std::string m_name;
 
+    json11::Json m_json_value;
+
     void setFromJSON(json11::Json value) {
         m_value = static_cast<T>(JSONFieldValue(value));
     }
 
     void onStateChange(T /*old*/, T new_) {
+        m_json_value = json11::Json { new_ };
         m_component->markStateChange(m_name, new_);
     }
 };
@@ -181,7 +197,7 @@ private:
 // component)
 
 // Stateless Transition Field
-// * The parent component must know how to serialise all its statelss fields
+// * The parent component must know how to serialise all its stateless fields
 // * The parent component must know how to deserialise all its stateless fields
 // * The fields must be able to communicate its state change to the entity
 // collection (e.g. via component)

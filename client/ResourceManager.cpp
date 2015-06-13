@@ -76,7 +76,6 @@ void ResourceManager::loadPackage(std::string resource_package,
 
 sys::Texture & ResourceManager::getTexture(std::string key) {
     auto iter = m_textures.find(key);
-
     if (iter == m_textures.end()) {
         throw std::runtime_error(
             fmt::format("Couldn't find texture \"{}\"", key));

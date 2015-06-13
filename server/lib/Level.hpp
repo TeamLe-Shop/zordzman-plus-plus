@@ -31,6 +31,9 @@ public:
     /// Run a single game simulation cycle and return entity state changes
     std::vector<entity::StateChange> cycle();
 
+    /// Poll current state of the game simulation and return entity states
+    std::vector<entity::StateChange> poll();
+
     /// Add a player to the map.
     unsigned int addPlayer(std::string name);
 

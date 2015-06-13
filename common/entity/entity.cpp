@@ -25,6 +25,19 @@ std::vector<EntityStateChange> Entity::collectStateChanges() {
     return changes;
 }
 
+
+std::vector<EntityStateChange> Entity::collectState() {
+    std::vector<EntityStateChange> state;
+    for (auto & pair : m_components) {
+        for (auto & component_pair : pair.second->collectState()) {
+            state.emplace_back(pair.first, std::get<0>(component_pair),
+                                 std::get<1>(component_pair));
+        }
+    }
+
+    return state;
+}
+
 Component * Entity::operator[](std::string name) {
     return m_components[name].get();
 }
@@ -89,6 +102,20 @@ std::vector<StateChange> EntityCollection::collectStateChanges() {
         }
     }
     return changes;
+}
+
+std::vector<StateChange> EntityCollection::poll() {
+    std::vector<StateChange> state;
+
+    for (auto & entity : m_entities) {
+        for (auto & entity_changes : entity.collectState()) {
+            state.emplace_back(entity.getID(), std::get<0>(entity_changes),
+                                 std::get<1>(entity_changes),
+                                 std::get<2>(entity_changes));
+        }
+    }
+
+    return state;
 }
 
 void EntityCollection::handleEntityStateChange(json11::Json entity) {

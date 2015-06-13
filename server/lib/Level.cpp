@@ -48,6 +48,10 @@ std::vector<entity::StateChange> Level::cycle() {
     return entities.collectStateChanges();
 }
 
+std::vector<entity::StateChange> Level::poll() {
+    return entities.poll();
+}
+
 unsigned int Level::addPlayer(std::string name) {
     entity::Entity & ent = entities.createEntity();
     ent.addComponent(new entity::CharacterComponent(name, 100));

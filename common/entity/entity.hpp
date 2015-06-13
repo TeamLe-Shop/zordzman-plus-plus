@@ -81,6 +81,8 @@ public:
     /// to the entity.
     std::vector<EntityStateChange> collectStateChanges();
 
+    std::vector<EntityStateChange> collectState();
+
     /// Access a component by component ID.
     Component * operator[](std::string name);
 
@@ -198,6 +200,8 @@ public:
 
     /// Get an entity by it's unique ID.
     Entity & get(unsigned int id);
+
+    std::vector<StateChange> poll();
 
 private:
     unsigned int m_entity_id;

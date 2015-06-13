@@ -228,6 +228,11 @@ int Server::exec() {
                     sendAll("player.joined", client.name);
                     client.m_playerID = m_level.addPlayer(client.name);
                     client.m_msg_proc.send("player.id", (int)client.m_playerID);
+
+                    auto state = m_level.poll();
+                    for (auto s : state) {
+                        m_clients.back().m_msg_proc.sendStateChange(s);
+                    }
                 }
                 continue;
             }

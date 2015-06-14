@@ -163,8 +163,23 @@ void BaseClient::process() {
 }
 
 
-void BaseClient::pushMessage(std::string type, PyObject* entity) {
+// TODO: Better error handling
+void BaseClient::send(std::string type, PyObject* entity) {
     restoreThread();
+    auto args = Py_BuildValue("(sO)", type.c_str(), entity);
+    Py_DECREF(entity);
+    if (!args) {
+        PyErr_Print();
+        saveThread();
+        return;
+    }
+    PyObject_CallObject(m_py_client_send, args);
+    Py_DECREF(args);
+    if (PyErr_Occurred()) {
+        PyErr_Print();
+        saveThread();
+        return;
+    }
     saveThread();
 }
 

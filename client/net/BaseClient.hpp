@@ -55,7 +55,7 @@ class BaseClient {
         /// Push a message onto the Python client's queue.
         ///
         /// This steals the reference to the `entity`.
-        void pushMessage(std::string type, PyObject* entity);
+        void send(std::string type, PyObject* entity);
 
     private:
         long m_tid;

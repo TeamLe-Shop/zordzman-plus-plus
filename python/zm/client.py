@@ -33,6 +33,11 @@ class DisconnectMessage(formencode.Schema):
     """Client disconnection message."""
 
 
+@zm.pipeline.Ingress.register("zm:client:connected")
+class ConnectedMessage(formencode.Schema):
+    """Notification that the client has connected."""
+
+
 @zm.pipeline.Ingress.register("entity.state")
 class EntityStateMessage(formencode.Schema):
 
@@ -47,7 +52,7 @@ class EntityStateMessage(formencode.Schema):
             formencode.validators.ConfirmType(type=float),
             formencode.validators.ConfirmType(type=str),
         ]),
-        formencode.validators.ConfirmType(type=object),
+        formencode.validators.ConfirmType(subclass=object),
     ])
 
 @zm.pipeline.Egress.register("chat.message")

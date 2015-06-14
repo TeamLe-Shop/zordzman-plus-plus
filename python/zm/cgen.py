@@ -162,11 +162,11 @@ def _generate_fields(schema):
                     "{}.{}'s validator is a Pipe but is missing "
                     "a terminating ConfirmType validator".format(
                         schema.__name__, field_name))
-            if len(confirm.type) != 1:
+            if len(confirm.subclass) != 1:
                 raise CGenError("Pipe-terminating ConfirmType validators "
                                 "should only have 1 type, {} given: {}".format(
-                                    len(confirm.type), confirm.type))
-            type_ = confirm.type[0]
+                                    len(confirm.subclass), confirm.subclass))
+            type_ = confirm.subclass[0]
         else:
             try:
                 type_ = FE_TYPES[fe_field.__class__]
@@ -296,6 +296,7 @@ def _parse_args(argv=None):
     parser.add_argument(
         "pipeline",
         type=_pipeline,
+        nargs="+",
         help="name of the message pipeline to use",
     )
     parser.add_argument(
@@ -324,7 +325,7 @@ def main(argv=None):
     env.filters["doxygen"] = _filter_doxygen
     template = env.get_template(args.template.name)
     print(template.render(
-        namespaces=[_generate_namespaces(args.pipeline)],
+        namespaces=[_generate_namespaces(pipe) for pipe in args.pipeline],
         int=int,
         str=str,
         float=float,

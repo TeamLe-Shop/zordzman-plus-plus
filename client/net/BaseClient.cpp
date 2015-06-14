@@ -24,7 +24,7 @@ BaseClient::BaseClient() {
         throw std::runtime_error(
             "Python entry point (zm.client) does not exist");
     }
-    char * ep_error = NULL;
+    const char * ep_error = NULL;
     auto success = invokeEntryPoint(zm_client, &ep_error);
     Py_DECREF(zm);
     Py_DECREF(zm_client);
@@ -39,7 +39,7 @@ BaseClient::BaseClient() {
 #define EP_FAIL(message) *error = message; PyErr_Print(); return false
 #define EP_SUCCESS return true
 
-bool BaseClient::invokeEntryPoint(PyObject * ep, char ** error) {
+bool BaseClient::invokeEntryPoint(PyObject * ep, const char ** error) {
     *error = NULL;
     if (!PyCallable_Check(ep)) {
         EP_FAIL("Entry point is not callable");

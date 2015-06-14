@@ -76,7 +76,7 @@ class BaseClient {
         /// expectations then true is retured. However, if any one of the
         /// expectations is not met then false is returned and ``error`` is
         /// set to an error message.
-        bool invokeEntryPoint(PyObject * ep, char ** error);
+        bool invokeEntryPoint(PyObject * ep, const char ** error);
 
         virtual void processMessage(std::string type, PyObject* entity) = 0;
 };

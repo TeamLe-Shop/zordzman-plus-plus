@@ -77,7 +77,10 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
 
     auto spriteinfo = render ? render->m_sprite.get() : "[No render component]";
     auto alphainfo = render ? render->m_alpha.get() : 0.f;
-    /*
+
+    auto xpos = position ? position->m_x.get() : 0;
+    auto ypos = position ? position->m_y.get() : 0;
+
     fmt::print("Frame: #{}, Entity ID: #{}:\n"
                "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n"
                "\tRender Info: Sprite: \"{}\", Alpha: {:f}\n"
@@ -85,9 +88,7 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
                 coll->getFrame(), ent.getID(), character->m_name.get(),
                 character->m_health.get(), character->m_max_health.get(),
                 spriteinfo, alphainfo,
-                position->m_x.get(),
-                position->m_y.get());
-    */
+                xpos, ypos);
 }
 
 }

@@ -24,8 +24,11 @@ void renderSystem(entity::EntityCollection * coll, entity::Entity & ent) {
     auto spriteinfo = render ? render->m_sprite.get() : "";
     auto alphainfo = render ? render->m_alpha.get() : 1.f;
 
+    auto xpos = position ? position->m_x.get() : 0;
+    auto ypos = position ? position->m_y.get() : 0;
+
     glColor4f(1, 1, 1, alphainfo);
-    drawSprite(spriteinfo, position->m_x.get(), position->m_y.get(), 32, 32);
+    drawSprite(spriteinfo, xpos, ypos, 32, 32);
     glColor4f(1, 1, 1, 1);
 }
 

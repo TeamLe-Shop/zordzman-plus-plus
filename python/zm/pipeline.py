@@ -187,7 +187,7 @@ class Pipeline(metaclass=PipelineMeta):
 
     def pump(self):
         for message in self._pending:
-            for subscriber in self._subscribers.get(message.type, []):
+            for subscriber in self._subscribers.get(message.type.name, []):
                 entity = copy.deepcopy(message.entity)
                 try:
                     subscriber(entity)

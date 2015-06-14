@@ -28,9 +28,8 @@ using namespace client;
 
 int main(int argc, char * argv[]) {
     net::Client client;
-    // client.send(net::egress::zm::client::Connect({"127.0.0.1", 9001}));
-    client.send(net::egress::ChatMessage({"hello :D"}));
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    client.send(net::egress::zm::client::Connect({"127.0.0.1", 9001}));
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
     client.process();
     // net::messages::egress::zm::client::Connect c;
     // net::messages::egress::ChatMessage msg = {"foo"};

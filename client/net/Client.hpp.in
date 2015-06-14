@@ -6,10 +6,13 @@
 #include "messages.hpp"
 
 
-/*% macro senders(namespace, parents=()) %*/
+/*% macro senders(namespace, parents=None) %*/
+/*% set parents = [] if not parents else parents %*/
+
 /*% for struct in namespace.structs %*/
 /// Send a `/*{struct.name}*/` message to the Python client.
-void send(net::/*{namespace.name}*/::/*{struct.name}*/ entity) {
+void send(net::/*{(parents + [""])|join("::")}*/
+          /*{namespace.name}*/::/*{struct.name}*/ entity) {
     restoreThread();
     auto dict = PyDict_New();
     if (!dict) {
@@ -42,6 +45,10 @@ void send(net::/*{namespace.name}*/::/*{struct.name}*/ entity) {
     saveThread();
 }
 /*% endfor %*/
+
+/*% for ns in namespace.namespaces %*/
+/*{senders(ns, parents + [namespace.name])}*/
+/*% endfor %*/
 /*% endmacro %*/
 
 
@@ -54,12 +61,18 @@ public:
     /*% endfor %*/
 
 private:
-
     PyObject * nativeToPython(std::string string) {
         restoreThread();
         PyObject * py_string = PyUnicode_FromString(string.c_str());
         saveThread();
         return py_string;
+    }
+
+    PyObject * nativeToPython(long integer) {
+        restoreThread();
+        PyObject * py_int = PyLong_FromLong(integer);
+        saveThread();
+        return py_int;
     }
 
     void processMessage(std::string type, PyObject * entity) {

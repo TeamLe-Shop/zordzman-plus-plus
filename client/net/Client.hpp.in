@@ -3,12 +3,65 @@
 #include <vector>
 
 #include "BaseClient.hpp"
+#include "messages.hpp"
+
+
+/*% macro senders(namespace, parents=()) %*/
+/*% for struct in namespace.structs %*/
+/// Send a `/*{struct.name}*/` message to the Python client.
+void send(net::/*{namespace.name}*/::/*{struct.name}*/ entity) {
+    restoreThread();
+    auto dict = PyDict_New();
+    if (!dict) {
+        PyErr_Print();
+        saveThread();
+        return;  // TODO: no, do something better
+    }
+    PyObject * py_field;
+    /*%- for field in struct.fields %*/
+    py_field = nativeToPython(entity./*{field.name}*/);
+    if (py_field) {
+        auto was_set = PyDict_SetItemString(
+            dict, "/*{field.name}*/", py_field) == 0;
+        Py_DECREF(py_field);
+        if (!was_set) {
+            PyErr_Print();
+            Py_DECREF(dict);
+            saveThread();
+            return;
+        }
+    } else {
+        PyErr_Print();
+        Py_DECREF(dict);
+        saveThread();
+        return;
+    }
+    /*%- endfor %*/
+    BaseClient::send("/*{struct.type_name}*/", dict);
+    Py_DECREF(dict);
+    saveThread();
+}
+/*% endfor %*/
+/*% endmacro %*/
 
 
 namespace net {
 
 class Client : public BaseClient {
+public:
+    /*% for namespace in namespaces %*/
+    /*{senders(namespace)}*/
+    /*% endfor %*/
+
 private:
+
+    PyObject * nativeToPython(std::string string) {
+        restoreThread();
+        PyObject * py_string = PyUnicode_FromString(string.c_str());
+        saveThread();
+        return py_string;
+    }
+
     void processMessage(std::string type, PyObject * entity) {
         fprintf(stderr, "messaage: %s\n", type.c_str());
     }

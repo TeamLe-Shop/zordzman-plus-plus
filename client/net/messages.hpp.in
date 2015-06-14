@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Python.h"
 
 
@@ -30,9 +32,7 @@ struct /*{struct.name}*/ {
 
 
 namespace net {
-namespace messages {
 /*% for namespace in namespaces %*/
 /*{ns(namespace)}*/
 /*% endfor %*/
-}  // namespace messages
 }  // namespace net

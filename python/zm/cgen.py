@@ -25,7 +25,7 @@ When rendering the template the following context is available:
     a list of :class:`Struct`s.
 
     It is the structures which represent each message type. Each struct has
-    a name, it's own documentation and and a list of :class:`Field`s. And
+    a name, it's own documentation and a list of :class:`Field`s. And
     in-turn each field has a name and a type. The type is a Python primitive
     type, e.g. ``int`` or ``str``.
 
@@ -96,6 +96,7 @@ Struct = collections.namedtuple(
     "Struct",
     (
         "name",
+        "type_name",
         "doc",
         "fields",
     )
@@ -208,6 +209,7 @@ def _generate_struct(message_type):
     name = "".join(part.capitalize() for part in name_split[-1].split("."))
     return namespaces, Struct(
         name=name,
+        type_name=message_type.name,
         doc=_normalise_docstring(message_type.__doc__),
         fields=_generate_fields(message_type._schema),
     )

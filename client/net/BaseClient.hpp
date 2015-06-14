@@ -11,7 +11,25 @@ class BaseClient {
         BaseClient();
         virtual ~BaseClient();
 
-        void pump();
+        /// Process all available messages.
+        ///
+        /// This will pull all available messages from the Python client and
+        /// pass them through processMessage.
+        ///
+        /// This calls the Python client's `retrieve` method and expects it
+        /// to return an iterator of messages. If an iterator is not returned
+        /// then a std::runtime_error is thrown.
+        ///
+        /// Each message is also expected to have `entity` and `type`
+        /// attributes. The entity can be any Python object, and will be pass
+        /// as-is to processMessage. The type is expected to have its own
+        /// `name` attribute. This name is converted to a std::string before
+        /// being passed to processMessage.
+        ///
+        /// If any message in the iterator doesn't conform to these
+        /// expectations then it is ignored and processMessage will never be
+        /// called for it.
+        void process();
 
     protected:
         /// Re-enterant version of `PyEval_SaveThread`.
@@ -47,9 +65,6 @@ class BaseClient {
         PyObject * m_py_client_send;
         PyObject * m_py_client_retrieve;
 
-        PyObject* m_py_messages;
-        PyObject* m_py_o_messages;
-
         /// Call the Python entry point function.
         ///
         /// This calls a Python function which is expected to return a client
@@ -63,7 +78,7 @@ class BaseClient {
         /// set to an error message.
         bool invokeEntryPoint(PyObject * ep, char ** error);
 
-        virtual void convert(std::string type, PyObject* entity) = 0;
+        virtual void processMessage(std::string type, PyObject* entity) = 0;
 };
 
 

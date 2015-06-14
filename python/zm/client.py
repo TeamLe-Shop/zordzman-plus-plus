@@ -266,7 +266,9 @@ class Client(threading.Thread):
         self._socket.sendall(self.MAGIC_NUMBER)
 
     def retrieve(self):
-        raise NotImplementedError
+        # DO NOT return the pipeline directly. We don't want to expose the
+        # pipeline API in C++land.
+        yield from self._ingress
 
     def send(self, type_name, entity):
         """Send a message to the server.

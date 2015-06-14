@@ -28,11 +28,12 @@ using namespace client;
 
 int main(int argc, char * argv[]) {
     net::Client client;
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    client.process();
     // net::messages::egress::zm::client::Connect c;
     // net::messages::egress::ChatMessage msg = {"foo"};
     // net::Client client;
     // client.addHandler(handler);
-    // std::this_thread::sleep_for(std::chrono::milliseconds(200));
     // client.pump();
     // client.send({"component", "field", 0, Py_None});
     return 0;

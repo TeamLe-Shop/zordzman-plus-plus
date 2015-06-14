@@ -119,31 +119,52 @@ BaseClient::~BaseClient() {
 }
 
 
-void BaseClient::pump() {
+void BaseClient::process() {
     restoreThread();
-    auto nmessages = PyList_Size(m_py_messages);
-    for (auto i = 0; i < nmessages; i++) {
-        auto message = PyList_GetItem(m_py_messages, i);
-        auto type = std::string(PyUnicode_AsUTF8(
-                PyObject_GetAttr(message, PyUnicode_FromString("type"))));
-        auto entity = PyObject_GetAttr(message,
-            PyUnicode_FromString("entity"));
-        convert(type, entity);
+    PyObject * message;
+    PyObject * iterator = PyObject_CallFunction(m_py_client_retrieve, "");
+    if (!iterator) {
+        PyErr_Print();
+        saveThread();
+        return;
     }
-    PySequence_DelSlice(m_py_messages, 0, nmessages);
+    if (!PyIter_Check(iterator)) {
+        saveThread();
+        throw std::runtime_error("Client.retrieve did not return an iterator");
+    }
+    while ((message = PyIter_Next(iterator))) {
+        std::string type("");
+        PyObject * py_type_name = NULL;
+        PyObject * py_entity = PyObject_GetAttrString(message, "entity");
+        PyObject * py_type = PyObject_GetAttrString(message, "type");
+        if (py_type) {
+            py_type_name = PyObject_GetAttrString(py_type, "name");
+        }
+        if (py_type_name) {
+            // "The caller is not responsible for deallocating the buffer."
+            //      - PyUnicode documentation
+            auto c_name = PyUnicode_AsUTF8(py_type_name);
+            if (c_name) {
+                type += c_name;
+            }
+        }
+        if (!PyErr_Occurred()) {
+            processMessage(type, py_entity);
+        } else {
+            PyErr_Print();
+        }
+        Py_XDECREF(py_type);
+        Py_XDECREF(py_type_name);
+        Py_XDECREF(py_entity);
+        Py_DECREF(message);
+    }
+    Py_DECREF(iterator);
     saveThread();
 }
 
 
 void BaseClient::pushMessage(std::string type, PyObject* entity) {
     restoreThread();
-    auto message = Py_BuildValue("(sO)", type.c_str(), entity);
-    Py_DECREF(entity);
-    if (!message) {
-        PyErr_Print();
-    } else {
-        PyList_Append(m_py_o_messages, message);
-    }
     saveThread();
 }
 

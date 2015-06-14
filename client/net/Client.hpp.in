@@ -9,9 +9,11 @@
 /*% macro senders(namespace, parents=None) %*/
 /*% set parents = ["net"] if not parents else parents %*/
 /*% for struct in namespace.structs %*/
+/*% set has_fields = struct.fields|length %*/
 /// Send a `/*{struct.name}*/` message to the Python client.
 void send(/*{(parents + [""])|join("::")}*/
-          /*{namespace.name}*/::/*{struct.name}*/ entity) {
+          /*{namespace.name}*/::/*{struct.name}*/
+          /*% if has_fields %*/entity/*% endif %*/) {
     restoreThread();
     auto dict = PyDict_New();
     if (!dict) {
@@ -19,7 +21,9 @@ void send(/*{(parents + [""])|join("::")}*/
         saveThread();
         return;  // TODO: no, do something better
     }
+    /*%- if has_fields %*/
     PyObject * py_field;
+    /*% endif %*/
     /*%- for field in struct.fields %*/
     py_field = nativeToPython(entity./*{field.name}*/);
     if (py_field) {
@@ -66,6 +70,7 @@ void send(/*{(parents + [""])|join("::")}*/
 /*% macro converters(namespace, parents=None) %*/
 /*% set parents = ["net"] if not parents else parents %*/
 /*% for struct in namespace.structs %*/
+/*% set has_fields = struct.fields|length %*/
 /// Convert a Python dictionary to a /*{struct.name}*/
 ///
 /// If the dictionary could be successfully to a /*{struct.name}*/ then
@@ -82,7 +87,9 @@ bool pythonToMessage(PyObject * py_entity,
         saveThread();
         return false;
     }
+    /*%- if has_fields %*/
     PyObject * py_field;
+    /*% endif %*/
     /*%- for field in struct.fields %*/
     /*{ctype(field.type)}*/ c_field_/*{field.name}*/;
     py_field = PyDict_GetItemString(py_entity, "/*{field.name}*/");

@@ -80,7 +80,7 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
 
     auto xpos = position ? position->m_x.get() : 0;
     auto ypos = position ? position->m_y.get() : 0;
-
+    /*
     fmt::print("Frame: #{}, Entity ID: #{}:\n"
                "\tCharacter: Name: \"{}\", Health: {}, Max Health: {}\n"
                "\tRender Info: Sprite: \"{}\", Alpha: {:f}\n"
@@ -89,6 +89,7 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
                 character->m_health.get(), character->m_max_health.get(),
                 spriteinfo, alphainfo,
                 xpos, ypos);
+    */
 }
 
 }
@@ -364,7 +365,7 @@ void Client::handlePlayerLeft(Processor *, MessageEntity entity) {
 }
 
 void Client::handleEntityDeletion(Processor *, MessageEntity entity) {
-    m_level.m_entities.removeEntity((unsigned int)entity["id"].int_value());
+    m_level.m_entities.removeEntity(entity.int_value());
 }
 
 void Client::drawHUD() {
@@ -403,8 +404,9 @@ void Client::drawHUD() {
 
     entity::Entity & player = m_level.m_entities.get(m_playerID);
     auto character = COMPONENT(player, entity::CharacterComponent);
+    auto health = character ? character->m_health.get() : 0;
     drawText("default", fmt::format("{}: {}", language::translate("Health"),
-             character->m_health.get()), 0,
+             health), 0,
              0 + height - 32, 16, 16);
     drawText("default", fmt::format("{}:", language::translate("Weapon")),
              0, 0 + height - 32 + 16, 16, 16);

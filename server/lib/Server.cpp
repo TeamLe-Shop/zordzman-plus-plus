@@ -108,6 +108,10 @@ Server::Server(Config config) : m_config(config),
     int optval = 1;
     setsockopt(m_tcp_socket, SOL_SOCKET, SO_REUSEADDR,
                reinterpret_cast<const char *>(&optval), sizeof(optval));
+#ifdef __APPLE__
+    setsockopt(m_tcp_socket, SOL_SOCKET, SO_NOSIGPIPE,
+               reinterpret_cast<const char *>(&optval), sizeof(optval));
+#endif
 
 #ifdef _WIN32
     ioctlsocket(m_tcp_socket, FIONBIO, nullptr);

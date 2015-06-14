@@ -267,10 +267,14 @@ public:
             m_egress.pop();
             std::string encoded_message = message.dump() + " ";
             size_t sent = 0;
+            int flag = 0;
+#if defined(__linux__) || defined(__FreeBSD__)
+            flag = MSG_NOSIGNAL;
+#endif
             while (sent < encoded_message.size()) {
                 ssize_t data_or_error =
                     ::send(m_socket, encoded_message.data() + sent,
-                           encoded_message.size() - sent, 0);
+                           encoded_message.size() - sent, flag);
                 if (data_or_error == -1) {
                     fmt::print("(MessageProcessor) Error sending: {}\n",
                                strerror(errno));

@@ -13,30 +13,32 @@
 using namespace client;
 
 
-// void handler(net::messages::EntityState state) {
-//     fprintf(
-//         stderr,
-//         "HI I'M NOLHANDLER: %li.%s.%s = ",
-//         state.id,
-//         state.component.c_str(),
-//         state.field.c_str()
-//     );
-//     PyObject_Print(state.value, stderr, Py_PRINT_RAW);
-//     fprintf(stderr, "\n");
-// }
+void es_handler(net::ingress::EntityState state) {
+    fprintf(
+        stderr,
+        "HI I'M NOLHANDLER: %li.%s.%s = (%p) ",
+        state.id,
+        state.component.c_str(),
+        state.field.c_str(),
+        state.value
+    );
+    PyObject_Print(state.value, stderr, Py_PRINT_RAW);
+    fprintf(stderr, "\n");
+}
+
+
+void handler(net::ingress::zm::client::Connected) {
+    fprintf(stderr, "Connected!\n");
+}
 
 
 int main(int argc, char * argv[]) {
     net::Client client;
+    client.addHandler(handler);
+    client.addHandler(es_handler);
     client.send(net::egress::zm::client::Connect({"127.0.0.1", 9001}));
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     client.process();
-    // net::messages::egress::zm::client::Connect c;
-    // net::messages::egress::ChatMessage msg = {"foo"};
-    // net::Client client;
-    // client.addHandler(handler);
-    // client.pump();
-    // client.send({"component", "field", 0, Py_None});
     return 0;
     try {
         Config cfg("config/config.json");

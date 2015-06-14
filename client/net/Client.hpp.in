@@ -96,6 +96,11 @@ bool pythonToMessage(PyObject * py_entity,
     }
     Py_XDECREF(py_field);
     /*% endfor %*/
+    *entity = {
+    /*% for field in struct.fields -%*/
+        c_field_/*{field.name}*//*% if not loop.last %*/,/*% endif %*/
+    /*%- endfor %*/
+    };
     saveThread();
     return true;
 }
@@ -106,6 +111,50 @@ bool pythonToMessage(PyObject * py_entity,
 /*% endmacro %*/
 
 
+/*% macro handlers(namespace, parents=None) %*/
+/*% set parents = ["net"] if not parents else parents %*/
+/*% for struct in namespace.structs %*/
+/// Add a handler for /*{struct.type_name}*/ messages.
+void addHandler(std::function<void (
+                Client *,
+                /*{(parents + [""])|join("::")}*/
+                /*{-namespace.name}*/::/*{struct.name}*/)> callback) {
+    m_/*{(parents + [""])|join("_")}*/
+    /*{-namespace.name}*/_/*{struct.name}*/_callbacks.push_back(callback);
+}
+
+/// Add a handler for /*{struct.type_name}*/ messages.
+void addHandler(std::function<void (
+                /*{(parents + [""])|join("::")}*/
+                /*{-namespace.name}*/::/*{struct.name}*/)> callback) {
+    addHandler([callback](
+        Client *, /*{(parents + [""])|join("::")}*/
+                 /*{-namespace.name}*/::/*{struct.name}*/ entity) {
+            return callback(entity);
+        }
+    );
+}
+/*% endfor %*/
+/*% for ns in namespace.namespaces %*/
+/*{handlers(ns, parents + [namespace.name])}*/
+/*% endfor %*/
+/*% endmacro %*/
+
+
+/*% macro callbacks(namespace, parents=None) %*/
+/*% set parents = ["net"] if not parents else parents %*/
+/*% for struct in namespace.structs %*/
+std::vector<
+    std::function<void (Client *,
+        /*{(parents + [""])|join("::")}*/
+        /*{-namespace.name}*/::/*{struct.name}*/)
+    >> m_/*{(parents + [""])|join("_")}*/
+        /*{-namespace.name}*/_/*{struct.name}*/_callbacks;
+/*% endfor %*/
+/*% for ns in namespace.namespaces %*/
+/*{callbacks(ns, parents + [namespace.name])}*/
+/*% endfor %*/
+/*% endmacro %*/
 
 
 namespace net {
@@ -115,6 +164,12 @@ public:
     /*% for namespace in namespaces %*/
     /*% if namespace.name == "egress" %*/
     /*{senders(namespace)}*/
+    /*% endif %*/
+    /*% endfor %*/
+
+    /*% for namespace in namespaces %*/
+    /*% if namespace.name == "ingress" %*/
+    /*{handlers(namespace)}*/
     /*% endif %*/
     /*% endfor %*/
 
@@ -195,6 +250,7 @@ private:
     /*% for namespace in namespaces %*/
     /*% if namespace.name == "ingress" %*/
     /*{converters(namespace)}*/
+    /*{callbacks(namespace)}*/
     /*% endif %*/
     /*% endfor %*/
 
@@ -208,6 +264,11 @@ private:
             /*{-namespace.name}*/::/*{struct.name}*/ c_entity;
             auto success = pythonToMessage(entity, &c_entity);
             if (success) {
+                for (auto callback :
+                     m_/*{(parents + [""])|join("_")}*/
+                     /*{-namespace.name}*/_/*{struct.name}*/_callbacks) {
+                    callback(this, c_entity);
+                 }
             } else {
                 PyErr_Print();
                 PyObject_Print(entity, stderr, Py_PRINT_RAW);

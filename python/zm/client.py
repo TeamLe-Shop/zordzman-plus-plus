@@ -152,6 +152,7 @@ class Client(threading.Thread):
         self._socket.connect((host, port))
         self._peer_name = self._socket.getpeername()
         self._socket.sendall(self.MAGIC_NUMBER)
+        self._ingress.push("zm:client:connected", {})
 
     def retrieve(self):
         # DO NOT return the pipeline directly. We don't want to expose the

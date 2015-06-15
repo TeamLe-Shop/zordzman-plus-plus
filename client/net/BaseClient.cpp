@@ -10,8 +10,6 @@ namespace net {
 BaseClient::BaseClient() {
     Py_InitializeEx(0);
     PyEval_InitThreads();
-    PyList_Insert(PySys_GetObject("path"),
-                  0, PyUnicode_FromString("../python/"));
     auto zm = PyImport_ImportModule("zm");
     if (!zm) {
         PyErr_Print();

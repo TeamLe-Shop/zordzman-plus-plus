@@ -82,6 +82,11 @@ endif()
 
 # Python
 
+find_library(TIFF_LIBRARY tiff)
+message(STATUS "Found libtiff: ${TIFF_LIBRARY}")
+find_package(LibLZMA REQUIRED)
+set(CURSES_NEED_NCURSES TRUE)
+find_package(Curses REQUIRED)
 find_package(PythonLibs REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIR})
 
@@ -93,6 +98,10 @@ add_executable(zordzman ${CLIENT_SOURCES})
 
 file(GLOB_RECURSE SERVER_SOURCES server/*.*pp)
 add_executable(zordzman-server ${SERVER_SOURCES})
+
+# Install binaries
+message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+install(TARGETS zordzman DESTINATION bin)
 
 target_link_libraries(common_entity json11)
 target_link_libraries(common_util cppformat)
@@ -111,6 +120,9 @@ target_link_libraries(zordzman
     ${SDLMIXER_LIBRARY}
     ${SDLTTF_LIBRARY}
     ${PYTHON_LIBRARIES}
+    ${CURSES_LIBRARIES}
+    ${TIFF_LIBRARY}
+    ${LIBLZMA_LIBRARIES}
     json11
     cppformat
     server

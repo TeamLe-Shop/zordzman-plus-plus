@@ -1,0 +1,25 @@
+package:
+    name: zordzman
+    version: 0.1.0
+
+build:
+    number: 0
+
+source:
+    path: ../../
+
+requirements:
+    build:
+        - cmake
+        - ncurses
+        - pillow
+        - python
+        - zm
+    run:
+        - ncurses
+        - python
+        - zm
+
+about:
+    home: https://github.com/TeamLe-Shop/zordzman-plus-plus
+    license: GPLv2

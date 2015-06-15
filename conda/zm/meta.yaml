@@ -1,0 +1,26 @@
+package:
+    name: zm
+    version: 0.1.0
+
+build:
+    number: 0
+
+source:
+    path: ../../
+
+requirements:
+    build:
+        - python
+        - setuptools
+    run:
+        - python
+        - formencode
+        - jinja2
+
+test:
+    imports:
+        - zm
+
+about:
+    home: https://github.com/TeamLe-Shop/zordzman-plus-plus
+    license: GPLv2

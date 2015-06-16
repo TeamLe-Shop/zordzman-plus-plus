@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.0)
 
 project(zordzman)
 
+# The Python version needed. This is the version of Python that will be used
+# to run additional build steps and the version that is embedded into the
+# zordzman and zordzman-server binaries. Any patch number will be allowed.
+set(PYTHON_VERSION_MAJOR 3)
+set(PYTHON_VERSION_MINOR 4)
+
 # Detect compiler
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(USING_GCC TRUE)
@@ -163,7 +169,49 @@ file(GLOB_RECURSE RESOURCE_METAS
     resources/sound/sound_meta.json
 )
 
-execute_process(COMMAND ./tools/make-spritesheet.py ${SPRITESHEET_METAS}
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-execute_process(COMMAND ./tools/make-resource-package.py ${RESOURCE_METAS}
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+set(RESOURCES_DIRECTORY ${CMAKE_BINARY_DIR}/resources)
+message(STATUS "Making resources build directory ${RESOURCES_DIRECTORY}")
+file(MAKE_DIRECTORY ${RESOURCES_DIRECTORY})
+
+add_custom_command(
+    TARGET zordzman POST_BUILD
+    COMMAND
+        rm ${RESOURCES_DIRECTORY}/*
+    COMMAND
+        python
+        ${CMAKE_CURRENT_SOURCE_DIR}/tools/make-spritesheet.py
+        ${SPRITESHEET_METAS}
+    COMMAND
+        python
+        ${CMAKE_CURRENT_SOURCE_DIR}/tools/make-resource-package.py
+        ${RESOURCE_METAS}
+    DEPENDS ${SPRITESHEET_METAS} ${RESOURCE_METAS}
+    WORKING_DIRECTORY ${RESOURCES_DIRECTORY}
+    COMMENT "Building resources tarball"
+)
+
+execute_process(
+    COMMAND python --version
+    ERROR_VARIABLE PYTHON_VERSION_FULL
+    ERROR_STRIP_TRAILING_WHITESPACE
+)
+string(
+    REGEX MATCH
+    "[0-9]+\\.[0-9]+\\.[0-9]+"
+    PYTHON_VERSION
+    ${PYTHON_VERSION_FULL}
+)
+math(EXPR PYTHON_VERSION_MINOR_MAX "${PYTHON_VERSION_MINOR} + 1")
+set(PYTHON_VERSION_MIN "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+set(PYTHON_VERSION_MAX "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_MAX}")
+if(PYTHON_VERSION STREQUAL "")
+    message(FATAL_ERROR "Couldn't determine Python version")
+endif()
+if((${PYTHON_VERSION} VERSION_LESS ${PYTHON_VERSION_MIN})
+    OR (${PYTHON_VERSION} VERSION_EQUAL ${PYTHON_VERSION_MAX})
+    OR (${PYTHON_VERSION} VERSION_GREATER ${PYTHON_VERSION_MAX}))
+    message(FATAL_ERROR "Need Python ${PYTHON_VERSION_MAJOR}."
+            "${PYTHON_VERSION_MINOR}.x but found ${PYTHON_VERSION}")
+endif()
+message(STATUS "Python version: ${PYTHON_VERSION}")

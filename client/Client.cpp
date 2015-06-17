@@ -85,10 +85,8 @@ Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_chatMessages(10),
       m_resources("resources.tar"), m_cfg(cfg), m_hud(hud),
       m_graph_data(150) {
-
     m_chatMessages.resize(0);
     m_graph_data.resize(0);
-
     m_level.m_entities.registerComponent(
         entity::CharacterComponent::getComponentName(),
         entity::CharacterComponent::new_);
@@ -98,7 +96,6 @@ Client::Client(Config const & cfg, HUD hud)
     m_level.m_entities.addSystem(debugSystem);
     m_level.m_entities.addSystem(renderSystem);
     m_instance = this;
-
     Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
 }
 
@@ -121,22 +118,21 @@ void Client::exec() {
             }
         }
 
-        // Clear the screen.
-        glClear(GL_COLOR_BUFFER_BIT);
+        m_level.m_entities.cycle();
 
-        // Render the level's tiles and entities
-        m_level.render();
-
+        glClear(GL_COLOR_BUFFER_BIT);  // Clear the screen.
+        m_level.render();  // Render the level's tiles and entities
         drawHUD();
 
+        // TODO: refactor this out
         glColor3f(1, 1, 1);
-
         m_graph_data.push_back(msgs_recvd);
         if (m_graph_data.size() > max_graph_data) {
             m_graph_data.erase(m_graph_data.begin());
             m_graph_data.resize(max_graph_data);
         }
 
+        // TODO: refactor this out
         // NOTE: Don't depend on SDL_GetTicks too much.
         m_currentTime = SDL_GetTicks();
         if (m_currentTime > m_lastMessage + 5000 && m_chatMessages.size() > 0) {
@@ -145,9 +141,6 @@ void Client::exec() {
             m_chatMessages.resize(m_chatMessages.size() - 1);
             m_lastMessage = m_currentTime;
         }
-
-        m_level.m_entities.cycle();
-
         m_window.present();
     }
 }

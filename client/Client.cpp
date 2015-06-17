@@ -118,14 +118,14 @@ void Client::exec() {
             }
         }
 
-        m_level.m_entities.cycle();
-
         glClear(GL_COLOR_BUFFER_BIT);  // Clear the screen.
         m_level.render();  // Render the level's tiles and entities
         drawHUD();
+        glColor3f(1, 1, 1);
+        m_level.m_entities.cycle();  // Calls the rendering system
+        m_window.present();
 
         // TODO: refactor this out
-        glColor3f(1, 1, 1);
         m_graph_data.push_back(msgs_recvd);
         if (m_graph_data.size() > max_graph_data) {
             m_graph_data.erase(m_graph_data.begin());
@@ -141,7 +141,6 @@ void Client::exec() {
             m_chatMessages.resize(m_chatMessages.size() - 1);
             m_lastMessage = m_currentTime;
         }
-        m_window.present();
     }
 }
 

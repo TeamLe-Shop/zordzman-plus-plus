@@ -119,7 +119,6 @@ Client::Client(Config const & cfg, HUD hud)
     m_instance = this;
 
     Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
-    audio::playMusic("snayk");
 }
 
 Client::~Client() {

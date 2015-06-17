@@ -6,6 +6,8 @@
 #include "Config.hpp"
 #include "ResourceManager.hpp"
 #include "HUD.hpp"
+#include "net/Client.hpp"
+#include "net/messages.hpp"
 
 #include "base64.hpp"
 #include "json11.hpp"
@@ -51,8 +53,6 @@ public:
     static Client & get();
     /// Get the window on which things are rendered.
     sys::RenderWindow & getWindow();
-    /// Join a game server.
-    bool joinServer();
     /// Draw the HUD.
     void drawHUD();
     /// Check if the client has the map the server has
@@ -67,22 +67,6 @@ private:
     Client & operator=(const Client &) = delete;
     sys::SysContext m_system;
     sys::RenderWindow m_window;
-    net::Socket m_socket;
-    struct sockaddr_in m_socket_addr;
-    net::MessageProcessor<> m_msg_proc;
-
-    // Handler functions
-    void handleMapOffer(Processor * /*processor*/, net::MessageEntity entity);
-    void handleMapContents(Processor * /*processor*/,
-                           net::MessageEntity entity);
-    void handleServerMessage(Processor * /*processor*/,
-                             net::MessageEntity entity);
-    void handleEntityState(Processor * /*processor*/,
-                           net::MessageEntity entity);
-    void handlePlayerID(Processor * /*processor*/, net::MessageEntity entity);
-
-    void handlePlayerJoined(Processor *, net::MessageEntity entity);
-    void handlePlayerLeft(Processor *, net::MessageEntity entity);
 
     std::vector<ChatMessage> m_chatMessages;
     uint32_t m_lastMessage, m_currentTime;

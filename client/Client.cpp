@@ -107,25 +107,6 @@ Client::Client(Config const & cfg, HUD hud)
 
     m_chatMessages.resize(0);
     m_graph_data.resize(0);
-#ifdef _WIN32
-    WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
-    if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
-        int err = WSAGetLastError();
-        throw std::runtime_error(
-            fmt::format("Couldn't create socket: (wsagetlasterror: {})", err));
-    }
-#else
-    if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
-        throw std::runtime_error(
-            fmt::format("Couldn't create socket: {}", strerror(errno)));
-    }
-#endif
-
-    m_socket_addr.sin_family = AF_INET;
-
-    if (!joinServer()) {
-        throw std::runtime_error("Couldn't connect to server.");
-    }
 
     m_level.m_entities.registerComponent(
         entity::CharacterComponent::getComponentName(),
@@ -143,79 +124,8 @@ Client::Client(Config const & cfg, HUD hud)
 
 Client::~Client() {
     m_instance = nullptr;
-#ifdef _WIN32
-    closesocket(m_socket);
-    WSACleanup();
-#else
-    close(m_socket);
-#endif
 }
 
-bool Client::joinServer() {
-    memset(&m_socket_addr, 0, sizeof(m_socket_addr));
-
-    common::util::net::resolvehost(m_socket_addr, m_cfg.host);
-
-    m_socket_addr.sin_port = htons(m_cfg.port);
-
-    fmt::print("Server IP: {}\n", common::util::net::ipaddr(m_socket_addr));
-
-    if (connect(m_socket, (struct sockaddr *)&m_socket_addr,
-                sizeof m_socket_addr) < 0) {
-        fmt::print(stderr, "[ERROR] ({}) Could not connect to host: {}\n",
-                   errno, strerror(errno));
-#ifdef _WIN32
-        closesocket(m_socket);
-#else
-        close(m_socket);
-#endif
-        return false;
-    }
-#ifdef _WIN32
-    ioctlsocket(m_socket, FIONBIO, nullptr);
-#else
-    fcntl(m_socket, F_SETFL, O_NONBLOCK);
-#endif
-
-    m_msg_proc.setSocket(m_socket);
-
-    size_t total_sent = 0;
-    size_t length = 4;
-
-    while (total_sent < length) {
-        auto additive = send(m_socket, net::MAGIC_NUMBER.c_str(), length, 0);
-
-        if (additive == -1) {
-            fmt::print(stderr, "[ERROR] Error sending magic num: {}\n",
-                       strerror(errno));
-            break;
-        }
-
-        total_sent += additive;
-    }
-
-    using namespace std::placeholders;
-
-    m_msg_proc.addMutedHandler(
-        "map.offer", std::bind(&Client::handleMapOffer, this, _1, _2));
-    m_msg_proc.addMutedHandler(
-        "map.contents", std::bind(&Client::handleMapContents, this, _1, _2));
-    m_msg_proc.addMutedHandler(
-        "server.message",
-        std::bind(&Client::handleServerMessage, this, _1, _2));
-    m_msg_proc.addMutedHandler("disconnect", handleDisconnect);
-    m_msg_proc.addMutedHandler(
-        "entity.state", std::bind(&Client::handleEntityState, this, _1, _2));
-    m_msg_proc.addMutedHandler(
-        "player.id", std::bind(&Client::handlePlayerID, this, _1, _2));
-    m_msg_proc.addMutedHandler(
-        "player.joined", std::bind(&Client::handlePlayerJoined, this, _1, _2));
-    m_msg_proc.addMutedHandler(
-        "player.left", std::bind(&Client::handlePlayerLeft, this, _1, _2));
-
-    m_msg_proc.send("client.nick", m_cfg.name);
-    return true;
-}
 
 void Client::exec() {
     using namespace drawingOperations;
@@ -241,14 +151,11 @@ void Client::exec() {
 
         glColor3f(1, 1, 1);
 
-        m_msg_proc.process(&msgs_recvd);
         m_graph_data.push_back(msgs_recvd);
         if (m_graph_data.size() > max_graph_data) {
             m_graph_data.erase(m_graph_data.begin());
             m_graph_data.resize(max_graph_data);
         }
-        m_msg_proc.dispatch();
-        m_msg_proc.flushSendQueue();
 
         // NOTE: Don't depend on SDL_GetTicks too much.
         m_currentTime = SDL_GetTicks();
@@ -301,7 +208,7 @@ void Client::checkForMap(std::string map, std::string hash) {
     }
 
     if (!found_match) {
-        m_msg_proc.send("map.request", nullptr);
+        // TODO: m_msg_proc.send("map.request", nullptr);
     }
 }
 
@@ -323,43 +230,6 @@ void Client::addMessage(std::string msg) {
     } else {
         m_chatMessages.push_back({msg, m_lastMessage});
     }
-}
-
-void Client::handleMapOffer(Processor *, MessageEntity entity) {
-    checkForMap(entity["name"].string_value(), entity["hash"].string_value());
-}
-
-void Client::handleMapContents(Processor *, MessageEntity entity) {
-    writeMapContents(entity.string_value());
-}
-
-void Client::handleServerMessage(Processor *, MessageEntity entity) {
-    addMessage(fmt::format("{}", entity.string_value()));
-}
-
-void Client::handleEntityState(Processor *, MessageEntity entity) {
-    m_level.m_entities.handleEntityStateChange(entity);
-}
-
-void Client::handlePlayerID(Processor *, MessageEntity entity) {
-    if (!entity.is_number()) {
-        fmt::print("Server sent invalid player ID! Abandon ship!\n");
-        exit(0);
-    }
-    m_playerID = entity.int_value();
-    m_receivedID = true;
-}
-
-void Client::handlePlayerJoined(Processor *, MessageEntity entity) {
-    audio::playSound("playerjoined");
-    addMessage(fmt::format("Player \"{}\" joined the game.",
-                           entity.string_value()));
-}
-
-void Client::handlePlayerLeft(Processor *, MessageEntity entity) {
-    audio::playSound("playerleft");
-    addMessage(fmt::format("Player \"{}\" left the game.",
-                           entity.string_value()));
 }
 
 void Client::drawHUD() {
@@ -411,7 +281,7 @@ void Client::drawHUD() {
 
     glColor3f(1, 1, 1);
     std::string serverstr =
-        fmt::format("Server: {}", common::util::net::ipaddr(m_socket_addr));
+        fmt::format("Server: {}", "SERVER ADDRESS");
     std::string mapstr = fmt::format("Map: {}", m_map_name);
     drawText("default", serverstr, width - (8 * serverstr.size()),
              height - 8, 8, 8);
@@ -463,7 +333,7 @@ void Client::input(SDL_Event event) {
             if (chat_open) {
                 SDL_StopTextInput();
                 if (!chat_string.empty()) {
-                    m_msg_proc.send("chat.message", chat_string);
+                    // TODO: m_msg_proc.send("chat.message", chat_string);
                 }
             } else {
                 SDL_StartTextInput();

@@ -57,16 +57,6 @@ bool net_graph = true;
 Client * Client::m_instance;
 
 namespace {
-// Handler functions
-
-void handleDisconnect(Processor * /*processor*/, MessageEntity entity) {
-    fmt::print("Disconnected from server ({})\n", entity.string_value());
-    // What do I do here? I want to exit, what's the appropriate function to
-    // call?
-    // TODO: When we implement game states, we should perhaps change this
-    // to go back to previous state?
-    exit(0);
-}
 
 // Systems
 void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {

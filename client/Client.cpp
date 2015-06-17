@@ -43,8 +43,6 @@
 #include "common/extlib/hash-library/md5.h"
 
 
-using namespace net;
-
 namespace client {
 
 using namespace json11;

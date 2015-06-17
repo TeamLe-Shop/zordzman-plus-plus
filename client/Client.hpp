@@ -92,9 +92,6 @@ private:
     std::string m_map_name;
     Config const & m_cfg;
     HUD m_hud;
-#ifdef _WIN32
-    WSADATA m_wsa_data;
-#endif
     Mix_Music * m_music = nullptr;
     unsigned int m_playerID;
     bool m_receivedID = false;

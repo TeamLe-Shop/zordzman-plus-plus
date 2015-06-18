@@ -71,12 +71,10 @@ public:
     /// Add a chat message to be displayed.
     void addMessage(std::string message);
 
-    /// Handle an SDL event.
-    void input(SDL_Event event);
-
 private:
     Client(const Client &) = delete;
     Client & operator=(const Client &) = delete;
+    bool m_running;
 
     sys::SysContext m_system;
     sys::RenderWindow m_window;
@@ -95,6 +93,9 @@ private:
     size_t msgs_recvd;
     size_t max_graph_data = 150;
     std::vector<size_t> m_graph_data;
+
+    /// Handle all available SDL events.
+    void handleEvents();
 
 public:
     ResourceManager m_resources;

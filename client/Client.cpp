@@ -85,6 +85,7 @@ Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_chatMessages(10),
       m_resources("resources.tar"), m_cfg(cfg), m_hud(hud),
       m_graph_data(150) {
+    m_running = true;
     m_chatMessages.resize(0);
     m_graph_data.resize(0);
     m_level.m_entities.registerComponent(
@@ -105,19 +106,8 @@ Client::~Client() {
 
 
 void Client::exec() {
-    using namespace drawingOperations;
-    for (;;) {
-        SDL_Event event;
-
-        // Break from our game loop if they've hit the 'X' button.
-        if (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                break;
-            } else {
-                input(event);
-            }
-        }
-
+    while (m_running) {
+        handleEvents();
         glClear(GL_COLOR_BUFFER_BIT);  // Clear the screen.
         m_level.render();  // Render the level's tiles and entities
         drawHUD();
@@ -135,7 +125,8 @@ void Client::exec() {
         // TODO: refactor this out
         // NOTE: Don't depend on SDL_GetTicks too much.
         m_currentTime = SDL_GetTicks();
-        if (m_currentTime > m_lastMessage + 5000 && m_chatMessages.size() > 0) {
+        if (m_currentTime > m_lastMessage + 5000
+                && m_chatMessages.size() > 0) {
             std::move(m_chatMessages.begin() + 1, m_chatMessages.end(),
                       m_chatMessages.begin());
             m_chatMessages.resize(m_chatMessages.size() - 1);
@@ -298,37 +289,45 @@ Client & Client::get() {
 
 sys::RenderWindow & Client::getWindow() { return m_window; }
 
-void Client::input(SDL_Event event) {
-    switch (event.type) {
-    case SDL_KEYDOWN:
-        if (event.key.keysym.sym == SDLK_RETURN) {
-            if (chat_open) {
-                SDL_StopTextInput();
-                if (!chat_string.empty()) {
-                    // TODO: m_msg_proc.send("chat.message", chat_string);
-                }
-            } else {
-                SDL_StartTextInput();
-            }
-            chat_open = !chat_open;
-            chat_string = "";
-        }
 
-        if (chat_open) {
-            if (event.key.keysym.sym == SDLK_BACKSPACE) {
-                if (!chat_string.empty()) {
-                    common::util::string::utf8_pop_character(chat_string);
-                } else {
-                    audio::playSound("error");
+void Client::handleEvents() {
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+            case SDL_QUIT:
+                m_running = false;
+                break;
+            case SDL_KEYDOWN:
+                if (event.key.keysym.sym == SDLK_RETURN) {
+                    if (chat_open) {
+                        SDL_StopTextInput();
+                        if (!chat_string.empty()) {
+                            // TODO: m_msg_proc.send(
+                            //          "chat.message", chat_string);
+                        }
+                    } else {
+                        SDL_StartTextInput();
+                    }
+                    chat_open = !chat_open;
+                    chat_string = "";
                 }
-            }
+                if (chat_open) {
+                    if (event.key.keysym.sym == SDLK_BACKSPACE) {
+                        if (!chat_string.empty()) {
+                            common::util::string::utf8_pop_character(
+                                chat_string);
+                        } else {
+                            audio::playSound("error");
+                        }
+                    }
+                }
+                break;
+            case SDL_TEXTINPUT:
+                if (chat_open) {
+                    chat_string += event.text.text;
+                }
+                break;
         }
-        break;
-    case SDL_TEXTINPUT:
-        if (chat_open) {
-            chat_string += event.text.text;
-        }
-        break;
     }
 }
 

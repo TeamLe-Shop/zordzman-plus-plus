@@ -444,7 +444,7 @@ void Client::drawHUD() {
         glColor4f(0.2, 0.2, 0.2, fade);
         drawRectangle(1, m_hud.border.y - 9, width - 1, 8);
         glColor4f(1, 1, 1, fade);
-        drawText("default", fmt::format("Say: {}", chat_string),
+        drawText("default", fmt::format("{}: {}", language::translate("Say"), chat_string),
                  0, m_hud.border.y - 9, 8, 8);
     }
 

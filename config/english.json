@@ -2,5 +2,7 @@
     "Health": "Health",
     "Weapon": "Weapon",
     "Map": "Map",
-    "Server": "Server"
+    "Server": "Server",
+    "Player \"{}\" joined the game.": "Player \"{}\" joined the game.",
+    "Player \"{}\" left the game.": "Player \"{}\" left the game."
 }

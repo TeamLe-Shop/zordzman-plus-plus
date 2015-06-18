@@ -354,13 +354,13 @@ void Client::handlePlayerID(Processor *, MessageEntity entity) {
 
 void Client::handlePlayerJoined(Processor *, MessageEntity entity) {
     audio::playSound("playerjoined");
-    addMessage(fmt::format("Player \"{}\" joined the game.",
+    addMessage(fmt::format(language::translate("Player \"{}\" joined the game."),
                            entity.string_value()));
 }
 
 void Client::handlePlayerLeft(Processor *, MessageEntity entity) {
     audio::playSound("playerleft");
-    addMessage(fmt::format("Player \"{}\" left the game.",
+    addMessage(fmt::format(language::translate("Player \"{}\" left the game."),
                            entity.string_value()));
 }
 

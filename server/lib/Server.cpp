@@ -61,15 +61,15 @@ void handleClientNick(Processor *, MessageEntity entity, Server * server,
                       Client * client) {
     for (Client & c : server->m_clients) {
         if (c.name == entity.string_value()) {
-            client->m_msg_proc.send("server.message", "That nick is taken.");
+            client->m_msg_proc.send("nick.taken", nullptr);
             return;
         }
     }
     client->m_logger.log("[INFO] Changed nick ({} -> {})", client->name,
                          entity.string_value());
-    server->sendAll("server.message", fmt::format("* {} changed nick to {}",
-                                                  client->name,
-                                                  entity.string_value()));
+    server->sendAll("nick.change", Json::object {
+                    { "old", client->name },
+                    { "new", entity.string_value() }});
     client->name = entity.string_value();
 
     entity::Entity& ent = server->m_level.getEntity(client->m_playerID);

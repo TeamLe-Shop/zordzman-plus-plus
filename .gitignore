@@ -1,3 +1,4 @@
 CMakeLists.txt.user
 doc/
 build/
+config/config.json

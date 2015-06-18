@@ -211,6 +211,12 @@ bool Client::joinServer() {
     m_msg_proc.addMutedHandler(
         "entity.delete",
         std::bind(&Client::handleEntityDeletion, this, _1, _2));
+    m_msg_proc.addMutedHandler(
+        "nick.taken",
+        std::bind(&Client::handleNickTaken, this, _1));
+    m_msg_proc.addMutedHandler(
+        "nick.change",
+        std::bind(&Client::handleNickChange, this, _1, _2));
 
     m_msg_proc.send("client.nick", m_cfg.name);
     return true;
@@ -366,6 +372,17 @@ void Client::handlePlayerLeft(Processor *, MessageEntity entity) {
 
 void Client::handleEntityDeletion(Processor *, MessageEntity entity) {
     m_level.m_entities.removeEntity(entity.int_value());
+}
+
+void Client::handleNickTaken(Processor *) {
+    addMessage(fmt::format(language::translate("Nickname already taken.")));
+}
+
+void Client::handleNickChange(Processor *, MessageEntity entity) {
+    std::string str =
+        fmt::format(language::translate("\"{}\" changed name to \"{}\"."),
+                    entity["old"].string_value(), entity["new"].string_value());
+    addMessage(str);
 }
 
 void Client::drawHUD() {

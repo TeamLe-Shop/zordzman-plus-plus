@@ -27,6 +27,7 @@ public:
     std::string name = "Player";
     std::string level_dir = "levels";
     std::string hud = "default_hud.json";
+    std::string language = "english";
 };
 
 } // namespace client

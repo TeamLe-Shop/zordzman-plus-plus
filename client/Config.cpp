@@ -21,6 +21,7 @@ Config::Config(std::string config) {
     name = value(json["name"], "Player").string_value();
     level_dir = value(json["level_dir"], "levels").string_value();
     hud = value(json["hud"], "default_hud.json").string_value();
+    language = value(json["language"], "english").string_value();
 }
 
 }

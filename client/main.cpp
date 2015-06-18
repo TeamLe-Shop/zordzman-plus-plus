@@ -24,7 +24,7 @@ int main(int argc, char * argv[]) {
         // a customizer's reference.
         HUD hud(fmt::format("config/{}", cfg.hud));
 
-        language::setLanguage("english");
+        language::setLanguage(cfg.language);
 
         if (argc > 1) {
             cfg.host = argv[1];

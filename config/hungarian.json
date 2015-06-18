@@ -5,5 +5,7 @@
     "Server": "Szerver",
     "Player \"{}\" joined the game.": "\"{}\" nevű játékos beszállt a játékba.",
     "Player \"{}\" left the game.": "\"{}\" nevű játékos kiszállt a játékból.",
-    "Say": "Mondanivaló"
+    "Say": "Mondanivaló",
+    "Nickname already taken.": "A becenév már foglalt.",
+    "\"{}\" changed name to \"{}\".": "\"{}\" megváltoztatta a nevét \"{}\"-ra."
 }

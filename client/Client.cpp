@@ -420,8 +420,9 @@ void Client::drawHUD() {
 
     glColor3f(1, 1, 1);
     std::string serverstr =
-        fmt::format("Server: {}", common::util::net::ipaddr(m_socket_addr));
-    std::string mapstr = fmt::format("Map: {}", m_map_name);
+        fmt::format("{}: {}", language::translate("Server"),
+                              common::util::net::ipaddr(m_socket_addr));
+    std::string mapstr = fmt::format("{}: {}", language::translate("Map"), m_map_name);
     drawText("default", serverstr, width - (8 * serverstr.size()),
              height - 8, 8, 8);
     drawText("default", mapstr, width - (8 * mapstr.size()), height - 16, 8, 8);

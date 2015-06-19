@@ -1,6 +1,6 @@
-#include "gfx/Renderer.hpp"
 #include "common/entity/components/character.hpp"
 #include "common/entity/components/render.hpp"
+#include "gfx/Renderer.hpp"
 
 
 using namespace client::drawingOperations;

@@ -202,10 +202,6 @@ void Client::drawHUD() {
         glColor4f(1, 1, 1, 1);
     }
 
-    if (!m_receivedID) {
-        return;
-    }
-
     if (chat_open) {
         if (chat_fade_timer < chat_maxfade) {
             chat_fade_timer++;

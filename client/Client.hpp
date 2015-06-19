@@ -1,5 +1,6 @@
 #pragma once
 
+#include "client/gfx/Renderer.hpp"
 #include "sys/RenderWindow.hpp"
 #include "sys/SysContext.hpp"
 #include "level/Level.hpp"
@@ -78,6 +79,7 @@ private:
 
     sys::SysContext m_system;
     sys::RenderWindow m_window;
+    gfx::Renderer m_renderer;
 
     uint32_t m_lastMessage;
     uint32_t m_currentTime;

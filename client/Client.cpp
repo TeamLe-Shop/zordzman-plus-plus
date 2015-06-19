@@ -65,26 +65,12 @@ void debugSystem(entity::EntityCollection * coll, entity::Entity & ent) {
     auto alphainfo = render ? render->m_alpha.get() : 0.f;
 }
 
-void renderSystem(entity::EntityCollection * coll, entity::Entity & ent) {
-    using namespace drawingOperations;
-
-    auto render    = COMPONENT(ent, entity::RenderComponent);
-    auto character = COMPONENT(ent, entity::CharacterComponent);
-
-    auto spriteinfo = render ? render->m_sprite.get() : "";
-    auto alphainfo = render ? render->m_alpha.get() : 1.f;
-
-    glColor4f(1, 1, 1, alphainfo);
-    drawSprite(spriteinfo, 40, 40, 32, 32);
-    glColor4f(1, 1, 1, 1);
-}
-
 }
 
 Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_chatMessages(10),
       m_resources("resources.tar"), m_cfg(cfg), m_hud(hud),
-      m_graph_data(150) {
+      m_renderer(m_window, hud, m_level), m_graph_data(150) {
     m_running = true;
     m_chatMessages.resize(0);
     m_graph_data.resize(0);
@@ -95,9 +81,11 @@ Client::Client(Config const & cfg, HUD hud)
         entity::RenderComponent::getComponentName(),
         entity::RenderComponent::new_);
     m_level.m_entities.addSystem(debugSystem);
-    m_level.m_entities.addSystem(renderSystem);
+    m_level.m_entities.addSystem(m_renderer);
     m_instance = this;
     Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
+    m_renderer.setServerName("localhost:9001");
+    m_renderer.setMapName("zm_test");
 }
 
 Client::~Client() {
@@ -108,10 +96,7 @@ Client::~Client() {
 void Client::exec() {
     while (m_running) {
         handleEvents();
-        glClear(GL_COLOR_BUFFER_BIT);  // Clear the screen.
-        m_level.render();  // Render the level's tiles and entities
-        drawHUD();
-        glColor3f(1, 1, 1);
+        m_renderer.render();
         m_level.m_entities.cycle();  // Calls the rendering system
         m_window.present();
 
@@ -220,35 +205,6 @@ void Client::drawHUD() {
     if (!m_receivedID) {
         return;
     }
-
-    // Draw the rectangle/box which contains information about the player.
-    setColor(m_hud.hud_box.color);
-    drawRectangle(m_hud.hud_box.x, m_hud.hud_box.y, m_hud.hud_box.width,
-                  m_hud.hud_box.height, true);
-    setColor(m_hud.font_color);
-
-    // Format the health string & weapon strings
-
-    entity::Entity & player = m_level.m_entities.get(m_playerID);
-    auto character = COMPONENT(player, entity::CharacterComponent);
-    drawText("default", fmt::format("HP: {}", character->m_health.get()), 0,
-             0 + height - 32, 16, 16);
-    drawText("default", "WEP:", 0, 0 + height - 32 + 16, 16, 16);
-
-    // Draw the names of the weapons as smaller components
-
-    // Line border to seperate the actual game from the HUD
-    setColor(m_hud.border.color);
-    drawRectangle(m_hud.border.x, m_hud.border.y, m_hud.border.width,
-                  m_hud.border.height);
-
-    glColor3f(1, 1, 1);
-    std::string serverstr =
-        fmt::format("Server: {}", "SERVER ADDRESS");
-    std::string mapstr = fmt::format("Map: {}", m_map_name);
-    drawText("default", serverstr, width - (8 * serverstr.size()),
-             height - 8, 8, 8);
-    drawText("default", mapstr, width - (8 * mapstr.size()), height - 16, 8, 8);
 
     if (chat_open) {
         if (chat_fade_timer < chat_maxfade) {

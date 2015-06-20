@@ -14,6 +14,7 @@
 
 #include <stdexcept>
 #include <format.h>
+#include <functional>
 #include <thread>
 
 #include <stdlib.h>
@@ -45,6 +46,7 @@
 
 namespace client {
 
+using namespace std::placeholders;
 using namespace json11;
 
 namespace {
@@ -82,8 +84,8 @@ Client::Client(Config const & cfg, HUD hud)
     m_level.m_entities.addSystem(m_renderer);
     m_instance = this;
     Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
-    m_renderer.setServerName("localhost:9001");
     m_renderer.setMapName("zm_test");
+    m_client.addHandler(std::bind(&Client::onConnect, this, _1));
 }
 
 Client::~Client() {
@@ -92,8 +94,10 @@ Client::~Client() {
 
 
 void Client::exec() {
+    m_client.connect(m_cfg.host, m_cfg.port);
     while (m_running) {
         handleEvents();
+        m_client.process();
         m_renderer.render();
         m_level.m_entities.cycle();  // Calls the rendering system
         drawHUD();  // TODO: remove kebab
@@ -113,6 +117,11 @@ void Client::exec() {
             m_lastMessage = m_currentTime;
         }
     }
+    m_client.disconnect();
+}
+
+void Client::onConnect(::net::ingress::zm::client::Connected server) {
+    m_renderer.setServerName(fmt::format("{}:{}", server.host, server.port));
 }
 
 void Client::checkForMap(std::string map, std::string hash) {

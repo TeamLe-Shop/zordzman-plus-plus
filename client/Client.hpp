@@ -69,6 +69,7 @@ private:
     sys::SysContext m_system;
     sys::RenderWindow m_window;
     gfx::Renderer m_renderer;
+    net::Client m_client;
 
     uint32_t m_lastMessage;
     uint32_t m_currentTime;
@@ -83,6 +84,8 @@ private:
 
     /// Handle all available SDL events.
     void handleEvents();
+
+    void onConnect(net::ingress::zm::client::Connected server);
 
 public:
     ResourceManager m_resources;

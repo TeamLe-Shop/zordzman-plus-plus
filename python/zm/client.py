@@ -37,6 +37,9 @@ class DisconnectMessage(formencode.Schema):
 class ConnectedMessage(formencode.Schema):
     """Notification that the client has connected."""
 
+    host = formencode.validators.String()
+    port = formencode.validators.Int(min=0, max=65535)
+
 
 @zm.pipeline.Ingress.register("entity.state")
 class EntityStateMessage(formencode.Schema):
@@ -152,7 +155,10 @@ class Client(threading.Thread):
         self._socket.connect((host, port))
         self._peer_name = self._socket.getpeername()
         self._socket.sendall(self.MAGIC_NUMBER)
-        self._ingress.push("zm:client:connected", {})
+        self._ingress.push("zm:client:connected", {
+            "host": self._peer_name[0],
+            "port": self._peer_name[1],
+        })
 
     def retrieve(self):
         # DO NOT return the pipeline directly. We don't want to expose the

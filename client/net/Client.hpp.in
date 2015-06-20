@@ -168,6 +168,14 @@ namespace net {
 
 class Client : public BaseClient {
 public:
+    void connect(std::string host, unsigned short port) {
+        send(egress::zm::client::Connect({host, port}));
+    }
+
+    void disconnect() {
+        send(egress::zm::client::Disconnect());
+    }
+
     /*% for namespace in namespaces %*/
     /*% if namespace.name == "egress" %*/
     /*{senders(namespace)}*/

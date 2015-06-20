@@ -11,11 +11,13 @@ namespace gfx {
 
 
 Renderer::Renderer(sys::RenderWindow &window, HUD &hud, Level &level) :
-    m_window(window),
-    m_hud(hud),
-    m_level(level),
-    m_have_player_id(false),
-    m_player_id(0) {}
+        m_window(window),
+        m_hud(hud),
+        m_level(level),
+        m_have_player_id(false),
+        m_player_id(0) {
+    m_graph_data.resize(0);
+}
 
 
 void Renderer::setPlayerID(unsigned int id) {
@@ -44,6 +46,7 @@ void Renderer::render() {
     glClear(GL_COLOR_BUFFER_BIT);  // Clear the screen.
     m_level.render();
     drawHUD();
+    drawNetGraph();
     glColor3f(1, 1, 1);
 }
 
@@ -80,6 +83,37 @@ void Renderer::drawHUD() {
     drawText("default", serverstr, width - (8 * serverstr.size()),
              height - 8, 8, 8);
     drawText("default", mapstr, width - (8 * mapstr.size()), height - 16, 8, 8);
+}
+
+
+void Renderer::addNetworkData(std::size_t messages_recieved) {
+    m_graph_data.push_back(messages_recieved);
+    if (m_graph_data.size() > m_graph_data_max) {
+        m_graph_data.erase(m_graph_data.begin());
+        m_graph_data.resize(m_graph_data_max);
+    }
+}
+
+
+void Renderer::drawNetGraph() {
+    auto const height = m_window.getHeight();
+    auto const width = m_window.getWidth();
+    glColor4f(0.2f, 0.2f, 0.2f, 0.2f);
+    drawRectangle(
+        width - m_graph_data_max, height - 32 - 100,
+        m_graph_data_max,
+        100,
+        true
+    );
+    glColor4f(0, 0, 1, 0.9f);
+    for (size_t i = 0; i < m_graph_data.size(); i++) {
+        if (m_graph_data[i]) {
+            drawLine(width - m_graph_data.size() + i, height - 32,
+                     width - m_graph_data.size() + i,
+                     height - 32 - m_graph_data[i] * 2);
+        }
+    }
+    glColor4f(1, 1, 1, 1);
 }
 
 

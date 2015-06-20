@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <string>
 
 #include "client/HUD.hpp"
@@ -20,6 +21,7 @@ public:
     void clearPlayerID();
     void setServerName(std::string name);
     void setMapName(std::string map);
+    void addNetworkData(std::size_t messages_recieved);
     void operator()(entity::EntityCollection * coll, entity::Entity & ent);
 
 private:
@@ -30,8 +32,11 @@ private:
     unsigned int m_player_id;
     std::string m_server_name;
     std::string m_map_name;
+    std::size_t m_graph_data_max = 150;
+    std::vector<std::size_t> m_graph_data;
 
     void drawHUD();
+    void drawNetGraph();
 };
 
 }  // namespace gfx

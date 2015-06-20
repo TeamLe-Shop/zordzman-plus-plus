@@ -96,6 +96,7 @@ void Client::exec() {
         handleEvents();
         m_renderer.render();
         m_level.m_entities.cycle();  // Calls the rendering system
+        drawHUD();  // TODO: remove kebab
         m_window.present();
 
         // TODO: Placeholers

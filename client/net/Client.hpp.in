@@ -98,6 +98,7 @@ bool pythonToMessage(PyObject * py_entity,
         return false;
     }
     if (!pythonToNative(py_field, &c_field_/*{field.name}*/)) {
+        Py_XDECREF(py_field);
         saveThread();
         return false;
     }
@@ -259,7 +260,7 @@ private:
         Py_INCREF(py_object);
         *object = py_object;
         saveThread();
-        return 1;
+        return true;
     }
 
     /*% for namespace in namespaces %*/

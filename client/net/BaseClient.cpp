@@ -153,7 +153,9 @@ void BaseClient::process() {
         }
         Py_XDECREF(py_type);
         Py_XDECREF(py_type_name);
-        Py_XDECREF(py_entity);
+        // WHAT!? py_entity seems to be getting double-freed or something to
+        // that effect. "Someone" should really go look into that. :D
+        // Py_XDECREF(py_entity);
         Py_DECREF(message);
     }
     Py_DECREF(iterator);

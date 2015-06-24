@@ -38,14 +38,6 @@ void Player::render() const {
         break;
     }
     */
-
-    float username_x = (m_x + 16) - m_username.size() * 4;
-    float username_y = m_y - 12;
-    float username_width = m_username.size() * 8;
-    glColor4f(0.2, 0.2, 0.2, 0.2);
-    drawRectangle(username_x, username_y, username_width, 8);
-    glColor4f(1, 1, 1, 1);
-    drawText("default", m_username, username_x, username_y, 8, 8);
 }
 
 void Player::tick() {

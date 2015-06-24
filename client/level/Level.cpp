@@ -30,6 +30,17 @@ void renderSystem(entity::EntityCollection * coll, entity::Entity & ent) {
     glColor4f(1, 1, 1, alphainfo);
     drawSprite(spriteinfo, xpos, ypos, 32, 32);
     glColor4f(1, 1, 1, 1);
+
+    if (!character->m_name.get().empty()) {
+        std::string name = character->m_name.get();
+        float username_x = (xpos + 16) - name.size() * 4;
+        float username_y = ypos - 12;
+        float username_width = name.size() * 8;
+        glColor4f(0.2, 0.2, 0.2, 0.2);
+        drawRectangle(username_x, username_y, username_width, 8);
+        glColor4f(1, 1, 1, 1);
+        drawText("default", name, username_x, username_y, 8, 8);
+    }
 }
 
 } // Anonymous namespace

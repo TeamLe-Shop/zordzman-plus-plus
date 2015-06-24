@@ -64,7 +64,8 @@ void handleClientNick(Processor *, MessageEntity entity, Server * server,
                       Client * client) {
     for (Client & c : server->m_clients) {
         if (c.name == entity["nickname"].string_value()) {
-            client->m_msg_proc.send("server.message", "That nick is taken.");
+            client->m_msg_proc.send("server.message",
+                Json::object{{"message", "That nick is taken."}});
             return;
         }
     }

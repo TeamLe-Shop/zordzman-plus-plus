@@ -91,6 +91,7 @@ private:
     void onServerMessage(net::ingress::ServerMessage);
     void onEntityState(net::ingress::EntityState);
     void onPlayerId(net::ingress::PlayerId);
+    void onPlayerJoined(net::ingress::PlayerJoined);
 
 public:
     ResourceManager m_resources;

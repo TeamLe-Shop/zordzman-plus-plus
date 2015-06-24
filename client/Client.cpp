@@ -91,6 +91,7 @@ Client::Client(Config const & cfg, HUD hud)
     m_client.addHandler(std::bind(&Client::onServerMessage, this, _1));
     m_client.addHandler(std::bind(&Client::onEntityState, this, _1));
     m_client.addHandler(std::bind(&Client::onPlayerId, this, _1));
+    m_client.addHandler(std::bind(&Client::onPlayerJoined, this, _1));
 }
 
 Client::~Client() {
@@ -169,6 +170,11 @@ void Client::onEntityState(::net::ingress::EntityState state) {
 
 void Client::onPlayerId(::net::ingress::PlayerId id) {
     m_renderer.setPlayerID(id.id);
+}
+
+void Client::onPlayerJoined(::net::ingress::PlayerJoined joiner) {
+    audio::playSound("playerjoined");
+    addMessage(fmt::format("Player \"{}\" joined the game.", joiner.name));
 }
 
 void Client::checkForMap(std::string map, std::string hash) {

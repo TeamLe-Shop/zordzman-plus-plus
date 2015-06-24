@@ -103,6 +103,12 @@ class PlayerIDMessage(formencode.Schema):
     id = formencode.validators.Int()
 
 
+@zm.pipeline.Ingress.register("player.joined")
+class PlayerJoinedMessage(formencode.Schema):
+
+    name = formencode.validators.String()
+
+
 class Client(threading.Thread):
     """The Zordzman network client.
 

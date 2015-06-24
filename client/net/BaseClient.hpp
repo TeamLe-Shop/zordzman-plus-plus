@@ -29,7 +29,10 @@ class BaseClient {
         /// If any message in the iterator doesn't conform to these
         /// expectations then it is ignored and processMessage will never be
         /// called for it.
-        void process();
+        ///
+        /// @returns the number of messages that were processed which
+        ///     may be zero.
+        unsigned int process();
 
     protected:
         /// Re-enterant version of `PyEval_SaveThread`.

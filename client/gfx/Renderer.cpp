@@ -110,7 +110,7 @@ void Renderer::drawNetGraph() {
         if (m_graph_data[i]) {
             drawLine(width - m_graph_data.size() + i, height - 32,
                      width - m_graph_data.size() + i,
-                     height - 32 - m_graph_data[i] * 2);
+                     height - 32 - m_graph_data[i] * 5);
         }
     }
     glColor4f(1, 1, 1, 1);

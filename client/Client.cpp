@@ -103,14 +103,13 @@ void Client::exec() {
     m_client.connect(m_cfg.host, m_cfg.port);
     while (m_running) {
         handleEvents();
-        m_client.process();
+        m_renderer.addNetworkData(m_client.process());
         m_renderer.render();
         m_level.m_entities.cycle();  // Calls the rendering system
         drawHUD();  // TODO: remove kebab
         m_window.present();
 
         // TODO: Placeholers
-        m_renderer.addNetworkData(10);
 
         // TODO: refactor this out
         // NOTE: Don't depend on SDL_GetTicks too much.

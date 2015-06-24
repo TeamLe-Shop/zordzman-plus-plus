@@ -117,14 +117,15 @@ BaseClient::~BaseClient() {
 }
 
 
-void BaseClient::process() {
+unsigned int BaseClient::process() {
     restoreThread();
+    unsigned int message_count = 0;
     PyObject * message;
     PyObject * iterator = PyObject_CallFunction(m_py_client_retrieve, "");
     if (!iterator) {
         PyErr_Print();
         saveThread();
-        return;
+        return 0;
     }
     if (!PyIter_Check(iterator)) {
         saveThread();
@@ -157,9 +158,11 @@ void BaseClient::process() {
         // that effect. "Someone" should really go look into that. :D
         // Py_XDECREF(py_entity);
         Py_DECREF(message);
+        message_count++;
     }
     Py_DECREF(iterator);
     saveThread();
+    return message_count;
 }
 
 

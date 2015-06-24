@@ -41,6 +41,26 @@ class ConnectedMessage(formencode.Schema):
     port = formencode.validators.Int(min=0, max=65535)
 
 
+@zm.pipeline.Ingress.register("map.offer")
+class MapOfferMessage(formencode.Schema):
+    """Sent by the server to indicate the current map."""
+
+    hash = formencode.validators.String()
+    name = formencode.validators.String()
+
+
+@zm.pipeline.Egress.register("map.request")
+class MapRequestMessage(formencode.Schema):
+    """Request the current map from the server."""
+
+
+@zm.pipeline.Ingress.register("map.contents")
+class MapContentsMessage(formencode.Schema):
+    """The contents of the current map base64-encoded."""
+
+    contents = formencode.validators.String()
+
+
 @zm.pipeline.Ingress.register("entity.state")
 class EntityStateMessage(formencode.Schema):
 

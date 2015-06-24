@@ -86,6 +86,8 @@ Client::Client(Config const & cfg, HUD hud)
     Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
     m_renderer.setMapName("zm_test");
     m_client.addHandler(std::bind(&Client::onConnect, this, _1));
+    m_client.addHandler(std::bind(&Client::onMapOffer, this, _1));
+    m_client.addHandler(std::bind(&Client::onMapContents, this, _1));
 }
 
 Client::~Client() {
@@ -124,6 +126,14 @@ void Client::onConnect(::net::ingress::zm::client::Connected server) {
     m_renderer.setServerName(fmt::format("{}:{}", server.host, server.port));
 }
 
+void Client::onMapOffer(::net::ingress::MapOffer offer) {
+    checkForMap(offer.name, offer.hash);
+}
+
+void Client::onMapContents(::net::ingress::MapContents contents) {
+    writeMapContents(contents.contents);
+}
+
 void Client::checkForMap(std::string map, std::string hash) {
     using namespace common::util::file;
     bool found_match = false;
@@ -160,7 +170,7 @@ void Client::checkForMap(std::string map, std::string hash) {
     }
 
     if (!found_match) {
-        // TODO: m_msg_proc.send("map.request", nullptr);
+        m_client.send(::net::egress::MapRequest());
     }
 }
 

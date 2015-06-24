@@ -128,6 +128,7 @@ void Client::onConnect(::net::ingress::zm::client::Connected server) {
 
 void Client::onMapOffer(::net::ingress::MapOffer offer) {
     checkForMap(offer.name, offer.hash);
+    m_renderer.setMapName(offer.name);
 }
 
 void Client::onMapContents(::net::ingress::MapContents contents) {

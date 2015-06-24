@@ -63,17 +63,18 @@ void handleChatMessage(Processor *, MessageEntity entity, Server * server,
 void handleClientNick(Processor *, MessageEntity entity, Server * server,
                       Client * client) {
     for (Client & c : server->m_clients) {
-        if (c.name == entity.string_value()) {
+        if (c.name == entity["nickname"].string_value()) {
             client->m_msg_proc.send("server.message", "That nick is taken.");
             return;
         }
     }
     client->m_logger.log("[INFO] Changed nick ({} -> {})", client->name,
-                         entity.string_value());
-    server->sendAll("server.message", fmt::format("* {} changed nick to {}",
-                                                  client->name,
-                                                  entity.string_value()));
-    client->name = entity.string_value();
+                         entity["nickname"].string_value());
+    auto message = fmt::format("* {} changed nick to {}",
+                               client->name,
+                               entity["nickname"].string_value());
+    server->sendAll("server.message",  Json::object{{"message", message}});
+    client->name = entity["nickname"].string_value();
 
     entity::Entity& ent = server->m_map.getEntity(client->m_playerID);
     auto character = COMPONENT(ent, entity::CharacterComponent);

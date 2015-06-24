@@ -125,6 +125,7 @@ void Client::exec() {
 
 void Client::onConnect(::net::ingress::zm::client::Connected server) {
     m_renderer.setServerName(fmt::format("{}:{}", server.host, server.port));
+    m_client.send(::net::egress::ClientNick({m_cfg.name}));
 }
 
 void Client::onMapOffer(::net::ingress::MapOffer offer) {

@@ -89,6 +89,7 @@ Client::Client(Config const & cfg, HUD hud)
     m_client.addHandler(std::bind(&Client::onMapOffer, this, _1));
     m_client.addHandler(std::bind(&Client::onMapContents, this, _1));
     m_client.addHandler(std::bind(&Client::onServerMessage, this, _1));
+    m_client.addHandler(std::bind(&Client::onEntityState, this, _1));
 }
 
 Client::~Client() {
@@ -140,6 +141,30 @@ void Client::onMapContents(::net::ingress::MapContents contents) {
 void Client::onServerMessage(::net::ingress::ServerMessage message) {
     addMessage(fmt::format("{}", message.message));
 }
+
+
+#define JSON_STATE(value)   Json::object { \
+                                {"id", (int) state.id}, \
+                                {"component", state.component}, \
+                                {"field", state.field}, \
+                                {"value", value}, \
+                            }
+
+void Client::onEntityState(::net::ingress::EntityState state) {
+    Json json_state;
+    if (PyLong_CheckExact(state.value)) {
+        json_state = JSON_STATE((int) PyLong_AsLong(state.value));
+    } else if (PyFloat_CheckExact(state.value)) {
+        json_state = JSON_STATE(PyFloat_AsDouble(state.value));
+    } else if (PyUnicode_CheckExact(state.value)) {
+        json_state = JSON_STATE(PyUnicode_AsUTF8(state.value));
+    } else {
+        return;
+    }
+    m_level.m_entities.handleEntityStateChange(json_state);
+}
+
+#undef JSON_STATE
 
 void Client::checkForMap(std::string map, std::string hash) {
     using namespace common::util::file;

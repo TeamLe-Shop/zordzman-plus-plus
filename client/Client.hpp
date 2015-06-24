@@ -89,6 +89,7 @@ private:
     void onMapOffer(net::ingress::MapOffer);
     void onMapContents(net::ingress::MapContents);
     void onServerMessage(net::ingress::ServerMessage);
+    void onEntityState(net::ingress::EntityState);
 
 public:
     ResourceManager m_resources;

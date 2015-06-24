@@ -85,6 +85,12 @@ class ChatMessage(formencode.Schema):
     message = formencode.validators.String()
 
 
+@zm.pipeline.Ingress.register("server.message")
+class ServerMessage(formencode.Schema):
+
+    message = formencode.validators.String()
+
+
 class Client(threading.Thread):
     """The Zordzman network client.
 

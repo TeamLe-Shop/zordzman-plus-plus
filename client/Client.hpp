@@ -88,6 +88,7 @@ private:
     void onConnect(net::ingress::zm::client::Connected server);
     void onMapOffer(net::ingress::MapOffer);
     void onMapContents(net::ingress::MapContents);
+    void onServerMessage(net::ingress::ServerMessage);
 
 public:
     ResourceManager m_resources;

@@ -88,6 +88,7 @@ Client::Client(Config const & cfg, HUD hud)
     m_client.addHandler(std::bind(&Client::onConnect, this, _1));
     m_client.addHandler(std::bind(&Client::onMapOffer, this, _1));
     m_client.addHandler(std::bind(&Client::onMapContents, this, _1));
+    m_client.addHandler(std::bind(&Client::onServerMessage, this, _1));
 }
 
 Client::~Client() {
@@ -133,6 +134,10 @@ void Client::onMapOffer(::net::ingress::MapOffer offer) {
 
 void Client::onMapContents(::net::ingress::MapContents contents) {
     writeMapContents(contents.contents);
+}
+
+void Client::onServerMessage(::net::ingress::ServerMessage message) {
+    addMessage(fmt::format("{}", message.message));
 }
 
 void Client::checkForMap(std::string map, std::string hash) {
@@ -252,6 +257,7 @@ void Client::handleEvents() {
                     if (chat_open) {
                         SDL_StopTextInput();
                         if (!chat_string.empty()) {
+                            m_client.send(::net::egress::ChatMessage({chat_string}));
                             // TODO: m_msg_proc.send(
                             //          "chat.message", chat_string);
                         }

@@ -97,6 +97,12 @@ class ClientNickMessage(formencode.Schema):
     nickname = formencode.validators.String()
 
 
+@zm.pipeline.Ingress.register("player.id")
+class PlayerIDMessage(formencode.Schema):
+
+    id = formencode.validators.Int()
+
+
 class Client(threading.Thread):
     """The Zordzman network client.
 

@@ -232,7 +232,8 @@ int Server::exec() {
                 if (client.getState() == Client::Connected) {
                     sendAll("player.joined", client.name);
                     client.m_playerID = m_map.addPlayer(client.name);
-                    client.m_msg_proc.send("player.id", (int)client.m_playerID);
+                    client.m_msg_proc.send("player.id",
+                        Json::object{{"id", (int)client.m_playerID}});
                 }
                 continue;
             }

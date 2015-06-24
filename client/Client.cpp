@@ -90,6 +90,7 @@ Client::Client(Config const & cfg, HUD hud)
     m_client.addHandler(std::bind(&Client::onMapContents, this, _1));
     m_client.addHandler(std::bind(&Client::onServerMessage, this, _1));
     m_client.addHandler(std::bind(&Client::onEntityState, this, _1));
+    m_client.addHandler(std::bind(&Client::onPlayerId, this, _1));
 }
 
 Client::~Client() {
@@ -165,6 +166,10 @@ void Client::onEntityState(::net::ingress::EntityState state) {
 }
 
 #undef JSON_STATE
+
+void Client::onPlayerId(::net::ingress::PlayerId id) {
+    m_renderer.setPlayerID(id.id);
+}
 
 void Client::checkForMap(std::string map, std::string hash) {
     using namespace common::util::file;

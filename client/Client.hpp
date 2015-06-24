@@ -90,6 +90,7 @@ private:
     void onMapContents(net::ingress::MapContents);
     void onServerMessage(net::ingress::ServerMessage);
     void onEntityState(net::ingress::EntityState);
+    void onPlayerId(net::ingress::PlayerId);
 
 public:
     ResourceManager m_resources;

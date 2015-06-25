@@ -8,6 +8,70 @@ project(zordzman)
 set(PYTHON_VERSION_MAJOR 3)
 set(PYTHON_VERSION_MINOR 4)
 
+
+# Check Python executable version
+execute_process(
+    COMMAND python --version
+    ERROR_VARIABLE PYTHON_VERSION_FULL
+    ERROR_STRIP_TRAILING_WHITESPACE
+)
+string(
+    REGEX MATCH
+    "[0-9]+\\.[0-9]+\\.[0-9]+"
+    PYTHON_VERSION
+    ${PYTHON_VERSION_FULL}
+)
+math(EXPR PYTHON_VERSION_MINOR_MAX "${PYTHON_VERSION_MINOR} + 1")
+set(PYTHON_VERSION_MIN "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+set(PYTHON_VERSION_MAX "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_MAX}")
+if(PYTHON_VERSION STREQUAL "")
+    message(FATAL_ERROR "Couldn't determine Python version")
+endif()
+if((${PYTHON_VERSION} VERSION_LESS ${PYTHON_VERSION_MIN})
+    OR (${PYTHON_VERSION} VERSION_EQUAL ${PYTHON_VERSION_MAX})
+    OR (${PYTHON_VERSION} VERSION_GREATER ${PYTHON_VERSION_MAX}))
+    message(FATAL_ERROR "Need Python ${PYTHON_VERSION_MAJOR}."
+            "${PYTHON_VERSION_MINOR}.x but found ${PYTHON_VERSION}")
+endif()
+message(STATUS "Python version: ${PYTHON_VERSION}")
+
+
+# Check that the 'zm' package is installed
+execute_process(COMMAND python -c "import zm" RESULT_VARIABLE ZM_STATUS)
+if(${ZM_STATUS})
+    message(FATAL_ERROR "No 'zm' Python package found; try pip install -e .")
+endif()
+message(STATUS "Found 'zm' Python package")
+
+
+# Generate files from Python definitions
+file(GLOB_RECURSE PYTHON_SOURCES python/*.py)
+set(TEMPLATE_MESSAGES ${CMAKE_SOURCE_DIR}/client/net/messages.hpp.in)
+set(GEN_EGRESS_MESSAGES ${CMAKE_SOURCE_DIR}/client/net/egress.hpp)
+set(GEN_INGRESS_MESSAGES ${CMAKE_SOURCE_DIR}/client/net/ingress.hpp)
+
+set(TEMPLATE_CLIENT ${CMAKE_SOURCE_DIR}/client/net/Client.hpp.in)
+set(GEN_CLIENT ${CMAKE_SOURCE_DIR}/client/net/Client.hpp)
+add_custom_command(
+    OUTPUT ${GEN_CLIENT}
+    COMMAND python -m zm.cgen Egress Ingress ${TEMPLATE_CLIENT} > ${GEN_CLIENT}
+    DEPENDS ${PYTHON_SOURCES} ${TEMPLATE_CLIENT}
+    COMMENT "Generating ${GEN_CLIENT}"
+)
+add_custom_command(
+    OUTPUT ${GEN_EGRESS_MESSAGES}
+    COMMAND python -m zm.cgen Egress ${TEMPLATE_MESSAGES} > ${GEN_EGRESS_MESSAGES}
+    DEPENDS ${PYTHON_SOURCES} ${TEMPLATE_MESSAGES}
+    COMMENT "Generating ${GEN_EGRESS_MESSAGES}"
+)
+add_custom_command(
+    OUTPUT ${GEN_INGRESS_MESSAGES}
+    COMMAND python -m zm.cgen Ingress ${TEMPLATE_MESSAGES} > ${GEN_INGRESS_MESSAGES}
+    DEPENDS ${PYTHON_SOURCES} ${TEMPLATE_MESSAGES}
+    COMMENT "Generating ${GEN_INGRESS_MESSAGES}"
+)
+
+
 # Detect compiler
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(USING_GCC TRUE)
@@ -100,7 +164,14 @@ include_directories(.)
 include_directories(client)
 
 file(GLOB_RECURSE CLIENT_SOURCES client/*.*pp)
-add_executable(zordzman ${CLIENT_SOURCES})
+message(STATUS ${GEN_CLIENT})
+add_executable(
+    zordzman
+    ${CLIENT_SOURCES}
+    ${GEN_CLIENT}
+    ${GEN_EGRESS_MESSAGES}
+    ${GEN_INGRESS_MESSAGES}
+)
 
 file(GLOB_RECURSE SERVER_SOURCES server/*.*pp)
 add_executable(zordzman-server ${SERVER_SOURCES})
@@ -190,28 +261,3 @@ add_custom_command(
     WORKING_DIRECTORY ${RESOURCES_DIRECTORY}
     COMMENT "Building resources tarball"
 )
-
-execute_process(
-    COMMAND python --version
-    ERROR_VARIABLE PYTHON_VERSION_FULL
-    ERROR_STRIP_TRAILING_WHITESPACE
-)
-string(
-    REGEX MATCH
-    "[0-9]+\\.[0-9]+\\.[0-9]+"
-    PYTHON_VERSION
-    ${PYTHON_VERSION_FULL}
-)
-math(EXPR PYTHON_VERSION_MINOR_MAX "${PYTHON_VERSION_MINOR} + 1")
-set(PYTHON_VERSION_MIN "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
-set(PYTHON_VERSION_MAX "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_MAX}")
-if(PYTHON_VERSION STREQUAL "")
-    message(FATAL_ERROR "Couldn't determine Python version")
-endif()
-if((${PYTHON_VERSION} VERSION_LESS ${PYTHON_VERSION_MIN})
-    OR (${PYTHON_VERSION} VERSION_EQUAL ${PYTHON_VERSION_MAX})
-    OR (${PYTHON_VERSION} VERSION_GREATER ${PYTHON_VERSION_MAX}))
-    message(FATAL_ERROR "Need Python ${PYTHON_VERSION_MAJOR}."
-            "${PYTHON_VERSION_MINOR}.x but found ${PYTHON_VERSION}")
-endif()
-message(STATUS "Python version: ${PYTHON_VERSION}")

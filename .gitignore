@@ -5,6 +5,7 @@ doc/
 # Python
 *.pyc
 *.egg-info/
+.coverage
 
 
 # Generated Files

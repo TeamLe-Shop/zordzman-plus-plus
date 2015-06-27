@@ -1,0 +1,8 @@
+# Runtime
+formencode
+jinja2
+
+
+# Tests
+pytest
+pytest-cov

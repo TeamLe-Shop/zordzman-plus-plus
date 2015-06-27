@@ -66,7 +66,6 @@ class PipelineMeta(type):
     search for all subscribes that were registered with :meth:`subscribe`.
     """
 
-    _no_entity = object()
     marker = "__pipeline_subscriptions__"
 
     def __new__(meta, name, bases, attrs):

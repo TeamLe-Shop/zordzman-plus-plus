@@ -6,6 +6,7 @@ doc/
 *.pyc
 *.egg-info/
 .coverage
+htmlcov/
 
 
 # Generated Files

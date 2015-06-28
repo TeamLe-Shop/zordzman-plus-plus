@@ -1,0 +1,11 @@
+{
+    "Health": "Vida",
+    "Weapon": "Arma",
+    "Map": "Mapa",
+    "Server": "Servidor",
+    "Player \"{}\" joined the game.": "Player \"{}\" entro el juego.",
+    "Player \"{}\" left the game.": "Jugador \"{}\" se salio del juego.",
+    "Say": "Diga",
+    "Nickname already taken.": "Nombre esta usado.",
+    "\"{}\" changed name to \"{}\".": "\"{}\" cambio su nombre a \"{}\"."
+}

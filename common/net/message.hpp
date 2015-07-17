@@ -249,6 +249,7 @@ public:
             {"field", std::get<2>(change)},
             {"value", std::get<3>(change)},
         };
+
         send("entity.state", entity);
     }
 

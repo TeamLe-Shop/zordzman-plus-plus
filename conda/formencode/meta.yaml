@@ -1,0 +1,28 @@
+{% set version = "1.3.0" %}
+
+package:
+    name: formencode
+    version: {{version}}
+
+source:
+    fn: FormEncode-{{version}}.zip
+    url: https://pypi.python.org/packages/source/F/FormEncode/FormEncode-{{version}}.zip
+    md5: 6df12d60bf3179402f2c2efd1129eb74
+
+build:
+    number: 0
+
+requirements:
+    build:
+        - python
+        - setuptools
+    run:
+        - python
+
+test:
+    imports:
+        - formencode
+
+about:
+    home: http://formencode.org/
+    license: PSF

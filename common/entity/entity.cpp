@@ -142,7 +142,7 @@ void EntityCollection::handleEntityStateChange(json11::Json entity) {
     } else {
         ent = &(*ent_it);
     }
-    if (!ent->hasComponent(component)) {
+    if ((*ent)[component] == nullptr || !(*ent).hasComponent(component)) {
         if (m_component_types.count(component) == 0) {
             // We don't know what type of component this is, just give up
             return;
@@ -186,6 +186,15 @@ Entity & EntityCollection::get(unsigned int id) {
     // What do I do here?
     throw std::runtime_error(
         fmt::format("Entity with ID <{}> does not exist", id));
+}
+
+bool EntityCollection::contains(unsigned int id) {
+    for (auto & e : m_entities) {
+        if (e.getID() == id) {
+            return true;
+        }
+    }
+    return false;
 }
 
 } // namespace entity

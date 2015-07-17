@@ -1,4 +1,23 @@
 CMakeLists.txt.user
 doc/
+
+
+# Python
+*.pyc
+*.egg-info/
+.coverage
+htmlcov/
+
+
+# Generated Files
+client/net/Client.hpp
+client/net/ingress.hpp
+client/net/egress.hpp
+
+
+# Build artefacts
 build/
 config/config.json
+*.manifest
+resources.tar
+spritesheet.png

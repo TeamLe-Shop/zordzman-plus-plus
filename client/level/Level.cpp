@@ -21,6 +21,10 @@ void renderSystem(entity::EntityCollection * coll, entity::Entity & ent) {
     auto character = COMPONENT(ent, entity::CharacterComponent);
     auto position  = COMPONENT(ent, entity::PositionComponent);
 
+    if (!render) {
+        return;
+    }
+
     auto spriteinfo = render ? render->m_sprite.get() : "";
     auto alphainfo = render ? render->m_alpha.get() : 1.f;
 

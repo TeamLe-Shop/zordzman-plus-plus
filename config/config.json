@@ -1,6 +1,8 @@
 {
-    "host": "servers.tf",
+    "host": "localhost",
     "port": 4544,
     "name": "snayk",
-    "level_dir": "levels"
+    "level_dir": "levels",
+    "language": "spanish",
+    "hud": "default_hud"
 }

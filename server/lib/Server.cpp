@@ -47,31 +47,33 @@ void handleLevelRequest(Processor *, MessageEntity /*entity*/, Server * server,
     }
     client->m_logger.log("[INFO] Sending map {} ({} bytes)",
                          server->m_level.name, server->m_level.size);
-    client->m_msg_proc.send("map.contents", server->m_level.asBase64());
+    client->m_msg_proc.send(
+        "map.contents",
+        Json::object{{"contents", server->m_level.asBase64()}});
 }
 
 void handleChatMessage(Processor *, MessageEntity entity, Server * server,
                        Client * client) {
-    client->m_logger.log("[INFO] Message: {}", entity.string_value());
-    server->sendAll("server.message", fmt::format("{}: {}",
-                    client->name, entity.string_value()));
+    auto message = entity["message"].string_value();
+    client->m_logger.log("[INFO] Message: {}", message);
+    server->sendAll("server.message",  Json::object{{
+        "message", fmt::format("{}: {}", client->name, message)}});
 }
 
 void handleClientNick(Processor *, MessageEntity entity, Server * server,
                       Client * client) {
     for (Client & c : server->m_clients) {
-        if (c.name == entity.string_value()) {
-            client->m_msg_proc.send("nick.taken", nullptr);
+        if (c.name == entity["nickname"].string_value()) {
+            client->m_msg_proc.send("nick.taken", Json::object{});
             return;
         }
     }
     client->m_logger.log("[INFO] Changed nick ({} -> {})", client->name,
-                         entity.string_value());
+                        entity["nickname"].string_value());
     server->sendAll("nick.change", Json::object {
-                    { "old", client->name },
-                    { "new", entity.string_value() }});
-    client->name = entity.string_value();
-
+                    { "oldnick", client->name },
+                    { "newnick", entity.string_value() }});
+    client->name = entity["nickname"].string_value();
     entity::Entity& ent = server->m_level.getEntity(client->m_playerID);
     auto character = COMPONENT(ent, entity::CharacterComponent);
     character->m_name.set(client->name);
@@ -218,13 +220,16 @@ void Server::acceptConnections() {
 int Server::exec() {
     while (true) {
         acceptConnections();
+        auto changes = m_level.cycle();
         for (auto & client : m_clients) {
             if (client.getState() == Client::Pending) {
                 client.checkProtocolVersion();
                 if (client.getState() == Client::Connected) {
-                    sendAll("player.joined", client.name);
+                    sendAll("player.joined",
+                            Json::object{{"name", client.name}});
                     client.m_playerID = m_level.addPlayer(client.name);
-                    client.m_msg_proc.send("player.id", (int)client.m_playerID);
+                    client.m_msg_proc.send("player.id",
+                        Json::object{{"id", (int)client.m_playerID}});
 
                     auto state = m_level.poll();
                     for (auto s : state) {
@@ -233,7 +238,6 @@ int Server::exec() {
                 }
                 continue;
             }
-            auto changes = m_level.cycle();
             for (auto change : changes) {
                 client.m_msg_proc.sendStateChange(change);
             }
@@ -245,12 +249,13 @@ int Server::exec() {
             client.exec(this);
         }
 
-        for (size_t i = 0; i < m_clients.size(); ++i) {
+        for (size_t i = 0; i < m_clients.size(); i++) {
             Client & client = m_clients[i];
 
             if (client.getState() == Client::Disconnected) {
-                sendAll("player.left", client.name);
-                sendAll("entity.delete", (int)client.m_playerID);
+                sendAll("player.left", Json::object{{"name", client.name}});
+                sendAll("entity.delete", Json::object{{"id",
+                                                      (int)client.m_playerID}});
                 m_level.removePlayer(client);
                 m_clients.erase(m_clients.begin() + i);
             }

@@ -1,0 +1,315 @@
+#include <functional>
+#include <string>
+#include <vector>
+
+#include "BaseClient.hpp"
+#include "messages.hpp"
+
+
+/*% macro senders(namespace, parents=None) %*/
+/*% set parents = ["net"] if not parents else parents %*/
+/*% for struct in namespace.structs %*/
+/*% set has_fields = struct.fields|length %*/
+/// Send a `/*{struct.name}*/` message to the Python client.
+void send(/*{(parents + [""])|join("::")}*/
+          /*{namespace.name}*/::/*{struct.name}*/
+          /*% if has_fields %*/entity/*% endif %*/) {
+    restoreThread();
+    auto dict = PyDict_New();
+    if (!dict) {
+        PyErr_Print();
+        saveThread();
+        return;  // TODO: no, do something better
+    }
+    /*%- if has_fields %*/
+    PyObject * py_field;
+    /*% endif %*/
+    /*%- for field in struct.fields %*/
+    py_field = nativeToPython(entity./*{field.name}*/);
+    if (py_field) {
+        auto was_set = PyDict_SetItemString(
+            dict, "/*{field.name}*/", py_field) == 0;
+        Py_DECREF(py_field);
+        if (!was_set) {
+            PyErr_Print();
+            Py_DECREF(dict);
+            saveThread();
+            return;
+        }
+    } else {
+        PyErr_Print();
+        Py_DECREF(dict);
+        saveThread();
+        return;
+    }
+    /*%- endfor %*/
+    BaseClient::send("/*{struct.type_name}*/", dict);
+    Py_DECREF(dict);
+    saveThread();
+}
+/*% endfor %*/
+
+/*% for ns in namespace.namespaces %*/
+/*{senders(ns, parents + [namespace.name])}*/
+/*% endfor %*/
+/*% endmacro %*/
+
+
+
+/*# TODO: this needs to be shared with messages.hpp.in #*/
+/*% macro ctype(type) -%*/
+/*{{
+    str: "std::string",
+    int: "long",
+    object: "PyObject *",
+}[type]|default("KABOOM")}*/
+/*%- endmacro %*/
+
+
+
+/*% macro converters(namespace, parents=None) %*/
+/*% set parents = ["net"] if not parents else parents %*/
+/*% for struct in namespace.structs %*/
+/*% set has_fields = struct.fields|length %*/
+/// Convert a Python dictionary to a /*{struct.name}*/
+///
+/// If the dictionary could be successfully to a /*{struct.name}*/ then
+/// the given address is set to the new message entity object and
+/// true is returned.
+///
+/// False is returned if the dictionary couldn't be converted for any
+/// reason. A Python exception may be set.
+bool pythonToMessage(PyObject * py_entity,
+                     /*{(parents + [""])|join("::")}*/
+                     /*{-namespace.name}*/::/*{struct.name}*/ * entity) {
+    restoreThread();
+    if (!PyDict_CheckExact(py_entity)) {
+        saveThread();
+        return false;
+    }
+    /*%- if has_fields %*/
+    PyObject * py_field;
+    /*% endif %*/
+    /*%- for field in struct.fields %*/
+    /*{ctype(field.type)}*/ c_field_/*{field.name}*/;
+    py_field = PyDict_GetItemString(py_entity, "/*{field.name}*/");
+    if (!py_field) {
+        saveThread();
+        return false;
+    }
+    if (!pythonToNative(py_field, &c_field_/*{field.name}*/)) {
+        Py_XDECREF(py_field);
+        saveThread();
+        return false;
+    }
+    Py_XDECREF(py_field);
+    /*% endfor %*/
+    *entity = {
+    /*% for field in struct.fields -%*/
+        c_field_/*{field.name}*//*% if not loop.last %*/,/*% endif %*/
+    /*%- endfor %*/
+    };
+    saveThread();
+    return true;
+}
+/*% endfor %*/
+/*% for ns in namespace.namespaces %*/
+/*{converters(ns, parents + [namespace.name])}*/
+/*% endfor %*/
+/*% endmacro %*/
+
+
+/*% macro handlers(namespace, parents=None) %*/
+/*% set parents = ["net"] if not parents else parents %*/
+/*% for struct in namespace.structs %*/
+/// Add a handler for /*{struct.type_name}*/ messages.
+void addHandler(std::function<void (
+                Client *,
+                /*{(parents + [""])|join("::")}*/
+                /*{-namespace.name}*/::/*{struct.name}*/)> callback) {
+    m_/*{(parents + [""])|join("_")}*/
+    /*{-namespace.name}*/_/*{struct.name}*/_callbacks.push_back(callback);
+}
+
+/// Add a handler for /*{struct.type_name}*/ messages.
+void addHandler(std::function<void (
+                /*{(parents + [""])|join("::")}*/
+                /*{-namespace.name}*/::/*{struct.name}*/)> callback) {
+    addHandler([callback](
+        Client *, /*{(parents + [""])|join("::")}*/
+                 /*{-namespace.name}*/::/*{struct.name}*/ entity) {
+            return callback(entity);
+        }
+    );
+}
+/*% endfor %*/
+/*% for ns in namespace.namespaces %*/
+/*{handlers(ns, parents + [namespace.name])}*/
+/*% endfor %*/
+/*% endmacro %*/
+
+
+/*% macro callbacks(namespace, parents=None) %*/
+/*% set parents = ["net"] if not parents else parents %*/
+/*% for struct in namespace.structs %*/
+std::vector<
+    std::function<void (Client *,
+        /*{(parents + [""])|join("::")}*/
+        /*{-namespace.name}*/::/*{struct.name}*/)
+    >> m_/*{(parents + [""])|join("_")}*/
+        /*{-namespace.name}*/_/*{struct.name}*/_callbacks;
+/*% endfor %*/
+/*% for ns in namespace.namespaces %*/
+/*{callbacks(ns, parents + [namespace.name])}*/
+/*% endfor %*/
+/*% endmacro %*/
+
+
+namespace net {
+
+class Client : public BaseClient {
+public:
+    void connect(std::string host, unsigned short port) {
+        send(egress::zm::client::Connect({host, port}));
+    }
+
+    void disconnect() {
+        send(egress::zm::client::Disconnect());
+    }
+
+    /*% for namespace in namespaces %*/
+    /*% if namespace.name == "egress" %*/
+    /*{senders(namespace)}*/
+    /*% endif %*/
+    /*% endfor %*/
+
+    /*% for namespace in namespaces %*/
+    /*% if namespace.name == "ingress" %*/
+    /*{handlers(namespace)}*/
+    /*% endif %*/
+    /*% endfor %*/
+
+private:
+    /// Convert a std::string to a Python Unicode string.
+    ///
+    /// On success a new reference to a Python string is returned. Returns
+    /// NULL on error, an exception will be set.
+    PyObject * nativeToPython(std::string string) {
+        restoreThread();
+        PyObject * py_string = PyUnicode_FromString(string.c_str());
+        saveThread();
+        return py_string;
+    }
+
+    /// Convert a long to a Python integer.
+    ///
+    /// On success a new reference to a Python integer is returned. Returns
+    /// NULL on error, an exception will be set.
+    PyObject * nativeToPython(long integer) {
+        restoreThread();
+        PyObject * py_int = PyLong_FromLong(integer);
+        saveThread();
+        return py_int;
+    }
+
+    /// Convert a Python Unicode string to a UTF-8 encoded std::string.
+    ///
+    /// If the Python object cannot be converted to a std::string then a
+    /// TypeError will be set and false returned.
+    ///
+    /// Sets the string and returns true on success.
+    bool pythonToNative(PyObject * py_object, std::string * string) {
+        restoreThread();
+        if (!PyUnicode_Check(py_object)) {
+            PyErr_Format(
+                PyExc_TypeError, "Expected a string, got %R", py_object);
+            saveThread();
+            return false;
+        }
+        *string = std::string(PyUnicode_AsUTF8(py_object));
+        saveThread();
+        return true;
+    }
+
+    /// Convert a Python integer to a long.
+    ///
+    /// If the Python object cannot be converted to a long then a TypeError
+    /// will be set and false returned.
+    ///
+    /// Sets the long and returns true on success.
+    bool pythonToNative(PyObject * py_object, long * integer) {
+        restoreThread();
+        if (!PyLong_Check(py_object)) {
+            PyErr_Format(
+                PyExc_TypeError, "Expected an integer, got %R", py_object);
+            saveThread();
+            return false;
+        }
+        *integer = PyLong_AsLong(py_object);
+        saveThread();
+        return true;
+    }
+
+    /// Convert a PyObject * ... to a PyObject *.
+    ///
+    /// This is effectively a no-op. The reference count of the given object
+    /// will be incremented and that's it. It's the responsibility of the
+    /// objects owner to decrecrement the reference count.
+    bool pythonToNative(PyObject * py_object, PyObject ** object) {
+        restoreThread();
+        Py_INCREF(py_object);
+        *object = py_object;
+        saveThread();
+        return true;
+    }
+
+    /*% for namespace in namespaces %*/
+    /*% if namespace.name == "ingress" %*/
+    /*{converters(namespace)}*/
+    /*{callbacks(namespace)}*/
+    /*% endif %*/
+    /*% endfor %*/
+
+    void processMessage(std::string type, PyObject * entity) {
+        restoreThread();
+        /*% macro types(namespace, parents=None) %*/
+        /*% set parents = ["net"] if not parents else parents %*/
+        /*% for struct in namespace.structs %*/
+        if (type == "/*{struct.type_name}*/") {
+            /*{(parents + [""])|join("::")}*/
+            /*{-namespace.name}*/::/*{struct.name}*/ c_entity;
+            auto success = pythonToMessage(entity, &c_entity);
+            if (success) {
+                for (auto callback :
+                     m_/*{(parents + [""])|join("_")}*/
+                     /*{-namespace.name}*/_/*{struct.name}*/_callbacks) {
+                    callback(this, c_entity);
+                 }
+            } else {
+                PyErr_Print();
+                PyObject_Print(entity, stderr, Py_PRINT_RAW);
+                fprintf(stderr, "\nCould not convert message of type "
+                        "'/*{struct.type_name}*/' to "
+                        "/*{(parents + [""])|join("::")}*/"
+                        "/*{-namespace.name}*/::/*{struct.name}*/\n");
+            }
+        }
+        /*% endfor %*/
+
+        /*% for ns in namespace.namespaces %*/
+        /*{types(ns, parents + [namespace.name])}*/
+        /*% endfor %*/
+        /*% endmacro %*/
+
+        /*% for namespace in namespaces %*/
+        /*% if namespace.name == "ingress" %*/
+        /*{types(namespace)}*/
+        /*% endif %*/
+        /*% endfor %*/
+        saveThread();
+        return;
+    }
+};
+
+
+}  // namespace net

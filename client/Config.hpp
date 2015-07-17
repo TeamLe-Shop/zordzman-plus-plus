@@ -22,7 +22,7 @@ public:
 
 // You can make this private if you want to add more complications.
 public:
-    std::string host = "localhost";
+    std::string host = "127.0.0.1";
     int port = 4544;
     std::string name = "Player";
     std::string level_dir = "levels";

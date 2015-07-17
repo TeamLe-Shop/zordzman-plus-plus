@@ -201,6 +201,10 @@ public:
     /// Get an entity by it's unique ID.
     Entity & get(unsigned int id);
 
+    /// Return whether the collection contains an entity possessing the ID
+    /// `id`.
+    bool contains(unsigned int id);
+
     std::vector<StateChange> poll();
 
 private:

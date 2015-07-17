@@ -112,8 +112,6 @@ if(USING_GCC OR USING_CLANG OR OSX)
                         -Wnon-virtual-dtor)
 endif()
 
-message(STATUS "FUCK YOU")
-
 add_library(hash-library common/extlib/hash-library/md5.cpp)
 add_library(base64
             common/extlib/base64/base64.hpp common/extlib/base64/base64.cpp)

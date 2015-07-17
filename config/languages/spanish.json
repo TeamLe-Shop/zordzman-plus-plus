@@ -5,7 +5,7 @@
     "Server": "Servidor",
     "Player \"{}\" joined the game.": "Jugador \"{}\" entro el juego.",
     "Player \"{}\" left the game.": "Jugador \"{}\" se salio del juego.",
-    "Say": "Diga",
+    "Say": "Habla",
     "Nickname already taken.": "Nombre esta usado.",
     "\"{}\" changed name to \"{}\".": "\"{}\" cambio su nombre a \"{}\"."
 }

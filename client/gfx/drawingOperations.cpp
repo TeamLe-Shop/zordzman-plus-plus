@@ -20,7 +20,8 @@ namespace drawingOperations {
 
 sys::Texture const * currentTexture = nullptr;
 
-void drawSprite(std::string name, float x, float y, float w, float h) {
+void drawSprite(std::string name, float x, float y, float w, float h,
+                double rotation) {
     if (name == "") {
         return;
     }
@@ -30,12 +31,12 @@ void drawSprite(std::string name, float x, float y, float w, float h) {
 
     drawSpriteFromTexture(manager->getTexture(sprite.m_path.c_str()),
                           sprite.m_x, sprite.m_y, x, y, w, h, sprite.m_width,
-                          sprite.m_height);
+                          sprite.m_height, SpriteFlip::None, rotation);
 }
 
 void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
                            float x, float y, float w, float h, float sprW,
-                           float sprH, SpriteFlip flip) {
+                           float sprH, SpriteFlip flip, double rotation) {
     if (xOff < 0 || yOff < 0)
         return;
 
@@ -51,6 +52,11 @@ void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
         sys::Texture::bind(texture);
         currentTexture = &texture;
     }
+    glLoadIdentity();
+    glPushMatrix();
+    glTranslatef(x + w / 2, y + h / 2, 0);
+    glRotatef(rotation, 0, 0, 1);
+    glTranslatef(-(x + w / 2), -(y + h  / 2), 0);
     // Draw a textured quad that represents the sprite
     glBegin(GL_QUADS);
     switch (flip) {
@@ -77,8 +83,8 @@ void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
     case SpriteFlip::Vertical:
         throw std::runtime_error("Unimplemented!");
     }
-
     glEnd();
+    glPopMatrix();
 }
 
 void drawRectangle(float x, float y, float w, float h, bool filled) {

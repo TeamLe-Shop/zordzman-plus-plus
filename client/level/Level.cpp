@@ -30,9 +30,12 @@ void renderSystem(entity::EntityCollection * coll, entity::Entity & ent) {
 
     auto xpos = position ? position->m_x.get() : 0;
     auto ypos = position ? position->m_y.get() : 0;
+    auto rotation = render ? render->m_rotation.get() : 0;
+    auto width = render ? render->m_width.get() : 32;
+    auto height = render ? render->m_height.get() : 32;
 
     glColor4f(1, 1, 1, alphainfo);
-    drawSprite(spriteinfo, xpos, ypos, 32, 32);
+    drawSprite(spriteinfo, xpos, ypos, width, height, rotation);
     glColor4f(1, 1, 1, 1);
 
     if (!character->m_name.get().empty()) {

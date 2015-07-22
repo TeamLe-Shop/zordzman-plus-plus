@@ -14,15 +14,13 @@ Renderer::Renderer(sys::RenderWindow &window, HUD &hud, Level &level) :
         m_hud(hud),
         m_level(level),
         m_have_player_id(false),
-        m_player_id(0),
-        m_chatMessages(10) {
+        m_player_id(0) {
 
-    float graph_width = 300;
-    float graph_height = 100;
+    float graph_width = 100;
+    float graph_height = 66;
     m_netgraph = Netgraph(window.getWidth() - graph_width,
                           window.getHeight() - graph_height - 32, graph_width,
                           graph_height, color_float(0, 0, 1, 0.9f));
-    m_chatMessages.resize(0);
 }
 
 void Renderer::setPlayerID(unsigned int id) {
@@ -50,15 +48,6 @@ void Renderer::render() {
     m_netgraph.render();
     drawChat();
     glColor3f(1, 1, 1);
-
-    m_currentTime = SDL_GetTicks();
-    if (m_currentTime > m_lastMessage + 5000
-            && m_chatMessages.size() > 0) {
-        std::move(m_chatMessages.begin() + 1, m_chatMessages.end(),
-                  m_chatMessages.begin());
-        m_chatMessages.resize(m_chatMessages.size() - 1);
-        m_lastMessage = m_currentTime;
-    }
 }
 
 void Renderer::drawHUD() {
@@ -129,24 +118,11 @@ void Renderer::drawChat() {
                  0, m_hud.border.y - 9, 8, 8);
     }
 
-    for (size_t i = 0; i < m_chatMessages.size(); i++) {
-        glColor4f(0.2, 0.2, 0.2, 0.3);
-        size_t len = mbstowcs(NULL, m_chatMessages[i].message.c_str(), 0);
-        drawRectangle(0, i * 8, len * 8, 8);
-        glColor4f(1, 1, 1, 1);
-        drawText("default", m_chatMessages[i].message, 0, i * 8, 8, 8);
-    }
+    m_chatMessages.render();
 }
 
 void Renderer::addMessage(std::string msg) {
-    m_lastMessage = SDL_GetTicks();
-    if (m_chatMessages.size() == m_chatMessages.capacity()) {
-        std::move(m_chatMessages.begin() + 1, m_chatMessages.end(),
-                  m_chatMessages.begin());
-        m_chatMessages[m_chatMessages.size() - 1] = {msg, m_lastMessage};
-    } else {
-        m_chatMessages.push_back({msg, m_lastMessage});
-    }
+    m_chatMessages.addMessage(msg);
 }
 
 void Renderer::addNetworkData(size_t data) {

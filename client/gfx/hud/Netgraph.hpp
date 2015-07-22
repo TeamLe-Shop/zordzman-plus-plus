@@ -2,7 +2,6 @@
 
 #include "client/gfx/hud/Element.hpp"
 
-#include <string>
 #include <vector>
 
 namespace client {

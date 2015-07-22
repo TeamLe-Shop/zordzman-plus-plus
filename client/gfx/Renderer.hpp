@@ -11,13 +11,9 @@
 
 #include "client/gfx/hud/Label.hpp"
 #include "client/gfx/hud/Netgraph.hpp"
+#include "client/gfx/hud/ChatMessages.hpp"
 
 namespace client {
-
-typedef struct {
-    std::string message;
-    uint32_t timestamp;
-} ChatMessage;
 
 namespace gfx {
 
@@ -51,9 +47,8 @@ private:
     uint8_t chat_fade_timer = 0;
     uint8_t chat_minfade = 0;
     uint8_t chat_maxfade = 10;
-    std::vector<ChatMessage> m_chatMessages;
-    uint32_t m_lastMessage;
-    uint32_t m_currentTime;
+
+    ChatMessages m_chatMessages;
 
     void drawHUD();
     void drawNetGraph();

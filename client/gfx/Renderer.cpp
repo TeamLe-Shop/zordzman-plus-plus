@@ -16,7 +16,12 @@ Renderer::Renderer(sys::RenderWindow &window, HUD &hud, Level &level) :
         m_have_player_id(false),
         m_player_id(0),
         m_chatMessages(10) {
-    m_graph_data.resize(0);
+
+    float graph_width = 300;
+    float graph_height = 100;
+    m_netgraph = Netgraph(window.getWidth() - graph_width,
+                          window.getHeight() - graph_height - 32, graph_width,
+                          graph_height, color_float(0, 0, 1, 0.9f));
     m_chatMessages.resize(0);
 }
 
@@ -42,7 +47,7 @@ void Renderer::render() {
     glClear(GL_COLOR_BUFFER_BIT);  // Clear the screen.
     m_level.render();
     drawHUD();
-    drawNetGraph();
+    m_netgraph.render();
     drawChat();
     glColor3f(1, 1, 1);
 
@@ -72,14 +77,13 @@ void Renderer::drawHUD() {
         entity::Entity & player = m_level.m_entities.get(m_player_id);
         auto character = COMPONENT(player, entity::CharacterComponent);
 
-
-        drawText("default",
-                 fmt::format("{}: {}", translate(Key_Health),
-                                       character->m_health.get()),
-                 0, 0 + height - 32, 16, 16);
-        drawText("default",
-                 fmt::format("{}:", translate(Key_Weapon)),
-                 0, 0 + height - 32 + 16, 16, 16);
+        std::string hp_string = fmt::format("{}: {}", translate(Key_Health),
+                                            character->m_health.get());
+        Label hp_label = Label(0, height - 32, hp_string, 16);
+        hp_label.render();
+        Label wep_label = Label(0, height - 16,
+                                fmt::format("{}:", translate(Key_Weapon)), 16);
+        wep_label.render();
     }
 
     // Line border to seperate the actual game from the HUD
@@ -92,40 +96,9 @@ void Renderer::drawHUD() {
     std::string serverstr =
         fmt::format("{}: {}", translate(Key_Server), m_server_name);
     std::string mapstr = fmt::format("{}: {}", translate(Key_Map), m_map_name);
-    drawText("default", serverstr, width - (8 * serverstr.size()),
-             height - 8, 8, 8);
-    drawText("default", mapstr, width - (8 * mapstr.size()), height - 16, 8, 8);
+    Label(width - (8 * serverstr.size()), height - 8, serverstr, 8).render();
+    Label(width - (8 * mapstr.size()), height - 16, mapstr, 8).render();
 
-    glColor4f(1, 1, 1, 1);
-}
-
-
-void Renderer::addNetworkData(std::size_t messages_recieved) {
-    m_graph_data.push_back(messages_recieved);
-    if (m_graph_data.size() > m_graph_data_max) {
-        m_graph_data.erase(m_graph_data.begin());
-        m_graph_data.resize(m_graph_data_max);
-    }
-}
-
-void Renderer::drawNetGraph() {
-    auto const height = m_window.getHeight();
-    auto const width = m_window.getWidth();
-    glColor4f(0.2f, 0.2f, 0.2f, 0.2f);
-    drawRectangle(
-        width - m_graph_data_max, height - 32 - 100,
-        m_graph_data_max,
-        100,
-        true
-    );
-    glColor4f(0, 0, 1, 0.9f);
-    for (size_t i = 0; i < m_graph_data.size(); i++) {
-        if (m_graph_data[i]) {
-            drawLine(width - m_graph_data.size() + i, height - 32,
-                     width - m_graph_data.size() + i,
-                     height - 32 - m_graph_data[i] * 2);
-        }
-    }
     glColor4f(1, 1, 1, 1);
 }
 
@@ -174,6 +147,10 @@ void Renderer::addMessage(std::string msg) {
     } else {
         m_chatMessages.push_back({msg, m_lastMessage});
     }
+}
+
+void Renderer::addNetworkData(size_t data) {
+    m_netgraph.addData(data);
 }
 
 }  // namespace gfx

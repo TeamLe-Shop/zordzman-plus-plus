@@ -61,8 +61,12 @@ void setColor(int r, int g, int b, int a);
 /// Set the current color.
 ///
 /// @param col The color.
-///            The first byte represents red, second green, third blue and last
-///            ///            alpha.
+/// The first byte represents red, second green, third blue and last
+/// alpha.
 void setColor(uint32_t col);
+
+uint32_t color_float(float r, float g, float b, float a);
+
+uint32_t color_int(int r, int g, int b, int a);
 } // namespace drawingOperations
 } // namespace client

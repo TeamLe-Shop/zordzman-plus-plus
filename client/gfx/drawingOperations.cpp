@@ -201,5 +201,16 @@ void setColor(uint32_t col) {
               (col >> 8 & 0xFF) / 255.0f, (col & 0xFF) / 255.0f);
 }
 
+uint32_t color_float(float r, float g, float b, float a) {
+    int newr = (int)(r * 255);
+    int newg = (int)(g * 255) << 8;
+    int newb = (int)(b * 255) << 16;
+    int newa = (int)(a * 255) << 24;
+
+    fmt::print(" lal {:x}\n", newr | newg | newb | newa);
+
+    return newr | newg | newb | newa;
+}
+
 } // namespace drawingOperations
 } // namespace client

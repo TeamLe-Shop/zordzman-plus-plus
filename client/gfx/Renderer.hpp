@@ -9,6 +9,8 @@
 #include "client/sys/RenderWindow.hpp"
 #include "common/entity/entity.hpp"
 
+#include "client/gfx/hud/Label.hpp"
+#include "client/gfx/hud/Netgraph.hpp"
 
 namespace client {
 
@@ -43,8 +45,7 @@ private:
     std::string m_map_name;
 
     // Netgraph
-    std::size_t m_graph_data_max = 150;
-    std::vector<std::size_t> m_graph_data;
+    Netgraph m_netgraph;
 
     // Chat
     uint8_t chat_fade_timer = 0;

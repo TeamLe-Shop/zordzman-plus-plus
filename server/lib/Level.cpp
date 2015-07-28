@@ -4,7 +4,9 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+
 #include "common/util/stream.hpp"
+#include "common/util/fileutil.hpp"
 
 #include "systems/physicsSystem.hpp"
 
@@ -20,7 +22,7 @@ namespace level {
 using namespace common::util;
 
 void Level::loadLevel(std::string map_name) {
-    name = map_name;
+    name = common::util::file::fileFromPath(map_name);
     std::ifstream file(map_name, std::ios::in | std::ios::binary);
     std::vector<char> data = stream::readToEnd(file);
     size = data.size();

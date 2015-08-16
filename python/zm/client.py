@@ -207,7 +207,7 @@ class Client(threading.Thread):
             self._egress_buffer = b""
             self._ingress.clear()
             self._egress.clear()
-            log.info("Disconnected from host")
+            log.info("Disconnected from host %s:%i" & self._peer_name)
 
     @zm.pipeline.Egress.subscribe("zm:client:connect",
                                   unpack=True, silence=True)

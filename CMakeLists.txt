@@ -233,8 +233,8 @@ target_link_libraries(zordzman-server
 
 # Build resource packages
 file(GLOB_RECURSE SPRITESHEET_METAS
-    resources/tiles/*_meta.json
-    resources/player/*_meta.json
+    resources/graphics/tiles/*_meta.json
+    resources/graphics/player/*_meta.json
 )
 
 file(GLOB_RECURSE RESOURCE_METAS

@@ -128,7 +128,7 @@ class PlayerLeftMessage(formencode.Schema):
 
 @zm.pipeline.Ingress.register("entity.delete")
 class EntityDeleteMessage(formencode.Schema):
-    """Received if the requested nickname change was taken."""
+    """Message received upon deletion of an entity."""
     id = formencode.validators.Int()
 
 class Client(threading.Thread):

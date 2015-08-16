@@ -107,8 +107,6 @@ class NickChangeMessage(formencode.Schema):
 @zm.pipeline.Ingress.register("nick.taken")
 class NickTakenMessage(formencode.Schema):
     """Received if the requested nickname change was taken."""
-    pass
-
 
 @zm.pipeline.Ingress.register("player.id")
 class PlayerIDMessage(formencode.Schema):
@@ -126,14 +124,12 @@ class PlayerJoinedMessage(formencode.Schema):
 class PlayerLeftMessage(formencode.Schema):
     """Received if the requested nickname change was taken."""
     name = formencode.validators.String()
-    pass
 
 
 @zm.pipeline.Ingress.register("entity.delete")
 class EntityDeleteMessage(formencode.Schema):
     """Received if the requested nickname change was taken."""
     id = formencode.validators.Int()
-    pass
 
 class Client(threading.Thread):
     """The Zordzman network client.
@@ -208,7 +204,7 @@ class Client(threading.Thread):
             self._egress_buffer = b""
             self._ingress.clear()
             self._egress.clear()
-            log.info("Disconnected from %s:%i" % self._peer_name)
+            log.info("Disconnected from host")
 
     @zm.pipeline.Egress.subscribe("zm:client:connect",
                                   unpack=True, silence=True)

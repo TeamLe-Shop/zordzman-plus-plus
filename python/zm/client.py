@@ -78,6 +78,7 @@ class EntityStateMessage(formencode.Schema):
         formencode.validators.ConfirmType(subclass=object),
     ])
 
+
 @zm.pipeline.Egress.register("chat.message")
 @zm.pipeline.Ingress.register("chat.message")
 class ChatMessage(formencode.Schema):
@@ -108,6 +109,7 @@ class NickChangeMessage(formencode.Schema):
 class NickTakenMessage(formencode.Schema):
     """Received if the requested nickname change was taken."""
 
+
 @zm.pipeline.Ingress.register("player.id")
 class PlayerIDMessage(formencode.Schema):
 
@@ -130,6 +132,7 @@ class PlayerLeftMessage(formencode.Schema):
 class EntityDeleteMessage(formencode.Schema):
     """Message received upon deletion of an entity."""
     id = formencode.validators.Int()
+
 
 class Client(threading.Thread):
     """The Zordzman network client.

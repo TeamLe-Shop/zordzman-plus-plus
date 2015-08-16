@@ -207,7 +207,7 @@ class Client(threading.Thread):
             self._egress_buffer = b""
             self._ingress.clear()
             self._egress.clear()
-            log.info("Disconnected from host %s:%i" & self._peer_name)
+            log.info("Disconnected from host %s:%i" % self._peer_name)
 
     @zm.pipeline.Egress.subscribe("zm:client:connect",
                                   unpack=True, silence=True)
@@ -221,7 +221,11 @@ class Client(threading.Thread):
             self.disconnect()
         log.info("Connecting to %s:%i", host, port)
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._socket.connect((host, port))
+        try:
+            self._socket.connect((host, port))
+        except socket.error:
+            self._socket = None
+            raise
         self._peer_name = self._socket.getpeername()
         self._socket.sendall(self.MAGIC_NUMBER)
         self._ingress.push("zm:client:connected", {

@@ -68,5 +68,7 @@ void setColor(uint32_t col);
 uint32_t color_float(float r, float g, float b, float a);
 
 uint32_t color_int(int r, int g, int b, int a);
+
+
 } // namespace drawingOperations
 } // namespace client

@@ -10,7 +10,7 @@
 namespace resources {
 
 enum PackageType {
-    Base, Map, ServerProvided, UserProvided
+    Base, Level, ServerProvided, UserProvided
 };
 
 class ResourcePackage {

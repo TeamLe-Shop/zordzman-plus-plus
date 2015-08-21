@@ -6,10 +6,13 @@
 #include "common/resources/SpriteResource.hpp"
 
 #include <SDL_opengl.h>
+
+#include <set>
 #include <string.h>
 #include <stdexcept>
 
 #include <SDL_ttf.h>
+
 
 #include "format.h"
 
@@ -19,6 +22,7 @@ namespace client {
 namespace drawingOperations {
 
 sys::Texture const * currentTexture = nullptr;
+std::set<std::string> invalid_sprites;
 
 void drawSprite(std::string name, float x, float y, float w, float h,
                 double rotation) {
@@ -28,6 +32,14 @@ void drawSprite(std::string name, float x, float y, float w, float h,
 
     ResourceManager * manager = &Client::get().m_resources;
     SpriteResource sprite = manager->m_sprites[name];
+
+    if (sprite.m_path.empty()) {
+        if (invalid_sprites.find(name) == invalid_sprites.end()) {
+            fmt::print("Failed to find sprite \"{}\"\n", name);
+            invalid_sprites.insert(name);
+        }
+        return;
+    }
 
     drawSpriteFromTexture(manager->getTexture(sprite.m_path.c_str()),
                           sprite.m_x, sprite.m_y, x, y, w, h, sprite.m_width,
@@ -206,8 +218,6 @@ uint32_t color_float(float r, float g, float b, float a) {
     int newg = (int)(g * 255) << 8;
     int newb = (int)(b * 255) << 16;
     int newa = (int)(a * 255) << 24;
-
-    fmt::print(" lal {:x}\n", newr | newg | newb | newa);
 
     return newr | newg | newb | newa;
 }

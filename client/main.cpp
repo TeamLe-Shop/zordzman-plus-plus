@@ -1,4 +1,4 @@
-#include "Client.hpp"
+#include "Game.hpp"
 
 #include <stdexcept>
 #include <clocale>
@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
             cfg.port = std::stoi(argv[2]);
         }
         // Initialize the game.
-        Client game(cfg, hud);
+        Game game(cfg, hud);
         // Start the game loop.
         game.exec();
     } catch (std::exception const & except) {

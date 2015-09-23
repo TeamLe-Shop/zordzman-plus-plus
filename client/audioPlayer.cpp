@@ -3,7 +3,7 @@
 #include "ResourceManager.hpp"
 #include "common/resources/MusicResource.hpp"
 #include "format.h"
-#include "Client.hpp"
+#include "Game.hpp"
 
 #include <iterator>
 
@@ -13,7 +13,7 @@ namespace client {
 namespace audio {
 
 void playMusic(std::string name) {
-    ResourceManager * manager = &Client::get().m_resources;
+    ResourceManager * manager = &Game::get().m_resources;
 
     MusicResource music = manager->m_music[name];
 
@@ -27,7 +27,7 @@ void playMusic(std::string name) {
 }
 
 void playSound(std::string name) {
-    ResourceManager * manager = &Client::get().m_resources;
+    ResourceManager * manager = &Game::get().m_resources;
 
     SoundResource sound = manager->m_sounds[name];
 

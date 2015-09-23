@@ -1,6 +1,6 @@
 #include "gfx/drawingOperations.hpp"
 
-#include "Client.hpp"
+#include "Game.hpp"
 #include "ResourceManager.hpp"
 
 #include "common/resources/SpriteResource.hpp"
@@ -30,7 +30,7 @@ void drawSprite(std::string name, float x, float y, float w, float h,
         return;
     }
 
-    ResourceManager * manager = &Client::get().m_resources;
+    ResourceManager * manager = &Game::get().m_resources;
     SpriteResource sprite = manager->m_sprites[name];
 
     if (sprite.m_path.empty()) {
@@ -141,7 +141,7 @@ void drawText(std::string font, std::string const & text, int x, int y, int w,
         return;
     }
 
-    ResourceManager * manager = &Client::get().m_resources;
+    ResourceManager * manager = &Game::get().m_resources;
     FontResource fontresource = manager->m_fonts[font];
 
     if (!fontresource.m_valid) {

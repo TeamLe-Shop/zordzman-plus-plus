@@ -1,4 +1,4 @@
-#include "Client.hpp"
+#include "Game.hpp"
 
 #include "common/entity/entity.hpp"
 #include "common/entity/component.hpp"
@@ -52,12 +52,12 @@ using namespace std::placeholders;
 using namespace json11;
 
 namespace {
-std::string const title = "Zordzman v0.0.";
+std::string const title = "Zordzman v0.1";
 } // Anonymous namespace
 
-Client * Client::m_instance;
+Game * Game::m_instance;
 
-Client::Client(Config const & cfg, HUD hud)
+Game::Game(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_resources("resources.tar"), m_cfg(cfg),
       m_hud(hud), m_renderer(m_window, hud, m_level) {
     m_running = true;
@@ -74,25 +74,25 @@ Client::Client(Config const & cfg, HUD hud)
     Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
     audio::playMusic("Lively");
     m_renderer.setMapName("<null>");
-    m_client.addHandler(std::bind(&Client::onConnect, this, _1));
-    m_client.addHandler(std::bind(&Client::onMapOffer, this, _1));
-    m_client.addHandler(std::bind(&Client::onMapContents, this, _1));
-    m_client.addHandler(std::bind(&Client::onServerMessage, this, _1));
-    m_client.addHandler(std::bind(&Client::onEntityState, this, _1));
-    m_client.addHandler(std::bind(&Client::onPlayerId, this, _1));
-    m_client.addHandler(std::bind(&Client::onPlayerJoined, this, _1));
-    m_client.addHandler(std::bind(&Client::onPlayerLeft, this, _1));
-    m_client.addHandler(std::bind(&Client::onEntityDelete, this, _1));
-    m_client.addHandler(std::bind(&Client::onNickTaken, this, _1));
-    m_client.addHandler(std::bind(&Client::onNickChange, this, _1));
+    m_client.addHandler(std::bind(&Game::onConnect, this, _1));
+    m_client.addHandler(std::bind(&Game::onMapOffer, this, _1));
+    m_client.addHandler(std::bind(&Game::onMapContents, this, _1));
+    m_client.addHandler(std::bind(&Game::onServerMessage, this, _1));
+    m_client.addHandler(std::bind(&Game::onEntityState, this, _1));
+    m_client.addHandler(std::bind(&Game::onPlayerId, this, _1));
+    m_client.addHandler(std::bind(&Game::onPlayerJoined, this, _1));
+    m_client.addHandler(std::bind(&Game::onPlayerLeft, this, _1));
+    m_client.addHandler(std::bind(&Game::onEntityDelete, this, _1));
+    m_client.addHandler(std::bind(&Game::onNickTaken, this, _1));
+    m_client.addHandler(std::bind(&Game::onNickChange, this, _1));
 }
 
-Client::~Client() {
+Game::~Game() {
     m_instance = nullptr;
 }
 
 
-void Client::exec() {
+void Game::exec() {
     m_client.connect(m_cfg.host, m_cfg.port);
     while (m_running) {
         handleEvents();
@@ -104,21 +104,21 @@ void Client::exec() {
     m_client.disconnect();
 }
 
-void Client::onConnect(::net::ingress::zm::client::Connected server) {
+void Game::onConnect(::net::ingress::zm::client::Connected server) {
     m_renderer.setServerName(fmt::format("{}:{}", server.host, server.port));
     m_client.send(::net::egress::ClientNick({m_cfg.name}));
 }
 
-void Client::onMapOffer(::net::ingress::MapOffer offer) {
+void Game::onMapOffer(::net::ingress::MapOffer offer) {
     checkForMap(offer.name, offer.hash);
     m_renderer.setMapName(offer.name);
 }
 
-void Client::onMapContents(::net::ingress::MapContents contents) {
+void Game::onMapContents(::net::ingress::MapContents contents) {
     writeMapContents(contents.contents);
 }
 
-void Client::onServerMessage(::net::ingress::ServerMessage message) {
+void Game::onServerMessage(::net::ingress::ServerMessage message) {
     m_renderer.addMessage(fmt::format("{}", message.message));
 }
 
@@ -129,7 +129,7 @@ void Client::onServerMessage(::net::ingress::ServerMessage message) {
                                 {"value", value}, \
                             }
 
-void Client::onEntityState(::net::ingress::EntityState state) {
+void Game::onEntityState(::net::ingress::EntityState state) {
     Json json_state;
     if (PyLong_CheckExact(state.value)) {
         json_state = JSON_STATE((int) PyLong_AsLong(state.value));
@@ -145,41 +145,41 @@ void Client::onEntityState(::net::ingress::EntityState state) {
 
 #undef JSON_STATE
 
-void Client::onPlayerId(::net::ingress::PlayerId id) {
+void Game::onPlayerId(::net::ingress::PlayerId id) {
     m_renderer.setPlayerID(id.id);
 }
 
-void Client::onPlayerJoined(::net::ingress::PlayerJoined joiner) {
+void Game::onPlayerJoined(::net::ingress::PlayerJoined joiner) {
     audio::playSound("playerjoined");
     std::string str = language::translate(language::Key_PlayerJoined);
     m_renderer.addMessage(fmt::format(str, joiner.name));
 }
 
-void Client::onPlayerLeft(::net::ingress::PlayerLeft left)
+void Game::onPlayerLeft(::net::ingress::PlayerLeft left)
 {
     audio::playSound("playerleft");
     std::string str = language::translate(language::Key_PlayerLeft);
     m_renderer.addMessage(fmt::format(str, left.name));
 }
 
-void Client::onEntityDelete(::net::ingress::EntityDelete entity)
+void Game::onEntityDelete(::net::ingress::EntityDelete entity)
 {
     m_level.m_entities.removeEntity(entity.id);
 }
 
-void Client::onNickChange(::net::ingress::NickChange change)
+void Game::onNickChange(::net::ingress::NickChange change)
 {
     std::string str = language::translate(language::Key_NickChange);
     m_renderer.addMessage(fmt::format(str, change.oldnick, change.newnick));
 }
 
-void Client::onNickTaken(::net::ingress::NickTaken)
+void Game::onNickTaken(::net::ingress::NickTaken)
 {
     std::string str = language::translate(language::Key_NickTaken);
     m_renderer.addMessage(fmt::format(str));
 }
 
-void Client::checkForMap(std::string map, std::string hash) {
+void Game::checkForMap(std::string map, std::string hash) {
     using namespace common::util::file;
     bool found_match = false;
 
@@ -219,7 +219,7 @@ void Client::checkForMap(std::string map, std::string hash) {
     }
 }
 
-void Client::writeMapContents(std::string const map_base64) {
+void Game::writeMapContents(std::string const map_base64) {
     std::string map_contents = base64_decode(map_base64);
     std::ofstream map_file(fmt::format("{}/{}", m_cfg.level_dir, m_map_hash),
                            std::ios::out | std::ios::binary);
@@ -228,16 +228,16 @@ void Client::writeMapContents(std::string const map_base64) {
     m_level = Level(fmt::format("{}/{}", m_cfg.level_dir, m_map_hash));
 }
 
-Client & Client::get() {
+Game & Game::get() {
     if (!m_instance) {
-        throw std::runtime_error("Client::get(): Instance is null.");
+        throw std::runtime_error("Game::get(): Instance is null.");
     }
     return *m_instance;
 }
 
-sys::RenderWindow & Client::getWindow() { return m_window; }
+sys::RenderWindow & Game::getWindow() { return m_window; }
 
-void Client::handleEvents() {
+void Game::handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {

@@ -3,7 +3,7 @@
 #include "common/entity/components/character.hpp"
 #include "common/entity/components/render.hpp"
 #include "common/entity/components/position.hpp"
-#include "Client.hpp"
+#include "Game.hpp"
 #include "level/tiles/Tile.hpp"
 #include "format.h"
 #include "common/util/stream.hpp"
@@ -109,7 +109,7 @@ void Level::setTileAt(int x, int y, byte tile) {
 
 void Level::render() const {
     using namespace drawingOperations;
-    auto & window = Client::get().getWindow();
+    auto & window = Game::get().getWindow();
 
     // Borders for the renders.
     int minX = (int)(0 / 32);

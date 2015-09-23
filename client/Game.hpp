@@ -24,13 +24,13 @@
 /// The Zordzman client.
 namespace client {
 
-class Client {
+class Game {
 public:
-    Client(Config const & cfg, HUD hud);
-    ~Client();
+    Game(Config const & cfg, HUD hud);
+    ~Game();
 
     /// Get the active game instance
-    static Client & get();
+    static Game & get();
 
     /// The client's mainloop.
     void exec();
@@ -57,8 +57,8 @@ public:
     void addMessage(std::string message);
 
 private:
-    Client(const Client &) = delete;
-    Client & operator=(const Client &) = delete;
+    Game(const Game &) = delete;
+    Game & operator=(const Game &) = delete;
     bool m_running;
 
     sys::SysContext m_system;
@@ -85,7 +85,7 @@ public:
     ResourceManager m_resources;
 
 private:
-    static Client * m_instance;
+    static Game * m_instance;
     Config const & m_cfg;
     std::string m_map_hash;
     std::string m_map_name;

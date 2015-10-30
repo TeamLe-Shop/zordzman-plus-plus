@@ -15,27 +15,15 @@
 using namespace common::util;
 
 namespace client {
+ResourceManager::ResourceManager() {}
+
 ResourceManager::ResourceManager(std::string base_resource) {
     loadPackage(base_resource, Base);
-
-    debug("Loaded textures:\n");
-    for (const auto & texture : m_textures) {
-        debug("  Path: {}\n", texture.first);
-    }
-
-    debug("Loaded music:\n");
-    for (const auto & music : m_musicfiles) {
-        debug("  Path: {}\n", music.first);
-    }
-
-    debug("Loaded sounds:\n");
-    for (const auto & sound : m_soundlist) {
-        debug("  Path: {}\n", sound.first);
-    }
 }
 
 void ResourceManager::loadPackage(std::string resource_package,
                                   PackageType type) {
+
     ResourcePackage rpackage(resource_package, type);
 
     m_sprites.loadPackage(rpackage);
@@ -71,6 +59,21 @@ void ResourceManager::loadPackage(std::string resource_package,
             // Currently non-JIT loading
             loadSound(rpackage.getTar(), sound.m_path);
         }
+    }
+
+    debug("Loaded textures:\n");
+    for (const auto & texture : m_textures) {
+        debug("  Path: {}\n", texture.first);
+    }
+
+    debug("Loaded music:\n");
+    for (const auto & music : m_musicfiles) {
+        debug("  Path: {}\n", music.first);
+    }
+
+    debug("Loaded sounds:\n");
+    for (const auto & sound : m_soundlist) {
+        debug("  Path: {}\n", sound.first);
     }
 }
 

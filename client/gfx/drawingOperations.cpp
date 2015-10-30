@@ -24,6 +24,52 @@ namespace drawingOperations {
 sys::Texture const * currentTexture = nullptr;
 std::set<std::string> invalid_sprites;
 
+
+void Color::setFloat(float _r, float _g, float _b, float _a) {
+    if (_r != -1) { r = _r; }
+    if (_g != -1) { g = _g; }
+    if (_b != -1) { b = _b; }
+    if (_a != -1) { a = _a; }
+}
+
+void Color::setInt(float _r, float _g, float _b, float _a) {
+    if (_r != -1) { r = _r / 255; }
+    if (_g != -1) { g = _g / 255; }
+    if (_b != -1) { b = _b / 255; }
+    if (_a != -1) { a = _a / 255; }
+}
+
+Color Color::operator*(const float& f) {
+    Color temp = {r, g, b, a};
+    temp.r *= f;
+    temp.g *= f;
+    temp.b *= f;
+    return temp;
+}
+
+void Color::operator*=(const float& f) {
+    r *= f;
+    g *= f;
+    b *= f;
+}
+
+
+Color Color::operator/(const float& f) {
+    Color temp = {r, g, b, a};
+    temp.r /= f;
+    temp.g /= f;
+    temp.b /= f;
+    temp.a /= f;
+    return temp;
+}
+
+void Color::operator/=(const float& f) {
+    r /= f;
+    g /= f;
+    b /= f;
+    a /= f;
+}
+
 void drawSprite(std::string name, float x, float y, float w, float h,
                 double rotation) {
     if (name == "") {
@@ -211,6 +257,10 @@ void setColor(int r, int g, int b, int a) {
 void setColor(uint32_t col) {
     glColor4f((col >> 24 & 0xFF) / 255.0f, (col >> 16 & 0xFF) / 255.0f,
               (col >> 8 & 0xFF) / 255.0f, (col & 0xFF) / 255.0f);
+}
+
+void setColor(Color c) {
+    glColor4f(c.r, c.g, c.b, c.a);
 }
 
 uint32_t color_float(float r, float g, float b, float a) {

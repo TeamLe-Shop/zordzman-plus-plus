@@ -235,6 +235,7 @@ target_link_libraries(zordzman-server
 file(GLOB_RECURSE SPRITESHEET_METAS
     resources/graphics/tiles/*_meta.json
     resources/graphics/player/*_meta.json
+    resources/ui/*_meta.json
 )
 
 file(GLOB_RECURSE RESOURCE_METAS

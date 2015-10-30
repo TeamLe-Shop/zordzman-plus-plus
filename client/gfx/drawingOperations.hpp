@@ -8,6 +8,19 @@ namespace drawingOperations {
 
 enum class SpriteFlip { None, Horizontal, Vertical };
 
+class Color {
+public:
+    void setFloat(float r, float g, float b, float a);
+    void setInt(float r, float g, float b, float a);
+    Color operator*(const float& f);
+    void operator*=(const float& f);
+    Color operator/(const float& f);
+    void operator/=(const float& f);
+
+public:
+    double r, g, b, a;
+};
+
 void drawSprite(std::string sprite, float x, float y, float w, float h,
                 double rotation = 0);
 
@@ -64,6 +77,8 @@ void setColor(int r, int g, int b, int a);
 /// The first byte represents red, second green, third blue and last
 /// alpha.
 void setColor(uint32_t col);
+
+void setColor(Color color);
 
 uint32_t color_float(float r, float g, float b, float a);
 

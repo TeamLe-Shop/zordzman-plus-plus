@@ -13,6 +13,9 @@ public:
     TitleState();
     void render(client::Client * c);
     void input();
+
+private:
+    unsigned int tick;
 };
 
 } // namespace state

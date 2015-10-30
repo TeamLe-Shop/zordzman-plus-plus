@@ -64,7 +64,6 @@ private:
     bool m_running;
 
     sys::SysContext m_system;
-    sys::RenderWindow m_window;
     net::Client m_client;
 
     /// Handle all available SDL events.
@@ -84,7 +83,8 @@ private:
 
 public:
     ResourceManager m_resources;
-    state::State m_state;
+    state::State * m_state;
+    sys::RenderWindow m_window;
 
 private:
     static Client * m_instance;

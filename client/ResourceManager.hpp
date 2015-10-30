@@ -24,6 +24,7 @@ using namespace resources;
 
 class ResourceManager {
 public:
+    ResourceManager();
     /// Initialize the resources
     ResourceManager(std::string resource_package);
     // Load a package from disk.

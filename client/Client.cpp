@@ -6,6 +6,8 @@
 #include "common/entity/components/render.hpp"
 #include "common/entity/components/position.hpp"
 
+#include "state/TitleState.hpp"
+
 #include "gfx/drawingOperations.hpp"
 #include "net/net.hpp"
 #include "json11.hpp"
@@ -58,9 +60,10 @@ std::string const title = "Zordzman v0.0.";
 Client * Client::m_instance;
 
 Client::Client(Config const & cfg, HUD hud)
-    : m_window(800, 600, title), m_resources("resources.tar"), m_cfg(cfg),
+    : m_window(800, 600, title), m_cfg(cfg),
       m_hud(hud) {
     m_running = true;
+    m_resources.loadPackage("resources.tar", Base);
     m_level.m_entities.registerComponent(
         entity::CharacterComponent::getComponentName(),
         entity::CharacterComponent::new_);
@@ -72,7 +75,6 @@ Client::Client(Config const & cfg, HUD hud)
         entity::PositionComponent::new_);
     m_instance = this;
     Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
-    audio::playMusic("Lively");
     m_client.addHandler(std::bind(&Client::onConnect, this, _1));
     m_client.addHandler(std::bind(&Client::onMapOffer, this, _1));
     m_client.addHandler(std::bind(&Client::onMapContents, this, _1));
@@ -84,6 +86,8 @@ Client::Client(Config const & cfg, HUD hud)
     m_client.addHandler(std::bind(&Client::onEntityDelete, this, _1));
     m_client.addHandler(std::bind(&Client::onNickTaken, this, _1));
     m_client.addHandler(std::bind(&Client::onNickChange, this, _1));
+
+    m_state = new state::TitleState();
 }
 
 Client::~Client() {
@@ -95,9 +99,9 @@ void Client::exec() {
     m_client.connect(m_cfg.host, m_cfg.port);
     while (m_running) {
         handleEvents();
-        glClear(GL_COLOR_BUFFER_BIT);  // Clear the screen.
-        m_level.render();
-        m_level.m_entities.cycle();  // Calls the rendering system
+        glClear(GL_COLOR_BUFFER_BIT);
+        m_state->render(this);
+        m_state->input();
         m_window.present();
     }
     m_client.disconnect();

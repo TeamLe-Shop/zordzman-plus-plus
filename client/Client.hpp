@@ -15,6 +15,8 @@
 
 #include "common/entity/entity.hpp"
 
+#include "state/State.hpp"
+
 #include <vector>
 #include <algorithm>
 
@@ -63,7 +65,6 @@ private:
 
     sys::SysContext m_system;
     sys::RenderWindow m_window;
-    gfx::Renderer m_renderer;
     net::Client m_client;
 
     /// Handle all available SDL events.
@@ -83,6 +84,7 @@ private:
 
 public:
     ResourceManager m_resources;
+    state::State m_state;
 
 private:
     static Client * m_instance;

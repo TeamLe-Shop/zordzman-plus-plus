@@ -59,7 +59,7 @@ Client * Client::m_instance;
 
 Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_resources("resources.tar"), m_cfg(cfg),
-      m_hud(hud), m_renderer(m_window, hud, m_level) {
+      m_hud(hud) {
     m_running = true;
     m_level.m_entities.registerComponent(
         entity::CharacterComponent::getComponentName(),
@@ -73,7 +73,6 @@ Client::Client(Config const & cfg, HUD hud)
     m_instance = this;
     Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
     audio::playMusic("Lively");
-    m_renderer.setMapName("<null>");
     m_client.addHandler(std::bind(&Client::onConnect, this, _1));
     m_client.addHandler(std::bind(&Client::onMapOffer, this, _1));
     m_client.addHandler(std::bind(&Client::onMapContents, this, _1));
@@ -96,8 +95,8 @@ void Client::exec() {
     m_client.connect(m_cfg.host, m_cfg.port);
     while (m_running) {
         handleEvents();
-        m_renderer.addNetworkData(m_client.process());
-        m_renderer.render();
+        glClear(GL_COLOR_BUFFER_BIT);  // Clear the screen.
+        m_level.render();
         m_level.m_entities.cycle();  // Calls the rendering system
         m_window.present();
     }
@@ -105,13 +104,11 @@ void Client::exec() {
 }
 
 void Client::onConnect(::net::ingress::zm::client::Connected server) {
-    m_renderer.setServerName(fmt::format("{}:{}", server.host, server.port));
     m_client.send(::net::egress::ClientNick({m_cfg.name}));
 }
 
 void Client::onMapOffer(::net::ingress::MapOffer offer) {
     checkForMap(offer.name, offer.hash);
-    m_renderer.setMapName(offer.name);
 }
 
 void Client::onMapContents(::net::ingress::MapContents contents) {
@@ -119,7 +116,6 @@ void Client::onMapContents(::net::ingress::MapContents contents) {
 }
 
 void Client::onServerMessage(::net::ingress::ServerMessage message) {
-    m_renderer.addMessage(fmt::format("{}", message.message));
 }
 
 #define JSON_STATE(value)   Json::object { \
@@ -146,20 +142,17 @@ void Client::onEntityState(::net::ingress::EntityState state) {
 #undef JSON_STATE
 
 void Client::onPlayerId(::net::ingress::PlayerId id) {
-    m_renderer.setPlayerID(id.id);
 }
 
 void Client::onPlayerJoined(::net::ingress::PlayerJoined joiner) {
     audio::playSound("playerjoined");
     std::string str = language::translate(language::Key_PlayerJoined);
-    m_renderer.addMessage(fmt::format(str, joiner.name));
 }
 
 void Client::onPlayerLeft(::net::ingress::PlayerLeft left)
 {
     audio::playSound("playerleft");
     std::string str = language::translate(language::Key_PlayerLeft);
-    m_renderer.addMessage(fmt::format(str, left.name));
 }
 
 void Client::onEntityDelete(::net::ingress::EntityDelete entity)
@@ -170,13 +163,11 @@ void Client::onEntityDelete(::net::ingress::EntityDelete entity)
 void Client::onNickChange(::net::ingress::NickChange change)
 {
     std::string str = language::translate(language::Key_NickChange);
-    m_renderer.addMessage(fmt::format(str, change.oldnick, change.newnick));
 }
 
 void Client::onNickTaken(::net::ingress::NickTaken)
 {
     std::string str = language::translate(language::Key_NickTaken);
-    m_renderer.addMessage(fmt::format(str));
 }
 
 void Client::checkForMap(std::string map, std::string hash) {
@@ -246,36 +237,10 @@ void Client::handleEvents() {
                 break;
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_RETURN) {
-                    if (m_renderer.chat_open) {
-                        SDL_StopTextInput();
-                        if (!m_renderer.chat_string.empty()) {
-                            m_client.send(
-                                ::net::egress::ChatMessage(
-                                    {m_renderer.chat_string}
-                                )
-                            );
-                        }
-                    } else {
-                        SDL_StartTextInput();
-                    }
-                    m_renderer.chat_open = !m_renderer.chat_open;
-                    m_renderer.chat_string = "";
-                }
-                if (m_renderer.chat_open) {
-                    if (event.key.keysym.sym == SDLK_BACKSPACE) {
-                        if (!m_renderer.chat_string.empty()) {
-                            common::util::string::utf8_pop_character(
-                                m_renderer.chat_string);
-                        } else {
-                            audio::playSound("error");
-                        }
-                    }
+
                 }
                 break;
             case SDL_TEXTINPUT:
-                if (m_renderer.chat_open) {
-                    m_renderer.chat_string += event.text.text;
-                }
                 break;
         }
     }

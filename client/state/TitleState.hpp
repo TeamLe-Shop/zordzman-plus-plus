@@ -6,8 +6,6 @@ namespace client {
 
 class Client;
 
-namespace state {
-
 class TitleState : public State {
 public:
     TitleState();
@@ -17,7 +15,5 @@ public:
 private:
     unsigned int tick;
 };
-
-} // namespace state
 
 } // namespace client

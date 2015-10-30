@@ -4,8 +4,6 @@ namespace client {
 
 class Client;
 
-namespace state {
-
 class State {
 public:
     State();
@@ -14,7 +12,5 @@ public:
     virtual void render(client::Client * c);
     virtual void input();
 };
-
-} // namespace state
 
 } // namespace client

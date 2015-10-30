@@ -87,7 +87,7 @@ Client::Client(Config const & cfg, HUD hud)
     m_client.addHandler(std::bind(&Client::onNickTaken, this, _1));
     m_client.addHandler(std::bind(&Client::onNickChange, this, _1));
 
-    m_state = new state::TitleState();
+    m_state = new TitleState();
 }
 
 Client::~Client() {

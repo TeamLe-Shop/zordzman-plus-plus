@@ -83,7 +83,7 @@ private:
 
 public:
     ResourceManager m_resources;
-    state::State * m_state;
+    State * m_state;
     sys::RenderWindow m_window;
 
 private:

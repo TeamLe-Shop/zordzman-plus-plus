@@ -9,8 +9,6 @@
 
 namespace client {
 
-namespace state {
-
 using namespace drawingOperations;
 
 TitleState::TitleState() {
@@ -44,9 +42,6 @@ void TitleState::render(client::Client * c) {
     tick++;
 }
 
-void TitleState::input() {
-}
-
-} // namespace state
+void TitleState::input() {}
 
 } // namespace client

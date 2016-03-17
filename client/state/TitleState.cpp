@@ -7,6 +7,8 @@
 
 #include "Client.hpp"
 
+#include <cmath>
+
 namespace client {
 
 using namespace drawingOperations;
@@ -36,7 +38,9 @@ void TitleState::render(client::Client * c) {
         }
     }
 
-    drawingOperations::drawSprite("selector", 650, 42, 64, 32, tick % 360);
+
+    drawingOperations::drawSprite("easteregg", 400-32, 114, 64, 64,
+        sinf((tick%360) * (M_PI/180)) * 30.0);
     drawingOperations::drawText("default", "v0.1", 0, 584, 16, 16);
 
     tick++;

@@ -24,8 +24,18 @@ public:
     double r, g, b, a;
 };
 
+class Hinge {
+public:
+    Hinge();
+    Hinge(float x, float y);
+
+public:
+    bool valid;
+    float x, y;
+};
+
 void drawSprite(std::string sprite, float x, float y, float w, float h,
-                double rotation = 0);
+                double rotation = 0, Hinge hinge = Hinge());
 
 /// Draw a sprite from a Texture
 ///
@@ -36,13 +46,17 @@ void drawSprite(std::string sprite, float x, float y, float w, float h,
 /// @param y Vertical position to draw the sprite at
 /// @param w Width of the projection
 /// @param h Height of the projection
+/// @param sprW The width of the sprite in the texture
+/// @param sprH The height of the sprite in the texture
+/// @param rotation Rotation in degrees to draw the sprite at
+/// @param hinge If rotated, the vertex to rotate the sprite around.
 ///
 /// If the projection size defined by (w, h) differs from spriteSize,
 /// the sprite will be scaled accordingly.
 void drawSpriteFromTexture(sys::Texture const & texture, int xOff, int yOff,
                            float x, float y, float w, float h, float sprW,
                            float sprH, SpriteFlip flip = SpriteFlip::None,
-                           double rotation = 0);
+                           double rotation = 0, Hinge hinge = Hinge());
 
 /// Draw a rectangle
 ///

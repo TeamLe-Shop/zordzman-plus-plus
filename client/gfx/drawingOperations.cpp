@@ -75,8 +75,18 @@ void Color::operator/=(const float& f) {
     a /= f;
 }
 
+Hinge::Hinge() {
+    valid = false;
+}
+
+Hinge::Hinge(float _x, float _y) {
+    valid = true;
+    x = _x;
+    y = _y;
+}
+
 void drawSprite(std::string name, float x, float y, float w, float h,
-                double rotation) {
+                double rotation, Hinge hinge) {
     if (name == "") {
         return;
     }
@@ -94,12 +104,13 @@ void drawSprite(std::string name, float x, float y, float w, float h,
 
     drawSpriteFromTexture(manager->getTexture(sprite.m_path.c_str()),
                           sprite.m_x, sprite.m_y, x, y, w, h, sprite.m_width,
-                          sprite.m_height, SpriteFlip::None, rotation);
+                          sprite.m_height, SpriteFlip::None, rotation, hinge);
 }
 
 void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
                            float x, float y, float w, float h, float sprW,
-                           float sprH, SpriteFlip flip, double rotation) {
+                           float sprH, SpriteFlip flip, double rotation,
+                           Hinge hinge) {
     if (xOff < 0 || yOff < 0)
         return;
 
@@ -109,6 +120,11 @@ void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
     float const texc_left = (float) xOff / texture.getWidth();
     float const texc_top = (float) yOff / texture.getHeight();
 
+    if (!hinge.valid) {
+        hinge.x = x + w/2;
+        hinge.y = y + w/2;
+    }
+
     // Avoid binding the same texture again, if it was previously bound, as
     // texture binding is an expensive operation
     if (&texture != currentTexture) {
@@ -117,9 +133,9 @@ void drawSpriteFromTexture(const sys::Texture & texture, int xOff, int yOff,
     }
     glLoadIdentity();
     glPushMatrix();
-    glTranslatef(x + w / 2, y + h / 2, 0);
+    glTranslatef(hinge.x, hinge.y, 0);
     glRotatef(rotation, 0, 0, 1);
-    glTranslatef(-(x + w / 2), -(y + h  / 2), 0);
+    glTranslatef(-(hinge.x), -(hinge.y), 0);
     // Draw a textured quad that represents the sprite
     glBegin(GL_QUADS);
     switch (flip) {

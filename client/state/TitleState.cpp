@@ -44,7 +44,7 @@ void TitleState::render(client::Client * c) {
     Color box_outline(0.9, 0.9, 0.9, 1);
 
     drawingOperations::drawSprite("easteregg", width/2-32, 114, 64, 64,
-        sinf((tick%360) * (M_PI/180)) * 30.0);
+        sinf((tick%360) * (M_PI/180)) * 30.0, Hinge(width/2, 114));
     drawingOperations::drawText("default", "v0.1", 0, 584, 16, 16);
 
     drawingOperations::setColor(box);

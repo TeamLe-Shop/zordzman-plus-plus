@@ -24,6 +24,11 @@ namespace drawingOperations {
 sys::Texture const * currentTexture = nullptr;
 std::set<std::string> invalid_sprites;
 
+Color::Color() {}
+
+Color::Color(float _r, float _g, float _b, float _a) {
+    setFloat(_r, _g, _b, _a);
+}
 
 void Color::setFloat(float _r, float _g, float _b, float _a) {
     if (_r != -1) { r = _r; }

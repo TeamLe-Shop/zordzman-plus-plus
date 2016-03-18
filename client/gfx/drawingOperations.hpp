@@ -10,6 +10,9 @@ enum class SpriteFlip { None, Horizontal, Vertical };
 
 class Color {
 public:
+    Color();
+    Color(float r, float g, float b, float a);
+
     void setFloat(float r, float g, float b, float a);
     void setInt(float r, float g, float b, float a);
     Color operator*(const float& f);

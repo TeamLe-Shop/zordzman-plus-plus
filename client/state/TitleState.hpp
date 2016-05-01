@@ -10,10 +10,11 @@ class TitleState : public State {
 public:
     TitleState();
     void render(client::Client * c);
-    void input();
+    void input(SDL_Event event);
 
 private:
     unsigned int tick;
+
 };
 
 } // namespace client

@@ -54,7 +54,7 @@ using namespace std::placeholders;
 using namespace json11;
 
 namespace {
-std::string const title = "Zordzman v0.0.";
+std::string const title = "Zordzman v0.0.9";
 } // Anonymous namespace
 
 Client * Client::m_instance;
@@ -101,7 +101,6 @@ void Client::exec() {
         handleEvents();
         glClear(GL_COLOR_BUFFER_BIT);
         m_state->render(this);
-        m_state->input();
         m_window.present();
     }
     m_client.disconnect();
@@ -239,12 +238,10 @@ void Client::handleEvents() {
             case SDL_QUIT:
                 m_running = false;
                 break;
-            case SDL_KEYDOWN:
-                if (event.key.keysym.sym == SDLK_RETURN) {
-
-                }
-                break;
             case SDL_TEXTINPUT:
+                break;
+            default:
+                m_state->input(event);
                 break;
         }
     }

@@ -45,7 +45,7 @@ void TitleState::render(client::Client * c) {
 
     drawingOperations::drawSprite("easteregg", width/2-32, 114, 64, 64,
         sinf((tick%360) * (M_PI/180)) * 30.0, Hinge(width/2, 114));
-    drawingOperations::drawText("default", "v0.1", 0, 584, 16, 16);
+    drawingOperations::drawText("default", "v0.0.9", 0, 584, 16, 16);
 
     drawingOperations::setColor(box);
     drawingOperations::drawRectangle(width/2-175, 200, 350, height-300, true);
@@ -53,16 +53,16 @@ void TitleState::render(client::Client * c) {
     drawingOperations::drawRectangle(width/2-175, 200, 350, height-300, false);
 
     gfx::Button spbutton(width/2-128, 250, 256, 24, "Singleplayer", 16,
-                       Color(0, 0.2, 0.7, 1));
+                       Color(0, 0.2, 0.7, 1), nullptr, nullptr);
 
     gfx::Button mpbutton(width/2-128, 300, 256, 24, "Multiplayer", 16,
-                       Color(0.7, 0, 0, 1));
+                       Color(0.7, 0, 0, 1), nullptr, nullptr);
 
     gfx::Button cbutton(width/2-128, 350, 256, 24, "Credits", 16,
-                       Color(0, 0.7, 0, 1));
+                       Color(0, 0.7, 0, 1), nullptr, nullptr);
 
     gfx::Button qbutton(width/2-128, 400, 256, 24, "Quit", 16,
-                       Color(0.85, 0.7, 0, 1));
+                       Color(0.85, 0.7, 0, 1), nullptr, nullptr);
     spbutton.render();
     mpbutton.render();
     cbutton.render();
@@ -71,6 +71,8 @@ void TitleState::render(client::Client * c) {
     tick++;
 }
 
-void TitleState::input() {}
+void TitleState::input(SDL_Event event) {
+
+}
 
 } // namespace client

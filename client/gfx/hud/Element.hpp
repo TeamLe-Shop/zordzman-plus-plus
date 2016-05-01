@@ -4,6 +4,8 @@ namespace client {
 
 namespace gfx {
 
+using Response = void (*)();
+
 class Element {
 public:
     Element();

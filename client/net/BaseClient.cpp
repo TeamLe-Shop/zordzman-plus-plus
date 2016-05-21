@@ -8,29 +8,29 @@
 namespace net {
 
 BaseClient::BaseClient() {
-    Py_InitializeEx(0);
-    PyEval_InitThreads();
-    auto zm = PyImport_ImportModule("zm");
-    if (!zm) {
-        PyErr_Print();
-        throw std::runtime_error("Could not find the 'zm' package");
-    }
-    auto zm_client = PyObject_GetAttrString(zm, "spawn_client");
-    if (!zm_client) {
-        PyErr_Print();
-        Py_DECREF(zm);
-        throw std::runtime_error(
-            "Python entry point (zm.client) does not exist");
-    }
-    const char * ep_error = NULL;
-    auto success = invokeEntryPoint(zm_client, &ep_error);
-    Py_DECREF(zm);
-    Py_DECREF(zm_client);
-    if (!success) {
-        throw std::runtime_error(ep_error);
-    }
-    m_tstate_count = 0;
-    m_tstate = PyEval_SaveThread();
+//     Py_InitializeEx(0);
+//     PyEval_InitThreads();
+//     auto zm = PyImport_ImportModule("zm");
+//     if (!zm) {
+//         PyErr_Print();
+//         throw std::runtime_error("Could not find the 'zm' package");
+//     }
+//     auto zm_client = PyObject_GetAttrString(zm, "spawn_client");
+//     if (!zm_client) {
+//         PyErr_Print();
+//         Py_DECREF(zm);
+//         throw std::runtime_error(
+//             "Python entry point (zm.client) does not exist");
+//     }
+//     const char * ep_error = NULL;
+//     auto success = invokeEntryPoint(zm_client, &ep_error);
+//     Py_DECREF(zm);
+//     Py_DECREF(zm_client);
+//     if (!success) {
+//         throw std::runtime_error(ep_error);
+//     }
+//     m_tstate_count = 0;
+//     m_tstate = PyEval_SaveThread();
 }
 
 

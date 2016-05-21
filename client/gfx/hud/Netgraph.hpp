@@ -3,6 +3,8 @@
 #include "client/gfx/hud/Element.hpp"
 
 #include <vector>
+#include <cstddef>
+#include <cstdint>
 
 namespace client {
 

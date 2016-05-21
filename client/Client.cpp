@@ -47,7 +47,6 @@
 
 #include "common/extlib/hash-library/md5.h"
 
-
 namespace client {
 
 using namespace std::placeholders;
@@ -55,6 +54,9 @@ using namespace json11;
 
 namespace {
 std::string const title = "Zordzman v0.0.9";
+unsigned int frame = 0;
+const unsigned int max_fps = 60;
+bool cap_fps = true;
 } // Anonymous namespace
 
 Client * Client::m_instance;
@@ -98,10 +100,19 @@ Client::~Client() {
 void Client::exec() {
     //m_client.connect(m_cfg.host, m_cfg.port);
     while (m_running) {
+        int frame_start_time = SDL_GetTicks();
         handleEvents();
-        glClear(GL_COLOR_BUFFER_BIT);
+        //glClear(GL_COLOR_BUFFER_BIT);
         m_state->render(this);
         m_window.present();
+        frame++;
+        int sleeptime = (1000/max_fps) - (SDL_GetTicks()-frame_start_time);
+        if (cap_fps && SDL_GetTicks() - frame_start_time < 1000.0 / max_fps) {
+            fmt::print("Ideal frame rendering time: {}, real frame rendering "
+                       "time: {}, difference (sleep time): {}\n", 1000/max_fps,
+                        SDL_GetTicks() - frame_start_time, sleeptime);
+            if (sleeptime > 0) { SDL_Delay(sleeptime); }
+        }
     }
     m_client.disconnect();
 }
@@ -237,9 +248,7 @@ void Client::handleEvents() {
         switch (event.type) {
             case SDL_QUIT:
                 m_running = false;
-                break;
-            case SDL_TEXTINPUT:
-                break;
+                break;;
             default:
                 m_state->input(event);
                 break;

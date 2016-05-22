@@ -59,7 +59,7 @@ If installation of these packages was successful, you can now build zordzman. It
 ```sh
 mkdir ../build-zordzman-plus-plus
 cd ../build-zordzman-plus-plus
-cmake zordzman-plus-plus
+cmake ../zordzman-plus-plus
 make
 ````
 

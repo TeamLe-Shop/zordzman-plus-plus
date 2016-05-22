@@ -108,10 +108,7 @@ void Client::exec() {
         frame++;
         int sleeptime = (1000/max_fps) - (SDL_GetTicks()-frame_start_time);
         if (cap_fps && SDL_GetTicks() - frame_start_time < 1000.0 / max_fps) {
-            fmt::print("Ideal frame rendering time: {}, real frame rendering "
-                       "time: {}, difference (sleep time): {}\n", 1000/max_fps,
-                        SDL_GetTicks() - frame_start_time, sleeptime);
-            if (sleeptime > 0) { SDL_Delay(sleeptime); }
+            SDL_Delay(sleeptime);
         }
     }
     m_client.disconnect();

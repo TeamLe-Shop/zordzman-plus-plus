@@ -45,7 +45,10 @@ void Color::setInt(float _r, float _g, float _b, float _a) {
 }
 
 Color Color::operator*(const float& f) {
-    Color temp = {r, g, b, a};
+    Color temp = {static_cast<float>(r),
+                  static_cast<float>(g),
+                  static_cast<float>(b),
+                  static_cast<float>(a)};
     temp.r *= f;
     temp.g *= f;
     temp.b *= f;
@@ -60,7 +63,10 @@ void Color::operator*=(const float& f) {
 
 
 Color Color::operator/(const float& f) {
-    Color temp = {r, g, b, a};
+    Color temp = {static_cast<float>(r),
+                  static_cast<float>(g),
+                  static_cast<float>(b),
+                  static_cast<float>(a)};
     temp.r /= f;
     temp.g /= f;
     temp.b /= f;

@@ -15,7 +15,7 @@ namespace client {
 using namespace drawingOperations;
 using namespace language;
 
-TitleState::TitleState() {
+TitleState::TitleState() : tick(0) {
     audio::playSound("woah");
 }
 

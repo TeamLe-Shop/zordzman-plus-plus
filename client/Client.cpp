@@ -77,17 +77,17 @@ Client::Client(Config const & cfg, HUD hud)
         entity::PositionComponent::new_);
     m_instance = this;
     Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
-//     m_client.addHandler(std::bind(&Client::onConnect, this, _1));
-//     m_client.addHandler(std::bind(&Client::onMapOffer, this, _1));
-//     m_client.addHandler(std::bind(&Client::onMapContents, this, _1));
-//     m_client.addHandler(std::bind(&Client::onServerMessage, this, _1));
-//     m_client.addHandler(std::bind(&Client::onEntityState, this, _1));
-//     m_client.addHandler(std::bind(&Client::onPlayerId, this, _1));
-//     m_client.addHandler(std::bind(&Client::onPlayerJoined, this, _1));
-//     m_client.addHandler(std::bind(&Client::onPlayerLeft, this, _1));
-//     m_client.addHandler(std::bind(&Client::onEntityDelete, this, _1));
-//     m_client.addHandler(std::bind(&Client::onNickTaken, this, _1));
-//     m_client.addHandler(std::bind(&Client::onNickChange, this, _1));
+//     //m_client.addHandler(std::bind(&Client::onConnect, this, _1));
+//     //m_client.addHandler(std::bind(&Client::onMapOffer, this, _1));
+//     //m_client.addHandler(std::bind(&Client::onMapContents, this, _1));
+//     //m_client.addHandler(std::bind(&Client::onServerMessage, this, _1));
+//     //m_client.addHandler(std::bind(&Client::onEntityState, this, _1));
+//     //m_client.addHandler(std::bind(&Client::onPlayerId, this, _1));
+//     //m_client.addHandler(std::bind(&Client::onPlayerJoined, this, _1));
+//     //m_client.addHandler(std::bind(&Client::onPlayerLeft, this, _1));
+//     //m_client.addHandler(std::bind(&Client::onEntityDelete, this, _1));
+//     //m_client.addHandler(std::bind(&Client::onNickTaken, this, _1));
+//     //m_client.addHandler(std::bind(&Client::onNickChange, this, _1));
 
     m_state = new TitleState();
 }
@@ -98,7 +98,7 @@ Client::~Client() {
 
 
 void Client::exec() {
-    //m_client.connect(m_cfg.host, m_cfg.port);
+    ////m_client.connect(m_cfg.host, m_cfg.port);
     while (m_running) {
         int frame_start_time = SDL_GetTicks();
         handleEvents();
@@ -111,11 +111,11 @@ void Client::exec() {
             SDL_Delay(sleeptime);
         }
     }
-    m_client.disconnect();
+    ////m_client.disconnect();
 }
 
 void Client::onConnect(::net::ingress::zm::client::Connected server) {
-    m_client.send(::net::egress::ClientNick({m_cfg.name}));
+    ////m_client.send(::net::egress::ClientNick({m_cfg.name}));
 }
 
 void Client::onMapOffer(::net::ingress::MapOffer offer) {
@@ -217,7 +217,7 @@ void Client::checkForMap(std::string map, std::string hash) {
     }
 
     if (!found_match) {
-        m_client.send(::net::egress::MapRequest());
+        ////m_client.send(::net::egress::MapRequest());
     }
 }
 

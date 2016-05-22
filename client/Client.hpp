@@ -64,7 +64,7 @@ private:
     bool m_running;
 
     sys::SysContext m_system;
-    net::Client m_client;
+    //net::Client m_client;
 
     /// Handle all available SDL events.
     void handleEvents();

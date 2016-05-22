@@ -26,8 +26,8 @@ std::string translate(std::string word) {
     if (keyValues[word].dump() != "null") {
         return keyValues[word].string_value();
     } else {
-        common::util::debug("Couldn't find key \"{}\" in language \"{}\"\n",
-                            word, current_language);
+        // common::util::debug("Couldn't find key \"{}\" in language \"{}\"\n",
+        //                     word, current_language);
         return word;
     }
 }

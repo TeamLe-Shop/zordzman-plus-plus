@@ -25,6 +25,12 @@ static std::string Key_PlayerJoined("Player \"{}\" joined the game.");
 static std::string Key_PlayerLeft("Player \"{}\" left the game.");
 static std::string Key_NickTaken("Nickname already taken.");
 static std::string Key_NickChange("\"{}\" changed name to \"{}\".");
+/* Title screen */
+static std::string Key_Singleplayer("Singleplayer");
+static std::string Key_Multiplayer("Multiplayer");
+static std::string Key_Credits("Credits");
+static std::string Key_Options("Options");
+static std::string Key_Quit("Quit");
 
 } // namespace language
 } // namespace client

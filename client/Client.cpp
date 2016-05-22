@@ -65,7 +65,7 @@ Client::Client(Config const & cfg, HUD hud)
     : m_window(800, 600, title), m_cfg(cfg),
       m_hud(hud) {
     m_running = true;
-    m_resources.loadPackage("resources.tar", Base);
+    m_resources.loadPackage("resources/resources.tar", Base);
     m_level.m_entities.registerComponent(
         entity::CharacterComponent::getComponentName(),
         entity::CharacterComponent::new_);

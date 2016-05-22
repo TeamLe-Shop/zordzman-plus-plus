@@ -40,7 +40,38 @@ Will be written soon.
 
 ### Linux ###
 
-Will be written soon.
+Requirements: Python3, [Pip](https://pip.pypa.io/en/stable/installing/),
+[CMake](https://cmake.org/download/)
+
+After cloning the repository, enter the root directory of the project and install formencode by executing the following:
+```sh
+pip install --user formencode
+```
+
+After formencode has been successfully installed, install zordzman's python packages by executing the following:
+
+```sh
+pip install --user -e .
+```
+
+If installation of these packages was successful, you can now build zordzman. It is, however, recommended that you create an external `build-zordzman-plus-plus` directory.
+
+```sh
+mkdir ../build-zordzman-plus-plus
+cd ../build-zordzman-plus-plus
+cmake zordzman-plus-plus
+make
+````
+
+To run the game however, a `resources.tar` resource package is required, which
+is created at build time. It will be found inside
+`build-zordzman-plus-plus/resources` assuming you followed the steps above.
+
+```sh
+cp resources/resources.tar ../zordzman-plus-plus/resources.tar
+```
+
+The above line will copy the resource package into the correct location.
 
 ### Windows ###
 

@@ -3,11 +3,15 @@
 #include "common/util/fileutil.hpp"
 #include "common/util/debug.hpp"
 
+#include <sstream>
+
 Tar::Tar(std::string path) {
     std::ifstream stream(path, std::ios::in | std::ios::binary);
 
     if (!stream.is_open()) {
-        throw std::runtime_error("(Tar) Error opening file " + path);
+        std::ostringstream msg;
+        msg << "(Tar) Error opening file \"" << path << "\": " << strerror(errno);
+        throw std::runtime_error(msg.str());
     }
 
     // Copypasted from stream.cpp
